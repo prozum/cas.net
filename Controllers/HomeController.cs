@@ -14,7 +14,7 @@ namespace CAS.NET.Controllers
 			var mvcName = typeof(Controller).Assembly.GetName ();
 			var isMono = Type.GetType ("Mono.Runtime") != null;
 
-			ViewData ["Version"] = mvcName.Version.Major + "." + mvcName.Version.Minor;
+			ViewData ["Version"] = mvcName.Version.Major;
 			ViewData ["Runtime"] = isMono ? "Mono" : ".NET";
 
 			return View ();
