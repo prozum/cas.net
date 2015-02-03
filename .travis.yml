@@ -13,8 +13,8 @@ before_install:
 
 install:
   - nuget restore CAS.NET.sln
+  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
 
 script:
-  - xbuild /p:Configuration=Debug CAS.NET.csproj
-  - # Unit Tests:
-  - nunit-console ./CAS.NET.Tests/bin/Debug/CAS.NET.Tests.dll
+  - xbuild /p:Configuration=Release CAS.NET.csproj
+  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./CAS.NET.Tests/bin/Release/CAS.NET.Tests.dll
