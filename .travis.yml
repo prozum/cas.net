@@ -10,6 +10,11 @@ before_install:
   - mono --version
   - xsp4 --version
   - doxygen --version
+  - locate nuint-console
+  - locate nuint-console.exe
+
+install:
+  - nuget restore CAS.NET.sln
 
 script:
   - xbuild /p:Configuration=Debug CAS.NET.csproj
