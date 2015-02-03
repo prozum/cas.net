@@ -20,19 +20,3 @@ script:
 
 notifications:
   email: false
-
-env:
-  global:
-   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
-   #   via the "travis encrypt" command using the project repo's public key
-   - secure: "INZAfFJE00VmEpaIuvLFqfj5oq77Hq5f6Cw3H7HTM1uOxWMQPmNw6GbOIkJE27KaW9yBz1LRnzvFbhjDlNYrrP11DhS0ebIvKKy+PD3qNeemQCrNfrXSgz/4gBfnKAZvzaX7V7dwwn9HnkpLkV7biS1QWkaP5ZwtnjS7xxCDrUk="
-
-addons:
-  coverity_scan:
-    project:
-      name: "prozum/CAS.NET"
-      description: "A computer algebra system written in ASP.NET"
-    notification_email: nimoov@prozum.dk
-    build_command_prepend: ""
-    build_command:   "xbuild /t:Rebuild"
-    branch_pattern: coverity
