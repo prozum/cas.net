@@ -33,6 +33,6 @@ addons:
       name: "prozum/CAS.NET"
       description: "A computer algebra system written in ASP.NET"
     notification_email: nimoov@prozum.dk
-    build_command_prepend: "xbuild /t:Clean"
-    build_command:   "xbuild /p:Configuration=Release CAS.NET.csproj"
+    build_command_prepend: ""
+    build_command:   "xbuild /t:Rebuild"
     branch_pattern: coverity
