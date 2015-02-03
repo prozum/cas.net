@@ -1,7 +1,5 @@
-language: c
-
-compiler:
-  - gcc
+language: csharp
+solution: CAS.NET.csproj
 
 before_install:
   - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
@@ -9,11 +7,11 @@ before_install:
   - sudo apt-get update 
   - sudo apt-get install mono mono-xsp4 doxygen
   - # DEBUG:
-  - pwd
   - mono --version
   - xsp4 --version
   - doxygen --version
 
 script:
-  - mdtool build CAS.NET.csproj
+  - xbuild /p:Configuration=Debug CAS.NET.csproj
   - # Unit Tests:
+  - nunit-console ./CAS.NET.Tests/bin/Debug/CAS.NET.Tests.dll
