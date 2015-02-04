@@ -83,6 +83,8 @@
     <Content Include="Web.config" />
     <Content Include="Global.asax" />
     <Content Include="packages.config" />
+    <Content Include="Views\Home\footer.cshtml" />
+    <Content Include="Views\Home\header.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
