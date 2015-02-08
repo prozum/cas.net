@@ -1,0 +1,28 @@
+﻿ <!DOCTYPE html>
+ @{
+    ViewBag.Title = "CAS.NET - Input";
+}
+<html> 
+<body> 
+@{
+if (IsPost)
+{ 
+string input1 = Request["InputText1"]; 
+string input2 = Request["InputText2"]; 
+<p>You entered: <br> 
+Input 1: @input1 <br> 
+Input 2: @input2 </p> 
+}
+else
+{
+<form method="post" action="">
+Input 1:<br> 
+<input type="text" name="InputText1" value=""><br>
+Input 2:<br><br>
+<input type="text" name="InputText2" value=""><br><br>
+<input type="submit" value="Submit" class="submit">
+</form> 
+}
+}
+</body> 
+</html> 
