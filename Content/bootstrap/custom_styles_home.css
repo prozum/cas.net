@@ -8,8 +8,8 @@
   border-radius: 7px;
 }
 .container-fluid {
-  padding-right: 500px;
-  padding-left: 500px;
+  padding-right: 10%;
+  padding-left: 10%;
   margin-right: auto;
   margin-left: auto;
 }
