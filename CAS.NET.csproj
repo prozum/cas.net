@@ -67,9 +67,7 @@
     <Folder Include="Content\" />
     <Folder Include="Models\" />
     <Folder Include="Scripts\" />
-    <Folder Include="Views\Home\css\" />
-    <Folder Include="Views\Home\fonts\" />
-    <Folder Include="Views\Home\js\" />
+    <Folder Include="Content\bootstrap\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\HomeController.cs" />
@@ -88,20 +86,21 @@
     <Content Include="Views\Home\footer.cshtml" />
     <Content Include="Views\Home\header.cshtml" />
     <Content Include="Views\Home\input.cshtml" />
-    <Content Include="Views\Home\css\bootstrap-theme.css" />
-    <Content Include="Views\Home\css\bootstrap-theme.min.css" />
-    <Content Include="Views\Home\css\bootstrap.css" />
-    <Content Include="Views\Home\css\bootstrap.min.css" />
-    <Content Include="Views\Home\fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Views\Home\fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="Views\Home\fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="Views\Home\fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="Views\Home\js\bootstrap.js" />
-    <Content Include="Views\Home\js\bootstrap.min.js" />
-    <Content Include="Views\Home\js\npm.js" />
-    <Content Include="Views\Home\custom_styles.css" />
     <Content Include="Views\Home\Index_old.cshtml" />
     <Content Include="Views\Home\index.cshtml" />
+    <Content Include="Content\bootstrap\custom_styles_home.css" />
+    <Content Include="Content\bootstrap\css\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap\css\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap\css\bootstrap.css" />
+    <Content Include="Content\bootstrap\css\bootstrap.min.css" />
+    <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\bootstrap\js\bootstrap.js" />
+    <Content Include="Content\bootstrap\js\bootstrap.min.js" />
+    <Content Include="Content\bootstrap\js\jquery.min.js" />
+    <Content Include="Content\bootstrap\js\npm.js" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
@@ -112,8 +111,8 @@
     </MonoDevelop>
   </ProjectExtensions>
   <ItemGroup>
-    <None Include="Views\Home\css\bootstrap-theme.css.map" />
-    <None Include="Views\Home\css\bootstrap.css.map" />
-    <None Include="Views\Home\fonts\glyphicons-halflings-regular.woff2" />
+    <None Include="Content\bootstrap\css\bootstrap-theme.css.map" />
+    <None Include="Content\bootstrap\css\bootstrap.css.map" />
+    <None Include="Content\bootstrap\fonts\glyphicons-halflings-regular.woff2" />
   </ItemGroup>
 </Project>
