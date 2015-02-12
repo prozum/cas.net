@@ -7,3 +7,9 @@
   border: 1px solid rgba(86,61,124,.2);
   border-radius: 7px;
 }
+.container-fluid {
+  padding-right: 500px;
+  padding-left: 500px;
+  margin-right: auto;
+  margin-left: auto;
+}
