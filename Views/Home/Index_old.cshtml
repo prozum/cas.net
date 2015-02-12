@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = "CAS.NET";
+}
+<html>
+<body>
+@RenderPage("header.cshtml")
+<h2>Welcome to ASP.NET MVC @ViewData["Version"] on @ViewData["Runtime"]!</h2>
+<h>Here there be equations, algebra and fun :D </h> <br />
+I love fun! - David <br>
+<h>2 + 2 = 4</h> <br />
+<h>3 * 2 - 1 = 5</h> <br />
+
+<h> 3x^2+2x-4=0, what is x?</h> <br /> <br />
+
+@RenderPage("input.cshtml")
+
+<h> The current time is @DateTime.Now </h> <br />
+<br>
+@RenderPage("footer.cshtml")
+
+</body>
+</html>

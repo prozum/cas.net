@@ -67,6 +67,9 @@
     <Folder Include="Content\" />
     <Folder Include="Models\" />
     <Folder Include="Scripts\" />
+    <Folder Include="Views\Home\css\" />
+    <Folder Include="Views\Home\fonts\" />
+    <Folder Include="Views\Home\js\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\HomeController.cs" />
@@ -76,7 +79,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Web.config" />
-    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
@@ -86,6 +88,20 @@
     <Content Include="Views\Home\footer.cshtml" />
     <Content Include="Views\Home\header.cshtml" />
     <Content Include="Views\Home\input.cshtml" />
+    <Content Include="Views\Home\css\bootstrap-theme.css" />
+    <Content Include="Views\Home\css\bootstrap-theme.min.css" />
+    <Content Include="Views\Home\css\bootstrap.css" />
+    <Content Include="Views\Home\css\bootstrap.min.css" />
+    <Content Include="Views\Home\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Views\Home\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Views\Home\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Views\Home\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Views\Home\js\bootstrap.js" />
+    <Content Include="Views\Home\js\bootstrap.min.js" />
+    <Content Include="Views\Home\js\npm.js" />
+    <Content Include="Views\Home\custom_styles.css" />
+    <Content Include="Views\Home\index.cshtml" />
+    <Content Include="Views\Home\Index_old.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
@@ -95,4 +111,9 @@
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
+  <ItemGroup>
+    <None Include="Views\Home\css\bootstrap-theme.css.map" />
+    <None Include="Views\Home\css\bootstrap.css.map" />
+    <None Include="Views\Home\fonts\glyphicons-halflings-regular.woff2" />
+  </ItemGroup>
 </Project>
