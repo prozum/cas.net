@@ -100,8 +100,8 @@
     <Content Include="Views\Home\js\bootstrap.min.js" />
     <Content Include="Views\Home\js\npm.js" />
     <Content Include="Views\Home\custom_styles.css" />
-    <Content Include="Views\Home\index.cshtml" />
     <Content Include="Views\Home\Index_old.cshtml" />
+    <Content Include="Views\Home\index.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
