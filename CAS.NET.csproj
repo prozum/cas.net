@@ -88,7 +88,6 @@
     <Content Include="Views\Home\header.cshtml" />
     <Content Include="Views\Home\input.cshtml" />
     <Content Include="Views\Home\Index_old.cshtml" />
-    <Content Include="Views\Home\index.cshtml" />
     <Content Include="Content\bootstrap\custom_styles_home.css" />
     <Content Include="Content\bootstrap\css\bootstrap-theme.css" />
     <Content Include="Content\bootstrap\css\bootstrap-theme.min.css" />
@@ -103,6 +102,7 @@
     <Content Include="Content\bootstrap\js\jquery.min.js" />
     <Content Include="Content\bootstrap\js\npm.js" />
     <Content Include="Content\images\calcy.png" />
+    <Content Include="Views\Home\Index.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
