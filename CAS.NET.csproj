@@ -69,11 +69,15 @@
     <Folder Include="Scripts\" />
     <Folder Include="Content\bootstrap\" />
     <Folder Include="Content\images\" />
+    <Folder Include="Models\Algebra\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Algebra\solve.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
   <ItemGroup>
