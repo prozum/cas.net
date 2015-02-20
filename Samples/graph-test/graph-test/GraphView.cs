@@ -1,8 +1,7 @@
-﻿using System;
-using Gtk;
+﻿using Gtk;
 using Cairo;
 
-public class Plotter : DrawingArea 
+public class GraphView : DrawingArea 
 {
 	Pango.Layout layout;
 	int h,w;
@@ -10,7 +9,7 @@ public class Plotter : DrawingArea
 	double scale = 20;
 	double a,b,c;
 
-	public Plotter (double a, double b, double c)
+	public GraphView (double a, double b, double c)
 	{
 		SetSizeRequest (600, 600);
 		this.a = a;

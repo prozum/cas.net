@@ -11,10 +11,10 @@ public class MainWindow : Window
         Application.Run();
     }
 
-    public MainWindow() : base("Plotter")
+    public MainWindow() : base("GraphViewTest")
     {
         // Setup ui
-		Add (new Plotter (1.17, -5.2, 4.23));
+		Add (new GraphView (1.17, -5.2, 4.23));
 		ShowAll ();
     }
 }
