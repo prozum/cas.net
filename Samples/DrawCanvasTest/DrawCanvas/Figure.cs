@@ -27,18 +27,12 @@ namespace Canvas
 		public void DrawFigure(ref Context ctx)
 		{
 			ctx.MoveTo(X[0], Y[0]);
-			ctx.Stroke();
 
-			if (X.Count == 1) {
-				ctx.Arc(X[0], Y[0], ctx.LineWidth/2, 0, 2*3.1415);
-				ctx.Fill();
-			} else {
-				for (int i = 1; i < X.Count; i++) {
+			for (int i = 0; i < X.Count; i++) {
 					ctx.LineTo(X[i], Y[i]);
-				}
-
-				ctx.Stroke();
 			}
+
+			ctx.Stroke();
 		}
 	}
 }

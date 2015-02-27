@@ -16,7 +16,7 @@ namespace Canvas
 			this.AddEvents((int)(EventMask.ButtonPressMask | EventMask.ButtonMotionMask));
 			Figures = new List<Figure>();
 			mouse = new Mouse();
-			GLib.Timeout.Add (5, new GLib.TimeoutHandler (CoordAddDelay));
+			GLib.Timeout.Add (1, new GLib.TimeoutHandler (CoordAddDelay));
 		}
 
 		protected override bool OnDrawn (Context ctx)

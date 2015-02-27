@@ -1,0 +1,12 @@
+/home/reindeernix/CAS.NET/Samples/DrawCanvasTest/DrawCanvas/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/home/reindeernix/CAS.NET/Samples/DrawCanvasTest/DrawCanvas/bin/Debug/DrawCanvas.exe.mdb
+/home/reindeernix/CAS.NET/Samples/DrawCanvasTest/DrawCanvas/bin/Debug/DrawCanvas.exe
+/home/reindeernix/CAS.NET/Samples/DrawCanvasTest/DrawCanvas/obj/x86/Debug/DrawCanvas.exe
+/home/reindeernix/CAS.NET/Samples/DrawCanvasTest/DrawCanvas/obj/x86/Debug/DrawCanvas.exe.mdb
+/home/reindeernix/CAS.NET/Samples/DrawCanvasTest/DrawCanvas/bin/Debug/atk-sharp.dll
+/home/reindeernix/CAS.NET/Samples/DrawCanvasTest/DrawCanvas/bin/Debug/cairo-sharp.dll
+/home/reindeernix/CAS.NET/Samples/DrawCanvasTest/DrawCanvas/bin/Debug/gdk-sharp.dll
+/home/reindeernix/CAS.NET/Samples/DrawCanvasTest/DrawCanvas/bin/Debug/gio-sharp.dll
+/home/reindeernix/CAS.NET/Samples/DrawCanvasTest/DrawCanvas/bin/Debug/glib-sharp.dll
+/home/reindeernix/CAS.NET/Samples/DrawCanvasTest/DrawCanvas/bin/Debug/gtk-sharp.dll
+/home/reindeernix/CAS.NET/Samples/DrawCanvasTest/DrawCanvas/bin/Debug/pango-sharp.dll
