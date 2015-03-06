@@ -78,6 +78,10 @@ public class GraphView : DrawingArea
 		layout = Pango.CairoHelper.CreateLayout (ct);
 		ct.LineWidth = 1;
 
+
+		//a -= 0.01;
+		//b -= 0.01;
+
 		DrawAxes (ct);
 		DrawGrid (ct);
 		DrawGraph (ct);
