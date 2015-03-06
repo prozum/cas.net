@@ -1,5 +1,0 @@
-/home/nimoov/Work/git/prozum/CAS.NET/Samples/FormulaTest/FormulaTest/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
-/home/nimoov/Work/git/prozum/CAS.NET/Samples/FormulaTest/FormulaTest/bin/Debug/FormulaTest.exe.mdb
-/home/nimoov/Work/git/prozum/CAS.NET/Samples/FormulaTest/FormulaTest/bin/Debug/FormulaTest.exe
-/home/nimoov/Work/git/prozum/CAS.NET/Samples/FormulaTest/FormulaTest/obj/x86/Debug/FormulaTest.exe
-/home/nimoov/Work/git/prozum/CAS.NET/Samples/FormulaTest/FormulaTest/obj/x86/Debug/FormulaTest.exe.mdb
