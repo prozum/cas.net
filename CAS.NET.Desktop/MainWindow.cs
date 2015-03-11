@@ -8,16 +8,17 @@ public class MainWindow : Window
 		new MainWindow ();
 		Application.Run();
 	}
+		
 
 	public MainWindow() : base("MainWindow")
 	{
-		DeleteEvent += OnDeleteEvent;
+		DeleteEvent += delegate {
+			Application.Quit();
+		};
 
-		// Setup ui
 		var textview = new TextView();
 		Add (textview);
 
-		// Setup tag
 		var tag = new TextTag ("helloworld-tag");
 		tag.Scale = Pango.Scale.XXLarge;
 		tag.Style = Pango.Style.Italic;
@@ -29,12 +30,8 @@ public class MainWindow : Window
 		buffer.TagTable.Add (tag);
 
 		var insertIter = buffer.StartIter;
-		buffer.InsertWithTagsByName (ref insertIter, "Hello CAS.NET!\n", "helloworld-tag");
-		ShowAll ();
-	}
+		buffer.InsertWithTagsByName (ref insertIter, "Hello Desktop!\n", "helloworld-tag");
 
-	protected void OnDeleteEvent (object sender, DeleteEventArgs a)
-	{
-		Application.Quit ();
+		ShowAll ();
 	}
 }
