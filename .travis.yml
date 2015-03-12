@@ -14,9 +14,10 @@ install:
   - nuget restore CAS.NET.sln
 
 script:
-  - xbuild /p:Configuration=Release CAS.NET.csproj
-  - xbuild /p:Configuration=Release CAS.NET.Tests/CAS.NET.Tests.csproj
-  - nunit-console ./CAS.NET.Tests/bin/Release/CAS.NET.Tests.dll
+  - xbuild /p:Configuration=Release CAS.NET.sln
+  - #xbuild /p:Configuration=Release CAS.NET.csproj
+  - #xbuild /p:Configuration=Release CAS.NET.Tests/CAS.NET.Tests.csproj
+  - #nunit-console ./CAS.NET.Tests/bin/Release/CAS.NET.Tests.dll
 
 notifications:
   email: false
