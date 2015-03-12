@@ -36,6 +36,7 @@
     <Compile Include="Canvas.cs" />
     <Compile Include="Figure.cs" />
     <Compile Include="DrawCanvasSample.cs" />
+    <Compile Include="Mouse.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="atk-sharp, Version=3.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
