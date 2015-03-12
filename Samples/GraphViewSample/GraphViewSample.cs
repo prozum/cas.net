@@ -12,15 +12,12 @@ public class MainWindow : Window
 
 	public MainWindow() : base("GraphViewTest")
 	{
-		DeleteEvent += OnDeleteEvent;
+		DeleteEvent += delegate {
+			Application.Quit ();
+		};
 
 		// Setup ui
 		Add (new GraphView (1.17, -5.2, 4.23));
 		ShowAll ();
-	}
-
-	protected void OnDeleteEvent (object sender, DeleteEventArgs a)
-	{
-		Application.Quit ();
 	}
 }
