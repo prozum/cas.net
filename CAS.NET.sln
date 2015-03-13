@@ -19,6 +19,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CAS.NET.Desktop", "CAS.NET.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CAS.NET.Mobile", "CAS.NET.Mobile\CAS.NET.Mobile.csproj", "{E7552B0B-3C50-4739-8AE5-25768BAC332D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ressources", "Ressources", "{5481AAC8-C613-4063-9106-01712CD51B20}"
+	ProjectSection(SolutionItems) = preProject
+		Ressources\calcy.png = Ressources\calcy.png
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
