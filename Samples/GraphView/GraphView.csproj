@@ -61,12 +61,12 @@
   <Import Project="..\packages\GtkSharp.3.1.2\build\net45\GtkSharp.targets" Condition="Exists('..\packages\GtkSharp.3.1.2\build\net45\GtkSharp.targets')" />
   <Import Project="..\..\packages\GtkSharp.3.1.2\build\net45\GtkSharp.targets" Condition="Exists('..\..\packages\GtkSharp.3.1.2\build\net45\GtkSharp.targets')" />
   <ItemGroup>
-    <ProjectReference Include="..\..\Libraries\Graph\Graph.csproj">
-      <Project>{61470166-2F65-41BD-9D9C-2C2C5F2DA6ED}</Project>
-      <Name>Graph</Name>
-    </ProjectReference>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\..\Libraries\LibGraph\LibGraph.csproj">
+      <Project>{61470166-2F65-41BD-9D9C-2C2C5F2DA6ED}</Project>
+      <Name>LibGraph</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>
