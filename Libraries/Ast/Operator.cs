@@ -51,9 +51,14 @@ namespace Ast
 
 	public class Div : Operator
 	{
+		public Div(Expression a, Expression b)
+		{
+
+		}
+
 		public override Expression Evaluate (Expression a, Expression b)
 		{
-			throw new NotImplementedException ();
+
 		}
 	}
 
