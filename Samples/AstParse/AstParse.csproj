@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProjectGuid>{7F56804C-27A5-4D71-BC60-06280B85D050}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>FormulaSample</RootNamespace>
+    <RootNamespace>AstParse</RootNamespace>
     <AssemblyName>FormulaTest</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
@@ -104,9 +104,9 @@
     </MonoDevelop>
   </ProjectExtensions>
   <ItemGroup>
-    <ProjectReference Include="..\..\Libraries\LibAst\LibAst.csproj">
+    <ProjectReference Include="..\..\Libraries\Ast\Ast.csproj">
       <Project>{82C03E10-075F-411C-A1F1-D5506C62BE1C}</Project>
-      <Name>LibAst</Name>
+      <Name>Ast</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>
