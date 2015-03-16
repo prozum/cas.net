@@ -13,90 +13,108 @@ namespace Ast
 			{"/",20}
 		};
 
-		public static Expression Parse(string parseString)
-		{
-			var exs = new List<Expression> ();
-			var ops = new List<Operator> (); 
+        //public static Expression Parse(string parseString)
+        //{
+        //    var exs = new List<Expression> ();
+        //    var ops = new List<Operator> (); 
 
-			var parseEnum = parseString.GetEnumerator ();
+        //    var parseEnum = parseString.GetEnumerator ();
 
 
-			while (parseEnum.MoveNext()) {
+        //    while (parseEnum.MoveNext()) {
 
-				// Skip whitespace
-				while (char.IsWhiteSpace (parseEnum.Current) || parseEnum.Current.Equals(";")) {
+        //        // Skip whitespace
+        //        while (char.IsWhiteSpace (parseEnum.Current) || parseEnum.Current.Equals(";")) {
 
-					parseEnum.MoveNext ();
-				}
+        //            parseEnum.MoveNext ();
+        //        }
 
-				if (char.IsLetter (parseEnum.Current)) {
+        //        if (char.IsLetter (parseEnum.Current)) {
 
-					exs.Add(ParseIdentifier (parseEnum));
+        //            exs.Add(ParseIdentifier (parseEnum));
 
-				}
+        //        }
 
-				if (char.IsDigit(parseEnum.Current)) {
+        //        if (char.IsDigit(parseEnum.Current)) {
 
-					exs.Add(ParseNumber (parseEnum));
+        //            exs.Add(ParseNumber (parseEnum));
 				
-				}
+        //        }
 
-				if (parseEnum.Current.Equals("(")) {
+        //        if (parseEnum.Current.Equals("(")) {
 				
-					exs.Add(ParseParenthese (parseEnum));
-				}
-			}
+        //            exs.Add(ParseParenthese (parseEnum));
+        //        }
+        //    }
 
-			return CreateAst (exs, ops);
-		}
+        //    return CreateAst (exs, ops);
+        //}
 
 		public static string ExtractSubstring(CharEnumerator parseEnum, char endChar)
 		{
-			string substring;
+			string substring = null;
 
 			int parentEnd = 0;
 			int parentStart = 0;
 
-			while (parseEnum.MoveNext) {
+			while (parseEnum.MoveNext()) {
 
-				if (parseEnum.Current.Equals("(")
-					{
+				if (parseEnum.Current.Equals('('))
+				{
+                    parseEnum.MoveNext();
 
+                    while (!parseEnum.Current.Equals(')') && (parentStart == parentEnd))
+                    {
+                        substring += parseEnum.Current;
+                        switch (parseEnum.Current)
+                        {
+                            case '(':
+                                parentStart++;
+                                break;
+                            case ')':
+                                parentEnd++;
+                                break;
+                            default:
+                                break;
+                        }
+                        parseEnum.MoveNext();
+                    }
+                }
 			}
-
+            return substring;
 		}
 
-		private static Expression ParseParenthese (CharEnumerator parseEnum)
-		{
-			parseEnum.MoveNext ();
-			//var exp = 
-		}
+        //private static Expression ParseParenthese (CharEnumerator parseEnum)
+        //{
+        //    parseEnum.MoveNext ();
+        //    //var exp = 
+        //}
 
-		private static Expression CreateAst(List<Expression> exs, List<Operator> ops)
-		{
-			return exs [0];
-		}
+        //private static Expression CreateAst(List<Expression> exs, List<Operator> ops)
+        //{
+        //    return exs [0];
+        //}
 
-		private static Expression ParseIdentifier(CharEnumerator parseEnum)
-		{
-			string identifier = "";
+        //private static Expression ParseIdentifier(CharEnumerator parseEnum)
+        //{
+        //    string identifier = "";
 
-			while (char.IsLetterOrDigit (parseEnum.Current)) {
+        //    while (char.IsLetterOrDigit (parseEnum.Current)) {
 
-				identifier += parseEnum.Current;
-				parseEnum.MoveNext ();
-			}
+        //        identifier += parseEnum.Current;
+        //        parseEnum.MoveNext ();
+        //    }
 
-			if (parseEnum.Current.Equals("(")) {
+        //    if (parseEnum.Current.Equals("(")) {
 
-				return ParseFunction (identifier, parseEnum);
+        //        return ParseFunction (identifier, parseEnum);
 
-			} else {
+        //    } else {
 
-				return Symbol (identifier);
+        //        return Symbol (identifier);
 
-			}
-		}
+        //    }
+        //}
 
 		private static Expression ParseNumber(CharEnumerator parseEnum)
 		{
@@ -105,9 +123,10 @@ namespace Ast
 			while (char.IsDigit(parseEnum.Current)) {
 
 				number += parseEnum.Current;
-			}
+            }
+            Expression res = new Expression();
+            return res;
 		}
-
 	}
 }
 
