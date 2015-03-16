@@ -6,7 +6,7 @@ namespace Ast
 	{
 	}
 
-	public class Integer : Number 
+	public class Integer : Number
 	{
 
 
@@ -38,7 +38,7 @@ namespace Ast
 
 		public static Integer Gcd(Integer num, Integer denom)
 		{
-			return new Integer (null);
+			throw new NotImplementedException ();
 		}
 	}
 
