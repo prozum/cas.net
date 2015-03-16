@@ -8,8 +8,11 @@ namespace Ast
 	{
 		public bool Contains(Expression e)
 		{
-			//TODO
-			return true;
+			if (e is Symbol) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 	}
 }
