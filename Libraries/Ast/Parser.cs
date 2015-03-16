@@ -47,10 +47,11 @@ namespace Ast
                 }
             }
 
-            return CreateAst (exs, ops);
+            //return CreateAst (exs, ops);
+			return new Expression ();
         }
 
-		public static string ExtractSubstring(CharEnumerator parseEnum, char endChar)
+		public static string ExtractSubstring(CharEnumerator parseEnum)
 		{
 			string substring = null;
 
@@ -86,37 +87,51 @@ namespace Ast
             return substring;
 		}
 
-        //private static Expression ParseParenthese (CharEnumerator parseEnum)
-        //{
-        //    parseEnum.MoveNext ();
-        //    //var exp = 
-        //}
+        private static Expression ParseParenthese (CharEnumerator parseEnum)
+        {
+			return Parse(ExtractSubstring (parseEnum));  
+        }
 
         //private static Expression CreateAst(List<Expression> exs, List<Operator> ops)
         //{
         //    return exs [0];
         //}
 
-        //private static Expression ParseIdentifier(CharEnumerator parseEnum)
-        //{
-        //    string identifier = "";
+        private static Expression ParseIdentifier(CharEnumerator parseEnum)
+        {
+            string identifier = "";
 
-        //    while (char.IsLetterOrDigit (parseEnum.Current)) {
+            while (char.IsLetterOrDigit (parseEnum.Current)) {
 
-        //        identifier += parseEnum.Current;
-        //        parseEnum.MoveNext ();
-        //    }
+                identifier += parseEnum.Current;
+                parseEnum.MoveNext ();
+            }
 
-        //    if (parseEnum.Current.Equals("(")) {
+            if (parseEnum.Current.Equals("(")) {
 
-        //        return ParseFunction (identifier, parseEnum);
+                return ParseFunction (identifier, parseEnum);
 
-        //    } else {
+            } else {
 
-        //        return Symbol (identifier);
+                return new Symbol (identifier);
 
-        //    }
-        //}
+            }
+        }
+
+		private static Expression ParseFunction(string identifier, CharEnumerator parseEnum)
+		{
+			var args = new List<Expression> ();
+
+			var argString = ExtractSubstring (parseEnum);
+			var argList = argString.Split (',');
+
+			foreach (string arg in argList) {
+
+				args.Add(Parse(arg));
+			}
+
+			return new Function(identifier, args);
+		}
 
 		private static Expression ParseNumber(CharEnumerator parseEnum)
 		{

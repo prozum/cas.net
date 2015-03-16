@@ -8,6 +8,8 @@ namespace Ast
 
 	public class Integer : Number 
 	{
+
+
 		public int value;
 	}
 

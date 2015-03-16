@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-	public abstract class Function  : Expression
+	public class Function  : Expression
 	{
-		public List<Expression> arglist = new List<Expression> ();
+		public string identifier;
+		public List<Expression> args = new List<Expression> ();
 
-		protected Function(params Expression[] args)
+		protected Function(string identifier, List<Expression> args)
 		{
-			foreach (var item in args) {
-				arglist.Add (item);
-			}
+			this.identifier = identifier;
+			this.args = args;
 		}
 	}
 
