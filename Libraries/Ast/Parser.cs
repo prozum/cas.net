@@ -79,6 +79,8 @@ namespace Ast
                         }
                         parseEnum.MoveNext();
                     }
+
+					return substring;
                 }
 			}
             return substring;
