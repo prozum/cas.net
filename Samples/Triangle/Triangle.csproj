@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{458E2B43-BAB8-436B-A369-6D5EAD0AF7CA}</ProjectGuid>
+    <ProjectGuid>{71941514-6E26-489B-8843-EB9D273B95D2}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Triangle</RootNamespace>
     <AssemblyName>Triangle</AssemblyName>
@@ -35,6 +35,7 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Calc.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
