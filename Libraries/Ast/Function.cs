@@ -5,12 +5,12 @@ namespace Ast
 {
 	public abstract class Function  : Expression
 	{
-		public List<Expression> arglist = new List<Expression> ();
+		protected List<Expression> argList = new List<Expression> ();
 
 		protected Function(params Expression[] args)
 		{
 			foreach (var item in args) {
-				arglist.Add (item);
+				argList.Add (item);
 			}
 		}
 	}

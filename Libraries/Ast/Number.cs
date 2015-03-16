@@ -15,6 +15,17 @@ namespace Ast
 	{
 		public Integer numerator;
 		public Integer denominator;
+		public Integer gcd;
+
+		public void Reduce(Integer num, Integer denom)
+		{
+			Gcd (num, denom);
+		}
+
+		public static Integer Gcd(Integer num, Integer denom)
+		{
+			return new Integer ();
+		}
 	}
 
 	public class Irrational : Number 

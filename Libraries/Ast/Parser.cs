@@ -13,42 +13,42 @@ namespace Ast
 			{"/",20}
 		};
 
-        //public static Expression Parse(string parseString)
-        //{
-        //    var exs = new List<Expression> ();
-        //    var ops = new List<Operator> (); 
+        public static Expression Parse(string parseString)
+        {
+            var exs = new List<Expression> ();
+            var ops = new List<Operator> (); 
 
-        //    var parseEnum = parseString.GetEnumerator ();
+            var parseEnum = parseString.GetEnumerator ();
 
 
-        //    while (parseEnum.MoveNext()) {
+            while (parseEnum.MoveNext()) {
 
-        //        // Skip whitespace
-        //        while (char.IsWhiteSpace (parseEnum.Current) || parseEnum.Current.Equals(";")) {
+                // Skip whitespace
+                while (char.IsWhiteSpace (parseEnum.Current) || parseEnum.Current.Equals(";")) {
 
-        //            parseEnum.MoveNext ();
-        //        }
+                    parseEnum.MoveNext ();
+                }
 
-        //        if (char.IsLetter (parseEnum.Current)) {
+                if (char.IsLetter (parseEnum.Current)) {
 
-        //            exs.Add(ParseIdentifier (parseEnum));
+                    exs.Add(ParseIdentifier (parseEnum));
 
-        //        }
+                }
 
-        //        if (char.IsDigit(parseEnum.Current)) {
+                if (char.IsDigit(parseEnum.Current)) {
 
-        //            exs.Add(ParseNumber (parseEnum));
+                    exs.Add(ParseNumber (parseEnum));
 				
-        //        }
+                }
 
-        //        if (parseEnum.Current.Equals("(")) {
+                if (parseEnum.Current.Equals("(")) {
 				
-        //            exs.Add(ParseParenthese (parseEnum));
-        //        }
-        //    }
+                    exs.Add(ParseParenthese (parseEnum));
+                }
+            }
 
-        //    return CreateAst (exs, ops);
-        //}
+            return CreateAst (exs, ops);
+        }
 
 		public static string ExtractSubstring(CharEnumerator parseEnum, char endChar)
 		{
@@ -66,7 +66,7 @@ namespace Ast
                     while (!parseEnum.Current.Equals(')') && (parentStart == parentEnd))
                     {
                         substring += parseEnum.Current;
-
+                        
                         switch (parseEnum.Current)
                         {
                             case '(':
@@ -74,8 +74,6 @@ namespace Ast
                                 break;
                             case ')':
                                 parentEnd++;
-                                break;
-                            default:
                                 break;
                         }
 
@@ -143,7 +141,7 @@ namespace Ast
                         return result;
                     }
 
-                    number += parseEnum.Current;
+				number += parseEnum.Current;
                     resultType = NumberType.Irrational;
                 }
                 else if (parseEnum.Current == 'i')
