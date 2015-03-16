@@ -52,7 +52,7 @@ namespace Ast
 
 		public static string ExtractSubstring(CharEnumerator parseEnum, char endChar)
 		{
-			string substring = null;
+			string substring = "";
 
 			int parentEnd = 0;
 			int parentStart = 0;
@@ -66,6 +66,7 @@ namespace Ast
                     while (!parseEnum.Current.Equals(')') && (parentStart == parentEnd))
                     {
                         substring += parseEnum.Current;
+
                         switch (parseEnum.Current)
                         {
                             case '(':
@@ -77,12 +78,14 @@ namespace Ast
                             default:
                                 break;
                         }
+
                         parseEnum.MoveNext();
                     }
 
 					return substring;
                 }
 			}
+
             return substring;
 		}
 
@@ -118,16 +121,51 @@ namespace Ast
         //    }
         //}
 
-		private static Expression ParseNumber(CharEnumerator parseEnum)
+        enum NumberType { Integer, Rational, Irrational, Complex };
+
+		public static Expression ParseNumber(CharEnumerator parseEnum)
 		{
+            NumberType resultType = NumberType.Integer;
+            Expression result = new Expression();
 			string number = "";
 
-			while (char.IsDigit(parseEnum.Current)) {
+            while (true)
+            {
+                if (char.IsDigit(parseEnum.Current))
+                {
+                    number += parseEnum.Current;
+                }
+                else if (parseEnum.Current == '.')
+                {
+                    if (resultType == NumberType.Irrational)
+                    {
+                        result = null;
+                        return result;
+                    }
 
-				number += parseEnum.Current;
+                    number += parseEnum.Current;
+                    resultType = NumberType.Irrational;
+                }
+                else if (parseEnum.Current == 'i')
+                {
+                    resultType = NumberType.Complex;
+                    break;
+                }
             }
-            Expression res = new Expression();
-            return res;
+
+            switch (resultType)
+            {
+                case NumberType.Integer:
+                    break;
+                case NumberType.Irrational:
+                    break;
+                case NumberType.Complex:
+                    break;
+                default:
+                    break;
+            }
+
+            return result;
 		}
 	}
 }

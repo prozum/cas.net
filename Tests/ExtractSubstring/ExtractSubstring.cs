@@ -18,7 +18,7 @@ namespace ExtractSubstring
 
 			var res = Ast.Parser.ExtractSubstring (testEnum, 'v');
 
-			Assert.AreEqual ("x*y", res);
+			Assert.AreEqual ("x*ys", res);
 		}
 	}
 }
