@@ -68,7 +68,7 @@ namespace Ast
                     {
                         substring += parseEnum.Current;
                         
-						switch (parseEnum.Current)
+                        switch (parseEnum.Current)
                         {
                             case '(':
                                 parentStart++;
@@ -84,6 +84,7 @@ namespace Ast
 					return substring;
                 }
 			}
+
             return substring;
 		}
 
@@ -118,31 +119,51 @@ namespace Ast
             }
         }
 
-		private static Expression ParseFunction(string identifier, CharEnumerator parseEnum)
+        enum NumberType { Integer, Rational, Irrational, Complex };
+
+		public static Expression ParseNumber(CharEnumerator parseEnum)
 		{
-			var args = new List<Expression> ();
-
-			var argString = ExtractSubstring (parseEnum);
-			var argList = argString.Split (',');
-
-			foreach (string arg in argList) {
-
-				args.Add(Parse(arg));
-			}
-
-			return new Function(identifier, args);
-		}
-
-		private static Expression ParseNumber(CharEnumerator parseEnum)
-		{
+            NumberType resultType = NumberType.Integer;
+            Expression result = new Expression();
 			string number = "";
 
-			while (char.IsDigit(parseEnum.Current)) {
+            while (true)
+            {
+                if (char.IsDigit(parseEnum.Current))
+                {
+                    number += parseEnum.Current;
+                }
+                else if (parseEnum.Current == '.')
+                {
+                    if (resultType == NumberType.Irrational)
+                    {
+                        result = null;
+                        return result;
+                    }
 
 				number += parseEnum.Current;
+                    resultType = NumberType.Irrational;
+                }
+                else if (parseEnum.Current == 'i')
+                {
+                    resultType = NumberType.Complex;
+                    break;
+                }
             }
 
-			return new Integer(int.Parse(number));
+            switch (resultType)
+            {
+                case NumberType.Integer:
+                    break;
+                case NumberType.Irrational:
+                    break;
+                case NumberType.Complex:
+                    break;
+                default:
+                    break;
+            }
+
+            return result;
 		}
 	}
 }
