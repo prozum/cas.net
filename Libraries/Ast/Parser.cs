@@ -124,7 +124,7 @@ namespace Ast
 		public static Expression ParseNumber(CharEnumerator parseEnum)
 		{
             NumberType resultType = NumberType.Integer;
-            Expression result = new Expression();
+            Expression result;
 			string number = "";
 
             while (true)
@@ -137,11 +137,10 @@ namespace Ast
                 {
                     if (resultType == NumberType.Irrational)
                     {
-                        result = null;
-                        return result;
+                        return null;
                     }
 
-				number += parseEnum.Current;
+				    number += parseEnum.Current;
                     resultType = NumberType.Irrational;
                 }
                 else if (parseEnum.Current == 'i')
@@ -154,12 +153,16 @@ namespace Ast
             switch (resultType)
             {
                 case NumberType.Integer:
+                    result = new Integer(int.Parse(number));
                     break;
                 case NumberType.Irrational:
+                    result = new Irrational(decimal.Parse(number));
                     break;
                 case NumberType.Complex:
+                    result = new Complex();
                     break;
                 default:
+                    result = new Expression();
                     break;
             }
 
