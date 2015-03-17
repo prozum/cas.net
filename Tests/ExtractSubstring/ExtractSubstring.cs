@@ -10,13 +10,22 @@ namespace ExtractSubstring
 		[Test]
 		public void ExtractSubstring()
 		{
-			var testString = "(x*y)*f(10-x)";
+			string res;
+
+			var testString = "(x*y)*f(10-x)-20";
 
 			var testEnum = testString.GetEnumerator ();
-			var res = Ast.Parser.ExtractSubstring (testEnum);
 
+			testEnum.MoveNext ();
+
+			res = Ast.Parser.ExtractSubstring (testEnum);
 			Assert.AreEqual ("x*y", res);
-			Assert.AreEqual (")", testEnum.Current);
+
+			testEnum.MoveNext ();
+			testEnum.MoveNext ();
+
+			res = Ast.Parser.ExtractSubstring (testEnum);
+			Assert.AreEqual ("10-x", res);
 		}
 	}
 }

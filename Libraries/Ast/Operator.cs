@@ -58,7 +58,7 @@ namespace Ast
 
 		public override Expression Evaluate (Expression a, Expression b)
 		{
-
+			throw new NotImplementedException ();
 		}
 	}
 

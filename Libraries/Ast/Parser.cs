@@ -20,7 +20,6 @@ namespace Ast
 
             var parseEnum = parseString.GetEnumerator ();
 
-
             while (parseEnum.MoveNext()) {
 
                 // Skip whitespace
@@ -38,7 +37,6 @@ namespace Ast
                 if (char.IsDigit(parseEnum.Current)) {
 
                     exs.Add(ParseNumber (parseEnum));
-				
                 }
 
                 if (parseEnum.Current.Equals("(")) {
@@ -58,45 +56,39 @@ namespace Ast
 			int parentEnd = 0;
 			int parentStart = 0;
 
-			while (parseEnum.MoveNext()) {
+		    if (parseEnum.Current.Equals('('))
+		    {
+                parseEnum.MoveNext();
 
-				if (parseEnum.Current.Equals('('))
-				{
-                    parseEnum.MoveNext();
-
-                    while (!parseEnum.Current.Equals(')') && (parentStart == parentEnd))
+                while (!parseEnum.Current.Equals(')') && (parentStart == parentEnd))
+                {
+                    substring += parseEnum.Current;
+                    
+                    switch (parseEnum.Current)
                     {
-                        substring += parseEnum.Current;
-                        
-                        switch (parseEnum.Current)
-                        {
-                            case '(':
-                                parentStart++;
-                                break;
-                            case ')':
-                                parentEnd++;
-                                break;
-                        }
-
-                        parseEnum.MoveNext();
+                        case '(':
+                            parentStart++;
+                            break;
+                        case ')':
+                            parentEnd++;
+                            break;
                     }
 
-					return substring;
+                    parseEnum.MoveNext();
                 }
-			}
 
-            return substring;
+		    	// Eat ')'
+                parseEnum.MoveNext();
+
+            }
+		    
+			return substring;
 		}
 
         private static Expression ParseParenthese (CharEnumerator parseEnum)
         {
 			return Parse(ExtractSubstring (parseEnum));  
         }
-
-        //private static Expression CreateAst(List<Expression> exs, List<Operator> ops)
-        //{
-        //    return exs [0];
-        //}
 
         private static Expression ParseIdentifier(CharEnumerator parseEnum)
         {
@@ -118,6 +110,20 @@ namespace Ast
 
             }
         }
+
+		private static Expression ParseFunction(string identifier, CharEnumerator parseEnum)
+		{
+			var args = new List<Expression> ();
+
+			var argString = ExtractSubstring (parseEnum);
+			var argList = argString.Split (',');
+
+			foreach (string arg in argList) {
+
+				args.Add(Parse(arg));
+			}
+			return new Function(identifier, args);
+		}
 
         enum NumberType { Integer, Rational, Irrational, Complex };
 
@@ -141,7 +147,7 @@ namespace Ast
                         return result;
                     }
 
-				number += parseEnum.Current;
+				    number += parseEnum.Current;
                     resultType = NumberType.Irrational;
                 }
                 else if (parseEnum.Current == 'i')
