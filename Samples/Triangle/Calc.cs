@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Triangle
+namespace Geometry
 {
-	public class Calc
+	public class Triangle
 	{
 		public static double Pythagoras(double kat_1, double kat_2, double hyp)
 		{

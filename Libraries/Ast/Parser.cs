@@ -37,6 +37,7 @@ namespace Ast
                 if (char.IsDigit(parseEnum.Current)) {
 
                     exs.Add(ParseNumber (parseEnum));
+				
                 }
 
                 if (parseEnum.Current.Equals("(")) {
@@ -77,7 +78,7 @@ namespace Ast
                     parseEnum.MoveNext();
                 }
 
-		    	// Eat ')'
+		// Eat ')'
                 parseEnum.MoveNext();
 
             }
@@ -89,6 +90,11 @@ namespace Ast
         {
 			return Parse(ExtractSubstring (parseEnum));  
         }
+
+        //private static Expression CreateAst(List<Expression> exs, List<Operator> ops)
+        //{
+        //    return exs [0];
+        //}
 
         private static Expression ParseIdentifier(CharEnumerator parseEnum)
         {
@@ -130,10 +136,10 @@ namespace Ast
 		public static Expression ParseNumber(CharEnumerator parseEnum)
 		{
             NumberType resultType = NumberType.Integer;
-            Expression result = new Expression();
+            Expression result;
 			string number = "";
 
-            while (true)
+            do
             {
                 if (char.IsDigit(parseEnum.Current))
                 {
@@ -141,13 +147,13 @@ namespace Ast
                 }
                 else if (parseEnum.Current == '.')
                 {
+                    //More than one dot. Error!
                     if (resultType == NumberType.Irrational)
                     {
-                        result = null;
-                        return result;
+                        return null;
                     }
 
-				    number += parseEnum.Current;
+                    number += parseEnum.Current;
                     resultType = NumberType.Irrational;
                 }
                 else if (parseEnum.Current == 'i')
@@ -155,17 +161,26 @@ namespace Ast
                     resultType = NumberType.Complex;
                     break;
                 }
-            }
+                else
+                {
+                    break;
+                }
+            } while (parseEnum.MoveNext());
 
             switch (resultType)
             {
                 case NumberType.Integer:
+                    result = new Integer(int.Parse(number));
                     break;
                 case NumberType.Irrational:
+                    result = new Irrational(decimal.Parse(number));
                     break;
                 case NumberType.Complex:
+                    result = new Complex();
                     break;
                 default:
+                    //Should never happen
+                    result = new Expression();
                     break;
             }
 

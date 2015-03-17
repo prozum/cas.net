@@ -8,13 +8,10 @@ namespace Ast
 
 	public class Integer : Number
 	{
-
-
 		public int value;
 
-		public Integer(int val)
+		public Integer(decimal val)
 		{
-			value = val;
 		}
 	}
 
@@ -22,13 +19,13 @@ namespace Ast
 	{
 		public Integer numerator;
 		public Integer denominator;
-		public Expression value;
+		public Irrational value;
 
 		public Rational(Integer num, Integer denom)
 		{
 			numerator = num;
 			denominator = denom;
-			value = new Div (numerator, denominator).Evaluate(numerator, denominator);
+			value = new Irrational(num.value / denom.value);
 		}
 
 		public void Reduce(Integer num, Integer denom)
