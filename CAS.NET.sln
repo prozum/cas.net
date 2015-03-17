@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrawCanvas", "Samples\DrawC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphView", "Samples\GraphView\GraphView.csproj", "{B30BE9E6-097E-4DC0-91EE-4DDDA35F8905}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Triangle", "Samples\Triangle\Triangle.csproj", "{71941514-6E26-489B-8843-EB9D273B95D2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geometry", "Samples\Triangle\Geometry.csproj", "{71941514-6E26-489B-8843-EB9D273B95D2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{F0AC8500-342F-4EA5-9649-3A3CAC990066}"
 EndProject
