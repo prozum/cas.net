@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 
 namespace Geometry
 {
@@ -44,23 +44,17 @@ namespace Geometry
 			}
 		}
 
-		// Trigonometri, find vinkler ud fra sidelængder
-		public static double Trigono(char whichSide, double a, double b, double c) {
-			if (whichSide == 'A') {
-				if (a != 0 && c != 0) {
-					return Math.Asin(Math.Sin (a / c));
-				} else if (b != 0 && c != 0) {
-					return Math.Cosh(Math.Cos (b / c));
-				} else {
-					return 0;
-				}
+		// Trigonometri, find alle vinkler ud fra alle sidelængder
+		public static double Angles(double a, double b, double c) {
+			if (Verify(a,b,c)) {
+				return Math.Asin(( Math.Pow(b,2) + Math.Pow(c,2) - Math.Pow(a,2) ) / ( 2*b*c ));
+				//return Math.Asin(( Math.Pow(a,2) + Math.Pow(c,2) - Math.Pow(b,2) ) / ( 2*a*c ));
+				//return Math.Asin(( Math.Pow(a,2) + Math.Pow(b,2) - Math.Pow(c,2) ) / ( 2*a*b ));
+				//cos B = ( a^2 + c^2 - b^2 ) / ( 2 ac )
 
-			} else if (whichSide == 'B') {
-				//hyp/kateta
-				return 0;
-			} else if (whichSide == 'C') {
-				return 0;
-			} else {
+				//cos C = ( a^2 + b^2 - c^2 ) / ( 2 ab )
+			}
+			else {
 				return 0;
 			}
 		}
