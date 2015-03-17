@@ -127,7 +127,7 @@ namespace Ast
             Expression result;
 			string number = "";
 
-            while (true)
+            do
             {
                 if (char.IsDigit(parseEnum.Current))
                 {
@@ -135,12 +135,13 @@ namespace Ast
                 }
                 else if (parseEnum.Current == '.')
                 {
+                    //More than one dot. Error!
                     if (resultType == NumberType.Irrational)
                     {
                         return null;
                     }
 
-				    number += parseEnum.Current;
+                    number += parseEnum.Current;
                     resultType = NumberType.Irrational;
                 }
                 else if (parseEnum.Current == 'i')
@@ -148,7 +149,11 @@ namespace Ast
                     resultType = NumberType.Complex;
                     break;
                 }
-            }
+                else
+                {
+                    break;
+                }
+            } while (parseEnum.MoveNext());
 
             switch (resultType)
             {
@@ -162,6 +167,7 @@ namespace Ast
                     result = new Complex();
                     break;
                 default:
+                    //Should never happen
                     result = new Expression();
                     break;
             }
