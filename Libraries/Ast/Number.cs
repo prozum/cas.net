@@ -10,7 +10,7 @@ namespace Ast
 	{
 		public int value;
 
-		public Integer(decimal val)
+		public Integer(int val)
 		{
 		}
 	}

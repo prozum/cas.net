@@ -22,11 +22,6 @@ namespace Ast
 
 	public class Add : Operator
 	{
-		public Add()
-		{
-
-		}
-
 		public override Expression Evaluate (Expression a, Expression b)
 		{
 			throw new NotImplementedException ();
@@ -37,7 +32,45 @@ namespace Ast
 	{
 		public override Expression Evaluate (Expression a, Expression b)
 		{
-			throw new NotImplementedException ();
+			if (a is Integer && b is Integer) {
+				return new Integer((a as Integer).value - (b as Integer).value);
+			}
+
+			if (a is Integer && b is Rational) {
+				return new Sub().Evaluate (new Rational((a as Integer), new Integer(1)), b);
+			}
+
+			if (a is Rational && b is Integer) {
+				return new Sub().Evaluate(a, new Rational((b as Integer), new Integer(1)));
+			}
+
+
+			if (a is Rational && b is Rational) {
+				return null;
+			}
+
+
+			if (a is Integer && b is Irrational) {
+				return new Irrational((a as Integer).value - (b as Irrational).value);
+			}
+
+			if (a is Irrational && b is Integer) {
+				return new Irrational((a as Irrational).value - (b as Integer).value);
+			}
+
+			if (a is Irrational && b is Irrational) {
+				return new Irrational((a as Irrational).value - (b as Irrational).value);
+			}
+
+			if (a is Irrational && b is Rational) {
+				return new Irrational((a as Irrational).value - (b as Rational).value.value);
+			}
+
+			if (a is Rational && b is Irrational) {
+				return new Irrational((a as Rational).value.value - (b as Irrational).value);
+			}
+
+			return null;
 		}
 	}
 
@@ -45,7 +78,44 @@ namespace Ast
 	{
 		public override Expression Evaluate (Expression a, Expression b)
 		{
-			throw new NotImplementedException ();
+			if (a is Integer && b is Integer) {
+				return new Integer((a as Integer).value * (b as Integer).value);
+			}
+
+			if (a is Integer && b is Rational) {
+				return new Mul().Evaluate (new Rational ((a as Integer), new Integer(1)), b);
+			}
+
+			if (a is Rational && b is Integer) {
+				return new Mul().Evaluate(a, new Rational((b as Integer), new Integer(1)));
+			}
+
+			if (a is Rational && b is Rational) {
+				return new Rational(((Integer)new Mul().Evaluate((a as Rational).numerator, (b as Rational).numerator)),
+									((Integer)new Mul().Evaluate((a as Rational).denominator, (b as Rational).denominator)));
+			}
+
+			if (a is Integer && b is Irrational) {
+				return new Irrational((a as Integer).value * (b as Irrational).value);
+			}
+
+			if (a is Irrational && b is Integer) {
+				return new Irrational((a as Irrational).value * (b as Integer).value);
+			}
+
+			if (a is Irrational && b is Irrational) {
+				return new Irrational((a as Irrational).value * (b as Irrational).value);
+			}
+
+			if (a is Irrational && b is Rational) {
+				return new Irrational((a as Irrational).value * (b as Rational).value.value);
+			}
+
+			if (a is Rational && b is Irrational) {
+				return new Irrational((a as Rational).value.value * (b as Irrational).value);
+			}
+
+			return null;
 		}
 	}
 
@@ -56,45 +126,42 @@ namespace Ast
 		public override Expression Evaluate (Expression a, Expression b)
 		{
 			if (a is Integer && b is Integer) {
-				return new Rational(a, b);
+				return new Rational((a as Integer), (b as Integer));
 			}
 
 			if (a is Integer && b is Rational) {
-				return new Div().Evaluate(new Rational(((Integer)a).value, 1), b);
+				return new Div().Evaluate(new Rational((a as Integer), new Integer(1)), b);
 			}
 
 			if (a is Rational && b is Integer) {
-				return new Div().Evaluate(new Rational(b, ((Integer)b).value, 1));
+				return new Div().Evaluate(a, new Rational((b as Integer), new Integer(1)));
 			}
 
 			if (a is Rational && b is Rational) {
-				return new Mul(new Rational(((Rational)a).numerator.value, ((Rational)a).denominator.value), b);
+				return new Mul().Evaluate(new Rational((a as Rational).denominator, (a as Rational).numerator), b);
 			}
 
-			if (a is Integer && b is Irrational)
-			{
-				return new Irrational(((Integer)a).value / ((Irrational)b).value);
+			if (a is Integer && b is Irrational) {
+				return new Irrational((a as Integer).value / (b as Irrational).value);
 			}
 
-			if (a is Irrational && b is Integer)
-			{
-				return new Irrational(((Irrational)a).value / ((Integer)b).value);
+			if (a is Irrational && b is Integer) {
+				return new Irrational((a as Irrational).value / (b as Integer).value);
 			}
 
-			if (a is Irrational && b is Irrational)
-			{
-				return new Irrational(((Irrational)a).value / ((Irrational)b).value);
+			if (a is Irrational && b is Irrational) {
+				return new Irrational((a as Irrational).value / (b as Irrational).value);
 			}
 
-			if (a is Irrational && b is Rational)
-			{
-				return new Irrational(((Irrational)a).value / ((Rational)b).value);
+			if (a is Irrational && b is Rational) {
+				return new Irrational((a as Irrational).value / (b as Rational).value.value);
 			}
 
-			if (a is Rational && b is Irrational)
-			{
-				return new Irrational(((Rational)a).value / ((Irrational)b).value);
+			if (a is Rational && b is Irrational) {
+				return new Irrational((a as Rational).value.value / (b as Irrational).value);
 			}
+
+			return null;
 		}
 	}
 
