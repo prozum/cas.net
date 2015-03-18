@@ -141,7 +141,7 @@ namespace Ast
 
             do
             {
-                if (char.IsDigit(parseEnum.Current))
+				if (char.IsDigit(parseEnum.Current))
                 {
                     number += parseEnum.Current;
                 }
@@ -170,7 +170,7 @@ namespace Ast
             switch (resultType)
             {
                 case NumberType.Integer:
-                    result = new Integer(int.Parse(number));
+					result = new Integer(int.Parse(number));
                     break;
                 case NumberType.Irrational:
                     result = new Irrational(decimal.Parse(number));

@@ -12,6 +12,7 @@ namespace Ast
 
 		public Integer(int val)
 		{
+            value = val;
 		}
 	}
 
@@ -25,7 +26,7 @@ namespace Ast
 		{
 			numerator = num;
 			denominator = denom;
-			value = new Irrational(num.value / denom.value);
+			//value = new Irrational(numerator.value / denominator.value);
 		}
 
 		public void Reduce(Integer num, Integer denom)
