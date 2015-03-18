@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 
 namespace Geometry
 {
@@ -12,32 +12,49 @@ namespace Geometry
 			else if ( hyp > 0) {
 				if (kat_1>1){
 					return Math.Sqrt (Math.Pow (hyp, 2) - Math.Pow (kat_1, 2));
-				}
-				else {
+				} else {
 					return Math.Sqrt (Math.Pow (hyp, 2) - Math.Pow (kat_2, 2));
 				}
-			}
-			else {
+			} else {
 				return 0;
 			}
 		}
-		// Trigonometri, find vinkler ud fra sidelængder
-		public static double Trigono(char whichSide, double a, double b, double c) {
-			if (whichSide == 'A') {
-				if (a != 0 && c != 0) {
-					return Math.Asin(Math.Sin (a / c));
-				} else if (b != 0 && c != 0) {
-					return Math.Cosh(Math.Cos (b / c));
+		public static double Area(double a, double b, double c, double A, double B, double C)
+		{
+			if (Verify (a, b, c)) {
+				if (a != 0 && b != 0 && C != 0) {
+					return 0.5 * a * b * Math.Sin (C);
+				} else if (b != 0 && c != 0 && A != 0) {
+					return 0.5 * b * c * Math.Sin (A);
+				} else if (a != 0 && c != 0 && B != 0) {
+					return 0.5 * a * c * Math.Sin (B);
 				} else {
 					return 0;
 				}
-
-			} else if (whichSide == 'B') {
-				//hyp/kateta
-				return 0;
-			} else if (whichSide == 'C') {
-				return 0;
 			} else {
+				return 0;
+			}
+		}
+		//Check if valid triangle
+		public static bool Verify(double a, double b, double c) {
+			if (a + b > c || a + c > b || b + c > a) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		// Trigonometri, find alle vinkler ud fra alle sidelængder
+		public static double Angles(double a, double b, double c) {
+			if (Verify(a,b,c)) {
+				return Math.Asin(( Math.Pow(b,2) + Math.Pow(c,2) - Math.Pow(a,2) ) / ( 2*b*c ));
+				//return Math.Asin(( Math.Pow(a,2) + Math.Pow(c,2) - Math.Pow(b,2) ) / ( 2*a*c ));
+				//return Math.Asin(( Math.Pow(a,2) + Math.Pow(b,2) - Math.Pow(c,2) ) / ( 2*a*b ));
+				//cos B = ( a^2 + c^2 - b^2 ) / ( 2 ac )
+
+				//cos C = ( a^2 + b^2 - c^2 ) / ( 2 ab )
+			}
+			else {
 				return 0;
 			}
 		}
