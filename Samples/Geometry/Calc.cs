@@ -30,6 +30,12 @@ namespace Geometry
 			//
 			double side;
 			if (select == 1) {
+
+				if (B > 0) {
+				
+				} else if (C > 0) {
+
+				}
 				side = Math.Asin((b / Math.Sin (B)) * Math.Sin (A));
 				return side;
 			} else if (select == 2) {
