@@ -4,21 +4,39 @@ namespace Geometry
 {
 	public class Triangle
 	{
+		//[RETVINKLET] Har to sider, find sidste side
 		public static double Pythagoras(double kat_1, double kat_2, double hyp)
 		{
-			if (kat_1 > 0 && kat_2 > 0) {
-				return Math.Sqrt (Math.Pow (kat_1, 2) + Math.Pow (kat_2, 2));
-			}
-			else if ( hyp > 0) {
-				if (kat_1>1){
-					return Math.Sqrt (Math.Pow (hyp, 2) - Math.Pow (kat_1, 2));
+			if (Verify (kat_1, kat_2, hyp)) {
+				if (kat_1 > 0 && kat_2 > 0) {
+					return Math.Sqrt (Math.Pow (kat_1, 2) + Math.Pow (kat_2, 2));
+				} else if (hyp > 0) {
+					if (kat_1 > 1) {
+						return Math.Sqrt (Math.Pow (hyp, 2) - Math.Pow (kat_1, 2));
+					} else {
+						return Math.Sqrt (Math.Pow (hyp, 2) - Math.Pow (kat_2, 2));
+					}
 				} else {
-					return Math.Sqrt (Math.Pow (hyp, 2) - Math.Pow (kat_2, 2));
+					return 0;
 				}
 			} else {
 				return 0;
 			}
 		}
+		// [RETVINKLET] Trigonometri, find alle vinkler ud fra alle sidelængder
+		public static double[] Angles(double a, double b, double c) {
+			if (Verify(a,b,c)) {
+				double[] angles = new double[3];
+				angles[0] = (180/Math.PI)*Math.Acos(( Math.Pow(b,2) + Math.Pow(c,2) - Math.Pow(a,2) ) / ( 2*b*c ));
+				angles[1] = (180/Math.PI)*Math.Acos(( Math.Pow(a,2) + Math.Pow(c,2) - Math.Pow(b,2) ) / ( 2*a*c ));
+				angles[2] = (180/Math.PI)*Math.Acos(( Math.Pow(a,2) + Math.Pow(b,2) - Math.Pow(c,2) ) / ( 2*a*b ));
+				return angles;
+			}
+			else {
+				return null;
+			}
+		}
+		//Have alle sider, find areal
 		public static double Area(double a, double b, double c, double A, double B, double C)
 		{
 			if (Verify (a, b, c)) {
@@ -43,20 +61,6 @@ namespace Geometry
 				return false;
 			}
 		}
-
-		// Trigonometri, find alle vinkler ud fra alle sidelængder
-		public static double Angles(double a, double b, double c) {
-			if (Verify(a,b,c)) {
-				return Math.Asin(( Math.Pow(b,2) + Math.Pow(c,2) - Math.Pow(a,2) ) / ( 2*b*c ));
-				//return Math.Asin(( Math.Pow(a,2) + Math.Pow(c,2) - Math.Pow(b,2) ) / ( 2*a*c ));
-				//return Math.Asin(( Math.Pow(a,2) + Math.Pow(b,2) - Math.Pow(c,2) ) / ( 2*a*b ));
-				//cos B = ( a^2 + c^2 - b^2 ) / ( 2 ac )
-
-				//cos C = ( a^2 + b^2 - c^2 ) / ( 2 ab )
-			}
-			else {
-				return 0;
-			}
-		}
+			
 	}
 }
