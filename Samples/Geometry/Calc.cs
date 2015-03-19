@@ -23,7 +23,29 @@ namespace Geometry
 				return 0;
 			}
 		}
-		// [RETVINKLET] Trigonometri, find alle vinkler ud fra alle sidelængder
+
+		//To vinkler og en længde eller vice versa.For at finde side.
+		public static double SineRelation(int select, double a, double b, double c, double A, double B, double C)
+		{
+			//
+			double side;
+			if (select == 1) {
+				side = Math.Asin((b / Math.Sin (B)) * Math.Sin (A));
+				return side;
+			} else if (select == 2) {
+				side = Math.Asin((a / Math.Sin (A)) * Math.Sin (B));
+				return side;
+			} else if (select == 3) {
+				side = (a*Math.Sin(C)) / Math.Sin (A);
+				return side;
+			} else {
+				return 0;
+			}
+
+
+		}
+
+		// Trigonometri, have alle sidelængder, find alle vinkler.
 		public static double[] Angles(double a, double b, double c) {
 			if (Verify(a,b,c)) {
 				double[] angles = new double[3];
@@ -31,12 +53,11 @@ namespace Geometry
 				angles[1] = (180/Math.PI)*Math.Acos(( Math.Pow(a,2) + Math.Pow(c,2) - Math.Pow(b,2) ) / ( 2*a*c ));
 				angles[2] = (180/Math.PI)*Math.Acos(( Math.Pow(a,2) + Math.Pow(b,2) - Math.Pow(c,2) ) / ( 2*a*b ));
 				return angles;
-			}
-			else {
+			} else {
 				return null;
 			}
 		}
-		//Have alle sider, find areal
+		//Have alle sider, find areal.
 		public static double Area(double a, double b, double c, double A, double B, double C)
 		{
 			if (Verify (a, b, c)) {
