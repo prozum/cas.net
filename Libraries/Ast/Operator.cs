@@ -46,9 +46,11 @@ namespace Ast
 
 
 			if (a is Rational && b is Rational) {
-				return null;
+				(a as Rational).numerator.value *= (b as Rational).denominator.value;
+				(b as Rational).numerator.value *= (a as Rational).denominator.value;
+				return new Rational((new Sub().Evaluate((a as Rational).numerator, (b as Rational).numerator) as Integer),
+									(new Mul().Evaluate((b as Rational).denominator, (a as Rational).denominator)) as Integer);
 			}
-
 
 			if (a is Integer && b is Irrational) {
 				return new Irrational((a as Integer).value - (b as Irrational).value);
@@ -121,8 +123,6 @@ namespace Ast
 
 	public class Div : Operator
 	{
-
-		/* fix errors */
 		public override Expression Evaluate (Expression a, Expression b)
 		{
 			if (a is Integer && b is Integer) {
