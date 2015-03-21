@@ -7,7 +7,7 @@ namespace Ast
 {
 	public static class Parser
 	{
-	    static readonly char[] opValidChars = { '=', '<', '>', '+', '-', '*', '/' };
+	    static readonly char[] opValidChars = { '=', '<', '>', '+', '-', '*', '/', '^' };
 
         public static Expression Parse(string parseString)
         {
@@ -243,6 +243,8 @@ namespace Ast
 				return new Mul ();
 			case "/":
 				return new Div ();
+			case "^":
+				return new Exp ();
 			default:
 				throw new NotImplementedException ();
 			}
