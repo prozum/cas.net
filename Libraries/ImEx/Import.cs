@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 //using Ast;
 
@@ -27,10 +28,10 @@ namespace ImEx
 		}
 
 		// This is a test purpose only object
-		public static Person ReadPersonFromFile (string FileName, string FileDestination)
+		public static List<Person> ReadPersonFromFile (string FileName, string FileDestination)
 		{
 			string s = OpenFileToString (FileName + ".cas", FileDestination);
-			Person DeserializedPerson = JsonConvert.DeserializeObject<Person> (s);
+			List<Person> DeserializedPerson = JsonConvert.DeserializeObject<List<Person>> (s);
 			return DeserializedPerson;
 		}
 	}
@@ -56,7 +57,11 @@ namespace ImEx
 			this.Age = Age;
 		}
 
-
+		public string ToString ()
+		{
+			string s = FirstName + " " + LastName + " " + Age;
+			return s;
+		}
 	}
 }
 

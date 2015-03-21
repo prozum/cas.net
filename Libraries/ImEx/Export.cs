@@ -6,7 +6,7 @@ namespace ImEx
 {
 	public static class Export
 	{
-		public static void WriteToCasFile (Object ExportObject, string FileName, string FileDestination)
+		public static int WriteToCasFile (Object ExportObject, string FileName, string FileDestination)
 		{
 			string JsonFile = JsonConvert.SerializeObject (ExportObject);
 
@@ -16,11 +16,15 @@ namespace ImEx
 			// bool b = Validation.ValidatePerson (JsonFile);
 			// Console.WriteLine (b);
 
+			int CSum = Checksum.BSDChecksumFromFile (JsonFile);
+
 			File.WriteAllText (FileName + ".cas", JsonFile);
 
 			#if DEBUG
 			Console.WriteLine ("Writing to file \"" + FileName + ".cas\": " + JsonFile);
 			#endif
+
+			return CSum;
 		}
 	}
 }
