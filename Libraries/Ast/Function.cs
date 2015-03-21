@@ -13,6 +13,18 @@ namespace Ast
 			this.identifier = identifier;
 			this.args = args;
 		}
+
+		public override string ToString ()
+		{
+			string str = identifier + '(';
+
+			foreach (Expression arg in args) {
+
+				str += arg.ToString ();
+			}
+
+			return str + ')';
+		}
 	}
 }
 

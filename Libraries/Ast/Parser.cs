@@ -1,71 +1,84 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Ast
 {
 	public static class Parser
 	{
-		private static Dictionary<string,int> predence = new Dictionary<string, int>
+		private static Dictionary<string,int> opPredence = new Dictionary<string, int>
 		{
+			{"=",0},
+			{"<",0},
+			{">",0},
 			{"+",10},
 			{"-",10},
 			{"*",20},
 			{"/",20}
 		};
 
+		static char[] opValidChars = { '=', '<', '>', '+', '-', '*', '/' };
+
         public static Expression Parse(string parseString)
         {
-            var exs = new List<Expression> ();
-            var ops = new List<Operator> (); 
+			var exs = new Stack<Expression> ();
+			var ops = new Stack<Operator> (); 
 
-            var parseEnum = parseString.GetEnumerator ();
+			var parseReader = new StringReader (parseString);
 
-            while (parseEnum.MoveNext()) {
+			int curChar;
+
+			while ((curChar = parseReader.Peek()) != -1) {
 
                 // Skip whitespace
-                while (char.IsWhiteSpace (parseEnum.Current) || parseEnum.Current.Equals(";")) {
+				while (char.IsWhiteSpace ((char)curChar)) {
 
-                    parseEnum.MoveNext ();
+                    parseReader.Read();
                 }
 
-                if (char.IsLetter (parseEnum.Current)) {
+				if (char.IsLetter ((char)curChar)) {
 
-                    exs.Add(ParseIdentifier (parseEnum));
+					exs.Push (ParseIdentifier (parseReader));
 
-                }
+				} else if (char.IsDigit ((char)curChar)) {
 
-                if (char.IsDigit(parseEnum.Current)) {
+					exs.Push (ParseNumber (parseReader));
 
-                    exs.Add(ParseNumber (parseEnum));
+				} else if (curChar.Equals ('(')) {
 				
-                }
+					exs.Push (Parse (ExtractSubstring (parseReader))); 
 
-                if (parseEnum.Current.Equals("(")) {
-				
-                    exs.Add(ParseParenthese (parseEnum));
-                }
+				} else if (opValidChars.Contains ((char)curChar)) {
+
+					ops.Push (ParseOperator (parseReader));
+
+				} else {
+
+					throw new NotImplementedException ();
+				}
             }
 
-            //return CreateAst (exs, ops);
-			return new Expression ();
+            return CreateAst (exs, ops);
+			//return new Expression ();
         }
 
-		public static string ExtractSubstring(CharEnumerator parseEnum)
+		private static string ExtractSubstring(StringReader parseReader)
 		{
 			string substring = null;
 
 			int parentEnd = 0;
 			int parentStart = 0;
 
-		    if (parseEnum.Current.Equals('('))
+			if (((char)parseReader.Peek()).Equals('('))
 		    {
-                parseEnum.MoveNext();
+                parseReader.Read();
 
-                while (!parseEnum.Current.Equals(')') && (parentStart == parentEnd))
+				while (!((char)parseReader.Peek()).Equals(')') && (parentStart == parentEnd))
                 {
-                    substring += parseEnum.Current;
+					substring += (char)parseReader.Peek();
                     
-                    switch (parseEnum.Current)
+					switch ((char)parseReader.Peek())
                     {
                         case '(':
                             parentStart++;
@@ -75,40 +88,82 @@ namespace Ast
                             break;
                     }
 
-                    parseEnum.MoveNext();
+                    parseReader.Read();
                 }
 
-		// Eat ')'
-                parseEnum.MoveNext();
+				// Eat ')'
+                parseReader.Read();
 
             }
 		    
 			return substring;
 		}
 
-        private static Expression ParseParenthese (CharEnumerator parseEnum)
+        private static Expression CreateAst(Stack<Expression> exs, Stack<Operator> ops)
         {
-			return Parse(ExtractSubstring (parseEnum));  
+			Expression right;
+			Operator curOp = null, nextOp;
+
+			right = exs.Pop ();
+
+			while (ops.Count > 0 ) {
+
+				curOp = ops.Pop ();
+				curOp.right = right;
+
+				if (ops.Count > 0) {
+
+					nextOp = ops.Peek ();
+
+					if (curOp.priority > nextOp.priority) {
+
+						curOp.left = exs.Pop ();
+						curOp.parent = nextOp;
+						right = curOp;
+
+					} else {
+
+						curOp.left = nextOp;
+						nextOp.parent = curOp;
+						right = exs.Pop ();
+					}
+
+				} else {
+
+					curOp.left = exs.Pop ();
+				}
+
+			}
+
+			//for (int i = 1; i <= ops.Count; i++) {
+
+				//ops[i].lef
+				//if (i == ops.Count) {
+				//	exs.
+				//}
+			while (curOp.parent != null) {
+
+				curOp = (Operator)curOp.parent;
+			}
+
+			return curOp;
         }
 
-        //private static Expression CreateAst(List<Expression> exs, List<Operator> ops)
-        //{
-        //    return exs [0];
-        //}
-
-        private static Expression ParseIdentifier(CharEnumerator parseEnum)
+		private static Expression ParseIdentifier(StringReader parseReader)
         {
-            string identifier = "";
+			string identifier = "";
+			char curChar;
 
-            while (char.IsLetterOrDigit (parseEnum.Current)) {
+			while ((curChar = (char)parseReader.Peek()) != -1 && char.IsLetterOrDigit (curChar)) {
 
-                identifier += parseEnum.Current;
-                parseEnum.MoveNext ();
+				//int test = curChar;
+				identifier += curChar;
+				parseReader.Read ();
             }
 
-            if (parseEnum.Current.Equals("(")) {
+			if (curChar == '(') {
 
-                return ParseFunction (identifier, parseEnum);
+                return ParseFunction (identifier, parseReader);
 
             } else {
 
@@ -117,11 +172,11 @@ namespace Ast
             }
         }
 
-		private static Expression ParseFunction(string identifier, CharEnumerator parseEnum)
+		private static Expression ParseFunction(string identifier, StringReader parseReader)
 		{
 			var args = new List<Expression> ();
 
-			var argString = ExtractSubstring (parseEnum);
+			var argString = ExtractSubstring (parseReader);
 			var argList = argString.Split (',');
 
 			foreach (string arg in argList) {
@@ -133,7 +188,7 @@ namespace Ast
 
         enum NumberType { Integer, Rational, Irrational, Complex };
 
-		public static Expression ParseNumber(CharEnumerator parseEnum)
+		private static Expression ParseNumber(StringReader parseReader)
 		{
             NumberType resultType = NumberType.Integer;
             Expression result;
@@ -141,11 +196,11 @@ namespace Ast
 
             do
             {
-                if (char.IsDigit(parseEnum.Current))
+				if (char.IsDigit((char)parseReader.Peek()))
                 {
-                    number += parseEnum.Current;
+					number += (char)parseReader.Read();
                 }
-                else if (parseEnum.Current == '.')
+				else if ((char)parseReader.Peek() == '.')
                 {
                     //More than one dot. Error!
                     if (resultType == NumberType.Irrational)
@@ -153,10 +208,10 @@ namespace Ast
                         return null;
                     }
 
-                    number += parseEnum.Current;
+					number += (char)parseReader.Read();
                     resultType = NumberType.Irrational;
                 }
-                else if (parseEnum.Current == 'i')
+				else if ((char)parseReader.Peek() == 'i')
                 {
                     resultType = NumberType.Complex;
                     break;
@@ -165,26 +220,51 @@ namespace Ast
                 {
                     break;
                 }
-            } while (parseEnum.MoveNext());
+			} while (parseReader.Peek() != -1);
 
             switch (resultType)
             {
                 case NumberType.Integer:
-                    result = new Integer(int.Parse(number));
-                    break;
+                    return new Integer(int.Parse(number));
                 case NumberType.Irrational:
-                    result = new Irrational(decimal.Parse(number));
-                    break;
+					return new Irrational(decimal.Parse(number));
                 case NumberType.Complex:
-                    result = new Complex();
-                    break;
+                    return new Complex();
                 default:
-                    //Should never happen
-                    result = new Expression();
-                    break;
+					throw new NotImplementedException ();
             }
+		}
 
-            return result;
+        enum OperatorType { Equal, LesserThan, GreaterThan, Plus, Minus, Mul, Div };
+
+		private static Operator ParseOperator(StringReader parseReader)
+		{
+			string op = ((char)parseReader.Read()).ToString();
+
+			if (opValidChars.Contains((char)parseReader.Peek())) {
+
+				op += (char)parseReader.Read();
+			}
+				
+			switch (op)
+			{
+			case "=":
+				return new Equal ();
+			case "<":
+				return new Lesser ();
+			case ">":
+				return new Greater ();
+			case "+":
+				return new Add ();
+			case "-":
+				return new Sub ();
+			case "*":
+				return new Mul ();
+			case "/":
+				return new Div ();
+			default:
+				throw new NotImplementedException ();
+			}
 		}
 	}
 }
