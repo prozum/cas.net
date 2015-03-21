@@ -1,11 +1,27 @@
 ﻿using System;
 using System.IO;
 using Newtonsoft.Json;
+using System.Security.Cryptography;
 
 namespace ImEx
 {
 	public static class Export
 	{
+
+		public static void WriteToCasFile (string ExportString, string FileName, string FileDestination)
+		{
+
+			File.WriteAllText (FileName + ".cas", ExportString);
+
+		}
+
+		public static string Serialize (Object ExportObject)
+		{
+			string JsonString = JsonConvert.SerializeObject (ExportObject);
+
+			return JsonString;
+		}
+		/*
 		public static int WriteToCasFile (Object ExportObject, string FileName, string FileDestination)
 		{
 			string JsonFile = JsonConvert.SerializeObject (ExportObject);
@@ -26,6 +42,7 @@ namespace ImEx
 
 			return CSum;
 		}
+		*/
 	}
 }
 
