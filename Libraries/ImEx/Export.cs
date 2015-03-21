@@ -13,8 +13,8 @@ namespace ImEx
 			JsonSerializer serializer = new JsonSerializer ();
 			serializer.NullValueHandling = NullValueHandling.Ignore;
 
-			bool b = Validation.ValidatePerson (JsonFile);
-			Console.WriteLine (b);
+			// bool b = Validation.ValidatePerson (JsonFile);
+			// Console.WriteLine (b);
 
 			File.WriteAllText (FileName + ".cas", JsonFile);
 
