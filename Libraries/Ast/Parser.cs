@@ -7,18 +7,7 @@ namespace Ast
 {
 	public static class Parser
 	{
-		private static Dictionary<string,int> opPredence = new Dictionary<string, int>
-		{
-			{"=",0},
-			{"<",0},
-			{">",0},
-			{"+",10},
-			{"-",10},
-			{"*",20},
-			{"/",20}
-		};
-
-		static char[] opValidChars = { '=', '<', '>', '+', '-', '*', '/' };
+	    static readonly char[] opValidChars = { '=', '<', '>', '+', '-', '*', '/' };
 
         public static Expression Parse(string parseString)
         {
@@ -60,7 +49,6 @@ namespace Ast
             }
 
             return CreateAst (exs, ops);
-			//return new Expression ();
         }
 
 		private static string ExtractSubstring(StringReader parseReader)
@@ -135,12 +123,6 @@ namespace Ast
 
 			}
 
-			//for (int i = 1; i <= ops.Count; i++) {
-
-				//ops[i].lef
-				//if (i == ops.Count) {
-				//	exs.
-				//}
 			while (curOp.parent != null) {
 
 				curOp = (Operator)curOp.parent;
@@ -152,16 +134,16 @@ namespace Ast
 		private static Expression ParseIdentifier(StringReader parseReader)
         {
 			string identifier = "";
-			char curChar;
+			int curChar;
 
-			while ((curChar = (char)parseReader.Peek()) != -1 && char.IsLetterOrDigit (curChar)) {
+			while ((curChar = parseReader.Peek()) != -1 && char.IsLetterOrDigit ((char)curChar)) {
 
 				//int test = curChar;
-				identifier += curChar;
+				identifier += (char)curChar;
 				parseReader.Read ();
             }
 
-			if (curChar == '(') {
+			if ((char)curChar == '(') {
 
                 return ParseFunction (identifier, parseReader);
 
@@ -191,7 +173,6 @@ namespace Ast
 		private static Expression ParseNumber(StringReader parseReader)
 		{
             NumberType resultType = NumberType.Integer;
-            Expression result;
 			string number = "";
 
             do

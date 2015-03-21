@@ -239,15 +239,6 @@ namespace Ast
 
 	public class Exp : Operator
 	{
-		public override Expression Evaluate (Expression a, Expression b)
-		{
-			throw new NotImplementedException ();
-
-		}
-	}
-
-	public class Exp : Operator
-	{
 		public Exp()
 		{
 			symbol = "^";
