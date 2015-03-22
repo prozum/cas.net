@@ -1,50 +1,59 @@
 ﻿using System;
-using System.IO;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace ImEx
 {
 	public static class Checksum
 	{
 		// BSD checksum algotithm, rewritten for C#
-		public static int BSDChecksumFromFile (string s)
+		// Computes 16 bit checksum
+		public static int GetBSDChecksum (string checksumString)
 		{
-			int Checksum = 0;
+			int checksum = 0;
 
-			foreach (char c in s) {
-				Checksum = (Checksum >> 1) + ((Checksum & 1) << 15);
-				Checksum += c;
-				Checksum &= 0xffff;
+			foreach (char c in checksumString) {
+				checksum = (checksum >> 1) + ((checksum & 1) << 15);
+				checksum += c;
+				checksum &= 0xffff;
 			}
-
-			return Checksum;
+			return checksum;
 		}
 
-		public static string GetMd5Hash (MD5 md5Hash, string s)
+		// Generates a 128 bit (16 byte) hash in hexadecimal form
+		public static string GetMd5Hash (MD5 md5Hash, string hashableString)
 		{
-			byte[] data = md5Hash.ComputeHash (System.Text.Encoding.UTF8.GetBytes (s));
+			byte[] data = md5Hash.ComputeHash (Encoding.UTF8.GetBytes (hashableString));
 
-			System.Text.StringBuilder SBuileder = new System.Text.StringBuilder ();
+			StringBuilder sBuileder = new StringBuilder ();
 
 			for (int i = 0; i < data.Length; i++) {
-				SBuileder.Append (data [i].ToString ("x2"));
+				sBuileder.Append (data [i].ToString ("x2"));
 			}
-
-			return SBuileder.ToString ();
+			return sBuileder.ToString ();
 		}
 
-		public static bool VerifyMd5Hash (MD5 md5Hash, string s, string hash)
+		// Takes two strings, generates their MD5 hashes, and compare them.
+		// Returns true if they are identical
+		public static bool VerifyMd5String (MD5 md5Hash, string verStringA, string verStringB)
 		{
-			string HashOfInput = GetMd5Hash (md5Hash, s);
+			string hashOfVerStringA = GetMd5Hash (md5Hash, verStringA);
+			string hashOfVerStringB = GetMd5Hash (md5Hash, verStringB);
 
 			StringComparer comparer = StringComparer.OrdinalIgnoreCase;
 
-			if (0 == comparer.Compare (HashOfInput, hash)) {
-				return true;
-			} else {
-				return false;
-			}
+			return 0 == comparer.Compare (hashOfVerStringA, hashOfVerStringB);
 		}
+
+		// Takes two MD5 hashes, and compare them.
+		// Returns true if they are identical
+		public static bool VerifyMd5Hash (MD5 md5Hash, string verHashA, string verHashB)
+		{
+			StringComparer comparer = StringComparer.OrdinalIgnoreCase;
+
+			return 0 == comparer.Compare (verHashA, verHashB);
+		}
+
 	}
 }
 

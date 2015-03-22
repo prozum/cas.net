@@ -1,48 +1,23 @@
 ﻿using System;
 using System.IO;
 using Newtonsoft.Json;
-using System.Security.Cryptography;
 
 namespace ImEx
 {
 	public static class Export
 	{
-
-		public static void WriteToCasFile (string ExportString, string FileName, string FileDestination)
+		// Writes an string to disk
+		// Currently doesnt have support for destination
+		public static void WriteToCasFile (string exportString, string fileName, string fileDestination)
 		{
-
-			File.WriteAllText (FileName + ".cas", ExportString);
-
+			File.WriteAllText (fileName + ".cas", exportString);
 		}
 
-		public static string Serialize (Object ExportObject)
+		// Takes a string, and serialize it as Json.
+		public static string Serialize (Object serializeObject)
 		{
-			string JsonString = JsonConvert.SerializeObject (ExportObject);
-
-			return JsonString;
+			return JsonConvert.SerializeObject (serializeObject);
 		}
-		/*
-		public static int WriteToCasFile (Object ExportObject, string FileName, string FileDestination)
-		{
-			string JsonFile = JsonConvert.SerializeObject (ExportObject);
-
-			JsonSerializer serializer = new JsonSerializer ();
-			serializer.NullValueHandling = NullValueHandling.Ignore;
-
-			// bool b = Validation.ValidatePerson (JsonFile);
-			// Console.WriteLine (b);
-
-			int CSum = Checksum.BSDChecksumFromFile (JsonFile);
-
-			File.WriteAllText (FileName + ".cas", JsonFile);
-
-			#if DEBUG
-			Console.WriteLine ("Writing to file \"" + FileName + ".cas\": " + JsonFile);
-			#endif
-
-			return CSum;
-		}
-		*/
 	}
 }
 

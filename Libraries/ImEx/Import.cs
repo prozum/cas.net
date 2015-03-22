@@ -9,57 +9,29 @@ namespace ImEx
 {
 	public static class Import
 	{
-		public static Object ReadFromCasFile (string FileName, string FileDestination)
+		// Returns a deserialised string from file to object T
+		public static T ReadDeserializedFromCasFile<T> (string fileName, string fileDestination)
 		{
-			string s = OpenFileToString (FileName + ".cas", "");
-			Object deserializedObject = JsonConvert.DeserializeObject<Object> (s);
-			return deserializedObject;
+			string serializedString = OpenFileToString (fileName + ".cas", "");
+			T deserialisedObject = JsonConvert.DeserializeObject<T> (serializedString);
+			return deserialisedObject;
 		}
 
-		public static string OpenFileToString (string FileName, string FileDestination)
+		// Returns a serialized string. Useful for creating checksums.
+		public static string ReadSerializedFromCasFile (string fileName, string fileDestination)
+		{
+			return OpenFileToString (fileName + ".cas", "");
+		}
+
+		// Loads serialized filecontent into strings.
+		private static string OpenFileToString (string fileName, string fileDestination)
 		{
 			string s;
-			using (StreamReader sr = new StreamReader (FileName)) {
+			using (StreamReader sr = new StreamReader (fileName)) {
 				s = sr.ReadToEnd ();
 			}
 			// Catch exception in case file cant be read or doesn't exist.
 
-			return s;
-		}
-
-		// This is a test purpose only object
-		public static List<Person> ReadPersonFromFile (string FileName, string FileDestination)
-		{
-			string s = OpenFileToString (FileName + ".cas", FileDestination);
-			List<Person> DeserializedPerson = JsonConvert.DeserializeObject<List<Person>> (s);
-			return DeserializedPerson;
-		}
-	}
-
-	public class Person
-	{
-		public string FirstName { get; set; }
-
-		public string LastName { get; set; }
-
-		public int Age{ get; set; }
-
-
-		public Person ()
-		{
-
-		}
-
-		public Person (string FirstName, string LastName, int Age)
-		{
-			this.FirstName = FirstName;
-			this.LastName = LastName;
-			this.Age = Age;
-		}
-
-		public string ToString ()
-		{
-			string s = FirstName + " " + LastName + " " + Age;
 			return s;
 		}
 	}
