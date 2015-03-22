@@ -98,6 +98,7 @@ namespace Ast
 
 				curOp = ops.Pop ();
 				curOp.right = right;
+				right.parent = curOp;
 
 				if (ops.Count > 0) {
 

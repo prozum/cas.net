@@ -12,7 +12,7 @@ namespace Ast
 
 		public override string ToString()
 		{
-			if (parent != null && priority >= parent.priority) {
+			if (parent == null || priority >= parent.priority ) {
 
 				return left.ToString () + symbol + right.ToString ();
 			
