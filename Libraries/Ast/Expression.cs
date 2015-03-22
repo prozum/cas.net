@@ -4,15 +4,11 @@ using System.Text.RegularExpressions;
 
 namespace Ast
 {
-	public class Expression 
+	public abstract class Expression 
 	{
-		public bool Contains(Expression e)
-		{
-			if (e is Symbol) {
-				return true;
-			} else {
-				return false;
-			}
-		}
+		public Operator parent;
+		//public abstract Expression Evaluate (Expression a, Expression b);
+		//public abstract string ToString ();
+		//public abstract bool Contains (Expression a);
 	}
 }

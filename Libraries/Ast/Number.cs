@@ -10,9 +10,14 @@ namespace Ast
 	{
 		public int value;
 
-		public Integer(int val)
+		public Integer(int value)
 		{
-            value = val;
+			this.value = value;
+		}
+
+		public override string ToString()
+		{
+			return value.ToString ();
 		}
 	}
 
@@ -26,7 +31,12 @@ namespace Ast
 		{
 			numerator = num;
 			denominator = denom;
-			value = new Irrational(numerator.value / denominator.value);
+			value = new Irrational(num.value / denom.value);
+		}
+
+		public override string ToString()
+		{
+			return value.ToString ();
 		}
 
 		public void Reduce(Integer num, Integer denom)
@@ -44,9 +54,14 @@ namespace Ast
 	{
 		public decimal value;
 
-		public Irrational(decimal val)
+		public Irrational(decimal value)
 		{
-			value = val;
+			this.value = value;
+		}
+
+		public override string ToString()
+		{
+			return value.ToString ();
 		}
 	}
 
@@ -54,6 +69,11 @@ namespace Ast
 	{
 		public Number real;
 		public Number imag;
+
+		public override string ToString()
+		{
+			return real.ToString () + '+' + imag.ToString() + 'i';
+		}
 	}
 }
 

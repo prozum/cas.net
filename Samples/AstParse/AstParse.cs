@@ -5,7 +5,8 @@ class AstParse
 {
 	public static void Main (string[] args)
 	{
-		var exp = new Expression();
+		var exp = Ast.Parser.Parse ("x^(y-20)-earthmass");
+		Console.WriteLine (exp.ToString());
 	}
 }
 

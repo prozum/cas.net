@@ -2,16 +2,63 @@
 
 namespace Ast
 {
-	public abstract class Operator
+	public abstract class Operator : Expression
 	{
+		public string symbol;
+		public int priority;
+		public Expression left,right;
+
 		public abstract Expression Evaluate(Expression a, Expression b);
+
+		public override string ToString()
+		{
+			if (parent != null && priority >= parent.priority) {
+
+				return left.ToString () + symbol + right.ToString ();
+			
+			} else {
+
+				return '(' + left.ToString () + symbol + right.ToString () + ')';
+
+			}
+		}
 	}
 
-	public class Equals : Operator
+	public class Equal : Operator
 	{
-		public Equals()
+		public Equal()
 		{
+			symbol = "=";
+			priority = 0;
+		}
 
+		public override Expression Evaluate (Expression a, Expression b)
+		{
+			throw new NotImplementedException ();
+		}
+
+	}
+
+	public class Lesser : Operator
+	{
+		public Lesser()
+		{
+			symbol = "<";
+			priority = 0;
+		}
+
+		public override Expression Evaluate (Expression a, Expression b)
+		{
+			throw new NotImplementedException ();
+		}
+	}
+
+	public class Greater : Operator
+	{
+		public Greater()
+		{
+			symbol = ">";
+			priority = 0;
 		}
 
 		public override Expression Evaluate (Expression a, Expression b)
@@ -22,6 +69,12 @@ namespace Ast
 
 	public class Add : Operator
 	{
+		public Add()
+		{
+			symbol = "+";
+			priority = 10;
+		}
+
 		public override Expression Evaluate (Expression a, Expression b)
 		{
 			throw new NotImplementedException ();
@@ -30,6 +83,12 @@ namespace Ast
 
 	public class Sub : Operator
 	{
+		public Sub()
+		{
+			symbol = "-";
+			priority = 10;
+		}
+
 		public override Expression Evaluate (Expression a, Expression b)
 		{
 			if (a is Integer && b is Integer) {
@@ -78,6 +137,12 @@ namespace Ast
 
 	public class Mul : Operator
 	{
+		public Mul()
+		{
+			symbol = "*";
+			priority = 20;
+		}
+
 		public override Expression Evaluate (Expression a, Expression b)
 		{
 			if (a is Integer && b is Integer) {
@@ -123,6 +188,13 @@ namespace Ast
 
 	public class Div : Operator
 	{
+		public Div()
+		{
+			symbol = "/";
+			priority = 20;
+		}
+
+		/* fix errors */
 		public override Expression Evaluate (Expression a, Expression b)
 		{
 			if (a is Integer && b is Integer) {
@@ -167,26 +239,15 @@ namespace Ast
 
 	public class Exp : Operator
 	{
-		public override Expression Evaluate (Expression a, Expression b)
+		public Exp()
 		{
-			throw new NotImplementedException ();
+			symbol = "^";
+			priority = 30;
 		}
-	}
 
-	public class LesserThan : Operator
-	{
-		public override Expression Evaluate (Expression a, Expression b)
-		{
-			throw new NotImplementedException ();
-		}
-	}
-
-	public class GreaterThan : Operator
-	{
 		public override Expression Evaluate (Expression a, Expression b)
 		{
 			throw new NotImplementedException ();
 		}
 	}
 }
-

@@ -36,6 +36,7 @@
     <Compile Include="Import.cs" />
     <Compile Include="Export.cs" />
     <Compile Include="Validation.cs" />
+    <Compile Include="Checksum.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

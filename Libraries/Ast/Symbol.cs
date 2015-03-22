@@ -11,6 +11,11 @@ namespace Ast
 		{
 			symbol = sym;
 		}
+
+		public override string ToString()
+		{
+			return symbol;
+		}
 	}
 }
 
