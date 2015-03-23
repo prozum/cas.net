@@ -2,17 +2,20 @@
 using System.Net;
 using System.Text;
 using System.IO;
+using System.Collections.Generic;
+using System.Data.SQLite;
 
 namespace Account
 {
-	public class Server
+	public static class Server
 	{
-		public Server ()
-		{
-		}
-
+		string URI = "URI=file:"
+		SQLiteConnection conn = new SQLiteConnection();
+			
 		public static void StartListen(string prefixes, Func<HttpListenerRequest, string> method)
 		{
+			throw new NotImplementedException();
+			/*
 			if (prefixes == null || prefixes.Length == 0)
 			{
 				throw new ArgumentException("prefixes");
@@ -39,7 +42,10 @@ namespace Account
 
 			output.Close();
 			listener.Stop();
+			*/
 		}
+
+
 
 	}
 }
