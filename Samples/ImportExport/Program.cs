@@ -38,7 +38,7 @@ namespace ImportExport
 					Checksum.GetBSDChecksum (
 						Import.ReadSerializedFromCasFile ("person2", ""))));
 
-			Console.WriteLine ("\n\nMD5:");
+			Console.WriteLine ("\nMD5:");
 			Console.WriteLine ("person == person");
 
 			// Valudate using MD5 hash
