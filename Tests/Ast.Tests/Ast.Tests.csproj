@@ -3,10 +3,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{DA661BA6-F57E-4821-8994-F5AC7C317B7F}</ProjectGuid>
+    <ProjectGuid>{3E0FBD2D-3E67-45BE-BCB0-B6B298718749}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>ParseNumber</RootNamespace>
-    <AssemblyName>ParseNumber</AssemblyName>
+    <RootNamespace>ExtractSubstring</RootNamespace>
+    <AssemblyName>ExtractSubstring</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -29,19 +29,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="nunit.framework">
-      <HintPath>..\..\..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
+      <HintPath>..\..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Test.cs" />
+    <Compile Include="Ast.Tests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Libraries\Ast\Ast.csproj">
+    <ProjectReference Include="..\..\Libraries\Ast\Ast.csproj">
       <Project>{82C03E10-075F-411C-A1F1-D5506C62BE1C}</Project>
       <Name>Ast</Name>
     </ProjectReference>

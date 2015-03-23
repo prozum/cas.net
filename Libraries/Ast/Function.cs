@@ -18,9 +18,14 @@ namespace Ast
 		{
 			string str = identifier + '(';
 
-			foreach (Expression arg in args) {
+			for (int i = 0; i < args.Count; i++) {
 
-				str += arg.ToString ();
+				str += args[i].ToString ();
+
+				if (i < args.Count - 1) {
+
+					str += ',';
+				}
 			}
 
 			return str + ')';

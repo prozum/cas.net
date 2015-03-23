@@ -89,8 +89,13 @@ namespace Ast
 
         private static Expression CreateAst(Stack<Expression> exs, Stack<Operator> ops)
         {
-			Expression right;
+			Expression left,right;
 			Operator curOp = null, nextOp;
+
+			if (exs.Count == 1) {
+
+				return exs.Pop ();
+			}
 
 			right = exs.Pop ();
 
@@ -119,7 +124,9 @@ namespace Ast
 
 				} else {
 
-					curOp.left = exs.Pop ();
+					left = exs.Pop ();
+					left.parent = curOp;
+					curOp.left = left;
 				}
 
 			}
