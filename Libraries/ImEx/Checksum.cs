@@ -54,6 +54,17 @@ namespace ImEx
 			return 0 == comparer.Compare (verHashA, verHashB);
 		}
 
+		// Takes one MD5 hash, and one string that need to generate a hash.
+		// Returns true if they are identical
+		public static bool VerifyMd5HashString (MD5 md5Hash, string verHash, string verString)
+		{
+			string hashOfVerString = GetMd5Hash (md5Hash, verString);
+
+			StringComparer comparer = StringComparer.OrdinalIgnoreCase;
+
+			return 0 == comparer.Compare (hashOfVerString, verHash);
+		}
+
 	}
 }
 
