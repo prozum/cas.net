@@ -5,13 +5,13 @@ using System.IO;
 using System.Collections.Generic;
 using System.Data.SQLite;
 
-namespace Account
+namespace CAS.NET.Server
 {
-	public static class Server
+	public class Server
 	{
-		string URI = "URI=file:"
-		SQLiteConnection conn = new SQLiteConnection();
-			
+		static string file = "URI=file:users.db";
+		static System.Data.SQLite.SQLiteConnection conn = new SQLiteConnection(file);
+
 		public static void StartListen(string prefixes, Func<HttpListenerRequest, string> method)
 		{
 			throw new NotImplementedException();
