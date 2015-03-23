@@ -182,7 +182,7 @@ namespace Ast
                 {
 					number += (char)parseReader.Read();
                 }
-				else if ((char)parseReader.Peek() == '.')
+                else if ((char)parseReader.Peek() == '.' || (char)parseReader.Peek() == ',')
                 {
                     //More than one dot. Error!
                     if (resultType == NumberType.Irrational)
