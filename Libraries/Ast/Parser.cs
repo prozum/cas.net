@@ -112,8 +112,18 @@ namespace Ast
 					if (curOp.priority > nextOp.priority) {
 
 						curOp.left = exs.Pop ();
-						curOp.parent = nextOp;
-						right = curOp;
+
+						if (curOp.parent == null) {
+
+							curOp.parent = nextOp;
+							right = curOp;
+
+						} else {
+
+							curOp.parent.parent = nextOp;
+							right = curOp.parent;
+
+						}
 
 					} else {
 
