@@ -9,6 +9,7 @@ namespace ImEx
 {
 	public static class Import
 	{
+	
 		// Returns a deserialised string from file to object T
 		public static T ReadDeserializedFromCasFile<T> (string fileName, string fileDestination)
 		{
@@ -21,6 +22,12 @@ namespace ImEx
 		public static string ReadSerializedFromCasFile (string fileName, string fileDestination)
 		{
 			return OpenFileToString (fileName + ".cas", "");
+		}
+
+		public static T DeserializeString<T> (string serializedString)
+		{
+			T deserializedObject = JsonConvert.DeserializeObject<T> (serializedString);
+			return deserializedObject;
 		}
 
 		// Loads serialized filecontent into strings.
