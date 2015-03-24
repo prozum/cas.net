@@ -75,5 +75,20 @@ namespace Ast
 			return real.ToString () + '+' + imag.ToString() + 'i';
 		}
 	}
+
+    public class Boolean : Number
+    {
+        public bool value;
+
+        public Boolean(bool value)
+        {
+            this.value = value;
+        }
+
+        public override string ToString()
+        {
+            return value.ToString();
+        }
+    }
 }
 
