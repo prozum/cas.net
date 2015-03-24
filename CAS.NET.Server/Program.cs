@@ -6,6 +6,7 @@ namespace CAS.NET.Server
 	{
 		public static void Main (string[] args)
 		{
+			Database DB = new Database("URI=file:data.db");
 			Console.WriteLine ("Hello World!");
 		}
 	}
