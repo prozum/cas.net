@@ -7,11 +7,8 @@ using System.Data.SQLite;
 
 namespace CAS.NET.Server
 {
-	public class Server
+	public static class Server
 	{
-		static string file = "URI=file:users.db";
-		static System.Data.SQLite.SQLiteConnection conn = new SQLiteConnection(file);
-
 		public static void StartListen(string prefixes, Func<HttpListenerRequest, string> method)
 		{
 			throw new NotImplementedException();
