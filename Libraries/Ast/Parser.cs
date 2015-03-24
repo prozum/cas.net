@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Ast
 {
@@ -188,7 +189,7 @@ namespace Ast
 
         enum NumberType { Integer, Rational, Irrational, Complex };
 
-		private static Expression ParseNumber(StringReader parseReader)
+		public static Expression ParseNumber(StringReader parseReader)
 		{
             NumberType resultType = NumberType.Integer;
 			string number = "";
@@ -199,15 +200,26 @@ namespace Ast
                 {
 					number += (char)parseReader.Read();
                 }
-                else if ((char)parseReader.Peek() == '.' || (char)parseReader.Peek() == ',')
+                else if ((char)parseReader.Peek() == '.')
                 {
                     //More than one dot. Error!
-                    if (resultType == NumberType.Irrational)
+                    if (resultType == NumberType.Irrational || CultureInfo.CurrentCulture.Name == "da-DK")
                     {
                         return null;
                     }
 
-					number += (char)parseReader.Read();
+                    number += (char)parseReader.Read();
+                    resultType = NumberType.Irrational;
+                }
+                else if ((char)parseReader.Peek() == ',')
+                {
+                    //More than one dot. Error!
+                    if (resultType == NumberType.Irrational || CultureInfo.CurrentCulture.Name != "da-DK")
+                    {
+                        return null;
+                    }
+
+                    number += (char)parseReader.Read();
                     resultType = NumberType.Irrational;
                 }
 				else if ((char)parseReader.Peek() == 'i')

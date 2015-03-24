@@ -21,6 +21,23 @@ namespace ExtractSubstring
 			
 			}
 		}
+
+		[Test]
+		public void ParseNumber()
+		{
+			Expression res;
+
+			string[] testStrings = {"10,10", "10.10"};
+
+			foreach (string testString in testStrings) {
+
+				res = Ast.Parser.ParseNumber(new System.IO.StringReader(testString));
+				Assert.AreEqual (testString, res.ToString());
+
+			}
+		}
+
+
 	}
 }
 
