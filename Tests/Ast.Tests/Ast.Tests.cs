@@ -1,11 +1,10 @@
 ﻿using NUnit.Framework;
-using System;
 using Ast;
 
-namespace ExtractSubstring
+namespace Ast.Tests
 {
 	[TestFixture]
-	public class ExtractSubstringTest
+	public class AstTests
 	{
 		[Test]
 		public void Parse()
@@ -27,7 +26,7 @@ namespace ExtractSubstring
 		{
 			Expression res;
 
-			string[] testStrings = {"10,10", "10.10"};
+			string[] testStrings = {"10.10"};
 
 			foreach (string testString in testStrings) {
 
