@@ -5,16 +5,19 @@ namespace TaskGen
 {
     class MainClass
     {
-        static void MakeTask ()
-        {
-            int varMin = 1;
-            int varMax = 10;
-            int varNum = 4;
-            int opsNum = 2;
 
+
+        static string MakeTask (int varMin, int varMax, int varNum, int opsNum)
+        {
             List<string> Operators = new List<string> ();
             List<int> Numbers = new List<int> ();
+
+            string task = "";
+
             Random r = new Random ();
+
+            Operators.Clear ();
+            Numbers.Clear ();
 
             switch (opsNum) {
             case 1:
@@ -35,17 +38,32 @@ namespace TaskGen
                 Numbers.Add (r.Next (varMin, varMax));
             }
     
-            Console.Write (Numbers[0]);
+            task += Numbers[0];
             for (int i = 0; i < varNum-1; i++) {
-                Console.Write (Operators[i]);
-                Console.Write (Numbers[i+1]);
-            }
+                task += Operators [i];
+                task += Numbers [i + 1];                  
 
-        }
+            }
+            return task;
+
+        }            
 
         public static void Main ()
         {
-            MakeTask ();
+            string task;
+            int varMin = 1;
+            int varMax = 10;
+            int varNum = 2;
+            int opsNum = 2;
+
+            ConsoleKeyInfo In;
+
+            Console.WriteLine ("Main Menu:");
+            Console.WriteLine ("1. Generate Task");
+            Console.WriteLine ("2. Task Settings");
+            Console.ReadKey ();
+
+            task = MakeTask (varMin, varMax, varNum, opsNum);
         }
     }
 }
