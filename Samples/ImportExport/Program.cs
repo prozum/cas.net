@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using ImEx;
 using System.Security.Cryptography;
-using ImEx.test
 
 namespace ImportExport
 {
@@ -81,6 +80,7 @@ namespace ImportExport
 			PrintPerson ("person", ReadPerson1);
 			PrintPerson ("person2", ReadPerson2);
 
+			Open.OpenFile ();
 		}
 
 		// Returns text based on true or false
