@@ -12,6 +12,7 @@ namespace Ast
 
         public static Expression Parse(string parseString)
         {
+			Expression curExp;
 			var exs = new Stack<Expression> ();
 			var ops = new Stack<Operator> (); 
 
@@ -29,27 +30,40 @@ namespace Ast
 
 				if (char.IsLetter ((char)curChar)) {
 
-					exs.Push (ParseIdentifier (parseReader));
+					//exs.Push (ParseIdentifier (parseReader));
+					curExp = ParseIdentifier (parseReader);
+					exs.Push (curExp);
 
 				} else if (char.IsDigit ((char)curChar)) {
 
-					exs.Push (ParseNumber (parseReader));
+					//exs.Push (ParseNumber (parseReader));
+					curExp = ParseNumber (parseReader);
+					exs.Push (curExp);
 
 				} else if (curChar.Equals ('(')) {
 				
-					exs.Push (Parse (ExtractSubstring (parseReader))); 
+					//exs.Push (Parse (ExtractSubstring (parseReader))); 
+					curExp = Parse (ExtractSubstring (parseReader)); 
+					exs.Push (curExp); 
 
 				} else if (opValidChars.Contains ((char)curChar)) {
 
-					ops.Push (ParseOperator (parseReader));
+					//ops.Push (ParseOperator (parseReader));
+					curExp = ParseOperator (parseReader);
+					ops.Push ((Operator)curExp);
 
 				} else {
 
-					throw new NotImplementedException ();
+					curExp = new Error ("Error in :" + parseReader.ToString());
+				}
+
+				if (curExp is Error) {
+
+					return curExp;
 				}
             }
 
-            return CreateAst (exs, ops);
+			return CreateAst (exs, ops);
         }
 
 		private static string ExtractSubstring(StringReader parseReader)
@@ -88,7 +102,7 @@ namespace Ast
 			return substring;
 		}
 
-        private static Expression CreateAst(Stack<Expression> exs, Stack<Operator> ops)
+		private static Expression CreateAst(Stack<Expression> exs, Stack<Operator> ops)
         {
 			Expression left,right;
 			Operator curOp = null, nextOp;
@@ -200,23 +214,12 @@ namespace Ast
                 {
 					number += (char)parseReader.Read();
                 }
-                else if ((char)parseReader.Peek() == '.')
+				else if ((char)parseReader.Peek() == NumberFormatInfo.CurrentInfo.CurrencyDecimalSeparator[0])
                 {
                     //More than one dot. Error!
-                    if (resultType == NumberType.Irrational || CultureInfo.CurrentCulture.Name == "da-DK")
+                    if (resultType == NumberType.Irrational )
                     {
-                        return null;
-                    }
-
-                    number += (char)parseReader.Read();
-                    resultType = NumberType.Irrational;
-                }
-                else if ((char)parseReader.Peek() == ',')
-                {
-                    //More than one dot. Error!
-                    if (resultType == NumberType.Irrational || CultureInfo.CurrentCulture.Name != "da-DK")
-                    {
-                        return null;
+						return new Error("Parser: unexpected extra decimal seperator in: " + parseReader.ToString());
                     }
 
                     number += (char)parseReader.Read();
@@ -241,14 +244,14 @@ namespace Ast
 					return new Irrational(decimal.Parse(number));
                 case NumberType.Complex:
                     return new Complex();
-                default:
-					throw new NotImplementedException ();
+				default:
+					return new Error ("Parser: unknown error in:" + parseReader.ToString ());
             }
 		}
 
         enum OperatorType { Equal, LesserThan, GreaterThan, Plus, Minus, Mul, Div };
 
-		private static Operator ParseOperator(StringReader parseReader)
+		private static Expression ParseOperator(StringReader parseReader)
 		{
 			string op = ((char)parseReader.Read()).ToString();
 
@@ -276,7 +279,7 @@ namespace Ast
 			case "^":
 				return new Exp ();
 			default:
-				throw new NotImplementedException ();
+				return new Error ("Parser: operator not supported: " + op);
 			}
 		}
 	}

@@ -35,11 +35,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Expression.cs" />
     <Compile Include="Number.cs" />
-    <Compile Include="Equation.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Function.cs" />
     <Compile Include="Symbol.cs" />
     <Compile Include="Operator.cs" />
+    <Compile Include="Error.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -2,19 +2,19 @@
 
 namespace Ast
 {
-	public class Symbol : Expression
+	public class Error : Expression
 	{
-		public Number prefix, exponent;
-		public string symbol;
+		public string message;
 
-		public Symbol (string sym)
+		public Error (string message)
 		{
-			symbol = sym;
+			this.message = message;
 		}
+
 
 		public override string ToString()
 		{
-			return symbol;
+			return message;
 		}
 
 		public override Expression Evaluate()
