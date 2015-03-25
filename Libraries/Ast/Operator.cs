@@ -10,19 +10,207 @@ namespace Ast
 
 		public abstract Expression Evaluate(Expression a, Expression b);
 
-		public override string ToString()
-		{
-			if (parent == null || priority >= parent.priority ) {
+        //public override string ToString()
+        //{
+        //    if (parent == null || priority >= parent.priority ) {
 
-				return left.ToString () + symbol + right.ToString ();
+        //        return left.ToString () + symbol + right.ToString ();
 			
-			} else {
+        //    } else {
 
-				return '(' + left.ToString () + symbol + right.ToString () + ')';
+        //        return '(' + left.ToString () + symbol + right.ToString () + ')';
 
-			}
-		}
-	}
+        //    }
+        //}
+
+        #region Add
+        public static Integer operator +(Integer a, Integer b)
+        {
+            return new Integer(a.value + b.value);
+        }
+
+        public static Rational operator +(Integer a, Rational b)
+        {
+            return new Rational(a, new Integer(1)) + b;
+        }
+
+        public static Rational operator +(Rational a, Integer b)
+        {
+            return a + new Rational(b, new Integer(1));
+        }
+
+        public static Rational operator +(Rational a, Rational b)
+        {
+            return new Rational(new Integer(a.numerator * b.denominator + b.numerator * a.denominator) , new Integer(a.denominator * b.denominator));
+        }
+
+        public static Irrational operator +(Integer a, Irrational b)
+        {
+            return new Irrational(a.value + b.value);
+        }
+
+        public static Irrational operator +(Irrational a, Integer b)
+        {
+            return new Irrational(a.value + b.value);
+        }
+
+        public static Irrational operator +(Irrational a, Rational b)
+        {
+            return new Irrational(a.value + b.value.value);
+        }
+
+        public static Irrational operator +(Rational a, Irrational b)
+        {
+            return new Irrational(a.value.value + b.value);
+        }
+
+        public static Irrational operator +(Irrational a, Irrational b)
+        {
+            return new Irrational(a.value + b.value);
+        }
+        #endregion
+
+        #region Sub
+        public static Expression operator -(Integer a, Integer b)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Expression operator -(Integer a, Rational b)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Expression operator -(Rational a, Integer b)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Expression operator -(Rational a, Rational b)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Expression operator -(Integer a, Irrational b)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Expression operator -(Irrational a, Integer b)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Expression operator -(Irrational a, Rational b)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Expression operator -(Rational a, Irrational b)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Expression operator -(Irrational a, Irrational b)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
+
+        #region Mul
+        public static Integer operator *(Integer a, Integer b)
+        {
+            return new Integer(a.value * b.value);
+        }
+
+        public static Rational operator *(Integer a, Rational b)
+        {
+            return new Rational(new Rational(a, new Integer(1)) * b);
+        }
+
+        public static Rational operator *(Rational a, Integer b)
+        {
+            return new Rational(a * new Rational(b, new Integer(1)));
+        }
+
+        public static Expression operator *(Rational a, Rational b)
+        {
+            return new Rational(a.numerator * b.numerator, a.denominator * b.denominator);
+        }
+
+        public static Expression operator *(Integer a, Irrational b)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Expression operator *(Irrational a, Integer b)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Expression operator *(Irrational a, Rational b)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Expression operator *(Rational a, Irrational b)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Expression operator *(Irrational a, Irrational b)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
+
+        #region Div
+        public static Expression operator /(Integer a, Integer b)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Expression operator /(Integer a, Rational b)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Expression operator /(Rational a, Integer b)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Expression operator /(Rational a, Rational b)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Expression operator /(Integer a, Irrational b)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Expression operator /(Irrational a, Integer b)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Expression operator /(Irrational a, Rational b)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Expression operator /(Rational a, Irrational b)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Expression operator /(Irrational a, Irrational b)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
+    }
 
 	public class Equal : Operator
 	{
