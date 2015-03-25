@@ -6,64 +6,79 @@ namespace CAS.NET.Server
 {
 	public class Database
 	{
-		public const string db = "URI=file:data.db";
-		public static SQLiteConnection Connection;
+		//public string db; // = "URI=file:data.db"
 
-		public Database()
+		private SQLiteConnection conn;
+		private SQLiteCommand cmd;
+
+		public Database(string db)
 		{
-			OpenDB ();
+			SQLiteConnection.CreateFile(db);
+			conn = new SQLiteConnection(db);
+			conn.Open();
+
+			/*
 			CreateUserDB ();
-			CreateTaskDB ();
+			CreateAssignmentDB ();
+			CreateCompletedDB();
+			CreateFeedbackDB();
+			*/
+			//cmd = new SQLiteCommand (Connection);
 		}
 
-		private static void OpenDB()
+		private void CreateUserDB()
 		{
-			Connection = new SQLiteConnection(db);
-			Connection.Open ();
-			Connection.Open ();
-		}
-
-		private static void CreateUserDB()
-		{
-			var cmd = new SQLiteCommand(db); 
-
-			cmd.CommandText = @"CREATE TABLE IF NOT EXIST User(Id TEXT PRIMARY KEY, Password TEXT, Klass TEXT, Privilege INTEGER)";
+			cmd.CommandText = @"CREATE TABLE IF NOT EXIST User(Username TEXT PRIMARY KEY, Password TEXT, Grade TEXT, Privilege INTEGER)";
 			cmd.ExecuteNonQuery();
 		}
 
-		private static void CreateTaskDB()
+		private void CreateAssignmentDB()
 		{
-			var cmd = new SQLiteCommand (db);
-
-			cmd.CommandText = @"CREATE TABLE IF NOT EXIST Task(Id TEXT PRIMARY KEY, TaskName TEXT, SaveFileName TEXT, Klass TEXT, Feedback INTEGER)";
+			cmd.CommandText = @"CREATE TABLE IF NOT EXIST Assignment(Username TEXT, TaskName TEXT, SaveFileName TEXT, Grade TEXT)";
 			cmd.ExecuteNonQuery();
 		}
 
-		public static void AddUser(string login, string password, string klass, bool privilege)
+		private void CreateCompletedDB()
 		{
-			using (var cmd = new SQLiteCommand (db)) {
-				if (privilege) {
-					cmd.CommandText = "INSERT INTO User VALUES(login, password, klass, 1)";
-					cmd.ExecuteNonQuery();
-				}
-				else {
-					cmd.CommandText = "INSERT INTO User VALUES(login, password, klass, 0)";
-					cmd.ExecuteNonQuery();
-				}
-			}
+			cmd.CommandText = @"CREATE TABLE IF NOT EXIST Completed(Username TEXT, TaskName TEXT, SaveFileName TEXT, Grade TEXT)";
+			cmd.ExecuteNonQuery();
 		}
 
-		public static void RemoveUser(string login)
+		private void CreateFeedbackDB()
 		{
-			using (var cmd = new SQLiteCommand (db)) {
-				cmd.CommandText = "DELETE FROM User WHERE username = login";
-				cmd.ExecuteNonQuery();
-			}
+			/* teachers need to give the student username here */
+			cmd.CommandText = @"CREATE TABLE IF NOT EXIST Feedback(Username TEXT, TaskName TEXT, SaveFileName TEXT, Grade TEXT)";
+			cmd.ExecuteNonQuery();
 		}
 
-		public static void AddTask()
+		public void AddUser(string login, string password, string grade, int privilege)
 		{
-			throw new NotImplementedException ();
+			cmd.CommandText = "INSERT INTO User VALUES(login, password, grade, privilege)";
+			cmd.ExecuteNonQuery();
+		}
+
+		public void RemoveUser(string username)
+		{
+			cmd.CommandText = "DELETE FROM User WHERE Username = username";
+			cmd.ExecuteNonQuery();
+		}
+
+		public void AddAssignment(string username, string taskname, string savefilename, string grade)
+		{
+			cmd.CommandText = "INSERT INTO Assignment VALUES(username, taskname, savefilename, grade)";
+			cmd.ExecuteNonQuery();
+		}
+
+		public void AddCompleted(string username, string taskname, string savefilename, string grade)
+		{
+			cmd.CommandText = "INSERT INTO Completed VALUES(username, taskname, savefilename, grade)";
+			cmd.ExecuteNonQuery();
+		}
+
+		public void AddFeedback(string username, string taskname, string savefilename, string grade)
+		{
+			cmd.CommandText = "INSERT INTO Feedback VALUES(username, taskname, savefilename, grade)";
+			cmd.ExecuteNonQuery();
 		}
 	}
 }
