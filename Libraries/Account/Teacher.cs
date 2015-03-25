@@ -24,7 +24,7 @@ namespace Account
 			WebClient client = new WebClient ();
 			client.Encoding = System.Text.Encoding.UTF8;
 
-			string msg = "AddAssignment " + file + " " + grade + " " + username + " " + password;
+			string msg = "AddAssignment " + grade + " " + username + " " + password + " " + file;
 			string response = client.UploadString("http://localhost:8080/", msg);
 
 			return response;
@@ -41,4 +41,3 @@ namespace Account
 		}
 	}
 }
-
