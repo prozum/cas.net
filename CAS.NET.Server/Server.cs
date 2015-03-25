@@ -3,47 +3,75 @@ using System.Net;
 using System.Text;
 using System.IO;
 using System.Collections.Generic;
-using System.Data.SQLite;
 
 namespace CAS.NET.Server
 {
 	public static class Server
 	{
-		public static void StartListen(string prefixes, Func<HttpListenerRequest, string> method)
+		public static void StartListen(string prefixes)
 		{
-			throw new NotImplementedException();
-			/*
 			if (prefixes == null || prefixes.Length == 0)
 			{
 				throw new ArgumentException("prefixes");
 			}
 
-			HttpListener listener = new HttpListener();
-
-			listener.Prefixes.Add(prefixes);
+			using (var listener = new HttpListener()) {
 
 			listener.Start();
-			Console.WriteLine("Listening...");
 
-			HttpListenerContext context = listener.GetContext();
-			HttpListenerRequest request = context.Request;
+				while (true)
+				{
+					Console.WriteLine("Listening...");
 
-			HttpListenerResponse response = context.Response;
+					HttpListenerContext context = listener.GetContext();
+					HttpListenerRequest request = context.Request;
+					HttpListenerResponse response = context.Response;
 
-			string responseString = method(request);
-			byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
-
-			response.ContentLength64 = buffer.Length;
-			System.IO.Stream output = response.OutputStream;
-			output.Write(buffer,0,buffer.Length);
-
-			output.Close();
-			listener.Stop();
-			*/
+					string msg = request.ToString();
+					ExecuteCommand(msg);
+				}
+			}
 		}
 
+		public static string GetCommand(string msg)
+		{
+			int i = 0;
+			string command = null;
 
+			while (msg[i] != ' ')
+			{
+				command = command + msg[i];
+				i++;
+			}
+			
+			return command;
+		}
 
+		public static string ExecuteCommand(string msg)
+		{
+			string command = GetCommand(msg);
+
+			if (command == null)
+			{
+				return "Error";
+			}
+
+			/*
+			switch (command)
+			{
+				case "AddAssignment":
+					break;
+				case "GetCompleted":
+					break;
+				case "AddFeedback":
+					break;
+				default:
+					break;
+			}
+			*/
+
+			return "Success";
+		}
 	}
 }
 

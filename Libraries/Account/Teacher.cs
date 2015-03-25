@@ -5,7 +5,7 @@ using System.IO;
 
 namespace Account
 {
-	public class Teacher : Client
+	public class Teacher
 	{
 		private int ID;
 
@@ -19,12 +19,23 @@ namespace Account
 			throw new NotImplementedException();
 		}
 
-		public override void GetTask()
+		public string AddAssignment(string file, string grade, string username, string password)
+		{
+			WebClient client = new WebClient ();
+			client.Encoding = System.Text.Encoding.UTF8;
+
+			string msg = "AddAssignment " + file + " " + grade + " " + username + " " + password;
+			string response = client.UploadString("http://localhost:8080/", msg);
+
+			return response;
+		}
+
+		public void GetCompleted()
 		{
 			throw new NotImplementedException();
 		}
 
-		public override void PushTask()
+		public void AddFeedback()
 		{
 			throw new NotImplementedException();
 		}
