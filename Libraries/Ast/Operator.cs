@@ -8,7 +8,13 @@ namespace Ast
 		public int priority;
 		public Expression left,right;
 
-		public abstract Expression Evaluate(Expression a, Expression b);
+		public abstract Expression Evaluate();
+
+        public Operator(Expression left, Expression right)
+        {
+            this.left = left;
+            this.right = right;
+        }
 
         //public override string ToString()
         //{
@@ -27,13 +33,14 @@ namespace Ast
 
 	public class Equal : Operator
 	{
-		public Equal()
-		{
-			symbol = "=";
-			priority = 0;
-		}
+        public Equal() : this(null, null) { }
+        public Equal(Expression left, Expression right) : base(left, right)
+        {
+            symbol = "=";
+            priority = 0;
+        }
 
-		public override Expression Evaluate (Expression a, Expression b)
+		public override Expression Evaluate ()
 		{
 			throw new NotImplementedException ();
 		}
@@ -42,61 +49,62 @@ namespace Ast
 
 	public class Add : Operator
 	{
-		public Add()
+        public Add() : this(null, null) { }
+        public Add(Expression left, Expression right) : base(left, right)
 		{
 			symbol = "+";
 			priority = 10;
 		}
 
-		public override Expression Evaluate (Expression a, Expression b)
+		public override Expression Evaluate ()
 		{
-            if (a is Integer && b is Integer)
+            if (left is Integer && right is Integer)
             {
-                return new Integer((a as Integer).value + (b as Integer).value);
+                return new Integer((left as Integer).value + (right as Integer).value);
             }
 
-            if (a is Integer && b is Rational)
+            if (left is Integer && right is Rational)
             {
-                return new Sub().Evaluate(new Rational((a as Integer), new Integer(1)), b);
+                return new Sub(new Rational((left as Integer), new Integer(1)), right).Evaluate();
             }
 
-            if (a is Rational && b is Integer)
+            if (left is Rational && right is Integer)
             {
-                return new Sub().Evaluate(a, new Rational((b as Integer), new Integer(1)));
+                return new Sub(left, new Rational((right as Integer), new Integer(1))).Evaluate();
             }
 
 
-            if (a is Rational && b is Rational)
+            if (left is Rational && right is Rational)
             {
-                (a as Rational).numerator.value *= (b as Rational).denominator.value;
-                (b as Rational).numerator.value *= (a as Rational).denominator.value;
-                return new Rational((new Add().Evaluate((a as Rational).numerator, (b as Rational).numerator) as Integer),
-                                    (new Mul().Evaluate((b as Rational).denominator, (a as Rational).denominator)) as Integer);
+                (left as Rational).numerator.value *= (right as Rational).denominator.value;
+                (right as Rational).numerator.value *= (left as Rational).denominator.value;
+                return new Rational(new Add((left as Rational).numerator, (right as Rational).numerator).Evaluate() as Integer,
+                                    new Mul((right as Rational).denominator, (left as Rational).denominator).Evaluate() as Integer);
             }
 
-            if (a is Integer && b is Irrational)
+            if (left is Integer && right is Irrational)
             {
-                return new Irrational((a as Integer).value + (b as Irrational).value);
+                return new Irrational((left as Integer).value + (right as Irrational).value);
             }
 
-            if (a is Irrational && b is Integer)
+            if (left is Irrational && right is Integer)
             {
-                return new Irrational((a as Irrational).value + (b as Integer).value);
+                return new Irrational((left as Irrational).value + (right as Integer).value);
             }
 
-            if (a is Irrational && b is Irrational)
+            if (left is Irrational && right is Irrational)
             {
-                return new Irrational((a as Irrational).value + (b as Irrational).value);
+                return new Irrational((left as Irrational).value + (right as Irrational).value);
             }
 
-            if (a is Irrational && b is Rational)
+            if (left is Irrational && right is Rational)
             {
-                return new Irrational((a as Irrational).value + (b as Rational).value.value);
+                return new Irrational((left as Irrational).value + (right as Rational).value.value);
             }
 
-            if (a is Rational && b is Irrational)
+            if (left is Rational && right is Irrational)
             {
-                return new Irrational((a as Rational).value.value + (b as Irrational).value);
+                return new Irrational((left as Rational).value.value + (right as Irrational).value);
             }
 
             return null;
@@ -105,52 +113,53 @@ namespace Ast
 
 	public class Sub : Operator
 	{
-		public Sub()
+        public Sub() : this(null, null) { }
+        public Sub(Expression left, Expression right) : base(left, right)
 		{
 			symbol = "-";
 			priority = 10;
 		}
 
-		public override Expression Evaluate (Expression a, Expression b)
+		public override Expression Evaluate ()
 		{
-			if (a is Integer && b is Integer) {
-				return new Integer((a as Integer).value - (b as Integer).value);
+			if (left is Integer && right is Integer) {
+				return new Integer((left as Integer).value - (right as Integer).value);
 			}
 
-			if (a is Integer && b is Rational) {
-				return new Sub().Evaluate (new Rational((a as Integer), new Integer(1)), b);
+			if (left is Integer && right is Rational) {
+                return new Sub(new Rational((left as Integer), new Integer(1)), right).Evaluate();
 			}
 
-			if (a is Rational && b is Integer) {
-				return new Sub().Evaluate(a, new Rational((b as Integer), new Integer(1)));
+			if (left is Rational && right is Integer) {
+                return new Sub(left, new Rational((right as Integer), new Integer(1))).Evaluate();
 			}
 
 
-			if (a is Rational && b is Rational) {
-				(a as Rational).numerator.value *= (b as Rational).denominator.value;
-				(b as Rational).numerator.value *= (a as Rational).denominator.value;
-				return new Rational((new Sub().Evaluate((a as Rational).numerator, (b as Rational).numerator) as Integer),
-									(new Mul().Evaluate((b as Rational).denominator, (a as Rational).denominator)) as Integer);
+			if (left is Rational && right is Rational) {
+				(left as Rational).numerator.value *= (right as Rational).denominator.value;
+				(right as Rational).numerator.value *= (left as Rational).denominator.value;
+                return new Rational(new Sub((left as Rational).numerator, (right as Rational).numerator).Evaluate() as Integer,
+                                    new Mul((right as Rational).denominator, (left as Rational).denominator).Evaluate() as Integer);
 			}
 
-			if (a is Integer && b is Irrational) {
-				return new Irrational((a as Integer).value - (b as Irrational).value);
+			if (left is Integer && right is Irrational) {
+				return new Irrational((left as Integer).value - (right as Irrational).value);
 			}
 
-			if (a is Irrational && b is Integer) {
-				return new Irrational((a as Irrational).value - (b as Integer).value);
+			if (left is Irrational && right is Integer) {
+				return new Irrational((left as Irrational).value - (right as Integer).value);
 			}
 
-			if (a is Irrational && b is Irrational) {
-				return new Irrational((a as Irrational).value - (b as Irrational).value);
+			if (left is Irrational && right is Irrational) {
+				return new Irrational((left as Irrational).value - (right as Irrational).value);
 			}
 
-			if (a is Irrational && b is Rational) {
-				return new Irrational((a as Irrational).value - (b as Rational).value.value);
+			if (left is Irrational && right is Rational) {
+				return new Irrational((left as Irrational).value - (right as Rational).value.value);
 			}
 
-			if (a is Rational && b is Irrational) {
-				return new Irrational((a as Rational).value.value - (b as Irrational).value);
+			if (left is Rational && right is Irrational) {
+				return new Irrational((left as Rational).value.value - (right as Irrational).value);
 			}
 
 			return null;
@@ -159,49 +168,50 @@ namespace Ast
 
 	public class Mul : Operator
 	{
-		public Mul()
+        public Mul() : this(null, null) { }
+        public Mul(Expression left, Expression right) : base(left, right)
 		{
 			symbol = "*";
 			priority = 20;
 		}
 
-		public override Expression Evaluate (Expression a, Expression b)
+		public override Expression Evaluate ()
 		{
-			if (a is Integer && b is Integer) {
-				return new Integer((a as Integer).value * (b as Integer).value);
+			if (left is Integer && right is Integer) {
+				return new Integer((left as Integer).value * (right as Integer).value);
 			}
 
-			if (a is Integer && b is Rational) {
-				return new Mul().Evaluate (new Rational ((a as Integer), new Integer(1)), b);
+			if (left is Integer && right is Rational) {
+                return new Mul(new Rational((left as Integer), new Integer(1)), right).Evaluate();
 			}
 
-			if (a is Rational && b is Integer) {
-				return new Mul().Evaluate(a, new Rational((b as Integer), new Integer(1)));
+			if (left is Rational && right is Integer) {
+                return new Mul(left, new Rational((right as Integer), new Integer(1))).Evaluate();
 			}
 
-			if (a is Rational && b is Rational) {
-				return new Rational(((Integer)new Mul().Evaluate((a as Rational).numerator, (b as Rational).numerator)),
-									((Integer)new Mul().Evaluate((a as Rational).denominator, (b as Rational).denominator)));
+			if (left is Rational && right is Rational) {
+                return new Rational(new Mul((left as Rational).numerator, (right as Rational).numerator).Evaluate() as Integer,
+                                   new Mul((left as Rational).denominator, (right as Rational).denominator).Evaluate() as Integer);
 			}
 
-			if (a is Integer && b is Irrational) {
-				return new Irrational((a as Integer).value * (b as Irrational).value);
+			if (left is Integer && right is Irrational) {
+				return new Irrational((left as Integer).value * (right as Irrational).value);
 			}
 
-			if (a is Irrational && b is Integer) {
-				return new Irrational((a as Irrational).value * (b as Integer).value);
+			if (left is Irrational && right is Integer) {
+				return new Irrational((left as Irrational).value * (right as Integer).value);
 			}
 
-			if (a is Irrational && b is Irrational) {
-				return new Irrational((a as Irrational).value * (b as Irrational).value);
+			if (left is Irrational && right is Irrational) {
+				return new Irrational((left as Irrational).value * (right as Irrational).value);
 			}
 
-			if (a is Irrational && b is Rational) {
-				return new Irrational((a as Irrational).value * (b as Rational).value.value);
+			if (left is Irrational && right is Rational) {
+				return new Irrational((left as Irrational).value * (right as Rational).value.value);
 			}
 
-			if (a is Rational && b is Irrational) {
-				return new Irrational((a as Rational).value.value * (b as Irrational).value);
+			if (left is Rational && right is Irrational) {
+				return new Irrational((left as Rational).value.value * (right as Irrational).value);
 			}
 
 			return null;
@@ -210,49 +220,50 @@ namespace Ast
 
 	public class Div : Operator
 	{
-		public Div()
+        public Div() : this(null, null) { }
+        public Div(Expression left, Expression right) : base(left, right)
 		{
 			symbol = "/";
 			priority = 20;
 		}
 
 		/* fix errors */
-		public override Expression Evaluate (Expression a, Expression b)
+		public override Expression Evaluate ()
 		{
-			if (a is Integer && b is Integer) {
-				return new Rational((a as Integer), (b as Integer));
+			if (left is Integer && right is Integer) {
+				return new Rational((left as Integer), (right as Integer));
 			}
 
-			if (a is Integer && b is Rational) {
-				return new Div().Evaluate(new Rational((a as Integer), new Integer(1)), b);
+			if (left is Integer && right is Rational) {
+                return new Div(new Rational((left as Integer), new Integer(1)), right).Evaluate();
 			}
 
-			if (a is Rational && b is Integer) {
-				return new Div().Evaluate(a, new Rational((b as Integer), new Integer(1)));
+			if (left is Rational && right is Integer) {
+                return new Div(left, new Rational((right as Integer), new Integer(1))).Evaluate();
 			}
 
-			if (a is Rational && b is Rational) {
-				return new Mul().Evaluate(new Rational((a as Rational).denominator, (a as Rational).numerator), b);
+			if (left is Rational && right is Rational) {
+                return new Mul(new Rational((left as Rational).denominator, (left as Rational).numerator), right).Evaluate();
 			}
 
-			if (a is Integer && b is Irrational) {
-				return new Irrational((a as Integer).value / (b as Irrational).value);
+			if (left is Integer && right is Irrational) {
+				return new Irrational((left as Integer).value / (right as Irrational).value);
 			}
 
-			if (a is Irrational && b is Integer) {
-				return new Irrational((a as Irrational).value / (b as Integer).value);
+			if (left is Irrational && right is Integer) {
+				return new Irrational((left as Irrational).value / (right as Integer).value);
 			}
 
-			if (a is Irrational && b is Irrational) {
-				return new Irrational((a as Irrational).value / (b as Irrational).value);
+			if (left is Irrational && right is Irrational) {
+				return new Irrational((left as Irrational).value / (right as Irrational).value);
 			}
 
-			if (a is Irrational && b is Rational) {
-				return new Irrational((a as Irrational).value / (b as Rational).value.value);
+			if (left is Irrational && right is Rational) {
+				return new Irrational((left as Irrational).value / (right as Rational).value.value);
 			}
 
-			if (a is Rational && b is Irrational) {
-				return new Irrational((a as Rational).value.value / (b as Irrational).value);
+			if (left is Rational && right is Irrational) {
+				return new Irrational((left as Rational).value.value / (right as Irrational).value);
 			}
 
 			return null;
@@ -261,15 +272,16 @@ namespace Ast
 
 	public class Exp : Operator
 	{
-		public Exp()
+        public Exp() : this(null, null) { }
+        public Exp(Expression left, Expression right) : base(left, right)
 		{
 			symbol = "^";
 			priority = 30;
 		}
 
-		public override Expression Evaluate (Expression a, Expression b)
-		{
-			throw new NotImplementedException ();
-		}
+        public override Expression Evaluate()
+        {
+            throw new NotImplementedException();
+        }
 	}
 }
