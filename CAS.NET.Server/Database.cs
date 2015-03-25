@@ -39,10 +39,7 @@ namespace CAS.NET.Server
 			}
 			finally 
 			{
-				if (conn != null) 
-				{
-					conn.Close();
-				}
+				conn.Close();
 			}
 		}
 
@@ -57,7 +54,7 @@ namespace CAS.NET.Server
 				string stm = "SELECT VERSION()";   
 				MySqlCommand cmd = new MySqlCommand(stm, conn);
 				cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Assignment(Username VARCHAR(8),
-									File TEXT CHARACTER SET binary, Grade TEXT CHARACTER SET binary)";
+									File TEXT CHARACTER SET binary, Grade TEXT CHARACTER SET binary) ENGINE=INNODB";
 				cmd.ExecuteNonQuery();
 			}
 			catch (MySqlException ex) 
@@ -67,10 +64,7 @@ namespace CAS.NET.Server
 			}
 			finally 
 			{
-				if (conn != null) 
-				{
-					conn.Close();
-				}
+				conn.Close();
 			}
 		}
 
@@ -94,10 +88,7 @@ namespace CAS.NET.Server
 			}
 			finally 
 			{
-				if (conn != null) 
-				{
-					conn.Close();
-				}
+				conn.Close();
 			}
 		}
 
@@ -121,10 +112,7 @@ namespace CAS.NET.Server
 			}
 			finally 
 			{
-				if (conn != null) 
-				{
-					conn.Close();
-				}
+				conn.Close();
 			}
 		}
 
@@ -160,14 +148,27 @@ namespace CAS.NET.Server
 
 		public void AddAssignment(string username, string file, string grade)
 		{
-			using (conn = new MySqlConnection(db)) {
+			try 
+			{
+				conn = new MySqlConnection(db);
 				conn.Open();
 
-				using (var cmd = new MySqlCommand()) {
-					cmd.CommandText = "INSERT INTO Assignment(Username, File, Grade) VALUES(username, file, grade)";
-					cmd.ExecuteNonQuery();
-				}
+				string stm = "SELECT VERSION()";   
+				MySqlCommand cmd = new MySqlCommand(stm, conn);
+				cmd.CommandText = "INSERT INTO Assignment(Username, File, Grade) VALUES(@username, @file, @grade)";
+				cmd.Parameters.AddWithValue("@username", username);
+				cmd.Parameters.AddWithValue("@file", file);
+				cmd.Parameters.AddWithValue("@grade", grade);
+				cmd.ExecuteNonQuery();
 
+			}
+			catch (MySqlException ex) 
+			{
+				Console.WriteLine(ex);
+
+			}
+			finally 
+			{
 				conn.Close();
 			}
 		}
