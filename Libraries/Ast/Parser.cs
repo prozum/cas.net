@@ -200,21 +200,10 @@ namespace Ast
                 {
 					number += (char)parseReader.Read();
                 }
-                else if ((char)parseReader.Peek() == '.')
+				else if ((char)parseReader.Peek() == NumberFormatInfo.CurrentInfo.CurrencyDecimalSeparator[0])
                 {
                     //More than one dot. Error!
-                    if (resultType == NumberType.Irrational || CultureInfo.CurrentCulture.Name == "da-DK")
-                    {
-                        return null;
-                    }
-
-                    number += (char)parseReader.Read();
-                    resultType = NumberType.Irrational;
-                }
-                else if ((char)parseReader.Peek() == ',')
-                {
-                    //More than one dot. Error!
-                    if (resultType == NumberType.Irrational || CultureInfo.CurrentCulture.Name != "da-DK")
+                    if (resultType == NumberType.Irrational )
                     {
                         return null;
                     }

@@ -16,18 +16,18 @@ namespace Ast
             this.right = right;
         }
 
-        //public override string ToString()
-        //{
-        //    if (parent == null || priority >= parent.priority ) {
+        public override string ToString()
+        {
+            if (parent == null || priority >= parent.priority ) {
 
-        //        return left.ToString () + symbol + right.ToString ();
+                return left.ToString () + symbol + right.ToString ();
 			
-        //    } else {
+            } else {
 
-        //        return '(' + left.ToString () + symbol + right.ToString () + ')';
+                return '(' + left.ToString () + symbol + right.ToString () + ')';
 
-        //    }
-        //}
+            }
+        }
 
     }
 
