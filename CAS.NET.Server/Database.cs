@@ -1,84 +1,205 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
+using MySql.Data.MySqlClient;
 
 namespace CAS.NET.Server
 {
 	public class Database
 	{
-		//public string db; // = "URI=file:data.db"
-
-		private SQLiteConnection conn;
-		private SQLiteCommand cmd;
+		private string db;
+		private MySqlConnection conn;
 
 		public Database(string db)
 		{
-			SQLiteConnection.CreateFile(db);
-			conn = new SQLiteConnection(db);
-			conn.Open();
-
-			/*
-			CreateUserDB ();
-			CreateAssignmentDB ();
-			CreateCompletedDB();
-			CreateFeedbackDB();
-			*/
-			//cmd = new SQLiteCommand (Connection);
+			this.db = db;
+			CreateUserDB (db);
+			CreateAssignmentDB (db);
+			CreateCompletedDB (db);
+			CreateFeedbackDB (db);
 		}
 
-		private void CreateUserDB()
+		private void CreateUserDB(string db)
 		{
-			cmd.CommandText = @"CREATE TABLE IF NOT EXIST User(Username TEXT PRIMARY KEY, Password TEXT, Grade TEXT, Privilege INTEGER)";
-			cmd.ExecuteNonQuery();
+			try 
+			{
+				conn = new MySqlConnection(db);
+				conn.Open();
+
+				string stm = "SELECT VERSION()";   
+				MySqlCommand cmd = new MySqlCommand(stm, conn);
+				cmd.CommandText = @"CREATE TABLE IF NOT EXISTS User(Username VARCHAR(8) PRIMARY KEY,
+									Password TEXT CHARACTER SET binary, Grade TEXT CHARACTER SET binary, Privilege INT)";
+				cmd.ExecuteNonQuery();
+
+			}
+			catch (MySqlException ex) 
+			{
+				Console.WriteLine(ex);
+
+			}
+			finally 
+			{
+				if (conn != null) 
+				{
+					conn.Close();
+				}
+			}
 		}
 
-		private void CreateAssignmentDB()
+
+		private void CreateAssignmentDB(string db)
 		{
-			cmd.CommandText = @"CREATE TABLE IF NOT EXIST Assignment(Username TEXT, TaskName TEXT, SaveFileName TEXT, Grade TEXT)";
-			cmd.ExecuteNonQuery();
+			try 
+			{
+				conn = new MySqlConnection(db);
+				conn.Open();
+
+				string stm = "SELECT VERSION()";   
+				MySqlCommand cmd = new MySqlCommand(stm, conn);
+				cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Assignment(Username VARCHAR(8), TaskName TEXT CHARACTER SET binary,
+									SaveFileName TEXT CHARACTER SET binary, Grade TEXT CHARACTER SET binary)";
+				cmd.ExecuteNonQuery();
+			}
+			catch (MySqlException ex) 
+			{
+				Console.WriteLine(ex);
+
+			}
+			finally 
+			{
+				if (conn != null) 
+				{
+					conn.Close();
+				}
+			}
 		}
 
-		private void CreateCompletedDB()
+		private void CreateCompletedDB(string db)
 		{
-			cmd.CommandText = @"CREATE TABLE IF NOT EXIST Completed(Username TEXT, TaskName TEXT, SaveFileName TEXT, Grade TEXT)";
-			cmd.ExecuteNonQuery();
+			try 
+			{
+				conn = new MySqlConnection(db);
+				conn.Open();
+
+				string stm = "SELECT VERSION()";   
+				MySqlCommand cmd = new MySqlCommand(stm, conn);
+				cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Completed(Username VARCHAR(8), TaskName TEXT CHARACTER SET binary,
+									SaveFileName TEXT CHARACTER SET binary, Grade TEXT CHARACTER SET binary)";
+				cmd.ExecuteNonQuery();
+			}
+			catch (MySqlException ex) 
+			{
+				Console.WriteLine(ex);
+
+			}
+			finally 
+			{
+				if (conn != null) 
+				{
+					conn.Close();
+				}
+			}
 		}
 
-		private void CreateFeedbackDB()
+		private void CreateFeedbackDB(string db)
 		{
-			/* teachers need to give the student username here */
-			cmd.CommandText = @"CREATE TABLE IF NOT EXIST Feedback(Username TEXT, TaskName TEXT, SaveFileName TEXT, Grade TEXT)";
-			cmd.ExecuteNonQuery();
+			try 
+			{
+				conn = new MySqlConnection(db);
+				conn.Open();
+
+				string stm = "SELECT VERSION()";   
+				MySqlCommand cmd = new MySqlCommand(stm, conn);
+				cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Feedback(Username VARCHAR(8), TaskName TEXT CHARACTER SET binary,
+									SaveFileName TEXT CHARACTER SET binary, Grade TEXT CHARACTER SET binary)";
+				cmd.ExecuteNonQuery();
+			}
+			catch (MySqlException ex) 
+			{
+				Console.WriteLine(ex);
+
+			}
+			finally 
+			{
+				if (conn != null) 
+				{
+					conn.Close();
+				}
+			}
 		}
 
+		/*
 		public void AddUser(string login, string password, string grade, int privilege)
 		{
-			cmd.CommandText = "INSERT INTO User VALUES(login, password, grade, privilege)";
-			cmd.ExecuteNonQuery();
+			using (var Connection = new SQLiteConnection(this.db)) {
+				Connection.Open();
+
+				using (var cmd = new SQLiteCommand(Connection)) {
+					cmd.CommandText = "INSERT INTO User VALUES(login, password, grade, privilege)";
+					cmd.ExecuteNonQuery();
+				}
+
+				Connection.Close();
+			}
 		}
 
 		public void RemoveUser(string username)
 		{
-			cmd.CommandText = "DELETE FROM User WHERE Username = username";
-			cmd.ExecuteNonQuery();
-		}
+			using (var Connection = new SQLiteConnection(this.db)) {
+				Connection.Open();
 
+				using (var cmd = new SQLiteCommand(Connection)) {
+					cmd.CommandText = "DELETE FROM User WHERE Username = username";
+					cmd.ExecuteNonQuery();
+				}
+
+				Connection.Close();
+			}
+		}
+		*/
+
+		/*
 		public void AddAssignment(string username, string taskname, string savefilename, string grade)
 		{
-			cmd.CommandText = "INSERT INTO Assignment VALUES(username, taskname, savefilename, grade)";
-			cmd.ExecuteNonQuery();
+			using (var Connection = new SQLiteConnection(this.db)) {
+				Connection.Open();
+
+				using (var cmd = new SQLiteCommand(Connection)) {
+					cmd.CommandText = "INSERT INTO Assignment VALUES(username, taskname, savefilename, grade)";
+					cmd.ExecuteNonQuery();
+				}
+
+				Connection.Close();
+			}
 		}
 
 		public void AddCompleted(string username, string taskname, string savefilename, string grade)
 		{
-			cmd.CommandText = "INSERT INTO Completed VALUES(username, taskname, savefilename, grade)";
-			cmd.ExecuteNonQuery();
+			using (var Connection = new SQLiteConnection(this.db)) {
+				Connection.Open();
+
+				using (var cmd = new SQLiteCommand(Connection)) {
+					cmd.CommandText = "INSERT INTO Completed VALUES(username, taskname, savefilename, grade)";
+					cmd.ExecuteNonQuery();
+				}
+
+				Connection.Close();
+			}
 		}
 
 		public void AddFeedback(string username, string taskname, string savefilename, string grade)
 		{
-			cmd.CommandText = "INSERT INTO Feedback VALUES(username, taskname, savefilename, grade)";
-			cmd.ExecuteNonQuery();
+			using (var Connection = new SQLiteConnection(this.db)) {
+				Connection.Open();
+
+				using (var cmd = new SQLiteCommand(Connection)) {
+					cmd.CommandText = "INSERT INTO Feedback VALUES(username, taskname, savefilename, grade)";
+					cmd.ExecuteNonQuery();
+				}
+
+				Connection.Close();
+			}
 		}
+		*/
 	}
 }
