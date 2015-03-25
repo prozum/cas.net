@@ -12,192 +12,31 @@ namespace Ast
 		//public abstract bool Contains (Expression a);
 
         #region Add
-        public static Integer operator +(Integer a, Integer b)
+        public static Expression operator +(Expression a, Expression b)
         {
-            return new Integer(a.value + b.value);
-        }
-
-        public static Rational operator +(Integer a, Rational b)
-        {
-            return new Rational(a, new Integer(1)) + b;
-        }
-
-        public static Rational operator +(Rational a, Integer b)
-        {
-            return a + new Rational(b, new Integer(1));
-        }
-
-        public static Rational operator +(Rational a, Rational b)
-        {
-            return new Rational(a.numerator * b.denominator + b.numerator * a.denominator, a.denominator * b.denominator);
-        }
-
-        public static Irrational operator +(Integer a, Irrational b)
-        {
-            return new Irrational(a.value + b.value);
-        }
-
-        public static Irrational operator +(Irrational a, Integer b)
-        {
-            return new Irrational(a.value + b.value);
-        }
-
-        public static Irrational operator +(Irrational a, Rational b)
-        {
-            return new Irrational(a.value + b.value.value);
-        }
-
-        public static Irrational operator +(Rational a, Irrational b)
-        {
-            return new Irrational(a.value.value + b.value);
-        }
-
-        public static Irrational operator +(Irrational a, Irrational b)
-        {
-            return new Irrational(a.value + b.value);
+            throw new NotImplementedException();
         }
         #endregion
 
         #region Sub
-        public static Integer operator -(Integer a, Integer b)
+        public static Expression operator -(Expression a, Expression b)
         {
-            return new Integer(a.value - b.value);
-        }
-
-        public static Rational operator -(Integer a, Rational b)
-        {
-            return new Rational(a, new Integer(1)) - b;
-        }
-
-        public static Rational operator -(Rational a, Integer b)
-        {
-            return a + new Rational(b, new Integer(1));
-        }
-
-        public static Rational operator -(Rational a, Rational b)
-        {
-            return new Rational(a.numerator * b.denominator - b.numerator * a.denominator, a.denominator * b.denominator);
-        }
-
-        public static Irrational operator -(Integer a, Irrational b)
-        {
-            return new Irrational(a.value - b.value);
-        }
-
-        public static Irrational operator -(Irrational a, Integer b)
-        {
-            return new Irrational(a.value - b.value);
-        }
-
-        public static Irrational operator -(Irrational a, Rational b)
-        {
-            return new Irrational(a.value - b.value.value);
-        }
-
-        public static Irrational operator -(Rational a, Irrational b)
-        {
-            return new Irrational(a.value.value - b.value);
-        }
-
-        public static Irrational operator -(Irrational a, Irrational b)
-        {
-            return new Irrational(a.value - b.value);
+            throw new NotImplementedException();
         }
         #endregion
 
         #region Mul
-        public static Integer operator *(Integer a, Integer b)
+        public static Expression operator *(Expression a, Expression b)
         {
-            return new Integer(a.value * b.value);
-        }
-
-        public static Rational operator *(Integer a, Rational b)
-        {
-            return new Rational(a, new Integer(1)) * b;
-        }
-
-        public static Rational operator *(Rational a, Integer b)
-        {
-            return a * new Rational(b, new Integer(1));
-        }
-
-        public static Rational operator *(Rational a, Rational b)
-        {
-            return new Rational(a.numerator * b.numerator, a.denominator * b.denominator);
-        }
-
-        public static Irrational operator *(Integer a, Irrational b)
-        {
-            return new Irrational(a.value * b.value);
-        }
-
-        public static Irrational operator *(Irrational a, Integer b)
-        {
-            return new Irrational(a.value * b.value);
-        }
-
-        public static Irrational operator *(Irrational a, Rational b)
-        {
-            return new Irrational(a.value * b.value.value);
-        }
-
-        public static Irrational operator *(Rational a, Irrational b)
-        {
-            return new Irrational(a.value.value * b.value);
-        }
-
-        public static Irrational operator *(Irrational a, Irrational b)
-        {
-            return new Irrational(a.value * b.value);
+            throw new NotImplementedException();
         }
         #endregion
 
         #region Div
-        public static Rational operator /(Integer a, Integer b)
+        public static Expression operator /(Expression a, Expression b)
         {
-            return new Rational(a, b);
-        }
-
-        public static Rational operator /(Integer a, Rational b)
-        {
-            return new Rational(a , new Integer(1)) / b;
-        }
-
-        public static Rational operator /(Rational a, Integer b)
-        {
-            return a / new Rational(b, new Integer(1));
-        }
-
-        public static Rational operator /(Rational a, Rational b)
-        {
-            return new Rational(a.numerator * b.denominator, a.denominator * b.numerator);
-        }
-
-        public static Irrational operator /(Integer a, Irrational b)
-        {
-            return new Irrational(a.value / b.value);
-        }
-
-        public static Irrational operator /(Irrational a, Integer b)
-        {
-            return new Irrational(a.value / b.value);
-        }
-
-        public static Irrational operator /(Irrational a, Rational b)
-        {
-            return new Irrational(a.value / b.value.value);
-        }
-
-        public static Irrational operator /(Rational a, Irrational b)
-        {
-            return new Irrational(a.value.value / b.value);
-        }
-
-        public static Irrational operator /(Irrational a, Irrational b)
-        {
-            return new Irrational(a.value / b.value);
+            throw new NotImplementedException();
         }
         #endregion
-
 	}
 }

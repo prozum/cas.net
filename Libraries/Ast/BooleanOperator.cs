@@ -8,100 +8,103 @@ namespace Ast
 {
     public class BooleanEqual : Operator
     {
-        public BooleanEqual()
+        public BooleanEqual() : this(null, null) { }
+        public BooleanEqual(Expression left, Expression right) : base(left, right)
         {
             symbol = "==";
             priority = 0;
         }
 
-        public override Expression Evaluate(Expression a, Expression b)
+        public override Expression Evaluate()
         {
-            return new Boolean((new Greater().Evaluate(a, b) as Boolean).value == false && (new Lesser().Evaluate(a, b) as Boolean).value == false);
+            return new Boolean((new Greater(left, right).Evaluate() as Boolean).value == false && (new Lesser(left, right).Evaluate() as Boolean).value == false);
         }
     }
 
     public class Lesser : Operator
     {
-        public Lesser()
+        public Lesser() : this(null, null) { }
+        public Lesser(Expression left, Expression right) : base(left, right)
         {
             symbol = "<";
             priority = 0;
         }
 
-        public override Expression Evaluate(Expression a, Expression b)
+        public override Expression Evaluate()
         {
-            return new Greater().Evaluate(b, a);
+            return new Greater(right, left).Evaluate();
         }
     }
 
     public class LesserOrEqual : Operator
     {
-        public LesserOrEqual()
+        public LesserOrEqual() : this(null, null) { }
+        public LesserOrEqual(Expression left, Expression right) : base(left, right)
         {
             symbol = "<=";
             priority = 0;
         }
 
-        public override Expression Evaluate(Expression a, Expression b)
+        public override Expression Evaluate()
         {
-            return new Boolean((new Lesser().Evaluate(a, b) as Boolean).value == true || (new BooleanEqual().Evaluate(a, b) as Boolean).value == true);
+            return new Boolean((new Lesser(left, right).Evaluate() as Boolean).value == true || (new BooleanEqual(left, right).Evaluate() as Boolean).value == true);
         }
     }
 
     public class Greater : Operator
     {
-        public Greater()
+        public Greater() : this(null, null) { }
+        public Greater(Expression left, Expression right) : base(left, right)
         {
             symbol = ">";
             priority = 0;
         }
 
-        public override Expression Evaluate(Expression a, Expression b)
+        public override Expression Evaluate()
         {
-            if (a is Integer && b is Integer)
+            if (left is Integer && right is Integer)
             {
-                return new Boolean((a as Integer).value > (b as Integer).value);
+                return new Boolean((left as Integer).value > (right as Integer).value);
             }
 
-            if (a is Integer && b is Rational)
+            if (left is Integer && right is Rational)
             {
-                return new Greater().Evaluate(new Rational((a as Integer), new Integer(1)), b);
+                return new Greater(new Rational((left as Integer), new Integer(1)), right).Evaluate();
             }
 
-            if (a is Rational && b is Integer)
+            if (left is Rational && right is Integer)
             {
-                return new Greater().Evaluate(a, new Rational((b as Integer), new Integer(1)));
+                return new Greater(left, new Rational((right as Integer), new Integer(1))).Evaluate();
             }
 
-
-            if (a is Rational && b is Rational)
+            if (left is Rational && right is Rational)
             {
-                return new Boolean((a as Rational).numerator.value * (b as Rational).denominator.value > (b as Rational).numerator.value * (a as Rational).denominator.value);
+                return new Boolean((left as Rational).numerator.value * (right as Rational).denominator.value > (right as Rational).numerator.value * (left as Rational).denominator.value);
             }
 
-            if (a is Integer && b is Irrational)
+            if (left is Integer && right is Irrational)
             {
-                return new Boolean((a as Integer).value > (b as Irrational).value);
+                return new Boolean((left as Integer).value > (right as Irrational).value);
             }
 
-            if (a is Irrational && b is Integer)
+            if (left is Irrational && right is Integer)
             {
-                return new Boolean((a as Irrational).value > (b as Integer).value);
+                return new Boolean((left as Irrational).value > (right as Integer).value);
             }
 
-            if (a is Irrational && b is Irrational)
+            if (left is Irrational && right is Irrational)
             {
-                return new Boolean((a as Irrational).value > (b as Irrational).value);
+                return new Boolean((left as Irrational).value > (right as Irrational).value);
             }
 
-            if (a is Irrational && b is Rational)
+            if (left is Irrational && right is Rational)
             {
-                return new Boolean((a as Irrational).value > (b as Rational).value.value);
+                return new Boolean((left as Irrational).value > (right as Rational).value.value);
             }
 
-            if (a is Rational && b is Irrational)
+            if (left is Rational && right is Irrational)
             {
-                return new Boolean((a as Rational).value.value > (b as Irrational).value);
+                return new Boolean((left as Rational).value.value > (right as Irrational).value);
             }
 
             return null;
@@ -110,15 +113,16 @@ namespace Ast
 
     public class GreaterOrEqual : Operator
     {
-        public GreaterOrEqual()
+        public GreaterOrEqual() : this(null, null) { }
+        public GreaterOrEqual(Expression left, Expression right) : base(left, right)
         {
             symbol = ">=";
             priority = 0;
         }
 
-        public override Expression Evaluate(Expression a, Expression b)
+        public override Expression Evaluate()
         {
-            return new Boolean((new Greater().Evaluate(a, b) as Boolean).value == true || (new BooleanEqual().Evaluate(a, b) as Boolean).value == true);
+            return new Boolean((new Greater(left, right).Evaluate() as Boolean).value == true || (new BooleanEqual(left, right).Evaluate() as Boolean).value == true);
         }
     }
 
