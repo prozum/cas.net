@@ -16,6 +16,11 @@ namespace Ast
 		{
 			return symbol;
 		}
+
+		public override Expression Evaluate()
+		{
+			return this;
+		}
 	}
 }
 
