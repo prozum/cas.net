@@ -56,8 +56,8 @@ namespace CAS.NET.Server
 
 				string stm = "SELECT VERSION()";   
 				MySqlCommand cmd = new MySqlCommand(stm, conn);
-				cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Assignment(Username VARCHAR(8), TaskName TEXT CHARACTER SET binary,
-									SaveFileName TEXT CHARACTER SET binary, Grade TEXT CHARACTER SET binary)";
+				cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Assignment(Username VARCHAR(8),
+									File TEXT CHARACTER SET binary, Grade TEXT CHARACTER SET binary)";
 				cmd.ExecuteNonQuery();
 			}
 			catch (MySqlException ex) 
@@ -158,21 +158,21 @@ namespace CAS.NET.Server
 		}
 		*/
 
-		/*
-		public void AddAssignment(string username, string taskname, string savefilename, string grade)
+		public void AddAssignment(string username, string file, string grade)
 		{
-			using (var Connection = new SQLiteConnection(this.db)) {
-				Connection.Open();
+			using (conn = new MySqlConnection(db)) {
+				conn.Open();
 
-				using (var cmd = new SQLiteCommand(Connection)) {
-					cmd.CommandText = "INSERT INTO Assignment VALUES(username, taskname, savefilename, grade)";
+				using (var cmd = new MySqlCommand()) {
+					cmd.CommandText = "INSERT INTO Assignment(Username, File, Grade) VALUES(username, file, grade)";
 					cmd.ExecuteNonQuery();
 				}
 
-				Connection.Close();
+				conn.Close();
 			}
 		}
 
+		/*
 		public void AddCompleted(string username, string taskname, string savefilename, string grade)
 		{
 			using (var Connection = new SQLiteConnection(this.db)) {
