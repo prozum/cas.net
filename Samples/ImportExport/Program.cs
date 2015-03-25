@@ -79,8 +79,6 @@ namespace ImportExport
 
 			PrintPerson ("person", ReadPerson1);
 			PrintPerson ("person2", ReadPerson2);
-
-			Open.OpenFile ();
 		}
 
 		// Returns text based on true or false
