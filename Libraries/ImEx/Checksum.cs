@@ -21,33 +21,33 @@ namespace ImEx
 		}
 
 		// Generates a 128 bit (16 byte) hash in hexadecimal form
-		public static string GetMd5Hash (MD5 md5Hash, string hashableString)
+		public static string GetMd5Hash (string hashableString)
 		{
-			byte[] data = md5Hash.ComputeHash (Encoding.UTF8.GetBytes (hashableString));
-
-			StringBuilder sBuileder = new StringBuilder ();
-
-			for (int i = 0; i < data.Length; i++) {
-				sBuileder.Append (data [i].ToString ("x2"));
+			using (MD5 md5Hash = MD5.Create ()) {
+				byte[] data = md5Hash.ComputeHash (Encoding.UTF8.GetBytes (hashableString));
+				StringBuilder sBuileder = new StringBuilder ();
+				for (int i = 0; i < data.Length; i++) {
+					sBuileder.Append (data [i].ToString ("x2"));
+				}
+				return sBuileder.ToString ();
 			}
-			return sBuileder.ToString ();
 		}
-
+			
 		// Takes two strings, generates their MD5 hashes, and compare them.
 		// Returns true if they are identical
-		public static bool VerifyMd5String (MD5 md5Hash, string verStringA, string verStringB)
+		public static bool VerifyMd5String (string verStringA, string verStringB)
 		{
-			string hashOfVerStringA = GetMd5Hash (md5Hash, verStringA);
-			string hashOfVerStringB = GetMd5Hash (md5Hash, verStringB);
-
-			StringComparer comparer = StringComparer.OrdinalIgnoreCase;
-
-			return 0 == comparer.Compare (hashOfVerStringA, hashOfVerStringB);
+			using (MD5 md5Hash = MD5.Create ()) {
+				string hashOfVerStringA = GetMd5Hash (verStringA);
+				string hashOfVerStringB = GetMd5Hash (verStringB);
+				StringComparer comparer = StringComparer.OrdinalIgnoreCase;
+				return 0 == comparer.Compare (hashOfVerStringA, hashOfVerStringB);
+			}
 		}
 
 		// Takes two MD5 hashes, and compare them.
 		// Returns true if they are identical
-		public static bool VerifyMd5Hash (MD5 md5Hash, string verHashA, string verHashB)
+		public static bool VerifyMd5Hash (string verHashA, string verHashB)
 		{
 			StringComparer comparer = StringComparer.OrdinalIgnoreCase;
 
@@ -56,9 +56,9 @@ namespace ImEx
 
 		// Takes one MD5 hash, and one string that need to generate a hash.
 		// Returns true if they are identical
-		public static bool VerifyMd5HashString (MD5 md5Hash, string verHash, string verString)
+		public static bool VerifyMd5HashString (string verHash, string verString)
 		{
-			string hashOfVerString = GetMd5Hash (md5Hash, verString);
+			string hashOfVerString = GetMd5Hash (verString);
 
 			StringComparer comparer = StringComparer.OrdinalIgnoreCase;
 

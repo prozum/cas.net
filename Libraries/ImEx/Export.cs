@@ -19,40 +19,5 @@ namespace ImEx
 			return JsonConvert.SerializeObject (serializeObject);
 		}
 	}
-
-	/*
-	public class TypeManager
-	{
-		public Type _type;
-		public string _JsonString;
-
-		public TypeManager (Object o)
-		{
-			_type = o.GetType ();
-			Console.WriteLine ("Type written: " + o.GetType ());
-			_JsonString = Export.Serialize (o);
-		}
-
-		public TypeManager ()
-		{
-
-		}
-
-		public Type GetTMType ()
-		{
-			return _type;
-		}
-
-		public string GetTMString ()
-		{
-			return _JsonString;
-		}
-
-		public string ToString ()
-		{
-			return _type.ToString () + " " + _JsonString;
-		}
-	}
-	*/
 }
 
