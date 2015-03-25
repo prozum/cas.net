@@ -8,7 +8,7 @@ namespace Ast
 		public int priority;
 		public Expression left,right;
 
-		public abstract Expression Evaluate();
+		//public abstract Expression Evaluate();
 
         public Operator(Expression left, Expression right)
         {
@@ -16,18 +16,18 @@ namespace Ast
             this.right = right;
         }
 
-        //public override string ToString()
-        //{
-        //    if (parent == null || priority >= parent.priority ) {
+        public override string ToString()
+        {
+            if (parent == null || priority >= parent.priority ) {
 
-        //        return left.ToString () + symbol + right.ToString ();
+                return left.ToString () + symbol + right.ToString ();
 			
-        //    } else {
+            } else {
 
-        //        return '(' + left.ToString () + symbol + right.ToString () + ')';
+                return '(' + left.ToString () + symbol + right.ToString () + ')';
 
-        //    }
-        //}
+            }
+        }
 
     }
 
@@ -162,7 +162,7 @@ namespace Ast
 				return new Irrational((left as Rational).value.value - (right as Irrational).value);
 			}
 
-			return null;
+			return new Error("Cannot evaluate operator expression!");
 		}
 	}
 
@@ -214,7 +214,7 @@ namespace Ast
 				return new Irrational((left as Rational).value.value * (right as Irrational).value);
 			}
 
-			return null;
+			return new Error("Cannot evaluate operator expression!");
 		}
 	}
 
@@ -266,7 +266,7 @@ namespace Ast
 				return new Irrational((left as Rational).value.value / (right as Irrational).value);
 			}
 
-			return null;
+			return new Error("Cannot evaluate operator expression!");
 		}
 	}
 
@@ -281,7 +281,11 @@ namespace Ast
 
         public override Expression Evaluate()
         {
-            throw new NotImplementedException();
+			if (left is Integer && right is Integer) {
+				return new Integer( (int)Math.Pow((left as Integer).value, (right as Integer).value));
+			}
+
+			return new Error("Cannot evaluate operator expression!");
         }
 	}
 }
