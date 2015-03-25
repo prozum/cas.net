@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ImEx;
 using System.Security.Cryptography;
+using ImEx.test
 
 namespace ImportExport
 {
@@ -48,9 +49,9 @@ namespace ImportExport
 
 			ChecksumString = Import.ReadSerializedFromCasFile ("person", "");
 			using (MD5 md5Hash = MD5.Create ()) {
-				S_CSumEx = Checksum.GetMd5Hash (md5Hash, Export.Serialize (person));
-				S_CSumIm = Checksum.GetMd5Hash (md5Hash, ChecksumString);
-				Valid = Checksum.VerifyMd5Hash (md5Hash, S_CSumEx, S_CSumIm);
+				S_CSumEx = Checksum.GetMd5Hash (Export.Serialize (person));
+				S_CSumIm = Checksum.GetMd5Hash (ChecksumString);
+				Valid = Checksum.VerifyMd5Hash (S_CSumEx, S_CSumIm);
 			}
 
 			PrintChecksums (S_CSumEx, S_CSumIm);
@@ -60,9 +61,9 @@ namespace ImportExport
 
 			ChecksumString = Import.ReadSerializedFromCasFile ("person2", "");
 			using (MD5 md5Hash = MD5.Create ()) {
-				S_CSumEx = Checksum.GetMd5Hash (md5Hash, Export.Serialize (person));
-				S_CSumIm = Checksum.GetMd5Hash (md5Hash, ChecksumString);
-				Valid = Checksum.VerifyMd5Hash (md5Hash, S_CSumEx, S_CSumIm);
+				S_CSumEx = Checksum.GetMd5Hash (Export.Serialize (person));
+				S_CSumIm = Checksum.GetMd5Hash (ChecksumString);
+				Valid = Checksum.VerifyMd5Hash (S_CSumEx, S_CSumIm);
 			}
 
 			PrintChecksums (S_CSumEx, S_CSumIm);

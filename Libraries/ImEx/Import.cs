@@ -7,9 +7,9 @@ using System.Collections.Generic;
 
 namespace ImEx
 {
+
 	public static class Import
 	{
-	
 		// Returns a deserialised string from file to object T
 		public static T ReadDeserializedFromCasFile<T> (string fileName, string fileDestination)
 		{
