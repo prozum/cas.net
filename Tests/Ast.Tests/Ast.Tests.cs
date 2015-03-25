@@ -11,12 +11,16 @@ namespace Ast.Tests
 		{
 			Expression res;
 
-			string[] testStrings = {"x*y*f(10-x)-20","x*10-20/x","f(x,y,z)=x/y*z"};
+			string[,] testStrings = {
+				{"(x*y)*f(10-x)-20", "x*y*f(10-x)-20"},
+				{"x*10-20/x", "x*10-20/x"},
+				{"f(x,y,z)=x/y*z", "f(x,y,z)=x/y*z"}
+			};
 
-			foreach (string testString in testStrings) {
+			for (int i = 0; i < testStrings.GetLength(0); i++) {
 
-				res = Ast.Parser.Parse(testString);
-				Assert.AreEqual (testString, res.ToString());
+				res = Ast.Parser.Parse(testStrings[i,0]);
+				Assert.AreEqual (testStrings[i,1], res.ToString());
 			
 			}
 		}
@@ -36,6 +40,24 @@ namespace Ast.Tests
 			}
 		}
 
+		[Test]
+		public void Evaluate()
+		{
+			Expression res;
+
+			string[,] testStrings = {
+				{"10.10*20", "202.00"},
+				{"10/20*20", "10"},
+				{"2^8", "256"}
+			};
+
+			for (int i = 0; i < testStrings.GetLength(0); i++) {
+
+				res = Ast.Parser.Parse(testStrings[i,0]);
+				Assert.AreEqual (testStrings[i,1], res.Evaluate().ToString());
+
+			}
+		}
 
 	}
 }

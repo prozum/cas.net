@@ -30,6 +30,12 @@ namespace Ast
 
 			return str + ')';
 		}
+
+		public override Expression Evaluate()
+		{
+			//TODO
+			return this;
+		}
 	}
 }
 
