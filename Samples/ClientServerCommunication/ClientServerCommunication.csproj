@@ -37,4 +37,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\Account\Account.csproj">
+      <Project>{926EE758-EDA5-4B92-BFE8-419C54909810}</Project>
+      <Name>Account</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

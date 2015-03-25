@@ -23,20 +23,26 @@ namespace CAS.NET.Server
 				while (true)
 				{
 					Console.WriteLine("Listening...");
-
-					var request = listener.GetContext().Request;
-					var response = listener.GetContext().Response;
+					var context = listener.GetContext();
+					var request = context.Request;
+					var response = context.Response;
 
 					Stream reader = request.InputStream;
-					byte[] msg = new byte[reader.Length];
+					byte[] buffer;
+					string msg;
 
-					for (int i = 0; i < reader.Length; i++) {
-						msg[i] = (byte)reader.ReadByte();
+					using(var memoryStream = new MemoryStream())
+					{
+						reader.CopyTo(memoryStream);
+						buffer = memoryStream.ToArray();
+						msg = Encoding.ASCII.GetString(buffer);
 					}
 
-					string remsg = ExecuteCommand(msg, db);
+					Console.WriteLine(msg);
 
-					byte[] buffer = System.Text.Encoding.UTF8.GetBytes(remsg);
+					var remsg = ExecuteCommand(msg, db);
+
+					buffer = System.Text.Encoding.UTF8.GetBytes(remsg);
 					response.ContentLength64 = buffer.Length;
 					System.IO.Stream output = response.OutputStream;
 					output.Write(buffer, 0, buffer.Length);
@@ -44,12 +50,12 @@ namespace CAS.NET.Server
 			}
 		}
 
-		public static string GetCommand(byte[] msg)
+		public static string GetCommand(string msg)
 		{
 			return GetStringFromPosition(msg, 0);
 		}
 
-		public static string ExecuteCommand(byte[] msg, Database db)
+		public static string ExecuteCommand(string msg, Database db)
 		{
 			string command = GetCommand(msg);
 
@@ -73,7 +79,7 @@ namespace CAS.NET.Server
 			return "Success";
 		}
 
-		public static string TeacherAddAssignment(byte[] msg, Database db)
+		public static string TeacherAddAssignment(string msg, Database db)
 		{
 			int n = 0;
 			string  grade = "", username = "", password = "", file = "";
@@ -95,7 +101,7 @@ namespace CAS.NET.Server
 			return "Successfully added assignment";
 		}
 
-		public static string GetStringFromPosition(byte[] msg, int pos)
+		public static string GetStringFromPosition(string msg, int pos)
 		{
 			string str = "";
 
@@ -108,7 +114,7 @@ namespace CAS.NET.Server
 			return str;
 		}
 
-		public static string GetStringFromPosition(byte[] msg, ref int pos)
+		public static string GetStringFromPosition(string msg, ref int pos)
 		{
 			string str = "";
 
