@@ -18,17 +18,17 @@ namespace Ast
 
 		public override Expression Evaluate()
         {
-            if (left is Operator && right is Operator)
+            if ((left is Operator || left is Symbol) && (right is Operator || left is Symbol))
             {
                 return new Add(left.Evaluate(), right.Evaluate()).Evaluate();
             }
 
-            if (left is Operator)
+            if (left is Operator || left is Symbol)
             {
                 return new Add(left.Evaluate(), right).Evaluate();
             }
 
-            if (right is Operator)
+            if (right is Operator || right is Symbol)
             {
                 return new Add(left, right.Evaluate()).Evaluate();
             }

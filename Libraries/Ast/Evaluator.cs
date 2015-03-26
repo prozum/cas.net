@@ -10,6 +10,15 @@ namespace Ast
 		public Evaluator ()
 		{
 		}
+
+        public Expression Evaluation(string inputString)
+        {
+            var exp = Parser.Parse(definitions, inputString);
+
+            return exp.Evaluate();
+
+            return new Error("Duuurh");
+        }
 	}
 }
 

@@ -10,7 +10,7 @@ namespace Ast
 	{
 	    static readonly char[] opValidChars = { '=', '<', '>', '+', '-', '*', '/', '^' };
 
-        public static Expression Parse(string parseString)
+        public static Expression Parse(Dictionary<string, Expression> definitions, string parseString)
         {
 			Expression curExp;
 			var exs = new Stack<Expression> ();
@@ -31,7 +31,7 @@ namespace Ast
 				if (char.IsLetter ((char)curChar)) {
 
 					//exs.Push (ParseIdentifier (parseReader));
-					curExp = ParseIdentifier (parseReader);
+                    curExp = ParseIdentifier(definitions, parseReader);
 					exs.Push (curExp);
 
 				} else if (char.IsDigit ((char)curChar)) {
@@ -43,7 +43,7 @@ namespace Ast
 				} else if (curChar.Equals ('(')) {
 				
 					//exs.Push (Parse (ExtractSubstring (parseReader))); 
-					curExp = Parse (ExtractSubstring (parseReader)); 
+                    curExp = Parse(definitions, ExtractSubstring(parseReader)); 
 					exs.Push (curExp); 
 
 				} else if (opValidChars.Contains ((char)curChar)) {
@@ -164,7 +164,7 @@ namespace Ast
 			return curOp;
         }
 
-		private static Expression ParseIdentifier(StringReader parseReader)
+        private static Expression ParseIdentifier(Dictionary<string, Expression> definitions, StringReader parseReader)
         {
 			string identifier = "";
 			int curChar;
@@ -178,16 +178,16 @@ namespace Ast
 
 			if ((char)curChar == '(') {
 
-                return ParseFunction (identifier, parseReader);
+                return ParseFunction(definitions, identifier, parseReader);
 
             } else {
 
-                return new Symbol (identifier);
+                return new Symbol(definitions, identifier);
 
             }
         }
 
-		private static Expression ParseFunction(string identifier, StringReader parseReader)
+		private static Expression ParseFunction(Dictionary<string, Expression> definitions, string identifier, StringReader parseReader)
 		{
 			var args = new List<Expression> ();
 
@@ -196,7 +196,7 @@ namespace Ast
 
 			foreach (string arg in argList) {
 
-				args.Add(Parse(arg));
+                args.Add(Parse(definitions, arg));
 			}
 			return new Function(identifier, args);
 		}

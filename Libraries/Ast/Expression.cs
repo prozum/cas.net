@@ -6,8 +6,10 @@ namespace Ast
 {
 	public abstract class Expression 
 	{
+        public Dictionary<string, Expression> definitions;
 		public Operator parent;
 		public abstract Expression Evaluate ();
+
 		//public abstract string ToString ();
 		//public abstract bool Contains (Expression a);
 

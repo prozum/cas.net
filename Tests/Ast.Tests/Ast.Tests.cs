@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using Ast;
+using System.Collections.Generic;
 
 namespace Ast.Tests
 {
@@ -19,7 +20,7 @@ namespace Ast.Tests
 
 			for (int i = 0; i < testStrings.GetLength(0); i++) {
 
-				res = Ast.Parser.Parse(testStrings[i,0]);
+                res = Ast.Parser.Parse(new Dictionary<string,Expression>(), testStrings[i,0]);
 				Assert.AreEqual (testStrings[i,1], res.ToString());
 			
 			}
@@ -53,7 +54,7 @@ namespace Ast.Tests
 
 			for (int i = 0; i < testStrings.GetLength(0); i++) {
 
-				res = Ast.Parser.Parse(testStrings[i,0]);
+				res = Ast.Parser.Parse(new Dictionary<string,Expression>(), testStrings[i,0]);
 				Assert.AreEqual (testStrings[i,1], res.Evaluate().ToString());
 
 			}
