@@ -107,7 +107,7 @@ namespace Ast
                 return new Boolean((left as Rational).value.value > (right as Irrational).value);
             }
 
-            return null;
+            return new Error("Cannot evaluate operator expression!");
         }
     }
 

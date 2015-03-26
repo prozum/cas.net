@@ -76,9 +76,9 @@ namespace Ast
 
             if (left is Rational && right is Rational)
             {
-                (left as Rational).numerator.value *= (right as Rational).denominator.value;
-                (right as Rational).numerator.value *= (left as Rational).denominator.value;
-                return new Rational(new Add((left as Rational).numerator, (right as Rational).numerator).Evaluate() as Integer,
+                var leftNumerator = new Integer((left as Rational).numerator.value * (right as Rational).denominator.value);
+                var rightNumerator = new Integer((right as Rational).numerator.value * (left as Rational).denominator.value);
+                return new Rational(new Add(leftNumerator, rightNumerator).Evaluate() as Integer,
                                     new Mul((right as Rational).denominator, (left as Rational).denominator).Evaluate() as Integer);
             }
 
@@ -107,7 +107,7 @@ namespace Ast
                 return new Irrational((left as Rational).value.value + (right as Irrational).value);
             }
 
-            return null;
+            return new Error("Cannot evaluate operator expression!");
 		}
 	}
 
@@ -135,10 +135,11 @@ namespace Ast
 			}
 
 
-			if (left is Rational && right is Rational) {
-				(left as Rational).numerator.value *= (right as Rational).denominator.value;
-				(right as Rational).numerator.value *= (left as Rational).denominator.value;
-                return new Rational(new Sub((left as Rational).numerator, (right as Rational).numerator).Evaluate() as Integer,
+            if (left is Rational && right is Rational)
+            {
+                var leftNumerator = new Integer((left as Rational).numerator.value * (right as Rational).denominator.value);
+                var rightNumerator = new Integer((right as Rational).numerator.value * (left as Rational).denominator.value);
+                return new Rational(new Sub(leftNumerator, rightNumerator).Evaluate() as Integer,
                                     new Mul((right as Rational).denominator, (left as Rational).denominator).Evaluate() as Integer);
 			}
 
