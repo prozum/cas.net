@@ -107,7 +107,7 @@ namespace Ast
                 return new Boolean((left as Rational).value.value > (right as Irrational).value);
             }
 
-            return new Error("Cannot evaluate operator expression!");
+            return base.Evaluate();
         }
     }
 
