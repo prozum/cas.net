@@ -6,7 +6,7 @@ namespace Ast
 	public class Function  : Expression
 	{
 		public string identifier;
-		public List<Expression> args = new List<Expression> ();
+        public List<Expression> args = new List<Expression>();
 
 		public Function(string identifier, List<Expression> args)
 		{
@@ -32,8 +32,7 @@ namespace Ast
 		}
 
 		public override Expression Evaluate()
-		{
-			//TODO
+        {
 			return this;
 		}
 	}

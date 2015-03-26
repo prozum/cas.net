@@ -20,6 +20,12 @@ namespace ImportExport
 			person2.Add (new Person ("Average", "joe", 40));
 			Export.WriteToCasFile (Export.Serialize (person2), "person2", "");
 
+			dynamic t;
+
+
+
+			/*
+
 			// Validate using BSD Checksum
 			Console.WriteLine ("BSD:");
 			string ChecksumString;
@@ -79,8 +85,10 @@ namespace ImportExport
 
 			PrintPerson ("person", ReadPerson1);
 			PrintPerson ("person2", ReadPerson2);
-		}
 
+			*/
+		}
+			
 		// Returns text based on true or false
 		public static void PrintValidation (bool b)
 		{
@@ -141,6 +149,25 @@ namespace ImportExport
 			string s = FirstName + " " + LastName + " " + Age;
 			return s;
 			;
+		}
+	}
+
+	public class ExtendedPerson : Person
+	{
+		public string occupation { get; set; }
+
+		public ExtendedPerson (string FirstName, string lastName, int age, string occupation)
+		{
+			this.FirstName = FirstName;
+			this.LastName = lastName;
+			this.Age = age;
+			this.occupation = occupation;
+		}
+
+		public string ToString ()
+		{
+			string s = FirstName + " " + LastName + " " + " " + Age + " " + occupation;
+			return s;
 		}
 	}
 }
