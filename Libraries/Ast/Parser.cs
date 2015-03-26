@@ -198,6 +198,7 @@ namespace Ast
 
                 args.Add(Parse(definitions, arg));
 			}
+
 			return new Function(identifier, args);
 		}
 

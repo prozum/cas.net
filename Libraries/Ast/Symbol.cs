@@ -26,7 +26,7 @@ namespace Ast
             if (definitions.ContainsKey(symbol))
             {
                 definitions.TryGetValue(symbol, out res);
-                return res;
+                return res.Evaluate();
             }
 
             return new Error("Duuurh");
