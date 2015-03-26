@@ -13,6 +13,11 @@ namespace ImEx
 			File.WriteAllText (fileDestination + fileName + ".cas", exportString);
 		}
 
+		public static void WriteToCasFile (string exportString, string file)
+		{
+			File.WriteAllText (file, exportString);
+		}
+
 		// Takes a string, and serialize it as Json.
 		public static string Serialize (Object serializeObject)
 		{
