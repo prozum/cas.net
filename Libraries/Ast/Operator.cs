@@ -16,7 +16,7 @@ namespace Ast
             this.right = right;
         }
 
-        public virtual Expression Evaluate()
+		public override Expression Evaluate()
         {
             if (left is Operator && right is Operator)
             {
