@@ -24,10 +24,10 @@ namespace Geometry
 			}
 		}
 
-		//To vinkler og en længde eller vice versa.For at finde side.
+		//To vinkler og en længde eller vice versa.For at finde side. *Virker ikke 
+		/*
 		public static double SineRelation(int select, double a, double b, double c, double A, double B, double C)
 		{
-			//
 			double side;
 			if (select == 1) {
 
@@ -47,9 +47,7 @@ namespace Geometry
 			} else {
 				return 0;
 			}
-
-
-		}
+		} */
 
 		// Trigonometri, have alle sidelængder, find alle vinkler.
 		public static double[] Angles(double a, double b, double c) {

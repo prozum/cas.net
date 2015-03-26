@@ -148,28 +148,15 @@ namespace CAS.NET.Server
 
 		public void AddAssignment(string username, string file, string grade)
 		{
-			try 
-			{
-				conn = new MySqlConnection(db);
+			using (conn = new MySqlConnection(db)) {
 				conn.Open();
 
-				string stm = "SELECT VERSION()";   
-				MySqlCommand cmd = new MySqlCommand(stm, conn);
-				cmd.CommandText = "INSERT INTO Assignment(Username, File, Grade) VALUES(@username, @file, @grade)";
+				const string command = "INSERT INTO Assignment(Username, File, Grade) VALUES(@username, @file, @grade)";
+				MySqlCommand cmd = new MySqlCommand(command, conn);
 				cmd.Parameters.AddWithValue("@username", username);
 				cmd.Parameters.AddWithValue("@file", file);
 				cmd.Parameters.AddWithValue("@grade", grade);
 				cmd.ExecuteNonQuery();
-
-			}
-			catch (MySqlException ex) 
-			{
-				Console.WriteLine(ex);
-
-			}
-			finally 
-			{
-				conn.Close();
 			}
 		}
 

@@ -16,6 +16,26 @@ namespace Ast
             this.right = right;
         }
 
+		public override Expression Evaluate()
+        {
+            if ((left is Operator || left is Symbol) && (right is Operator || left is Symbol))
+            {
+                return new Add(left.Evaluate(), right.Evaluate()).Evaluate();
+            }
+
+            if (left is Operator || left is Symbol)
+            {
+                return new Add(left.Evaluate(), right).Evaluate();
+            }
+
+            if (right is Operator || right is Symbol)
+            {
+                return new Add(left, right.Evaluate()).Evaluate();
+            }
+
+            return new Error("Cannot evaluate operator expression!");
+        }
+
         public override string ToString()
         {
             if (parent == null || priority >= parent.priority ) {
@@ -40,11 +60,10 @@ namespace Ast
             priority = 0;
         }
 
-		public override Expression Evaluate ()
-		{
-			throw new NotImplementedException ();
-		}
-
+        public override Expression Evaluate()
+        {
+            return base.Evaluate();
+        }
 	}
 
 	public class Add : Operator
@@ -58,6 +77,7 @@ namespace Ast
 
 		public override Expression Evaluate ()
 		{
+
             if (left is Integer && right is Integer)
             {
                 return new Integer((left as Integer).value + (right as Integer).value);
@@ -76,9 +96,9 @@ namespace Ast
 
             if (left is Rational && right is Rational)
             {
-                (left as Rational).numerator.value *= (right as Rational).denominator.value;
-                (right as Rational).numerator.value *= (left as Rational).denominator.value;
-                return new Rational(new Add((left as Rational).numerator, (right as Rational).numerator).Evaluate() as Integer,
+                var leftNumerator = new Integer((left as Rational).numerator.value * (right as Rational).denominator.value);
+                var rightNumerator = new Integer((right as Rational).numerator.value * (left as Rational).denominator.value);
+                return new Rational(new Add(leftNumerator, rightNumerator).Evaluate() as Integer,
                                     new Mul((right as Rational).denominator, (left as Rational).denominator).Evaluate() as Integer);
             }
 
@@ -107,7 +127,7 @@ namespace Ast
                 return new Irrational((left as Rational).value.value + (right as Irrational).value);
             }
 
-            return null;
+            return base.Evaluate();
 		}
 	}
 
@@ -135,10 +155,11 @@ namespace Ast
 			}
 
 
-			if (left is Rational && right is Rational) {
-				(left as Rational).numerator.value *= (right as Rational).denominator.value;
-				(right as Rational).numerator.value *= (left as Rational).denominator.value;
-                return new Rational(new Sub((left as Rational).numerator, (right as Rational).numerator).Evaluate() as Integer,
+            if (left is Rational && right is Rational)
+            {
+                var leftNumerator = new Integer((left as Rational).numerator.value * (right as Rational).denominator.value);
+                var rightNumerator = new Integer((right as Rational).numerator.value * (left as Rational).denominator.value);
+                return new Rational(new Sub(leftNumerator, rightNumerator).Evaluate() as Integer,
                                     new Mul((right as Rational).denominator, (left as Rational).denominator).Evaluate() as Integer);
 			}
 
@@ -162,7 +183,7 @@ namespace Ast
 				return new Irrational((left as Rational).value.value - (right as Irrational).value);
 			}
 
-			return new Error("Cannot evaluate operator expression!");
+            return base.Evaluate();
 		}
 	}
 
@@ -214,7 +235,7 @@ namespace Ast
 				return new Irrational((left as Rational).value.value * (right as Irrational).value);
 			}
 
-			return new Error("Cannot evaluate operator expression!");
+            return base.Evaluate();
 		}
 	}
 
@@ -266,7 +287,7 @@ namespace Ast
 				return new Irrational((left as Rational).value.value / (right as Irrational).value);
 			}
 
-			return new Error("Cannot evaluate operator expression!");
+            return base.Evaluate();
 		}
 	}
 
@@ -285,7 +306,7 @@ namespace Ast
 				return new Integer( (int)Math.Pow((left as Integer).value, (right as Integer).value));
 			}
 
-			return new Error("Cannot evaluate operator expression!");
+            return base.Evaluate();
         }
 	}
 }

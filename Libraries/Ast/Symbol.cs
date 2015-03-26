@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Ast
 {
@@ -7,9 +8,10 @@ namespace Ast
 		public Number prefix, exponent;
 		public string symbol;
 
-		public Symbol (string sym)
+        public Symbol(Dictionary<string, Expression> definitions, string sym)
 		{
 			symbol = sym;
+            this.definitions = definitions;
 		}
 
 		public override string ToString()
@@ -19,7 +21,15 @@ namespace Ast
 
 		public override Expression Evaluate()
 		{
-			return this;
+            Expression res;
+
+            if (definitions.ContainsKey(symbol))
+            {
+                definitions.TryGetValue(symbol, out res);
+                return res;
+            }
+
+            return new Error("Duuurh");
 		}
 	}
 }
