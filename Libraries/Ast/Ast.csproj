@@ -40,6 +40,7 @@
     <Compile Include="Symbol.cs" />
     <Compile Include="Operator.cs" />
     <Compile Include="Error.cs" />
+    <Compile Include="Evaluator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
