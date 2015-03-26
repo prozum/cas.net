@@ -10,9 +10,8 @@ namespace CAS.NET.Server
 	{
 		public static void StartListen(string prefix, Database db)
 		{
-			if (prefix == null || prefix.Length == 0)
-			{
-				throw new ArgumentException("prefixes");
+			if (string.IsNullOrEmpty (prefix)) {
+				throw new ArgumentException ("prefix");
 			}
 
 			using (HttpListener listener = new HttpListener()) {
@@ -35,7 +34,7 @@ namespace CAS.NET.Server
 					{
 						reader.CopyTo(memoryStream);
 						buffer = memoryStream.ToArray();
-						msg = Encoding.ASCII.GetString(buffer);
+						msg = Encoding.UTF8.GetString(buffer);
 					}
 
 					Console.WriteLine(msg);
@@ -82,7 +81,10 @@ namespace CAS.NET.Server
 		public static string TeacherAddAssignment(string msg, Database db)
 		{
 			int n = 0;
-			string  grade = "", username = "", password = "", file = "";
+			string grade = "";
+			string username = "";
+			string password = "";
+			string file = "";
 
 			/* find length of command by output parameter n */
 			GetStringFromPosition(msg, ref n);
@@ -99,6 +101,11 @@ namespace CAS.NET.Server
 			db.AddAssignment(username, file, grade);
 
 			return "Successfully added assignment";
+		}
+
+		public static string StudentGetAssignment(string msg, Database db)
+		{
+			throw new NotImplementedException ();
 		}
 
 		public static string GetStringFromPosition(string msg, int pos)
