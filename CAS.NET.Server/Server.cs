@@ -86,6 +86,7 @@ namespace CAS.NET.Server
 			string grade = "";
 			string username = "";
 			string password = "";
+			string name = "";
 			string file = "";
 
 			/* find length of command by output parameter n */
@@ -94,13 +95,14 @@ namespace CAS.NET.Server
 			grade = GetStringFromPosition(msg, ref n);
 			username = GetStringFromPosition(msg, ref n);
 			password = GetStringFromPosition(msg, ref n);
+			name = GetStringFromPosition(msg, ref n);
 
 			/* file can contain spaces, GetStringFromPosition doesn't work then */
 			for (int i = n; i < msg.Length; i++) {
 				file = file + msg[i];
 			}
 
-			db.AddAssignment(username, file, grade);
+			db.AddAssignment(username, file, name , grade);
 
 			return "Successfully added assignment";
 		}
