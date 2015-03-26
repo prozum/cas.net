@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Text;
-using System.IO;
-using System.Collections.Generic;
 
 namespace CAS.NET.Server
 {
@@ -66,7 +66,9 @@ namespace CAS.NET.Server
 			switch (command)
 			{
 				case "AddAssignment":
-					return TeacherAddAssignment(msg, db);
+					return TeacherAddAssignment (msg, db);
+				case "GetAssignment":
+					return StudentGetAssignment (msg, db);
 				case "GetCompleted":
 					break;
 				case "AddFeedback":
@@ -103,9 +105,32 @@ namespace CAS.NET.Server
 			return "Successfully added assignment";
 		}
 
-		public static string StudentGetAssignment(string msg, Database db)
+		public static string StudentGetAssignmentList(string msg, Database db)
 		{
 			throw new NotImplementedException ();
+		}
+
+		public static string StudentGetAssignment(string msg, Database db)
+		{
+			int n = 0;
+			string grade = "";
+			string username = "";
+			string password = "";
+			string file = "";
+
+			/* find length of command by output parameter n */
+			GetStringFromPosition(msg, ref n);
+
+			grade = GetStringFromPosition(msg, ref n);
+			username = GetStringFromPosition(msg, ref n);
+			password = GetStringFromPosition(msg, ref n);
+
+			/* file can contain spaces, GetStringFromPosition doesn't work then */
+			for (int i = n; i < msg.Length; i++) {
+				file = file + msg[i];
+			}
+
+			return "Successfully retrieved assignment";
 		}
 
 		public static string GetStringFromPosition(string msg, int pos)

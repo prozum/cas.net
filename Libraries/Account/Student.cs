@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Text;
 using System.IO;
+using System.Net;
+using System.Text;
 
 namespace Account
 {
-	public class Student : Client
+	public class Student
 	{
 		private int ID;
 
@@ -13,9 +14,15 @@ namespace Account
 
 		}
 
-		public override void GetTask()
+		public string GetAssignment(string file, string grade, string username, string password)
 		{
-			throw new NotImplementedException();
+			WebClient client = new WebClient ();
+			client.Encoding = System.Text.Encoding.UTF8;
+
+			string msg = "AddAssignment " + grade + " " + username + " " + password + " " + file;
+			string response = client.DownloadString("http://localhost:8080/", msg);
+
+			return response;
 		}
 
 		public override void PushTask()
