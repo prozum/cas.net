@@ -2,27 +2,33 @@
 
 namespace ImportExport
 {
-	public class TypeManager
-	{
-		public Type t;
-		public Object o;
-		// public string s;
+    public class TypeManager
+    {
+        public Type t;
+        // public Object o;
+        public string s;
 
-		public TypeManager (Object o)
-		{
-			this.t = o.GetType ();
-			this.o = o;
-		}
+        public TypeManager(Object o)
+        {
+            this.t = o.GetType();
+            // this.o = o;
+            this.s = ImEx.Export.Serialize(o);
+        }
 
-		public override string ToString ()
-		{
-			return t.ToString ();
-		}
+        public TypeManager()
+        {
 
-		public object GetObject ()
-		{
-			return this.o;
-		}
-	}
+        }
+
+        public override string ToString()
+        {
+            return t.ToString();
+        }
+
+        public object GetObject()
+        {
+            return this.t + " " + this.s;
+        }
+    }
 }
 

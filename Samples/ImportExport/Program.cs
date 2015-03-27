@@ -20,31 +20,54 @@ namespace ImportExport
             person2.Add(new Person("Average", "joe", 40));
             Export.WriteToCasFile(Export.Serialize(person2), "person2", "");
 
-            /*
+            /* Test serialize and deserialize objects, and reassign them to their original objects */
+
             List<Person> culture = new List<Person>();
             culture.Add(new Person("Average", "Joe", 40));
             culture.Add(new ExtendedPerson("Generic", "Twat", 20, "Generic"));
             culture.Add(new Idiot("Total", "Idiot", 25, 42));
 
+            List<TypeManager> liTM = new List<TypeManager>();
+
             foreach (var item in culture)
             {
-                Console.WriteLine(item.ToString());
+                liTM.Add(new TypeManager(item));
             }
 
-            Console.WriteLine("\n");
+            string s = Export.Serialize(liTM);
 
-            string s = Export.Serialize(culture);
+            List<TypeManager> liTM2 = new List<TypeManager>();
 
-            Console.WriteLine(s);
+            liTM2 = Import.DeserializeString<List<TypeManager>>(s);
+            List<Person> lp = new List<Person>();
 
-            List<Person> p = Import.DeserializeString<List<Person>>(s);
-
-            foreach (var item in p)
+            foreach (var item in liTM2)
             {
-                Console.WriteLine(item.ToString());
+                // Console.WriteLine(item.s + " " + item.t);
+                if (item.t == typeof(Person))
+                {
+                    //Console.WriteLine(item.s);
+                    lp.Add(Import.DeserializeString<Person>(item.s));
+                }
+                else if (item.t == typeof(ExtendedPerson))
+                {
+                    //Console.WriteLine(item.s);
+                    lp.Add(Import.DeserializeString<ExtendedPerson>(item.s));
+                }
+                else if (item.t == typeof(Idiot))
+                {
+                    //Console.WriteLine(item.s);
+                    lp.Add(Import.DeserializeString<Idiot>(item.s));
+                }
+               
             }
-            */
 
+            foreach (var item in lp)
+            {
+                Console.WriteLine(item);
+            }
+
+            /*
             // Validate using BSD Checksum
             Console.WriteLine("BSD:");
             string ChecksumString;
@@ -106,7 +129,7 @@ namespace ImportExport
 
             PrintPerson("person", ReadPerson1);
             PrintPerson("person2", ReadPerson2);
-
+            /**/
         }
 			
         // Returns text based on true or false
@@ -176,6 +199,7 @@ namespace ImportExport
         }
     }
 
+    // Person object used for tests
     public class ExtendedPerson : Person
     {
         public string occupation { get; set; }
@@ -190,11 +214,12 @@ namespace ImportExport
 
         public override string ToString()
         {
-            string s = FirstName + " " + LastName + " " + " " + Age + " " + occupation;
+            string s = FirstName + " " + LastName + " " + Age + " " + occupation;
             return s;
         }
     }
 
+    // Person object used for tests
     public class Idiot : Person
     {
         public int IQ;
