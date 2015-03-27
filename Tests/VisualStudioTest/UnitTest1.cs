@@ -24,5 +24,13 @@ namespace VisualStudioTest
 
             Assert.AreEqual("10", (evaluator1.Evaluation("x+5") as Integer).ToString());
         }
+
+        [TestMethod]
+        public void FunctionParsing()
+        {
+            var evaluator1 = new Evaluator();
+
+            Assert.AreEqual("f(a,b)", evaluator1.Evaluation("f(a,b)").ToString());
+        }
     }
 }
