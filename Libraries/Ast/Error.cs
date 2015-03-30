@@ -11,7 +11,6 @@ namespace Ast
 			this.message = message;
 		}
 
-
 		public override string ToString()
 		{
 			return message;

@@ -5,6 +5,7 @@ namespace Ast
 {
 	public class Function  : Expression
 	{
+        static string[] specialFunctionNames = { "cos", "sin", "tan", "sqrt" };
 		public string identifier;
         public List<Expression> args = new List<Expression>();
         public Dictionary<string, Expression> tempDefinitions;
@@ -38,6 +39,14 @@ namespace Ast
             Expression res;
 
             tempDefinitions = new Dictionary<string, Expression>(evaluator.variableDefinitions);
+
+            foreach (var item in specialFunctionNames)
+            {
+                if (item == identifier)
+                {
+                    return HardcodedFunctions();
+                }
+            }
 
             if (evaluator.functionParams.TryGetValue(identifier, out functionParemNames))
             {
@@ -75,6 +84,86 @@ namespace Ast
 
             throw new NotImplementedException();
 		}
-	}
+
+        private Expression HardcodedFunctions()
+        {
+            if (args.Count == 1)
+	        {
+		        switch (identifier)
+	            {
+                    case "cos":
+                        if (args[0].Evaluate() is Integer)
+                        {
+                            return new Irrational((decimal)Math.Cos((args[0].Evaluate() as Integer).value));
+                        }
+                        if (args[0].Evaluate() is Rational)
+                        {
+                            return new Irrational((decimal)Math.Cos((double)(args[0].Evaluate() as Rational).value.value));
+                        }
+                        if (args[0].Evaluate() is Irrational)
+                        {
+                            return new Irrational((decimal)Math.Cos((double)(args[0].Evaluate() as Irrational).value));
+                        }
+
+                        return new Error("Could not take cos of: " + args[0].ToString());
+
+                    case "sin":
+                        if (args[0].Evaluate() is Integer)
+                        {
+                            return new Irrational((decimal)Math.Sin((args[0].Evaluate() as Integer).value));
+                        }
+                        if (args[0].Evaluate() is Rational)
+                        {
+                            return new Irrational((decimal)Math.Sin((double)(args[0].Evaluate() as Rational).value.value));
+                        }
+                        if (args[0].Evaluate() is Irrational)
+                        {
+                            return new Irrational((decimal)Math.Sin((double)(args[0].Evaluate() as Irrational).value));
+                        }
+
+                        return new Error("Could not take cos of: " + args[0].ToString());
+
+                    case "tan":
+                        if (args[0].Evaluate() is Integer)
+                        {
+                            return new Irrational((decimal)Math.Tan((args[0].Evaluate() as Integer).value));
+                        }
+                        if (args[0].Evaluate() is Rational)
+                        {
+                            return new Irrational((decimal)Math.Tan((double)(args[0].Evaluate() as Rational).value.value));
+                        }
+                        if (args[0].Evaluate() is Irrational)
+                        {
+                            return new Irrational((decimal)Math.Tan((double)(args[0].Evaluate() as Irrational).value));
+                        }
+
+                        return new Error("Could not take cos of: " + args[0].ToString());
+
+                    case "sqrt":
+                        if (args[0].Evaluate() is Integer)
+                        {
+                            return new Irrational((decimal)Math.Sqrt((args[0].Evaluate() as Integer).value));
+                        }
+                        if (args[0].Evaluate() is Rational)
+                        {
+                            return new Irrational((decimal)Math.Sqrt((double)(args[0].Evaluate() as Rational).value.value));
+                        }
+                        if (args[0].Evaluate() is Irrational)
+                        {
+                            return new Irrational((decimal)Math.Sqrt((double)(args[0].Evaluate() as Irrational).value));
+                        }
+
+                        return new Error("Could not take cos of: " + args[0].ToString());
+
+		            default:
+                        return new Error("Function has the wrong number for parameters");
+	            }
+            }
+            else
+            {
+                return new Error("Function has the wrong number for parameters");
+            }
+        }
+    }
 }
 

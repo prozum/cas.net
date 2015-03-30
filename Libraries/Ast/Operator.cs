@@ -18,19 +18,32 @@ namespace Ast
 
 		public override Expression Evaluate()
         {
-            if ((left is Operator || left is Symbol) && (right is Operator || left is Symbol))
+            if ((left is Operator || left is Symbol) || (right is Operator || left is Symbol))
             {
-                return new Add(left.Evaluate(), right.Evaluate()).Evaluate();
-            }
+                if (this is Add)
+                {
+                    return new Add(left.Evaluate(), right.Evaluate()).Evaluate();
+                }
 
-            if (left is Operator || left is Symbol)
-            {
-                return new Add(left.Evaluate(), right).Evaluate();
-            }
+                if (this is Sub)
+                {
+                    return new Sub(left.Evaluate(), right.Evaluate()).Evaluate();
+                }
 
-            if (right is Operator || right is Symbol)
-            {
-                return new Add(left, right.Evaluate()).Evaluate();
+                if (this is Mul)
+                {
+                    return new Mul(left.Evaluate(), right.Evaluate()).Evaluate();
+                }
+
+                if (this is Div)
+                {
+                    return new Div(left.Evaluate(), right.Evaluate()).Evaluate();
+                }
+
+                if (this is Exp)
+                {
+                    return new Exp(left.Evaluate(), right.Evaluate()).Evaluate();
+                }
             }
 
             return new Error("Cannot evaluate operator expression!");
@@ -72,7 +85,7 @@ namespace Ast
         public Assign(Expression left, Expression right) : base(left, right)
         {
             symbol = ":=";
-            priority = -10;
+            priority = 0;
         }
 
     }

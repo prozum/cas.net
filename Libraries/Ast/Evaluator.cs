@@ -17,13 +17,13 @@ namespace Ast
         {
             var exp = Parser.Parse(this, inputString);
 
-            if (exp is Equal)
+            if (exp is Assign)
             {
-                if ((exp as Equal).left is Function)
+                if ((exp as Assign).left is Function)
                 {
                     var paramNames = new List<string>();
 
-                    foreach (var item in ((exp as Equal).left as Function).args)
+                    foreach (var item in ((exp as Assign).left as Function).args)
 	                {   
 		                if (item is Symbol)
 	                    {
@@ -33,16 +33,16 @@ namespace Ast
 	                    {
                             return new Error("One arg in the function is not a symbol");
 	                    }
-	                }
+	                }  
 
-                    functionParams.Add(((exp as Equal).left as Function).identifier, paramNames);
-                    functionDefinitions.Add(((exp as Equal).left as Function).identifier, (exp as Equal).right);
+                    functionParams.Add(((exp as Assign).left as Function).identifier, paramNames);
+                    functionDefinitions.Add(((exp as Assign).left as Function).identifier, (exp as Assign).right);
 
                     return new Error("Function defined");
                 }
-                else if ((exp as Equal).left is Symbol)
+                else if ((exp as Assign).left is Symbol)
                 {
-                    variableDefinitions.Add(((exp as Equal).left as Symbol).symbol, (exp as Equal).right);
+                    variableDefinitions.Add(((exp as Assign).left as Symbol).symbol, (exp as Assign).right);
 
                     return new Error("Varialbe defined");
                 }

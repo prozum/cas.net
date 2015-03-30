@@ -274,7 +274,8 @@ namespace Ast
             {
             case ":=":
                 return new Assign();
-			case "=":
+            case "=":
+                return new Assign();
 				return new Equal ();
             case "==":
                 return new BooleanEqual();
