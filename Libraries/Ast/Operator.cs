@@ -10,6 +10,7 @@ namespace Ast
 
 		//public abstract Expression Evaluate();
 
+        public Operator(Expression left, Expression right, Function function) { }
         public Operator(Expression left, Expression right)
         {
             this.left = left;
@@ -38,7 +39,7 @@ namespace Ast
 
         public override string ToString()
         {
-            if (parent == null || priority >= parent.priority ) 
+            if (parent == null || priority >= parent.priority) 
             {
                 return left.ToString () + symbol + right.ToString ();
             } 
@@ -48,6 +49,12 @@ namespace Ast
             }
         }
 
+        public override void SetFunctionCall(Function functionCall)
+        {
+            left.SetFunctionCall(functionCall);
+            right.SetFunctionCall(functionCall);
+            base.SetFunctionCall(functionCall);
+        }
     }
 
 	public class Equal : Operator

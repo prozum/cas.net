@@ -8,10 +8,10 @@ namespace Ast
 		public Number prefix, exponent;
 		public string symbol;
 
-        public Symbol(Dictionary<string, Expression> definitions, string sym)
+        public Symbol(Evaluator evaluator, string sym)
 		{
 			symbol = sym;
-            this.definitions = definitions;
+            this.evaluator = evaluator;
 		}
 
 		public override string ToString()
@@ -23,11 +23,23 @@ namespace Ast
 		{
             Expression res;
 
-            if (definitions.ContainsKey(symbol))
+            if (this.functionCall != null)
             {
-                definitions.TryGetValue(symbol, out res);
-                return res.Evaluate();
+                if (functionCall.tempDefinitions.ContainsKey(symbol))
+                {
+                    functionCall.tempDefinitions.TryGetValue(symbol, out res);
+                    return res.Evaluate();
+                }
             }
+            else
+            {
+                if (evaluator.variableDefinitions.ContainsKey(symbol))
+                {
+                    evaluator.variableDefinitions.TryGetValue(symbol, out res);
+                    return res.Evaluate();
+                }
+            }
+
 
             return new Error("Duuurh");
 		}
