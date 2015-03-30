@@ -32,7 +32,7 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Compile Include="Program.cs" />
-    <Compile Include="TypeManager.cs" />
+    <Compile Include="MetaType.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\ImEx\ImEx.csproj">

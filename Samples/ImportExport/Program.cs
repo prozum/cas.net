@@ -9,6 +9,9 @@ namespace ImportExport
     {
         public static void Main()
         {
+            #region CreatePersons
+            // These are used for sample tests
+
             // Create and export person
             List<Person> person = new List<Person>();
             person.Add(new Person("Generic", "Twat", 20));
@@ -27,37 +30,45 @@ namespace ImportExport
             culture.Add(new ExtendedPerson("Generic", "Twat", 20, "Generic"));
             culture.Add(new Idiot("Total", "Idiot", 25, 42));
 
-            List<TypeManager> liTM = new List<TypeManager>();
+            #endregion
+
+            #region MeteType
+
+            List<MetaType> liTM = new List<MetaType>();
 
             foreach (var item in culture)
             {
-                liTM.Add(new TypeManager(item));
+                liTM.Add(new MetaType(item));
             }
 
-            string s = Export.Serialize(liTM);
+            string serializedString = Export.Serialize(liTM);
 
-            List<TypeManager> liTM2 = new List<TypeManager>();
+            List<MetaType> liTM2 = new List<MetaType>();
 
-            liTM2 = Import.DeserializeString<List<TypeManager>>(s);
+            liTM2 = Import.DeserializeString<List<MetaType>>(serializedString);
+
             List<Person> lp = new List<Person>();
 
             foreach (var item in liTM2)
             {
-                // Console.WriteLine(item.s + " " + item.t);
-                if (item.t == typeof(Person))
+                if (item.type == typeof(Person))
                 {
                     //Console.WriteLine(item.s);
-                    lp.Add(Import.DeserializeString<Person>(item.s));
+                    lp.Add(Import.DeserializeString<Person>(item.serializedString));
                 }
-                else if (item.t == typeof(ExtendedPerson))
+                else if (item.type == typeof(ExtendedPerson))
                 {
                     //Console.WriteLine(item.s);
-                    lp.Add(Import.DeserializeString<ExtendedPerson>(item.s));
+                    lp.Add(Import.DeserializeString<ExtendedPerson>(item.serializedString));
                 }
-                else if (item.t == typeof(Idiot))
+                else if (item.type == typeof(Idiot))
                 {
                     //Console.WriteLine(item.s);
-                    lp.Add(Import.DeserializeString<Idiot>(item.s));
+                    lp.Add(Import.DeserializeString<Idiot>(item.serializedString));
+                }
+                else
+                {
+                    Console.WriteLine("Error!");
                 }
                
             }
@@ -67,7 +78,10 @@ namespace ImportExport
                 Console.WriteLine(item);
             }
 
-            /*
+            #endregion
+
+            #region Checksum
+
             // Validate using BSD Checksum
             Console.WriteLine("BSD:");
             string ChecksumString;
@@ -118,6 +132,11 @@ namespace ImportExport
             PrintChecksums(S_CSumEx, S_CSumIm);
             PrintValidation(Valid);
 
+            #endregion
+
+
+            #region Read/Write
+
             // Reading and printing content of files
             List<Person> ReadPerson1 = new List<Person>();
             List<Person> ReadPerson2 = new List<Person>();
@@ -130,6 +149,8 @@ namespace ImportExport
             PrintPerson("person", ReadPerson1);
             PrintPerson("person2", ReadPerson2);
             /**/
+
+            #endregion
         }
 			
         // Returns text based on true or false
