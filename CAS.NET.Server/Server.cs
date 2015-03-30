@@ -45,6 +45,7 @@ namespace CAS.NET.Server
 					response.ContentLength64 = buffer.Length;
 					System.IO.Stream output = response.OutputStream;
 					output.Write(buffer, 0, buffer.Length);
+                    output.Close();
 				}
 			}
 		}
@@ -86,7 +87,7 @@ namespace CAS.NET.Server
 			string grade = "";
 			string username = "";
 			string password = "";
-			string name = "";
+			string filename = "";
 			string file = "";
 
 			/* find length of command by output parameter n */
@@ -95,14 +96,14 @@ namespace CAS.NET.Server
 			grade = GetStringFromPosition(msg, ref n);
 			username = GetStringFromPosition(msg, ref n);
 			password = GetStringFromPosition(msg, ref n);
-			name = GetStringFromPosition(msg, ref n);
+			filename = GetStringFromPosition(msg, ref n);
 
-			/* file can contain spaces, GetStringFromPosition doesn't work then */
+			/* because a file can contain spaces, GetStringFromPosition doesn't work then */
 			for (int i = n; i < msg.Length; i++) {
 				file = file + msg[i];
 			}
 
-			db.AddAssignment(username, file, name , grade);
+			db.AddAssignment(username, file, filename, grade);
 
 			return "Successfully added assignment";
 		}
@@ -118,7 +119,7 @@ namespace CAS.NET.Server
 			string grade = "";
 			string username = "";
 			string password = "";
-			string file = "";
+            string filename = "";
 
 			/* find length of command by output parameter n */
 			GetStringFromPosition(msg, ref n);
@@ -126,13 +127,9 @@ namespace CAS.NET.Server
 			grade = GetStringFromPosition(msg, ref n);
 			username = GetStringFromPosition(msg, ref n);
 			password = GetStringFromPosition(msg, ref n);
-
-			/* file can contain spaces, GetStringFromPosition doesn't work then */
-			for (int i = n; i < msg.Length; i++) {
-				file = file + msg[i];
-			}
-
-			return "Successfully retrieved assignment";
+            filename = GetStringFromPosition(msg, n);
+            
+            return db.GetAssignment(filename, grade);
 		}
 
 		public static string GetStringFromPosition(string msg, int pos)

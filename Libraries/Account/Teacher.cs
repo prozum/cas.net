@@ -19,12 +19,12 @@ namespace Account
 			throw new NotImplementedException();
 		}
 
-		public string AddAssignment(string file, string grade, string username, string password)
+        public string AddAssignment(string file, string filename, string grade, string username, string password)
 		{
-			WebClient client = new WebClient ();
+			var client = new WebClient ();
 			client.Encoding = System.Text.Encoding.UTF8;
 
-			string msg = "AddAssignment " + grade + " " + username + " " + password + " " + file;
+            string msg = "AddAssignment " + grade + " " + username + " " + password + " " + filename + " " + file;
 			string response = client.UploadString("http://localhost:8080/", msg);
 
 			return response;

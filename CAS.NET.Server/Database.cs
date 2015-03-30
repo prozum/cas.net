@@ -6,7 +6,7 @@ namespace CAS.NET.Server
 {
 	public class Database
 	{
-		private string db;
+		private readonly string db;
 		private MySqlConnection conn;
 
 		public Database(string db)
@@ -146,42 +146,54 @@ namespace CAS.NET.Server
 		}
 		*/
 
-		public void AddAssignment(string username, string name, string file, string grade)
+		public void AddAssignment(string username, string filename, string file, string grade)
 		{
 			using (conn = new MySqlConnection(db)) {
 				conn.Open();
 				const string stm = "SELECT VERSION()";
 
-				MySqlCommand cmd = new MySqlCommand (stm, conn);
-				cmd.CommandText = "INSERT INTO Assignment(Username, FileName, File, Grade) VALUES(@username, FileName, @file, @grade)";
+				var cmd = new MySqlCommand (stm, conn);
+				cmd.CommandText = "INSERT INTO Assignment(Username, FileName, File, Grade) VALUES(@username, @filename, @file, @grade)";
 				cmd.Parameters.AddWithValue("@username", username);
-				cmd.Parameters.AddWithValue("@FileName", name);
+				cmd.Parameters.AddWithValue("@FileName", filename);
 				cmd.Parameters.AddWithValue("@file", file);
 				cmd.Parameters.AddWithValue("@grade", grade);
 				cmd.ExecuteNonQuery();
 			}
+
+            conn.Close();
 		}
 
-		public string GetAssignment(string file, string grade)
+        public string GetAssignment(string filename, string grade)
 		{
-
+            string file;
 
 			using (conn = new MySqlConnection(db)) {
 				conn.Open();
 				const string stm = "SELECT VERSION()";
 
-				MySqlCommand cmd = new MySqlCommand (stm, conn);
-				cmd.CommandText = "SELECT * FROM Assignment WHERE File = @file AND Grade = @grade FROM Assignment";
-				cmd.Parameters.AddWithValue ("@file", file);
+                Console.WriteLine("maybe here?");
+
+				var cmd = new MySqlCommand (stm, conn);
+				cmd.CommandText = "SELECT * FROM Assignment WHERE FileName = @filename AND Grade = @grade";
+				cmd.Parameters.AddWithValue ("@filename", filename);
 				cmd.Parameters.AddWithValue ("@grade", grade);
 
 				var rdr = cmd.ExecuteReader ();
 				rdr.Read ();
 				file = rdr ["File"].ToString ();
+                Console.WriteLine(file);
 			}
 
-			return file;
+            conn.Close();
+
+			return "I can actually return";
 		}
+
+        public string[] GetAssignmentList(string grade)
+        {
+            return null;
+        }
 
 		/*
 		public void AddCompleted(string username, string taskname, string savefilename, string grade)

@@ -14,18 +14,18 @@ namespace Account
 
 		}
 
-		public string GetAssignment(string file, string grade, string username, string password)
+        public string GetAssignment(string filename, string grade, string username, string password)
 		{
-			WebClient client = new WebClient ();
+			var client = new WebClient ();
 			client.Encoding = System.Text.Encoding.UTF8;
 
-			string msg = "AddAssignment " + grade + " " + username + " " + password + " " + file;
-			string response = client.DownloadString("http://localhost:8080/", msg);
+			string msg = "GetAssignment " + grade + " " + username + " " + password + " " + filename;
+			string response = client.UploadString("http://localhost:8080/", msg);
 
 			return response;
 		}
 
-		public override void PushTask()
+		public void PushTask()
 		{
 			throw new NotImplementedException();
 		}

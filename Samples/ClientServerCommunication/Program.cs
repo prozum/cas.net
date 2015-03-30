@@ -8,8 +8,11 @@ namespace ClientServerCommunication
 		public static void Main(string[] args)
 		{
 			Teacher teacher = new Teacher("kasp6378");
-			teacher.AddAssignment("jsonfileextemeoverload", "BasicAlgebra", "9A2016", "kasp6378", args[0]);
-			Console.WriteLine("Hello World!");
-		}
+            Student student = new Student("kasp6378", "9A2016");
+            Console.WriteLine(teacher.AddAssignment("jsonfileextremeoverload", "testfile", "9A2016", "kasp6378", args[0]));
+            Console.WriteLine(teacher.AddAssignment("jsonfileextremeoverload", "testfile", "9A2016", "kasp6378", args[0]));
+            Console.WriteLine(student.GetAssignment("testfile", "9A2016", "kasp6378", args[0]));
+            Console.WriteLine("Hello World!");
+        }
 	}
 }
