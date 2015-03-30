@@ -7,7 +7,6 @@ namespace Ast
 	{
 		public string identifier;
         public List<Expression> args = new List<Expression>();
-        public Dictionary<string, List<string>> functionParams;
         public Dictionary<string, Expression> tempDefinitions;
 
 		public Function(string identifier, List<Expression> args)
@@ -59,6 +58,10 @@ namespace Ast
                     res.SetFunctionCall(this);
 
                     return res.Evaluate();
+                }
+                else if (functionParemNames.Count == 0)
+                {
+                    return new Error("Can't call function with 0 parameters");
                 }
                 else
                 {

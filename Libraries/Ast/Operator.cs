@@ -10,7 +10,6 @@ namespace Ast
 
 		//public abstract Expression Evaluate();
 
-        public Operator(Expression left, Expression right, Function function) { }
         public Operator(Expression left, Expression right)
         {
             this.left = left;
@@ -65,12 +64,18 @@ namespace Ast
             symbol = "=";
             priority = 0;
         }
-
-        public override Expression Evaluate()
-        {
-            return base.Evaluate();
-        }
 	}
+
+    public class Assign : Operator
+    {
+        public Assign() : this(null, null) { }
+        public Assign(Expression left, Expression right) : base(left, right)
+        {
+            symbol = ":=";
+            priority = -10;
+        }
+
+    }
 
 	public class Add : Operator
 	{

@@ -68,7 +68,7 @@ namespace Ast
 
 		private static string ExtractSubstring(StringReader parseReader)
 		{
-			string substring = null;
+			string substring = "";
 
 			int parentEnd = 0;
 			int parentStart = 0;
@@ -110,7 +110,11 @@ namespace Ast
 			if (exs.Count == 1) {
 
 				return exs.Pop ();
-			}
+            }
+            else if (exs.Count < 1)
+            {
+                return new Error("No expressions found");
+            }
 
 			right = exs.Pop ();
 
@@ -267,9 +271,17 @@ namespace Ast
 			}
 				
 			switch (op)
-			{
+            {
+            case ":=":
+                return new Assign();
 			case "=":
 				return new Equal ();
+            case "==":
+                return new BooleanEqual();
+            case "<=":
+                return new LesserOrEqual();
+            case ">=":
+                return new GreaterOrEqual();
 			case "<":
 				return new Lesser ();
 			case ">":
