@@ -54,7 +54,7 @@ namespace CAS.NET.Server
 				string stm = "SELECT VERSION()";   
 				MySqlCommand cmd = new MySqlCommand(stm, conn);
 				cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Assignment(Username VARCHAR(8), FileName TEXT CHARACTER SET binary,
-									File TEXT CHARACTER SET binary, Grade TEXT CHARACTER SET binary) ENGINE=INNODB";
+									File TEXT CHARACTER SET binary, Grade TEXT CHARACTER SET binary)";
 				cmd.ExecuteNonQuery();
 			}
 			catch (MySqlException ex) 
@@ -155,7 +155,7 @@ namespace CAS.NET.Server
 				var cmd = new MySqlCommand (stm, conn);
 				cmd.CommandText = "INSERT INTO Assignment(Username, FileName, File, Grade) VALUES(@username, @filename, @file, @grade)";
 				cmd.Parameters.AddWithValue("@username", username);
-				cmd.Parameters.AddWithValue("@FileName", filename);
+				cmd.Parameters.AddWithValue("@filename", filename);
 				cmd.Parameters.AddWithValue("@file", file);
 				cmd.Parameters.AddWithValue("@grade", grade);
 				cmd.ExecuteNonQuery();
@@ -167,12 +167,11 @@ namespace CAS.NET.Server
         public string GetAssignment(string filename, string grade)
 		{
             string file;
+			int filecolumn = 2;
 
 			using (conn = new MySqlConnection(db)) {
 				conn.Open();
 				const string stm = "SELECT VERSION()";
-
-                Console.WriteLine("maybe here?");
 
 				var cmd = new MySqlCommand (stm, conn);
 				cmd.CommandText = "SELECT * FROM Assignment WHERE FileName = @filename AND Grade = @grade";
@@ -180,14 +179,22 @@ namespace CAS.NET.Server
 				cmd.Parameters.AddWithValue ("@grade", grade);
 
 				var rdr = cmd.ExecuteReader ();
-				rdr.Read ();
-				file = rdr ["File"].ToString ();
-                Console.WriteLine(file);
+
+				if (rdr.HasRows)
+				{
+					rdr.Read();
+					file = rdr.GetString (filecolumn);
+
+				}
+				else
+				{
+					file = "Error";
+				}
 			}
 
             conn.Close();
 
-			return "I can actually return";
+			return file;
 		}
 
         public string[] GetAssignmentList(string grade)

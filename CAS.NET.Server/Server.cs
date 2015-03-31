@@ -103,7 +103,7 @@ namespace CAS.NET.Server
 				file = file + msg[i];
 			}
 
-			db.AddAssignment(username, file, filename, grade);
+			db.AddAssignment(username, filename, file, grade);
 
 			return "Successfully added assignment";
 		}
@@ -125,10 +125,13 @@ namespace CAS.NET.Server
 			GetStringFromPosition(msg, ref n);
 
 			grade = GetStringFromPosition(msg, ref n);
-			username = GetStringFromPosition(msg, ref n);
-			password = GetStringFromPosition(msg, ref n);
-            filename = GetStringFromPosition(msg, n);
-            
+           	username = GetStringFromPosition(msg, ref n);
+            password = GetStringFromPosition(msg, ref n);
+
+			for (int i = n; i < msg.Length; i++) {
+				filename = filename + msg[i];
+			}
+
             return db.GetAssignment(filename, grade);
 		}
 
