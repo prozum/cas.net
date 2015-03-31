@@ -68,6 +68,8 @@ namespace CAS.NET.Server
 			{
 				case "AddAssignment":
 					return TeacherAddAssignment (msg, db);
+				case "GetAssignmentList":
+					return StudentGetAssignmentList(msg, db);
 				case "GetAssignment":
 					return StudentGetAssignment (msg, db);
 				case "GetCompleted":
@@ -75,10 +77,10 @@ namespace CAS.NET.Server
 				case "AddFeedback":
 					break;
 				default:
-					break;
+					return "Invalid command";
 			}
 
-			return "Success";
+			return "";
 		}
 
 		public static string TeacherAddAssignment(string msg, Database db)
@@ -110,7 +112,23 @@ namespace CAS.NET.Server
 
 		public static string StudentGetAssignmentList(string msg, Database db)
 		{
-			throw new NotImplementedException ();
+			int n = 0;
+			string grade = "";
+			string username = "";
+			string password = "";
+
+			GetStringFromPosition(msg, ref n);
+
+			grade = GetStringFromPosition(msg, ref n);
+			username = GetStringFromPosition(msg, ref n);
+
+			for (int i = n; i < msg.Length; i++)
+			{
+				password = password + msg[i];
+			}
+			//password = GetStringFromPosition(msg, ref n);
+
+			return string.Join(" ", db.GetAssignmentList(grade));
 		}
 
 		public static string StudentGetAssignment(string msg, Database db)
@@ -127,10 +145,13 @@ namespace CAS.NET.Server
 			grade = GetStringFromPosition(msg, ref n);
            	username = GetStringFromPosition(msg, ref n);
             password = GetStringFromPosition(msg, ref n);
+			//filename = GetStringFromPosition(msg, ref n);
+
 
 			for (int i = n; i < msg.Length; i++) {
 				filename = filename + msg[i];
 			}
+
 
             return db.GetAssignment(filename, grade);
 		}
@@ -139,7 +160,7 @@ namespace CAS.NET.Server
 		{
 			string str = "";
 
-			while (msg[pos] != ' ')
+			while (msg[pos] != ' ' && pos < msg.Length)
 			{
 				str = str + msg[pos];
 				pos++;
@@ -152,7 +173,7 @@ namespace CAS.NET.Server
 		{
 			string str = "";
 
-			while (msg[pos] != ' ')
+			while (msg[pos] != ' ' && pos < msg.Length)
 			{
 				str = str + msg[pos];
 				pos++;

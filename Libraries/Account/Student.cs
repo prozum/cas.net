@@ -14,6 +14,17 @@ namespace Account
 
 		}
 
+		public string[] GetAssignmentList(string grade, string username, string password)
+		{
+			var client = new WebClient ();
+			client.Encoding = System.Text.Encoding.UTF8;
+
+			string msg = "GetAssignmentList " + grade + " " + username + " " + password;
+			string response = client.UploadString("http://localhost:8080/", msg);
+
+			return response.Split(' ');
+		}
+
         public string GetAssignment(string filename, string grade, string username, string password)
 		{
 			var client = new WebClient ();

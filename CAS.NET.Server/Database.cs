@@ -116,6 +116,93 @@ namespace CAS.NET.Server
 			}
 		}
 
+
+
+		public void AddAssignment(string username, string filename, string file, string grade)
+		{
+			using (conn = new MySqlConnection(db)) {
+				conn.Open();
+				const string stm = "SELECT VERSION()";
+
+				var cmd = new MySqlCommand (stm, conn);
+				cmd.CommandText = "INSERT INTO Assignment(Username, FileName, File, Grade) VALUES(@username, @filename, @file, @grade)";
+				cmd.Parameters.AddWithValue("@username", username);
+				cmd.Parameters.AddWithValue("@filename", filename);
+				cmd.Parameters.AddWithValue("@file", file);
+				cmd.Parameters.AddWithValue("@grade", grade);
+				cmd.ExecuteNonQuery();
+			}
+
+            conn.Close();
+		}
+
+        public string GetAssignment(string filename, string grade)
+		{
+            string file;
+			int FileColumn = 2;
+
+			using (conn = new MySqlConnection(db)) {
+				conn.Open();
+				const string stm = "SELECT VERSION()";
+
+				var cmd = new MySqlCommand (stm, conn);
+				cmd.CommandText = "SELECT * FROM Assignment WHERE FileName = @filename AND Grade = @grade";
+				cmd.Parameters.AddWithValue ("@filename", filename);
+				cmd.Parameters.AddWithValue ("@grade", grade);
+
+				var rdr = cmd.ExecuteReader ();
+
+				if (rdr.HasRows)
+				{
+					rdr.Read();
+					file = rdr.GetString (FileColumn);
+
+				}
+				else
+				{
+					file = "Error";
+				}
+			}
+
+            conn.Close();
+
+			return file;
+		}
+
+        public string[] GetAssignmentList(string grade)
+		{
+			List<string> FileList = new List<string>();
+			int FileNameColumn = 1;
+
+			using (conn = new MySqlConnection(db)) {
+				conn.Open();
+				const string stm = "SELECT VERSION()";
+
+				var cmd = new MySqlCommand (stm, conn);
+				cmd.CommandText = "SELECT * FROM Assignment WHERE Grade = @grade";
+				cmd.Parameters.AddWithValue ("@grade", grade);
+
+				var rdr = cmd.ExecuteReader ();
+
+				if (rdr.HasRows)
+				{
+					while(rdr.Read())
+					{
+						FileList.Add(rdr.GetString (FileNameColumn));
+					}
+
+				}
+				else
+				{
+					FileList.Add("Error");
+				}
+			}
+
+			conn.Close();
+
+			return FileList.ToArray();
+		}
+
 		/*
 		public void AddUser(string login, string password, string grade, int privilege)
 		{
@@ -145,62 +232,6 @@ namespace CAS.NET.Server
 			}
 		}
 		*/
-
-		public void AddAssignment(string username, string filename, string file, string grade)
-		{
-			using (conn = new MySqlConnection(db)) {
-				conn.Open();
-				const string stm = "SELECT VERSION()";
-
-				var cmd = new MySqlCommand (stm, conn);
-				cmd.CommandText = "INSERT INTO Assignment(Username, FileName, File, Grade) VALUES(@username, @filename, @file, @grade)";
-				cmd.Parameters.AddWithValue("@username", username);
-				cmd.Parameters.AddWithValue("@filename", filename);
-				cmd.Parameters.AddWithValue("@file", file);
-				cmd.Parameters.AddWithValue("@grade", grade);
-				cmd.ExecuteNonQuery();
-			}
-
-            conn.Close();
-		}
-
-        public string GetAssignment(string filename, string grade)
-		{
-            string file;
-			int filecolumn = 2;
-
-			using (conn = new MySqlConnection(db)) {
-				conn.Open();
-				const string stm = "SELECT VERSION()";
-
-				var cmd = new MySqlCommand (stm, conn);
-				cmd.CommandText = "SELECT * FROM Assignment WHERE FileName = @filename AND Grade = @grade";
-				cmd.Parameters.AddWithValue ("@filename", filename);
-				cmd.Parameters.AddWithValue ("@grade", grade);
-
-				var rdr = cmd.ExecuteReader ();
-
-				if (rdr.HasRows)
-				{
-					rdr.Read();
-					file = rdr.GetString (filecolumn);
-
-				}
-				else
-				{
-					file = "Error";
-				}
-			}
-
-            conn.Close();
-
-			return file;
-		}
-
-        public string[] GetAssignmentList(string grade)
-        {
-            return null;
-        }
 
 		/*
 		public void AddCompleted(string username, string taskname, string savefilename, string grade)
