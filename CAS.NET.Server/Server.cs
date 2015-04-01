@@ -58,23 +58,20 @@ namespace CAS.NET.Server
 		public static string ExecuteCommand(string msg, Database db)
 		{
 			string command = GetCommand(msg);
-
-			if (command == null)
-			{
-				return "Error";
-			}
 				
 			switch (command)
 			{
 				case "AddAssignment":
 					return TeacherAddAssignment (msg, db);
+				case "AddFeedback":
+					break;
+				case "GetCompleted":
+					break;
 				case "GetAssignmentList":
 					return StudentGetAssignmentList(msg, db);
 				case "GetAssignment":
 					return StudentGetAssignment (msg, db);
-				case "GetCompleted":
-					break;
-				case "AddFeedback":
+				case "AddCompleted":
 					break;
 				default:
 					return "Invalid command";
@@ -151,9 +148,35 @@ namespace CAS.NET.Server
 			for (int i = n; i < msg.Length; i++) {
 				filename = filename + msg[i];
 			}
-
-
+				
             return db.GetAssignment(filename, grade);
+		}
+
+		public static string StudentAddCompleted(string msg, Database db)
+		{
+			int n = 0;
+			string grade = "";
+			string username = "";
+			string password = "";
+			string filename = "";
+			string file = "";
+
+			/* find length of command by output parameter n */
+			GetStringFromPosition(msg, ref n);
+
+			grade = GetStringFromPosition(msg, ref n);
+			username = GetStringFromPosition(msg, ref n);
+			password = GetStringFromPosition(msg, ref n);
+			filename = GetStringFromPosition(msg, ref n);
+
+			/* because a file can contain spaces, GetStringFromPosition doesn't work then */
+			for (int i = n; i < msg.Length; i++) {
+				file = file + msg[i];
+			}
+
+			db.AddCompleted(username, filename, file, grade);
+
+			return "Successfully added assignment";
 		}
 
 		public static string GetStringFromPosition(string msg, int pos)

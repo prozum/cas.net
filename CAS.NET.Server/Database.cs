@@ -27,7 +27,7 @@ namespace CAS.NET.Server
 
 				string stm = "SELECT VERSION()";   
 				MySqlCommand cmd = new MySqlCommand(stm, conn);
-				cmd.CommandText = @"CREATE TABLE IF NOT EXISTS User(Username VARCHAR(8) PRIMARY KEY,
+				cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Account(Username VARCHAR(8) PRIMARY KEY,
 									Password TEXT CHARACTER SET binary, Grade TEXT CHARACTER SET binary, Privilege INT)";
 				cmd.ExecuteNonQuery();
 
@@ -77,8 +77,8 @@ namespace CAS.NET.Server
 
 				string stm = "SELECT VERSION()";   
 				MySqlCommand cmd = new MySqlCommand(stm, conn);
-				cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Completed(Username VARCHAR(8), TaskName TEXT CHARACTER SET binary,
-									SaveFileName TEXT CHARACTER SET binary, Grade TEXT CHARACTER SET binary)";
+				cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Completed(Username VARCHAR(8), FileName TEXT CHARACTER SET binary,
+									File TEXT CHARACTER SET binary, Grade TEXT CHARACTER SET binary)";
 				cmd.ExecuteNonQuery();
 			}
 			catch (MySqlException ex) 
@@ -115,8 +115,6 @@ namespace CAS.NET.Server
 				conn.Close();
 			}
 		}
-
-
 
 		public void AddAssignment(string username, string filename, string file, string grade)
 		{
@@ -201,6 +199,24 @@ namespace CAS.NET.Server
 			conn.Close();
 
 			return FileList.ToArray();
+		}
+
+		public void AddCompleted(string username, string filename, string file, string grade)
+		{
+			using (conn = new MySqlConnection(db)) {
+				conn.Open();
+				const string stm = "SELECT VERSION()";
+
+				var cmd = new MySqlCommand (stm, conn);
+				cmd.CommandText = "INSERT INTO Completed(Username, FileName, File, Grade) VALUES(@username, @filename, @file, @grade)";
+				cmd.Parameters.AddWithValue("@username", username);
+				cmd.Parameters.AddWithValue("@filename", filename);
+				cmd.Parameters.AddWithValue("@file", file);
+				cmd.Parameters.AddWithValue("@grade", grade);
+				cmd.ExecuteNonQuery();
+			}
+
+			conn.Close();
 		}
 
 		/*
