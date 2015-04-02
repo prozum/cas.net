@@ -30,6 +30,17 @@ namespace Account
 			return response;
 		}
 
+		public string GetCompleted(string filename, string grade, string username, string password)
+		{
+			var client = new WebClient ();
+			client.Encoding = System.Text.Encoding.UTF8;
+
+			string msg = "GetCompleted " + grade + " " + username + " " + password + " " + filename;
+			string response = client.UploadString("http://localhost:8080/", msg);
+
+			return response;
+		}
+
 		public void GetCompleted()
 		{
 			throw new NotImplementedException();

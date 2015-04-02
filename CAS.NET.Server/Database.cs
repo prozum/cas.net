@@ -134,6 +134,66 @@ namespace CAS.NET.Server
             conn.Close();
 		}
 
+		public string GetCompleted(string filename, string grade)
+		{
+			string file;
+			int FileColumn = 2;
+			int StudentsGivenFeedback = 0;;
+
+			using (conn = new MySqlConnection(db)) {
+				conn.Open();
+				const string stm = "SELECT VERSION()";
+
+				var cmd = new MySqlCommand (stm, conn);
+				cmd.CommandText = "SELECT * FROM Feedback WHERE FileName = @filename AND Grade = @grade";
+				cmd.Parameters.AddWithValue ("@filename", filename);
+				cmd.Parameters.AddWithValue ("@grade", grade);
+
+				using (var rdr = cmd.ExecuteReader())
+				{
+					if (rdr.HasRows)
+					{
+						while (rdr.Read())
+						{
+							StudentsGivenFeedback++;
+						}
+					}
+				}
+
+				cmd.CommandText = "SELECT * FROM Completed WHERE FileName = @filename AND Grade = @grade";
+				cmd.Parameters.AddWithValue ("@filename", filename);
+				cmd.Parameters.AddWithValue ("@grade", grade);
+
+				using (var rdr = cmd.ExecuteReader())
+				{
+					if (rdr.HasRows)
+					{
+						int i = 0;
+
+						while (rdr.Read())
+						{
+							if (i == StudentsGivenFeedback+1)
+							{
+								conn.Close();
+								return rdr.GetString(FileColumn);
+							}
+
+							i++;
+						}
+
+						conn.Close();
+						return "All students have received feedback";
+					}
+					else
+					{
+						conn.Close();
+						return "No students have handed in this assignment";
+					}
+				}
+
+			}
+		}
+
         public string GetAssignment(string filename, string grade)
 		{
             string file;
