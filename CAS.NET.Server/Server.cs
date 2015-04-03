@@ -128,7 +128,7 @@ namespace CAS.NET.Server
 				filename = filename + msg[i];
 			}
 
-			return db.GetCompleted(username, filename, grade);
+			return db.GetCompleted(filename, grade);
 		}
 
 		/*

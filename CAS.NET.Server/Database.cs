@@ -78,7 +78,7 @@ namespace CAS.NET.Server
 				string stm = "SELECT VERSION()";   
 				MySqlCommand cmd = new MySqlCommand(stm, conn);
 				cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Completed(Username VARCHAR(8), FileName TEXT CHARACTER SET binary,
-									File TEXT CHARACTER SET binary, Grade TEXT CHARACTER SET binary)";
+									File TEXT CHARACTER SET binary, Grade TEXT CHARACTER SET binary, FeedbackGiven INTEGER)";
 				cmd.ExecuteNonQuery();
 			}
 			catch (MySqlException ex) 
@@ -101,8 +101,8 @@ namespace CAS.NET.Server
 
 				string stm = "SELECT VERSION()";   
 				MySqlCommand cmd = new MySqlCommand(stm, conn);
-				cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Feedback(Username VARCHAR(8), TaskName TEXT CHARACTER SET binary,
-									SaveFileName TEXT CHARACTER SET binary, Grade TEXT CHARACTER SET binary)";
+				cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Feedback(Username VARCHAR(8), FileName TEXT CHARACTER SET binary,
+									File TEXT CHARACTER SET binary, Grade TEXT CHARACTER SET binary)";
 				cmd.ExecuteNonQuery();
 			}
 			catch (MySqlException ex) 
@@ -130,8 +130,6 @@ namespace CAS.NET.Server
 				cmd.Parameters.AddWithValue("@grade", grade);
 				cmd.ExecuteNonQuery();
 			}
-
-            conn.Close();
 		}
 
 		public string GetCompleted(string filename, string grade)
@@ -145,52 +143,63 @@ namespace CAS.NET.Server
 				const string stm = "SELECT VERSION()";
 
 				var cmd = new MySqlCommand (stm, conn);
-				cmd.CommandText = "SELECT * FROM Feedback WHERE FileName = @filename AND Grade = @grade";
+				cmd.CommandText = "SELECT * FROM Completed WHERE FileName = @filename AND Grade = @grade AND FeedbackGiven = @feedback";
 				cmd.Parameters.AddWithValue ("@filename", filename);
 				cmd.Parameters.AddWithValue ("@grade", grade);
+				cmd.Parameters.AddWithValue("@feedback", 0);
 
 				using (var rdr = cmd.ExecuteReader())
 				{
 					if (rdr.HasRows)
 					{
-						while (rdr.Read())
-						{
-							StudentsGivenFeedback++;
-						}
-					}
-				}
-
-				cmd.CommandText = "SELECT * FROM Completed WHERE FileName = @filename AND Grade = @grade";
-				cmd.Parameters.AddWithValue ("@filename", filename);
-				cmd.Parameters.AddWithValue ("@grade", grade);
-
-				using (var rdr = cmd.ExecuteReader())
-				{
-					if (rdr.HasRows)
-					{
-						int i = 0;
-
-						while (rdr.Read())
-						{
-							if (i == StudentsGivenFeedback+1)
-							{
-								conn.Close();
-								return rdr.GetString(FileColumn);
-							}
-
-							i++;
-						}
-
-						conn.Close();
-						return "All students have received feedback";
+						file = rdr.GetString(FileColumn);
 					}
 					else
 					{
-						conn.Close();
-						return "No students have handed in this assignment";
+						file = "No more assignments to give feedback";
 					}
 				}
+			}
 
+			return file;
+		}
+
+		public void AddFeedback(string filename, string file, string grade)
+		{
+			using (conn = new MySqlConnection(db)) {
+				conn.Open();
+				const string stm = "SELECT VERSION()";
+				int UsernameColumn = 0;
+				string username;
+
+				var cmd = new MySqlCommand (stm, conn);
+				cmd.CommandText = "SELECT * FROM Completed WHERE FileName = @filename AND Grade = @grade AND FeedbackGiven = @feedback";
+				cmd.Parameters.AddWithValue ("@filename", filename);
+				cmd.Parameters.AddWithValue ("@grade", grade);
+				cmd.Parameters.AddWithValue("@feedback", 0);
+
+				using (var rdr = cmd.ExecuteReader())
+				{
+					if (rdr.HasRows)
+					{
+						rdr.Read();
+						username = rdr.GetString(UsernameColumn);
+
+						cmd.CommandText = "INSERT INTO Feedback WHERE Username = @username AND FileName = @filename AND File = @file AND Grade = @grade";
+						cmd.Parameters.AddWithValue("@username", username);
+						cmd.Parameters.AddWithValue("@filename", filename);
+						cmd.Parameters.AddWithValue("@file", file);
+						cmd.Parameters.AddWithValue("@grade", grade);
+						cmd.ExecuteNonQuery();
+
+						cmd.CommandText = "UPDATE Completed SET FeedbackGiven = @feedback WHERE Username = @username AND FileName = @filename AND Grade = @grade";
+						cmd.Parameters.AddWithValue("@feedback", 1);
+						cmd.Parameters.AddWithValue("@username", username);
+						cmd.Parameters.AddWithValue("@filename", filename);
+						cmd.Parameters.AddWithValue("@grade", grade);
+						cmd.ExecuteNonQuery();
+					}
+				}
 			}
 		}
 
@@ -221,8 +230,6 @@ namespace CAS.NET.Server
 					file = "Error";
 				}
 			}
-
-            conn.Close();
 
 			return file;
 		}
@@ -256,8 +263,6 @@ namespace CAS.NET.Server
 				}
 			}
 
-			conn.Close();
-
 			return FileList.ToArray();
 		}
 
@@ -268,15 +273,14 @@ namespace CAS.NET.Server
 				const string stm = "SELECT VERSION()";
 
 				var cmd = new MySqlCommand (stm, conn);
-				cmd.CommandText = "INSERT INTO Completed(Username, FileName, File, Grade) VALUES(@username, @filename, @file, @grade)";
+				cmd.CommandText = "INSERT INTO Completed(Username, FileName, File, Grade, FeedbackGiven) VALUES(@username, @filename, @file, @grade, @feedback)";
 				cmd.Parameters.AddWithValue("@username", username);
 				cmd.Parameters.AddWithValue("@filename", filename);
 				cmd.Parameters.AddWithValue("@file", file);
 				cmd.Parameters.AddWithValue("@grade", grade);
+				cmd.Parameters.AddWithValue("@feedback", 0);
 				cmd.ExecuteNonQuery();
 			}
-
-			conn.Close();
 		}
 
 		/*
