@@ -107,7 +107,49 @@ namespace CAS.NET.Server
 			return "Successfully added assignment";
 		}
 
+		public static string StudentGetAssignmentList(string msg, Database db)
+		{
+			int n = 0;
+			string username = "";
+			string password = "";
+
+			GetStringFromPosition(msg, ref n);
+			username = GetStringFromPosition(msg, ref n);
+
+			for (int i = n; i < msg.Length; i++)
+			{
+				password = password + msg[i];
+			}
+			//password = GetStringFromPosition(msg, ref n);
+
+			return string.Join(" ", db.StudentGetAssignmentList(username));
+		}
+
 		public static string TeacherGetCompleted(string msg, Database db)
+		{
+			int n = 0;
+			string grade = "";
+			string username = "";
+			string password = "";
+			string filename = "";
+
+			/* find length of command by output parameter n */
+			GetStringFromPosition(msg, ref n);
+
+			grade = GetStringFromPosition(msg, ref n);
+			username = GetStringFromPosition(msg, ref n);
+			password = GetStringFromPosition(msg, ref n);
+			//filename = GetStringFromPosition(msg, ref n);
+
+			/* because a file can contain spaces, GetStringFromPosition doesn't work then */
+			for (int i = n; i < msg.Length; i++) {
+				filename = filename + msg[i];
+			}
+
+			return db.GetCompleted(filename, grade);
+		}
+
+		public static string TeacherAddFeedback(string msg, Database db)
 		{
 			int n = 0;
 			string grade = "";

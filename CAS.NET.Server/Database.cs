@@ -132,6 +132,38 @@ namespace CAS.NET.Server
 			}
 		}
 
+		public string[] TeacherGetAssignmentList(string username)
+		{
+			List<string> FileList = new List<string>();
+			int FileNameColumn = 1;
+
+			using (conn = new MySqlConnection(db)) {
+				conn.Open();
+				const string stm = "SELECT VERSION()";
+
+				var cmd = new MySqlCommand (stm, conn);
+				cmd.CommandText = "SELECT * FROM Assignment WHERE Username = @username";
+				cmd.Parameters.AddWithValue ("@Username", username);
+
+				var rdr = cmd.ExecuteReader ();
+
+				if (rdr.HasRows)
+				{
+					while(rdr.Read())
+					{
+						FileList.Add(rdr.GetString (FileNameColumn));
+					}
+
+				}
+				else
+				{
+					FileList.Add("Error");
+				}
+			}
+
+			return FileList.ToArray();
+		}
+
 		public string GetCompleted(string filename, string grade)
 		{
 			string file;
@@ -234,7 +266,7 @@ namespace CAS.NET.Server
 			return file;
 		}
 
-        public string[] GetAssignmentList(string grade)
+        public string[] StudentGetAssignmentList(string grade)
 		{
 			List<string> FileList = new List<string>();
 			int FileNameColumn = 1;
