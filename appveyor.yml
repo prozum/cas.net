@@ -4,6 +4,14 @@ environment:
   CoverityNotificationEmail:
       secure: SkMoWnYcCR2QVa8COhA8mwLl7sxjWcIbbC0T5nrJLlM=
 
+init:
+# Properties, passed to MSBuild project.
+- ps: |
+    $env:BuildDir = "$env:APPVEYOR_BUILD_FOLDER\.OUTPUT"
+    $env:VersionBuild = "$env:APPVEYOR_BUILD_NUMBER"
+    $env:VersionStage = "$env:APPVEYOR_REPO_BRANCH"
+    $env:VersionTag = "$env:APPVEYOR_REPO_COMMIT"
+
 before_build:
   - nuget restore
 
