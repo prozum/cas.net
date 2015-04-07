@@ -10,6 +10,11 @@ namespace Ast
     {
         static readonly char[] opValidChars = { '=', '<', '>', '+', '-', '*', '/', '^' };
 
+        public static Expression Parse(string parseString)
+        {
+            return Parse(new Evaluator (), parseString);
+        }
+
         public static Expression Parse(Evaluator evaluator, string parseString)
         {
             Expression curExp;
