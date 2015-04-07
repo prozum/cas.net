@@ -455,6 +455,7 @@ namespace Ast
 
                 if (left is Sub)
                 {
+                    throw new NotImplementedException();
                     return new Sub(new Div((left as Operator).left, right), new Div((left as Operator).right, right));
                 }
 
