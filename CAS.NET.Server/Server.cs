@@ -67,7 +67,9 @@ namespace CAS.NET.Server
 					break;
 				case "GetCompleted":
 					break;
-				case "GetAssignmentList":
+				case "TeacherGetAssignmentList":
+					break;
+				case "StudentGetAssignmentList":
 					return StudentGetAssignmentList(msg, db);
 				case "GetAssignment":
 					return StudentGetAssignment (msg, db);
@@ -107,7 +109,7 @@ namespace CAS.NET.Server
 			return "Successfully added assignment";
 		}
 
-		public static string StudentGetAssignmentList(string msg, Database db)
+		public static string TeacherGetAssignmentList(string msg, Database db)
 		{
 			int n = 0;
 			string username = "";
@@ -122,7 +124,7 @@ namespace CAS.NET.Server
 			}
 			//password = GetStringFromPosition(msg, ref n);
 
-			return string.Join(" ", db.StudentGetAssignmentList(username));
+			return string.Join(" ", db.TeacherGetAssignmentList(username));
 		}
 
 		public static string TeacherGetCompleted(string msg, Database db)
@@ -173,35 +175,6 @@ namespace CAS.NET.Server
 			return db.GetCompleted(filename, grade);
 		}
 
-		/*
-		public static string TeacherAddFeedback(string msg, Database db)
-		{
-			int n = 0;
-			string grade = "";
-			string username = "";
-			string password = "";
-			string filename = "";
-			string file = "";
-
-			//find length of command by output parameter n
-			GetStringFromPosition(msg, ref n);
-
-			grade = GetStringFromPosition(msg, ref n);
-			username = GetStringFromPosition(msg, ref n);
-			password = GetStringFromPosition(msg, ref n);
-			filename = GetStringFromPosition(msg, ref n);
-
-			//because a file can contain spaces, GetStringFromPosition doesn't work then
-			for (int i = n; i < msg.Length; i++) {
-				file = file + msg[i];
-			}
-
-			db.AddAssignment(username, filename, file, grade);
-
-			return "Successfully added assignment";
-		}
-		*/
-
 		public static string StudentGetAssignmentList(string msg, Database db)
 		{
 			int n = 0;
@@ -220,7 +193,7 @@ namespace CAS.NET.Server
 			}
 			//password = GetStringFromPosition(msg, ref n);
 
-			return string.Join(" ", db.GetAssignmentList(grade));
+			return string.Join(" ", db.StudentGetAssignmentList(grade));
 		}
 
 		public static string StudentGetAssignment(string msg, Database db)
@@ -237,6 +210,14 @@ namespace CAS.NET.Server
 			grade = GetStringFromPosition(msg, ref n);
            	username = GetStringFromPosition(msg, ref n);
             password = GetStringFromPosition(msg, ref n);
+
+			/*
+			if (!db.ValidateUser(username, password))
+			{
+				return "Wrong username or password";
+			}
+			*/
+
 			//filename = GetStringFromPosition(msg, ref n);
 
 
@@ -262,6 +243,14 @@ namespace CAS.NET.Server
 			grade = GetStringFromPosition(msg, ref n);
 			username = GetStringFromPosition(msg, ref n);
 			password = GetStringFromPosition(msg, ref n);
+
+			/*
+			if (!db.ValidateUser(username, password, grade))
+			{
+				return "Wrong username or password";
+			}
+			*/
+
 			filename = GetStringFromPosition(msg, ref n);
 
 			/* because a file can contain spaces, GetStringFromPosition doesn't work then */
