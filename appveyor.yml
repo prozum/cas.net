@@ -1,75 +1,50 @@
+environment:
+  CoverityProjectToken:
+      secure: k5JpbLODWLUCC4wXpzabZz+y3Otvfp8hNuA1BZI1/c0=
+  CoverityNotificationEmail:
+      secure: SkMoWnYcCR2QVa8COhA8mwLl7sxjWcIbbC0T5nrJLlM=
+
 before_build:
   - nuget restore
 
 build_script:
 - ps: |
-# Define build command.
-$buildCmd = "C:\Program Files (x86)\MSBuild\12.0\bin\msbuild.exe"
-$buildArgs = @(
-  "/m",
-  "/l:C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll",
-  "/p:Configuration=$env:CONFIGURATION",
-  "/p:Platform=$env:PLATFORM")
+    $buildCmd = "C:\Program Files (x86)\MSBuild\12.0\bin\msbuild.exe"
+    $buildArgs = @(
+      "/m",
+      "/l:C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll",
+      "/p:Configuration=$env:CONFIGURATION",
+      "/p:Platform=$env:PLATFORM")
     
-# If build is not a scheduled one, than simply build project with MSBuild.
-if ($env:APPVEYOR_SCHEDULED_BUILD -ne "True") {
-  & $buildCmd $buildArgs
-  return  # exit script
-}
-
-# Else, build project with Coverity Scan.
-"Building project with Coverity Scan..."
-& "cov-build.exe" `
-  --dir cov-int `
-  $buildCmd $buildArgs
-
-# Compress results.
-"Compressing Coverity results..."
-$zipEncoderDef = @'
-  namespace AnalyzeCode {
-    public class PortableFileNameEncoder: System.Text.UTF8Encoding {
-      public PortableFileNameEncoder() {}
-      public override byte[] GetBytes(string entry) {
-        return base.GetBytes(entry.Replace("\\", "/"));
-      }
+    # If build is not a scheduled one, then simply build the project with
+    # MSBuild.
+    if ($env:APPVEYOR_SCHEDULED_BUILD -ne "True") {
+      & $buildCmd $buildArgs
+      return
     }
-  }
-'@
-Add-Type -TypeDefinition $zipEncoderDef
-[IO.Compression.ZipFile]::CreateFromDirectory(
-  "$env:APPVEYOR_BUILD_FOLDER\cov-int",
-  "$env:APPVEYOR_BUILD_FOLDER\$env:APPVEYOR_PROJECT_NAME.zip",
-  [IO.Compression.CompressionLevel]::Optimal,
-  $true,  # include root directory
-  (New-Object AnalyzeCode.PortableFileNameEncoder))
+    
+    # Else, build project with Coverity Scan.
+    "Building project with Coverity..."
+    & cov-build.exe --dir cov-int --encoding=UTF-8 $buildCmd $buildArgs
+      
+    # Compress results.
+    $coverityPublisher =
+      "third-party\nuget-packages\PublishCoverity.0.9.0\PublishCoverity.exe"
+    "Compressing Coverity results..."
+    & "$coverityPublisher" compress `
+      -i "$env:APPVEYOR_BUILD_FOLDER\cov-int" `
+      -o "$env:APPVEYOR_BUILD_FOLDER\$env:APPVEYOR_PROJECT_NAME.zip" `
+      --overwrite
+    
+    # Upload results to Coverity server.
+    $version = "$env:VersionMajor.$env:VersionMinor.$env:VersionPatch" +
+      "-$env:VersionStage+$env:VersionBuild"
+    "Uploading Coverity results..."  
+    & "$coverityPublisher" publish `
+      -t "$env:CoverityProjectToken" `
+      -e "$env:CoverityNotificationEmail" `
+      -r "$env:APPVEYOR_REPO_NAME" `
+      -z "$env:APPVEYOR_BUILD_FOLDER\$env:APPVEYOR_PROJECT_NAME.zip" `
+      -d "CI server scheduled build." `
+      --codeVersion "$version"
 
-# Upload results to Coverity server.
-"Uploading Coverity results..."
-Add-Type -AssemblyName "System.Net.Http"
-$client = New-Object Net.Http.HttpClient
-$client.Timeout = [TimeSpan]::FromMinutes(20)
-$form = New-Object Net.Http.MultipartFormDataContent
-
-# Fill token field.
-[Net.Http.HttpContent]$formField =
-  New-Object Net.Http.StringContent($env:CoverityProjectToken)
-$form.Add($formField, "token")
-
-# Fill version field.
-$formField = New-Object Net.Http.StringContent($env:APPVEYOR_BUILD_VERSION)
-$form.Add($formField, "version")
-
-# Fill description field.
-$formField = New-Object Net.Http.StringContent("AppVeyor scheduled build.")
-$form.Add($formField, "description")
-
-# Submit form.
-$url = "https://scan.coverity.com/builds?project=$env:APPVEYOR_REPO_NAME"
-$task = $client.PostAsync($url, $form)
-try {
-  $task.Wait()  # throws AggregateException on time-out
-} catch [AggregateException] {
-  throw $_.Exception.InnerException
-}
-$task.Result
-$fs.Close()
