@@ -77,6 +77,11 @@ namespace Ast
             symbol = "=";
             priority = 0;
         }
+
+        public override Expression Expand()
+        {
+            return new Equal(left.Expand(), right.Expand());
+        }
 	}
 
     public class Assign : Operator
@@ -86,6 +91,11 @@ namespace Ast
         {
             symbol = ":=";
             priority = 0;
+        }
+
+        public override Expression Expand()
+        {
+            return new Assign(left.Expand(), right.Expand());
         }
 
     }
@@ -154,6 +164,11 @@ namespace Ast
 
             return base.Evaluate();
 		}
+
+        public override Expression Expand()
+        {
+            return new Add(left.Expand(), right.Expand());
+        }
 	}
 
 	public class Sub : Operator
@@ -219,6 +234,11 @@ namespace Ast
 
             return base.Evaluate();
 		}
+
+        public override Expression Expand()
+        {
+            return new Sub(left.Expand(), right.Expand());
+        }
 	}
 
 	public class Mul : Operator
@@ -280,6 +300,37 @@ namespace Ast
 
             return base.Evaluate();
 		}
+
+        public override Expression Expand()
+        {
+            if (left is Operator && (left as Operator).priority < this.priority)
+            {
+                if (left is Add)
+                {
+                    return new Add(new Mul((left as Operator).left, right), new Mul((left as Operator).right, right));
+                }
+                
+                if (left is Sub)
+                {
+                    return new Sub(new Mul((left as Operator).left, right), new Mul((left as Operator).right, right));
+                }
+            }
+
+            if (right is Operator && (right as Operator).priority < this.priority)
+            {
+                if (right is Add)
+                {
+                    return new Add(new Mul((right as Operator).left, left), new Mul((right as Operator).right, left));
+                }
+                
+                if (right is Sub)
+                {
+                    return new Sub(new Mul((right as Operator).left, left), new Mul((right as Operator).right, left));
+                }
+            }
+
+            return new Mul(left.Expand(), right.Expand());
+        }
 	}
 
 	public class Div : Operator
@@ -341,6 +392,37 @@ namespace Ast
 
             return base.Evaluate();
 		}
+
+        public override Expression Expand()
+        {
+            if (left is Operator && (left as Operator).priority < this.priority)
+            {
+                if (left is Add)
+                {
+                    return new Add(new Div((left as Operator).left, right), new Div((left as Operator).right, right));
+                }
+                
+                if (left is Sub)
+                {
+                    return new Sub(new Div((left as Operator).left, right), new Div((left as Operator).right, right));
+                }
+            }
+
+            if (right is Operator && (right as Operator).priority < this.priority)
+            {
+                if (right is Add)
+                {
+                    return new Add(new Div((right as Operator).left, left), new Div((right as Operator).right, left));
+                }
+
+                if (right is Sub)
+                {
+                    return new Sub(new Div((right as Operator).left, left), new Div((right as Operator).right, left));
+                }
+            }
+
+            return new Div(left.Expand(), right.Expand());
+        }
 	}
 
 	public class Exp : Operator
@@ -360,6 +442,34 @@ namespace Ast
 			}
 
             return base.Evaluate();
+        }
+
+        public override Expression Expand()
+        {
+            if (left is Operator && (left as Operator).priority < this.priority)
+            {
+                if (left is Add)
+                {
+                    return new Add(new Add(new Exp((left as Operator).left, right), new Exp((left as Operator).right, right)), new Mul(new Integer(2), new Mul((left as Operator).left, (left as Operator).right)));
+                }
+
+                if (left is Sub)
+                {
+                    return new Sub(new Div((left as Operator).left, right), new Div((left as Operator).right, right));
+                }
+
+                if (left is Mul)
+                {
+                   return new Mul(new Exp((left as Operator).left,right), new Exp((left as Operator).right,right)); 
+                }
+
+                if (left is Div)
+                {
+                    return new Div(new Exp((left as Operator).left, right), new Exp((left as Operator).right, right)); 
+                }
+            }
+
+            return new Exp(left.Expand(), right.Expand());
         }
 	}
 }
