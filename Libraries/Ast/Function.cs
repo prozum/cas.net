@@ -3,37 +3,37 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-	public class Function  : Expression
-	{
+    public class Function  : Expression
+    {
         static string[] specialFunctionNames = { "cos", "sin", "tan", "sqrt" };
-		public string identifier;
+        public string identifier;
         public List<Expression> args = new List<Expression>();
         public Dictionary<string, Expression> tempDefinitions;
 
-		public Function(string identifier, List<Expression> args)
-		{
-			this.identifier = identifier;
-			this.args = args;
-		}
+        public Function(string identifier, List<Expression> args)
+        {
+            this.identifier = identifier;
+            this.args = args;
+        }
 
-		public override string ToString ()
-		{
-			string str = identifier + '(';
+        public override string ToString ()
+        {
+            string str = identifier + '(';
 
-			for (int i = 0; i < args.Count; i++) 
+            for (int i = 0; i < args.Count; i++) 
             {
-				str += args[i].ToString ();
+                str += args[i].ToString ();
 
-				if (i < args.Count - 1) 
+                if (i < args.Count - 1) 
                 {
-					str += ',';
-				}
-			}
+                    str += ',';
+                }
+            }
 
-			return str + ')';
-		}
+            return str + ')';
+        }
 
-		public override Expression Evaluate()
+        public override Expression Evaluate()
         {
             List<string> functionParemNames;
             Expression res;
@@ -83,14 +83,14 @@ namespace Ast
             }
 
             throw new NotImplementedException();
-		}
+        }
 
         private Expression HardcodedFunctions()
         {
             if (args.Count == 1)
-	        {
-		        switch (identifier)
-	            {
+            {
+                switch (identifier)
+                {
                     case "cos":
                         if (args[0].Evaluate() is Integer)
                         {
@@ -155,9 +155,9 @@ namespace Ast
 
                         return new Error("Could not take cos of: " + args[0].ToString());
 
-		            default:
+                    default:
                         return new Error("Function has the wrong number for parameters");
-	            }
+                }
             }
             else
             {

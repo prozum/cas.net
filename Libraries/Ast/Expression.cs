@@ -4,8 +4,8 @@ using System.Text.RegularExpressions;
 
 namespace Ast
 {
-	public abstract class Expression 
-	{
+    public abstract class Expression 
+    {
         public Evaluator evaluator;
         public Operator parent;
         public Function functionCall;
@@ -21,8 +21,8 @@ namespace Ast
             return this;
         }
 
-		//public abstract string ToString ();
-		//public abstract bool Contains (Expression a);
+        //public abstract string ToString ();
+        //public abstract bool Contains (Expression a);
 
         #region Add
         public static Expression operator +(Expression a, Expression b)
@@ -51,5 +51,5 @@ namespace Ast
             throw new NotImplementedException();
         }
         #endregion
-	}
+    }
 }

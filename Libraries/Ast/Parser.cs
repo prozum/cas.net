@@ -6,82 +6,82 @@ using System.Globalization;
 
 namespace Ast
 {
-	public static class Parser
-	{
-	    static readonly char[] opValidChars = { '=', '<', '>', '+', '-', '*', '/', '^' };
+    public static class Parser
+    {
+        static readonly char[] opValidChars = { '=', '<', '>', '+', '-', '*', '/', '^' };
 
         public static Expression Parse(Evaluator evaluator, string parseString)
         {
-			Expression curExp;
-			var exs = new Stack<Expression> ();
-			var ops = new Stack<Operator> (); 
+            Expression curExp;
+            var exs = new Stack<Expression> ();
+            var ops = new Stack<Operator> ();
 
-			var parseReader = new StringReader (parseString);
+            var parseReader = new StringReader (parseString);
 
-			int curChar;
+            int curChar;
 
-			while ((curChar = parseReader.Peek()) != -1) {
+            while ((curChar = parseReader.Peek()) != -1) {
 
                 // Skip whitespace
-				while (char.IsWhiteSpace ((char)curChar)) {
+                while (char.IsWhiteSpace ((char)curChar)) {
 
                     parseReader.Read();
                 }
 
-				if (char.IsLetter ((char)curChar)) {
+                if (char.IsLetter ((char)curChar)) {
 
-					//exs.Push (ParseIdentifier (parseReader));
+                    //exs.Push (ParseIdentifier (parseReader));
                     curExp = ParseIdentifier(evaluator, parseReader);
-					exs.Push (curExp);
+                    exs.Push (curExp);
 
-				} else if (char.IsDigit ((char)curChar)) {
+                } else if (char.IsDigit ((char)curChar)) {
 
-					//exs.Push (ParseNumber (parseReader));
-					curExp = ParseNumber (parseReader);
-					exs.Push (curExp);
+                    //exs.Push (ParseNumber (parseReader));
+                    curExp = ParseNumber (parseReader);
+                    exs.Push (curExp);
 
-				} else if (curChar.Equals ('(')) {
-				
-					//exs.Push (Parse (ExtractSubstring (parseReader))); 
+                } else if (curChar.Equals ('(')) {
+                
+                    //exs.Push (Parse (ExtractSubstring (parseReader))); 
                     curExp = Parse(evaluator, ExtractSubstring(parseReader)); 
-					exs.Push (curExp); 
+                    exs.Push (curExp); 
 
-				} else if (opValidChars.Contains ((char)curChar)) {
+                } else if (opValidChars.Contains ((char)curChar)) {
 
-					//ops.Push (ParseOperator (parseReader));
-					curExp = ParseOperator (parseReader);
-					ops.Push ((Operator)curExp);
+                    //ops.Push (ParseOperator (parseReader));
+                    curExp = ParseOperator (parseReader);
+                    ops.Push ((Operator)curExp);
 
-				} else {
+                } else {
 
-					curExp = new Error ("Error in :" + parseReader.ToString());
-				}
+                    curExp = new Error ("Error in :" + parseReader.ToString());
+                }
 
-				if (curExp is Error) {
+                if (curExp is Error) {
 
-					return curExp;
-				}
+                    return curExp;
+                }
             }
 
-			return CreateAst (exs, ops);
+            return CreateAst (exs, ops);
         }
 
-		private static string ExtractSubstring(StringReader parseReader)
-		{
-			string substring = "";
+        private static string ExtractSubstring(StringReader parseReader)
+        {
+            string substring = "";
 
-			int parentEnd = 0;
-			int parentStart = 0;
+            int parentEnd = 0;
+            int parentStart = 0;
 
-			if (((char)parseReader.Peek()).Equals('('))
-		    {
+            if (((char)parseReader.Peek()).Equals('('))
+            {
                 parseReader.Read();
 
-				while (!((char)parseReader.Peek()).Equals(')') && (parentStart == parentEnd))
+                while (!((char)parseReader.Peek()).Equals(')') && (parentStart == parentEnd))
                 {
-					substring += (char)parseReader.Peek();
+                    substring += (char)parseReader.Peek();
                     
-					switch ((char)parseReader.Peek())
+                    switch ((char)parseReader.Peek())
                     {
                         case '(':
                             parentStart++;
@@ -94,93 +94,93 @@ namespace Ast
                     parseReader.Read();
                 }
 
-				// Eat ')'
+                // Eat ')'
                 parseReader.Read();
 
             }
-		    
-			return substring;
-		}
+            
+            return substring;
+        }
 
-		private static Expression CreateAst(Stack<Expression> exs, Stack<Operator> ops)
+        private static Expression CreateAst(Stack<Expression> exs, Stack<Operator> ops)
         {
-			Expression left,right;
-			Operator curOp = null, nextOp;
+            Expression left,right;
+            Operator curOp = null, nextOp;
 
-			if (exs.Count == 1) {
+            if (exs.Count == 1) {
 
-				return exs.Pop ();
+                return exs.Pop ();
             }
             else if (exs.Count < 1)
             {
                 return new Error("No expressions found");
             }
 
-			right = exs.Pop ();
+            right = exs.Pop ();
 
-			while (ops.Count > 0 ) {
+            while (ops.Count > 0 ) {
 
-				curOp = ops.Pop ();
-				curOp.right = right;
-				right.parent = curOp;
+                curOp = ops.Pop ();
+                curOp.right = right;
+                right.parent = curOp;
 
-				if (ops.Count > 0) {
+                if (ops.Count > 0) {
 
-					nextOp = ops.Peek ();
+                    nextOp = ops.Peek ();
 
-					if (curOp.priority > nextOp.priority) {
+                    if (curOp.priority > nextOp.priority) {
 
-						curOp.left = exs.Pop ();
+                        curOp.left = exs.Pop ();
 
-						if (curOp.parent == null) {
+                        if (curOp.parent == null) {
 
-							curOp.parent = nextOp;
-							right = curOp;
+                            curOp.parent = nextOp;
+                            right = curOp;
 
-						} else {
+                        } else {
 
-							curOp.parent.parent = nextOp;
-							right = curOp.parent;
+                            curOp.parent.parent = nextOp;
+                            right = curOp.parent;
 
-						}
+                        }
 
-					} else {
+                    } else {
 
-						curOp.left = nextOp;
-						nextOp.parent = curOp;
-						right = exs.Pop ();
-					}
+                        curOp.left = nextOp;
+                        nextOp.parent = curOp;
+                        right = exs.Pop ();
+                    }
 
-				} else {
+                } else {
 
-					left = exs.Pop ();
-					left.parent = curOp;
-					curOp.left = left;
-				}
+                    left = exs.Pop ();
+                    left.parent = curOp;
+                    curOp.left = left;
+                }
 
-			}
+            }
 
-			while (curOp.parent != null) {
+            while (curOp.parent != null) {
 
-				curOp = (Operator)curOp.parent;
-			}
+                curOp = (Operator)curOp.parent;
+            }
 
-			return curOp;
+            return curOp;
         }
 
         private static Expression ParseIdentifier(Evaluator evaluator, StringReader parseReader)
         {
-			string identifier = "";
-			int curChar;
+            string identifier = "";
+            int curChar;
 
-			while ((curChar = parseReader.Peek()) != -1 && char.IsLetterOrDigit ((char)curChar)) {
+            while ((curChar = parseReader.Peek()) != -1 && char.IsLetterOrDigit ((char)curChar)) {
 
-				//int test = curChar;
-				identifier += (char)curChar;
-				parseReader.Read ();
+                //int test = curChar;
+                identifier += (char)curChar;
+                parseReader.Read ();
             }
 
-			if ((char)curChar == '(') {
+            if ((char)curChar == '(') {
 
                 return ParseFunction(evaluator, identifier, parseReader);
 
@@ -192,50 +192,50 @@ namespace Ast
         }
 
         private static Expression ParseFunction(Evaluator evaluator, string identifier, StringReader parseReader)
-		{
+        {
             Expression res;
-			var args = new List<Expression> ();
+            var args = new List<Expression> ();
 
-			var argString = ExtractSubstring (parseReader);
-			var argList = argString.Split (',');
+            var argString = ExtractSubstring (parseReader);
+            var argList = argString.Split (',');
 
-			foreach (string arg in argList) {
+            foreach (string arg in argList) {
 
                 args.Add(Parse(evaluator, arg));
-			}
+            }
 
             res = new Function(identifier, args);
 
             res.evaluator = evaluator;
 
             return res;
-		}
+        }
 
         enum NumberType { Integer, Rational, Irrational, Complex };
 
-		public static Expression ParseNumber(StringReader parseReader)
-		{
+        public static Expression ParseNumber(StringReader parseReader)
+        {
             NumberType resultType = NumberType.Integer;
-			string number = "";
+            string number = "";
 
             do
             {
-				if (char.IsDigit((char)parseReader.Peek()))
+                if (char.IsDigit((char)parseReader.Peek()))
                 {
-					number += (char)parseReader.Read();
+                    number += (char)parseReader.Read();
                 }
-				else if ((char)parseReader.Peek() == NumberFormatInfo.CurrentInfo.CurrencyDecimalSeparator[0])
+                else if ((char)parseReader.Peek() == NumberFormatInfo.CurrentInfo.CurrencyDecimalSeparator[0])
                 {
                     //More than one dot. Error!
                     if (resultType == NumberType.Irrational )
                     {
-						return new Error("Parser: unexpected extra decimal seperator in: " + parseReader.ToString());
+                        return new Error("Parser: unexpected extra decimal seperator in: " + parseReader.ToString());
                     }
 
                     number += (char)parseReader.Read();
                     resultType = NumberType.Irrational;
                 }
-				else if ((char)parseReader.Peek() == 'i')
+                else if ((char)parseReader.Peek() == 'i')
                 {
                     resultType = NumberType.Complex;
                     break;
@@ -244,63 +244,63 @@ namespace Ast
                 {
                     break;
                 }
-			} while (parseReader.Peek() != -1);
+            } while (parseReader.Peek() != -1);
 
             switch (resultType)
             {
                 case NumberType.Integer:
                     return new Integer(int.Parse(number));
                 case NumberType.Irrational:
-					return new Irrational(decimal.Parse(number));
+                    return new Irrational(decimal.Parse(number));
                 case NumberType.Complex:
                     return new Complex();
-				default:
-					return new Error ("Parser: unknown error in:" + parseReader.ToString ());
+                default:
+                    return new Error ("Parser: unknown error in:" + parseReader.ToString ());
             }
-		}
+        }
 
         enum OperatorType { Equal, LesserThan, GreaterThan, Plus, Minus, Mul, Div };
 
-		private static Expression ParseOperator(StringReader parseReader)
-		{
-			string op = ((char)parseReader.Read()).ToString();
+        private static Expression ParseOperator(StringReader parseReader)
+        {
+            string op = ((char)parseReader.Read()).ToString();
 
-			if (opValidChars.Contains((char)parseReader.Peek())) {
+            if (opValidChars.Contains((char)parseReader.Peek())) {
 
-				op += (char)parseReader.Read();
-			}
-				
-			switch (op)
+                op += (char)parseReader.Read();
+            }
+                
+            switch (op)
             {
             case ":=":
                 return new Assign();
             case "=":
                 return new Assign();
-				return new Equal ();
+                return new Equal ();
             case "==":
                 return new BooleanEqual();
             case "<=":
                 return new LesserOrEqual();
             case ">=":
                 return new GreaterOrEqual();
-			case "<":
-				return new Lesser ();
-			case ">":
-				return new Greater ();
-			case "+":
-				return new Add ();
-			case "-":
-				return new Sub ();
-			case "*":
-				return new Mul ();
-			case "/":
-				return new Div ();
-			case "^":
-				return new Exp ();
-			default:
-				return new Error ("Parser: operator not supported: " + op);
-			}
-		}
-	}
+            case "<":
+                return new Lesser ();
+            case ">":
+                return new Greater ();
+            case "+":
+                return new Add ();
+            case "-":
+                return new Sub ();
+            case "*":
+                return new Mul ();
+            case "/":
+                return new Div ();
+            case "^":
+                return new Exp ();
+            default:
+                return new Error ("Parser: operator not supported: " + op);
+            }
+        }
+    }
 }
 

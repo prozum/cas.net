@@ -3,24 +3,24 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-	public class Symbol : Expression
-	{
-		public Number prefix, exponent;
-		public string symbol;
+    public class Symbol : Expression
+    {
+        public Number prefix, exponent;
+        public string symbol;
 
         public Symbol(Evaluator evaluator, string sym)
-		{
-			symbol = sym;
+        {
+            symbol = sym;
             this.evaluator = evaluator;
-		}
+        }
 
-		public override string ToString()
-		{
-			return symbol;
-		}
+        public override string ToString()
+        {
+            return symbol;
+        }
 
-		public override Expression Evaluate()
-		{
+        public override Expression Evaluate()
+        {
             Expression res;
 
             if (this.functionCall is Function)
@@ -42,7 +42,7 @@ namespace Ast
 
 
             return new Error("Duuurh");
-		}
-	}
+        }
+    }
 }
 

@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-	public class Evaluator
-	{
+    public class Evaluator
+    {
         public Dictionary<string, Expression> variableDefinitions = new Dictionary<string, Expression>();
         public Dictionary<string, Expression> functionDefinitions = new Dictionary<string, Expression>();
         public Dictionary<string, List<string>> functionParams = new Dictionary<string, List<string>>();
 
-		public Evaluator ()
-		{
-		}
+        public Evaluator ()
+        {
+        }
 
         public Expression Evaluation(string inputString)
         {
@@ -24,16 +24,16 @@ namespace Ast
                     var paramNames = new List<string>();
 
                     foreach (var item in ((exp as Assign).left as Function).args)
-	                {   
-		                if (item is Symbol)
-	                    {
-		                    paramNames.Add((item as Symbol).symbol);
-	                    } 
+                    {   
+                        if (item is Symbol)
+                        {
+                            paramNames.Add((item as Symbol).symbol);
+                        } 
                         else
-	                    {
+                        {
                             return new Error("One arg in the function is not a symbol");
-	                    }
-	                }  
+                        }
+                    }  
 
                     functionParams.Add(((exp as Assign).left as Function).identifier, paramNames);
                     functionDefinitions.Add(((exp as Assign).left as Function).identifier, (exp as Assign).right);
@@ -71,6 +71,6 @@ namespace Ast
 
             return exp;
         }
-	}
+    }
 }
 

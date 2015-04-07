@@ -5,11 +5,11 @@ using System.IO;
 
 namespace Account
 {
-	public abstract class Client
-	{
-		public abstract void GetTask();
+    public abstract class Client
+    {
+        public abstract void GetTask();
 
-		public abstract void PushTask();
-	}
+        public abstract void PushTask();
+    }
 }
 
