@@ -5,37 +5,48 @@ namespace TaskGen
 {
     class MainClass
     {
-
-
-        static string MakeTask (int varMin, int varMax, int varNum, int opsNum)
+        static string MakeTask (int varMin, int varMax, int varNum)
         {
             List<string> Operators = new List<string> ();
             List<int> Numbers = new List<int> ();
 
-            string task = "";
+            string task = "";   
 
-            Random r = new Random ();
+            Random r = new Random (Guid.NewGuid().GetHashCode());
 
             Operators.Clear ();
             Numbers.Clear ();
 
-            switch (opsNum) {
-            case 1:
-                Operators.Add ("+");
-                break;
-            case 2:
-                Operators.Add ("-");
-                break;
-            case 4: 
-                Operators.Add ("*");
-                break;
-            case 8: 
-                Operators.Add ("/");
-                break;
-            }
+            int opsNum;
 
-            for (int i = 0; i < varNum; i++) {
-                Numbers.Add (r.Next (varMin, varMax));
+            Numbers.Add (r.Next (varMin, varMax));
+
+            for (int i = 0; i < varNum - 1; i++)
+            {
+                Numbers.Add(r.Next(varMin, varMax));
+                r = new Random (Guid.NewGuid().GetHashCode());
+
+                opsNum = r.Next(1, 5);
+
+                switch (opsNum)
+                {
+                    case 1:
+                        Operators.Add("+");
+                        break;
+                    case 2:
+                        Operators.Add("-");
+                        break;
+                    case 3: 
+                        Operators.Add("*");
+                        break;
+                    case 4:
+                        while (Numbers[i] == 0)
+                        {
+                            Numbers[i] = r.Next(varMin, varMax);
+                        }
+                        Operators.Add("/");
+                        break;
+                }
             }
     
             task += Numbers[0];
@@ -63,8 +74,7 @@ namespace TaskGen
             string input = "";
             int varMin = 1;
             int varMax = 10;
-            int varNum = 2;
-            int opsNum = varNum-1;     
+            int varNum = 2; 
 
             ConsoleKeyInfo In;
 
@@ -77,7 +87,7 @@ namespace TaskGen
                 PrintMenu (varMin, varMax, varNum);
 
                 if (In.Key == ConsoleKey.D1) {
-                    task = MakeTask (varMin, varMax, varNum, opsNum);
+                    task = MakeTask (varMin, varMax, varNum);
                     Console.Clear ();
 
                     Console.WriteLine (task);
