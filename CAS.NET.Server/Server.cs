@@ -50,23 +50,19 @@ namespace CAS.NET.Server
             }
         }
 
-        public static string GetCommand(string msg)
-        {
-            return GetStringFromPosition(msg, 0);
-        }
-
         public static string ExecuteCommand(string msg, Database db)
         {
-            string command = GetCommand(msg);
+            string command = msg.Substring(0, msg.IndexOf(" "));
+            msg.Substring(command.Length+1);
                 
             switch (command)
             {
             case "AddAssignment":
             	return TeacherAddAssignment (msg, db);
+            case "GetCompleted":
+                return TeacherGetCompleted (msg, db);
 			case "AddFeedback":
-				return TeacherAddFeedback (msg, db); 
-			case "GetCompleted":
-				return TeacherGetCompleted (msg, db);
+				return TeacherAddFeedback (msg, db);
 			case "TeacherGetAssignmentList":
 				return TeacherGetAssignmentList (msg, db);
             case "StudentGetAssignmentList":
@@ -84,25 +80,20 @@ namespace CAS.NET.Server
 
         public static string TeacherAddAssignment(string msg, Database db)
         {
-            int n = 0;
-            string grade;
-            string username = "";
-            string password = "";
-            string filename = "";
-            string file = "";
+            int n = 0;         
+            string[] strArr = new string[4];
 
-            /* find length of command by output parameter n */
-            GetStringFromPosition(msg, ref n);
-
-            grade = GetStringFromPosition(msg, ref n);
-            username = GetStringFromPosition(msg, ref n);
-            password = GetStringFromPosition(msg, ref n);
-            filename = GetStringFromPosition(msg, ref n);
-
-            /* because a file can contain spaces, GetStringFromPosition doesn't work then */
-            for (int i = n; i < msg.Length; i++) {
-                file = file + msg[i];
+            for (int i = 0; i < strArr.Length; i++)
+            {
+                strArr[i] = msg.Substring(n, msg.IndexOf(" "));
+                n += strArr[i].Length + 1;
             }
+
+            string grade = strArr[0];
+            string username = strArr[1];
+            string password = strArr[2];
+            string filename = strArr[3];
+            string file = msg.Substring(n, msg.Length);
 
             if (db.ValidateUser(username, password) != 1)
             {
@@ -116,18 +107,17 @@ namespace CAS.NET.Server
 
         public static string TeacherGetAssignmentList(string msg, Database db)
         {
-            int n = 0;
-            string username = "";
-            string password = "";
+            int n = 0;        
+            string[] strArr = new string[2];
 
-            GetStringFromPosition(msg, ref n);
-            username = GetStringFromPosition(msg, ref n);
-
-            for (int i = n; i < msg.Length; i++)
+            for (int i = 0; i < strArr.Length; i++)
             {
-                password = password + msg[i];
+                strArr[i] = msg.Substring(n, msg.IndexOf(" "));
+                n += strArr[i].Length + 1;
             }
-            //password = GetStringFromPosition(msg, ref n);
+
+            string username = strArr[0];
+            string password = strArr[1];
 
             if (db.ValidateUser(username, password) != 1)
             {
@@ -139,151 +129,124 @@ namespace CAS.NET.Server
 
         public static string TeacherGetCompleted(string msg, Database db)
         {
-            int n = 0;
-            string grade;
-            string username = "";
-            string password = "";
-            string filename = "";
+            int n = 0;         
+            string[] strArr = new string[4];
 
-            /* find length of command by output parameter n */
-            GetStringFromPosition(msg, ref n);
+            for (int i = 0; i < strArr.Length; i++)
+            {
+                strArr[i] = msg.Substring(n, msg.IndexOf(" "));
+                n += strArr[i].Length + 1;
+            }
 
-            grade = GetStringFromPosition(msg, ref n);
-            username = GetStringFromPosition(msg, ref n);
-            password = GetStringFromPosition(msg, ref n);
+            string grade = strArr[0];
+            string username = strArr[1];
+            string password = strArr[2];
+            string filename = strArr[3];           
 
             if (db.ValidateUser(username, password) != 1)
             {
                 return "Invalid teacher";
             }
 
-            //filename = GetStringFromPosition(msg, ref n);
-
-            /* because a file can contain spaces, GetStringFromPosition doesn't work then */
-            for (int i = n; i < msg.Length; i++) {
-                filename = filename + msg[i];
-            }
-
+            /* teachers can use this to get other classes completed assignments */
+            /* todo fix */
             return db.GetCompleted(filename, grade);
         }
 
         public static string TeacherAddFeedback(string msg, Database db)
         {
-            int n = 0;
-            string grade;
-            string username = "";
-            string password = "";
-            string filename = "";
+            int n = 0;         
+            string[] strArr = new string[4];
 
-            /* find length of command by output parameter n */
-            GetStringFromPosition(msg, ref n);
-
-            grade = GetStringFromPosition(msg, ref n);
-            username = GetStringFromPosition(msg, ref n);
-            password = GetStringFromPosition(msg, ref n);
-            //filename = GetStringFromPosition(msg, ref n);
-
-            /* because a file can contain spaces, GetStringFromPosition doesn't work then */
-            for (int i = n; i < msg.Length; i++) {
-                filename = filename + msg[i];
+            for (int i = 0; i < strArr.Length; i++)
+            {
+                strArr[i] = msg.Substring(n, msg.IndexOf(" "));
+                n += strArr[i].Length + 1;
             }
+
+            string grade = strArr[0];
+            string username = strArr[1];
+            string password = strArr[2];
+            string filename = strArr[3];
+            string file = msg.Substring(n, msg.Length);
 
             if (db.ValidateUser(username, password) != 1)
             {
                 return "Invalid teacher";
             }
 
-            return db.GetCompleted(filename, grade);
+            db.AddFeedback(filename, file, grade);
+
+            return "Successfully added feedback";
         }
 
         public static string StudentGetAssignmentList(string msg, Database db)
         {
-            int n = 0;
-            string grade;
-            string username = "";
-            string password = "";
+            int n = 0;         
+            string[] strArr = new string[2];
 
-            GetStringFromPosition(msg, ref n);
-
-            //grade = GetStringFromPosition(msg, ref n);
-            username = GetStringFromPosition(msg, ref n);
-
-            for (int i = n; i < msg.Length; i++)
+            for (int i = 0; i < strArr.Length; i++)
             {
-                password = password + msg[i];
+                strArr[i] = msg.Substring(n, msg.IndexOf(" "));
+                n += strArr[i].Length + 1;
             }
 
-            //password = GetStringFromPosition(msg, ref n);
+            string username = strArr[0];
+            string password = strArr[1];
+            string grade = db.GetGrade(username, password);
 
             if (db.ValidateUser(username, password) != 0)
             {
                 return "Invalid student";
             }
-
-            grade = db.GetGrade(username, password);
 
             return string.Join(" ", db.StudentGetAssignmentList(grade));
         }
 
         public static string StudentGetAssignment(string msg, Database db)
         {
-            int n = 0;
-            string grade;
-            string username = "";
-            string password = "";
-            string filename = "";
+            int n = 0;         
+            string[] strArr = new string[3];
 
-            /* find length of command by output parameter n */
-            GetStringFromPosition(msg, ref n);
-
-            //grade = GetStringFromPosition(msg, ref n);
-            username = GetStringFromPosition(msg, ref n);
-            password = GetStringFromPosition(msg, ref n);
+            for (int i = 0; i < strArr.Length; i++)
+            {
+                strArr[i] = msg.Substring(n, msg.IndexOf(" "));
+                n += strArr[i].Length + 1;
+            }
+                
+            string username = strArr[0];
+            string password = strArr[1];
+            string filename = strArr[2];
+            string grade = db.GetGrade(username, password);
 
             if (db.ValidateUser(username, password) != 0)
             {
                 return "Invalid student";
             }
 
-            grade = db.GetGrade(username, password);
-
-            //filename = GetStringFromPosition(msg, ref n);           
-
-            for (int i = n; i < msg.Length; i++) {
-                filename = filename + msg[i];
-            }
-                
             return db.GetAssignment(filename, grade);
         }
 
         public static string StudentAddCompleted(string msg, Database db)
         {
-            int n = 0;
-            string grade;
-            string username = "";
-            string password = "";
-            string filename = "";
-            string file = "";
+            int n = 0;         
+            string[] strArr = new string[3];
 
-            /* find length of command by output parameter n */
-            GetStringFromPosition(msg, ref n);
+            for (int i = 0; i < strArr.Length; i++)
+            {
+                strArr[i] = msg.Substring(n, msg.IndexOf(" "));
+                n += strArr[i].Length + 1;
+            }
 
-            //grade = GetStringFromPosition(msg, ref n);
-            username = GetStringFromPosition(msg, ref n);
-            password = GetStringFromPosition(msg, ref n);
+            string username = strArr[0];
+            string password = strArr[1];
+            string filename = strArr[2];
+            string grade = db.GetGrade(username, password);
+            string file = msg.Substring(n, msg.Length);       
 
             if (db.ValidateUser(username, password) != 0)
             {
                 return "Invalid student";
-            }
-
-            grade = db.GetGrade(username, password);
-
-            filename = GetStringFromPosition(msg, ref n);
-
-            /* because a file can contain spaces, GetStringFromPosition doesn't work then */
-            for (int i = n; i < msg.Length; i++) {
-                file = file + msg[i];
             }
 
             db.AddCompleted(username, filename, file, grade);
@@ -293,63 +256,26 @@ namespace CAS.NET.Server
 
 		public static string StudentGetFeedback(string msg, Database db)
 		{
-			int n = 0;
-			string grade;
-			string username = "";
-			string password = "";
-			string filename = "";
+            int n = 0;         
+            string[] strArr = new string[3];
 
-			/* find length of command by output parameter n */
-			GetStringFromPosition(msg, ref n);
+            for (int i = 0; i < strArr.Length; i++)
+            {
+                strArr[i] = msg.Substring(n, msg.IndexOf(" "));
+                n += strArr[i].Length + 1;
+            }
 
-			//grade = GetStringFromPosition(msg, ref n);
-			username = GetStringFromPosition(msg, ref n);
-			password = GetStringFromPosition(msg, ref n);
+            string username = strArr[0];
+            string password = strArr[1];
+            string filename = strArr[2];
+            string grade = db.GetGrade(username, password);
 
 			if (db.ValidateUser(username, password) != 0)
 			{
 				return "Invalid student";
-			}
-
-			grade = db.GetGrade(username, password);
-
-			//filename = GetStringFromPosition(msg, ref n);           
-
-			for (int i = n; i < msg.Length; i++) {
-				filename = filename + msg[i];
-			}
+			}         
 
 			return db.GetFeedback(username, filename, grade);
 		}
-
-        public static string GetStringFromPosition(string msg, int pos)
-        {
-            string str = "";
-
-            while (msg[pos] != ' ' && pos < msg.Length)
-            {
-                str = str + msg[pos];
-                pos++;
-            }
-
-            return str;
-        }
-
-        public static string GetStringFromPosition(string msg, ref int pos)
-        {
-            string str = "";
-
-            while (msg[pos] != ' ' && pos < msg.Length)
-            {
-                str = str + msg[pos];
-                pos++;
-            }
-
-            /* skip the space found */
-            pos++;
-
-            return str;
-        }
     }
 }
-
