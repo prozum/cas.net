@@ -99,13 +99,13 @@ namespace CAS.NET.Server
 				conn = new MySqlConnection(db);
 				conn.Open();
 
-				string stm = "SELECT VERSION()";   
+				string stm = "SELECT VERSION()";
 				MySqlCommand cmd = new MySqlCommand(stm, conn);
 				cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Feedback(Username VARCHAR(8), FileName TEXT CHARACTER SET binary,
 									File TEXT CHARACTER SET binary, Grade TEXT CHARACTER SET binary)";
 				cmd.ExecuteNonQuery();
 			}
-			catch (MySqlException ex) 
+			catch (MySqlException ex)
 			{
 				Console.WriteLine(ex);
 
@@ -153,7 +153,6 @@ namespace CAS.NET.Server
 					{
 						FileList.Add(rdr.GetString (FileNameColumn));
 					}
-
 				}
 				else
 				{
@@ -312,6 +311,53 @@ namespace CAS.NET.Server
 				cmd.Parameters.AddWithValue("@grade", grade);
 				cmd.Parameters.AddWithValue("@feedback", 0);
 				cmd.ExecuteNonQuery();
+			}
+		}
+
+		public int ValidateUser(string username, string password)
+		{
+			int PrivilegeColumn = 3;
+
+			string stm = "SELECT * FROM Account WHERE Username = @username AND Password = @password";
+
+			var cmd = new MySqlCommand (stm, conn);
+			cmd.Parameters.AddWithValue ("@username", username);
+			cmd.Parameters.AddWithValue ("@password", password);
+
+			var rdr = cmd.ExecuteReader ();
+
+			if (rdr.HasRows)
+			{
+				rdr.Read();
+				return rdr.GetInt32(PrivilegeColumn);
+			}
+			else
+			{
+				/* wrong username or password */
+				return -1;
+			}
+		}
+
+		public string GetGrade(string username, string password)
+		{
+			int GradeColumn = 2;
+
+			string stm = "SELECT * FROM Account WHERE Username = @username AND Password = @password";
+
+			var cmd = new MySqlCommand (stm, conn);
+			cmd.Parameters.AddWithValue ("@username", username);
+			cmd.Parameters.AddWithValue ("@password", password);
+
+			var rdr = cmd.ExecuteReader ();
+
+			if (rdr.HasRows)
+			{
+				rdr.Read();
+				return rdr.GetString(GradeColumn);
+			}
+			else
+			{
+				return "Wrong username or password";
 			}
 		}
 
