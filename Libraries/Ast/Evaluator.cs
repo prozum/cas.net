@@ -56,6 +56,21 @@ namespace Ast
                 return exp.Evaluate();
             }
         }
+
+        public Expression Expand(string inputString)
+        {
+            var exp = Parser.Parse(this, inputString);
+            var prevExp = "";
+
+            do
+            {
+                prevExp = exp.ToString();
+
+                exp = exp.Expand();
+            } while (exp.ToString() != prevExp);
+
+            return exp;
+        }
 	}
 }
 

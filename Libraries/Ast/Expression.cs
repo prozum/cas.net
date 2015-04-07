@@ -15,7 +15,11 @@ namespace Ast
         {
             this.functionCall = functionCall;
         }
-        
+
+        public virtual Expression Expand()
+        {
+            return this;
+        }
 
 		//public abstract string ToString ();
 		//public abstract bool Contains (Expression a);
