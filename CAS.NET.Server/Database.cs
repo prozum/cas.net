@@ -25,7 +25,7 @@ namespace CAS.NET.Server
                 conn = new MySqlConnection(db);
                 conn.Open();
 
-                string stm = "SELECT VERSION()";   
+                const string stm = "SELECT VERSION()";   
                 MySqlCommand cmd = new MySqlCommand(stm, conn);
                 cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Account(Username VARCHAR(8) PRIMARY KEY,
                                     Password TEXT CHARACTER SET binary, Grade TEXT CHARACTER SET binary, Privilege INT)";
@@ -51,7 +51,7 @@ namespace CAS.NET.Server
                 conn = new MySqlConnection(db);
                 conn.Open();
 
-                string stm = "SELECT VERSION()";   
+                const string stm = "SELECT VERSION()";   
                 MySqlCommand cmd = new MySqlCommand(stm, conn);
                 cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Assignment(Username VARCHAR(8), FileName TEXT CHARACTER SET binary,
                                     File TEXT CHARACTER SET binary, Grade TEXT CHARACTER SET binary)";
@@ -75,7 +75,7 @@ namespace CAS.NET.Server
                 conn = new MySqlConnection(db);
                 conn.Open();
 
-                string stm = "SELECT VERSION()";   
+                const string stm = "SELECT VERSION()";   
                 MySqlCommand cmd = new MySqlCommand(stm, conn);
                 cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Completed(Username VARCHAR(8), FileName TEXT CHARACTER SET binary,
                                     File TEXT CHARACTER SET binary, Grade TEXT CHARACTER SET binary, FeedbackGiven INTEGER)";
@@ -99,7 +99,7 @@ namespace CAS.NET.Server
                 conn = new MySqlConnection(db);
                 conn.Open();
 
-                string stm = "SELECT VERSION()";
+                const string stm = "SELECT VERSION()";
                 MySqlCommand cmd = new MySqlCommand(stm, conn);
                 cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Feedback(Username VARCHAR(8), FileName TEXT CHARACTER SET binary,
                                     File TEXT CHARACTER SET binary, Grade TEXT CHARACTER SET binary)";
@@ -136,7 +136,7 @@ namespace CAS.NET.Server
         public string[] TeacherGetAssignmentList(string username)
         {
             List<string> FileList = new List<string>();
-            int FileNameColumn = 1;
+            const int FileNameColumn = 1;
 
             using (conn = new MySqlConnection(db))
             {
@@ -168,7 +168,7 @@ namespace CAS.NET.Server
         public string GetCompleted(string filename, string grade)
         {
             string file;
-            int FileColumn = 2;
+            const int FileColumn = 2;
 
             using (conn = new MySqlConnection(db))
             {
@@ -203,7 +203,7 @@ namespace CAS.NET.Server
             {
                 conn.Open();
                 const string stm = "SELECT VERSION()";
-                int UsernameColumn = 0;
+                const int UsernameColumn = 0;
                 string username;
 
                 var cmd = new MySqlCommand(stm, conn);
@@ -240,7 +240,7 @@ namespace CAS.NET.Server
         public string GetAssignment(string filename, string grade)
         {
             string file;
-            int FileColumn = 2;
+            const int FileColumn = 2;
 
             using (conn = new MySqlConnection(db))
             {
@@ -272,7 +272,7 @@ namespace CAS.NET.Server
         public string[] StudentGetAssignmentList(string grade)
         {
             List<string> FileList = new List<string>();
-            int FileNameColumn = 1;
+            const int FileNameColumn = 1;
 
             using (conn = new MySqlConnection(db))
             {
@@ -320,11 +320,44 @@ namespace CAS.NET.Server
             }
         }
 
+		public string GetFeedback(string username, string filename, string grade)
+		{
+			string file;
+			const int FileColumn = 2;
+
+			using (conn = new MySqlConnection(db))
+			{
+				conn.Open();
+				const string stm = "SELECT VERSION()";
+
+				var cmd = new MySqlCommand(stm, conn);
+				cmd.CommandText = "SELECT * FROM Feedback WHERE Username = @username AND FileName = @filename AND Grade = @grade";
+				cmd.Parameters.AddWithValue ("@username", username);
+				cmd.Parameters.AddWithValue("@filename", filename);
+				cmd.Parameters.AddWithValue("@grade", grade);
+
+				var rdr = cmd.ExecuteReader();
+
+				if (rdr.HasRows)
+				{
+					rdr.Read();
+					file = rdr.GetString(FileColumn);
+
+				}
+				else
+				{
+					file = "No feedback on this assignment";
+				}
+			}
+
+			return file;
+		}
+
         public int ValidateUser(string username, string password)
         {
-            int PrivilegeColumn = 3;
+            const int PrivilegeColumn = 3;
 
-            string stm = "SELECT * FROM Account WHERE Username = @username AND Password = @password";
+            const string stm = "SELECT * FROM Account WHERE Username = @username AND Password = @password";
 
             var cmd = new MySqlCommand(stm, conn);
             cmd.Parameters.AddWithValue("@username", username);
@@ -346,9 +379,9 @@ namespace CAS.NET.Server
 
         public string GetGrade(string username, string password)
         {
-            int GradeColumn = 2;
+            const int GradeColumn = 2;
 
-            string stm = "SELECT * FROM Account WHERE Username = @username AND Password = @password";
+            const string stm = "SELECT * FROM Account WHERE Username = @username AND Password = @password";
 
             var cmd = new MySqlCommand(stm, conn);
             cmd.Parameters.AddWithValue("@username", username);

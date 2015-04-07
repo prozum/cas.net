@@ -14,7 +14,7 @@ namespace CAS.NET.Server
                 throw new ArgumentException ("prefix");
             }
 
-            using (HttpListener listener = new HttpListener()) {
+            using (var listener = new HttpListener()) {
             
                 listener.Prefixes.Add(prefix);
                 listener.Start();
@@ -61,31 +61,31 @@ namespace CAS.NET.Server
                 
             switch (command)
             {
-                case "AddAssignment":
-                    return TeacherAddAssignment (msg, db);
-                case "AddFeedback":
-                    break;
-                case "GetCompleted":
-                    break;
-                case "TeacherGetAssignmentList":
-                    break;
-                case "StudentGetAssignmentList":
-                    return StudentGetAssignmentList(msg, db);
-                case "GetAssignment":
-                    return StudentGetAssignment (msg, db);
-                case "AddCompleted":
-                    break;
-                default:
-                    return "Invalid command";
+            case "AddAssignment":
+            	return TeacherAddAssignment (msg, db);
+			case "AddFeedback":
+				return TeacherAddFeedback (msg, db); 
+			case "GetCompleted":
+				return TeacherGetCompleted (msg, db);
+			case "TeacherGetAssignmentList":
+				return TeacherGetAssignmentList (msg, db);
+            case "StudentGetAssignmentList":
+                return StudentGetAssignmentList(msg, db);
+            case "GetAssignment":
+            	return StudentGetAssignment (msg, db);
+			case "AddCompleted":
+				return StudentAddCompleted (msg, db);
+			case "GetFeedback":
+				return StudentGetFeedback (msg, db);
+            default:
+            	return "Invalid command";
             }
-
-            return "";
         }
 
         public static string TeacherAddAssignment(string msg, Database db)
         {
             int n = 0;
-            string grade = "";
+            string grade;
             string username = "";
             string password = "";
             string filename = "";
@@ -140,7 +140,7 @@ namespace CAS.NET.Server
         public static string TeacherGetCompleted(string msg, Database db)
         {
             int n = 0;
-            string grade = "";
+            string grade;
             string username = "";
             string password = "";
             string filename = "";
@@ -170,7 +170,7 @@ namespace CAS.NET.Server
         public static string TeacherAddFeedback(string msg, Database db)
         {
             int n = 0;
-            string grade = "";
+            string grade;
             string username = "";
             string password = "";
             string filename = "";
@@ -199,7 +199,7 @@ namespace CAS.NET.Server
         public static string StudentGetAssignmentList(string msg, Database db)
         {
             int n = 0;
-            string grade = "";
+            string grade;
             string username = "";
             string password = "";
 
@@ -228,7 +228,7 @@ namespace CAS.NET.Server
         public static string StudentGetAssignment(string msg, Database db)
         {
             int n = 0;
-            string grade = "";
+            string grade;
             string username = "";
             string password = "";
             string filename = "";
@@ -259,7 +259,7 @@ namespace CAS.NET.Server
         public static string StudentAddCompleted(string msg, Database db)
         {
             int n = 0;
-            string grade = "";
+            string grade;
             string username = "";
             string password = "";
             string filename = "";
@@ -290,6 +290,37 @@ namespace CAS.NET.Server
 
             return "Successfully added assignment";
         }
+
+		public static string StudentGetFeedback(string msg, Database db)
+		{
+			int n = 0;
+			string grade;
+			string username = "";
+			string password = "";
+			string filename = "";
+
+			/* find length of command by output parameter n */
+			GetStringFromPosition(msg, ref n);
+
+			//grade = GetStringFromPosition(msg, ref n);
+			username = GetStringFromPosition(msg, ref n);
+			password = GetStringFromPosition(msg, ref n);
+
+			if (db.ValidateUser(username, password) != 0)
+			{
+				return "Invalid student";
+			}
+
+			grade = db.GetGrade(username, password);
+
+			//filename = GetStringFromPosition(msg, ref n);           
+
+			for (int i = n; i < msg.Length; i++) {
+				filename = filename + msg[i];
+			}
+
+			return db.GetFeedback(username, filename, grade);
+		}
 
         public static string GetStringFromPosition(string msg, int pos)
         {
