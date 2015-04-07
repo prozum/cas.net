@@ -1,0 +1,34 @@
+﻿<Properties StartupItem="Tests/Ast.Tests/Ast.Tests.csproj" GitUserInfo="UsingMD">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.Workbench>
+    <Files>
+      <File FileName="Tests/Ast.Tests/Ast.Tests.cs" Line="29" Column="29" />
+      <File FileName="Libraries/Ast/Parser.cs" Line="88" Column="88" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="Libraries" expanded="True">
+            <Node name="Ast" expanded="True" />
+          </Node>
+          <Node name="Samples" expanded="True">
+            <Node name="DrawCanvas" expanded="True" />
+          </Node>
+          <Node name="Tests" expanded="True">
+            <Node name="Ast.Tests" expanded="True" />
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.NUnit.TestPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/home/nimoov/Work/git/prozum/cas.net/Samples/AstMenu/AstMenu.cs" line="10" column="1" />
+      <Breakpoint file="/home/nimoov/Work/git/prozum/cas.net/Libraries/Ast/Operator.cs" line="311" column="74" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
