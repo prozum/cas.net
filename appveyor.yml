@@ -56,4 +56,6 @@ build_script:
       -d "CI server scheduled build." `
       --codeVersion "$version"
 
+shallow_clone: true
+
 cache: packages
