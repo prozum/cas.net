@@ -80,7 +80,10 @@ namespace Ast
 
         public override Expression Expand()
         {
-            return new Equal(left.Expand(), right.Expand());
+            var res = new Equal(left.Expand(), right.Expand());
+            res.parent = this.parent;
+
+            return res;
         }
     }
 
@@ -95,7 +98,10 @@ namespace Ast
 
         public override Expression Expand()
         {
-            return new Assign(left.Expand(), right.Expand());
+            var res = new Assign(left.Expand(), right.Expand());
+            res.parent = this.parent;
+
+            return res;
         }
 
     }
@@ -167,7 +173,10 @@ namespace Ast
 
         public override Expression Expand()
         {
-            return new Add(left.Expand(), right.Expand());
+            var res = new Add(left.Expand(), right.Expand());
+            res.parent = this.parent;
+
+            return res;
         }
     }
 
@@ -237,7 +246,10 @@ namespace Ast
 
         public override Expression Expand()
         {
-            return new Sub(left.Expand(), right.Expand());
+            var res = new Sub(left.Expand(), right.Expand());
+            res.parent = this.parent;
+
+            return res;
         }
     }
 
@@ -303,33 +315,37 @@ namespace Ast
 
         public override Expression Expand()
         {
+            Expression res = null;
+
             if (left is Operator && (left as Operator).priority < this.priority)
             {
                 if (left is Add)
                 {
-                    return new Add(new Mul((left as Operator).left, right), new Mul((left as Operator).right, right));
-                }
-                
-                if (left is Sub)
+                    res = new Add(new Mul((left as Operator).left, right), new Mul((left as Operator).right, right));
+                } 
+                else if (left is Sub)
                 {
-                    return new Sub(new Mul((left as Operator).left, right), new Mul((left as Operator).right, right));
+                    res = new Sub(new Mul((left as Operator).left, right), new Mul((left as Operator).right, right));
                 }
-            }
-
-            if (right is Operator && (right as Operator).priority < this.priority)
+            } 
+            else if (right is Operator && (right as Operator).priority < this.priority)
             {
                 if (right is Add)
                 {
-                    return new Add(new Mul((right as Operator).left, left), new Mul((right as Operator).right, left));
+                    res = new Add(new Mul((right as Operator).left, left), new Mul((right as Operator).right, left));
                 }
-                
-                if (right is Sub)
+                else if (right is Sub)
                 {
-                    return new Sub(new Mul((right as Operator).left, left), new Mul((right as Operator).right, left));
+                    res = new Sub(new Mul((right as Operator).left, left), new Mul((right as Operator).right, left));
                 }
             }
+            else
+            {
+                res = new Mul(left.Expand(), right.Expand());
+            }
 
-            return new Mul(left.Expand(), right.Expand());
+            res.parent = this.parent;
+            return res;
         }
     }
 
@@ -395,33 +411,37 @@ namespace Ast
 
         public override Expression Expand()
         {
+            Expression res = null;
+
             if (left is Operator && (left as Operator).priority < this.priority)
             {
                 if (left is Add)
                 {
-                    return new Add(new Div((left as Operator).left, right), new Div((left as Operator).right, right));
-                }
-                
-                if (left is Sub)
+                    res = new Add(new Div((left as Operator).left, right), new Div((left as Operator).right, right));
+                } 
+                else if (left is Sub)
                 {
-                    return new Sub(new Div((left as Operator).left, right), new Div((left as Operator).right, right));
+                    res = new Sub(new Div((left as Operator).left, right), new Div((left as Operator).right, right));
                 }
             }
-
-            if (right is Operator && (right as Operator).priority < this.priority)
+            else if (right is Operator && (right as Operator).priority < this.priority)
             {
                 if (right is Add)
                 {
-                    return new Add(new Div((right as Operator).left, left), new Div((right as Operator).right, left));
+                    res = new Add(new Div((right as Operator).left, left), new Div((right as Operator).right, left));
                 }
-
-                if (right is Sub)
+                else if (right is Sub)
                 {
-                    return new Sub(new Div((right as Operator).left, left), new Div((right as Operator).right, left));
+                    res = new Sub(new Div((right as Operator).left, left), new Div((right as Operator).right, left));
                 }
             }
+            else
+            {
+                res = new Div(left.Expand(), right.Expand());
+            }
 
-            return new Div(left.Expand(), right.Expand());
+            res.parent = this.parent;
+            return res;
         }
     }
 
@@ -446,31 +466,34 @@ namespace Ast
 
         public override Expression Expand()
         {
+            Expression res = null;
+
             if (left is Operator && (left as Operator).priority < this.priority)
             {
                 if (left is Add)
                 {
-                    return new Add(new Add(new Exp((left as Operator).left, right), new Exp((left as Operator).right, right)), new Mul(new Integer(2), new Mul((left as Operator).left, (left as Operator).right)));
-                }
-
-                if (left is Sub)
+                    res = new Add(new Add(new Exp((left as Operator).left, right), new Exp((left as Operator).right, right)), new Mul(new Integer(2), new Mul((left as Operator).left, (left as Operator).right)));
+                } 
+                else if (left is Sub)
                 {
-                    throw new NotImplementedException();
-                    return new Sub(new Div((left as Operator).left, right), new Div((left as Operator).right, right));
+                    res = new Sub(new Add(new Exp((left as Operator).left, right), new Exp((left as Operator).right, right)), new Mul(new Integer(2), new Mul((left as Operator).left, (left as Operator).right)));
                 }
-
-                if (left is Mul)
+                else if (left is Mul)
                 {
-                   return new Mul(new Exp((left as Operator).left,right), new Exp((left as Operator).right,right)); 
+                    res = new Mul(new Exp((left as Operator).left, right), new Exp((left as Operator).right, right)); 
                 }
-
-                if (left is Div)
+                else if (left is Div)
                 {
-                    return new Div(new Exp((left as Operator).left, right), new Exp((left as Operator).right, right)); 
+                    res = new Div(new Exp((left as Operator).left, right), new Exp((left as Operator).right, right)); 
                 }
             }
+            else
+            {
+                res = new Exp(left.Expand(), right.Expand());
+            }
 
-            return new Exp(left.Expand(), right.Expand());
+            res.parent = this.parent;
+            return res;
         }
     }
 }
