@@ -205,7 +205,7 @@ namespace CAS.NET.Server
 
             GetStringFromPosition(msg, ref n);
 
-            grade = GetStringFromPosition(msg, ref n);
+            //grade = GetStringFromPosition(msg, ref n);
             username = GetStringFromPosition(msg, ref n);
 
             for (int i = n; i < msg.Length; i++)
@@ -219,6 +219,8 @@ namespace CAS.NET.Server
             {
                 return "Invalid student";
             }
+
+            grade = db.GetGrade(username, password);
 
             return string.Join(" ", db.StudentGetAssignmentList(grade));
         }
@@ -234,8 +236,8 @@ namespace CAS.NET.Server
             /* find length of command by output parameter n */
             GetStringFromPosition(msg, ref n);
 
-            grade = GetStringFromPosition(msg, ref n);
-               username = GetStringFromPosition(msg, ref n);
+            //grade = GetStringFromPosition(msg, ref n);
+            username = GetStringFromPosition(msg, ref n);
             password = GetStringFromPosition(msg, ref n);
 
             if (db.ValidateUser(username, password) != 0)
@@ -243,8 +245,9 @@ namespace CAS.NET.Server
                 return "Invalid student";
             }
 
-            //filename = GetStringFromPosition(msg, ref n);
+            grade = db.GetGrade(username, password);
 
+            //filename = GetStringFromPosition(msg, ref n);           
 
             for (int i = n; i < msg.Length; i++) {
                 filename = filename + msg[i];
@@ -265,7 +268,7 @@ namespace CAS.NET.Server
             /* find length of command by output parameter n */
             GetStringFromPosition(msg, ref n);
 
-            grade = GetStringFromPosition(msg, ref n);
+            //grade = GetStringFromPosition(msg, ref n);
             username = GetStringFromPosition(msg, ref n);
             password = GetStringFromPosition(msg, ref n);
 
@@ -273,6 +276,8 @@ namespace CAS.NET.Server
             {
                 return "Invalid student";
             }
+
+            grade = db.GetGrade(username, password);
 
             filename = GetStringFromPosition(msg, ref n);
 

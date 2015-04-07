@@ -57,9 +57,7 @@
     <Reference Include="pango-sharp, Version=3.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
       <HintPath>..\..\packages\GtkSharp.3.1.2\lib\net45\pango-sharp.dll</HintPath>
     </Reference>
-    <Reference Include="gtk-sharp, Version=3.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <HintPath>..\..\packages\GtkSharp.3.1.2\lib\net45\gtk-sharp.dll</HintPath>
-    </Reference>
+    <Reference Include="gtk-sharp, Version=3.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
