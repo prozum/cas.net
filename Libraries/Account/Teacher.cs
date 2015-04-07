@@ -8,15 +8,11 @@ namespace Account
     public class Teacher
     {
         private int ID;
+        static string host = "http://localhost:8080/";
 
         public Teacher (string Name)
         {
 
-        }
-
-        public void AddStudent()
-        {
-            throw new NotImplementedException();
         }
 
         public string AddAssignment(string file, string filename, string grade, string username, string password)
@@ -25,7 +21,7 @@ namespace Account
             client.Encoding = System.Text.Encoding.UTF8;
 
             string msg = "AddAssignment " + grade + " " + username + " " + password + " " + filename + " " + file;
-            string response = client.UploadString("http://localhost:8080/", msg);
+            string response = client.UploadString(host, msg);
 
             return response;
         }
@@ -36,19 +32,31 @@ namespace Account
             client.Encoding = System.Text.Encoding.UTF8;
 
             string msg = "GetCompleted " + grade + " " + username + " " + password + " " + filename;
-            string response = client.UploadString("http://localhost:8080/", msg);
+            string response = client.UploadString(host, msg);
 
             return response;
         }
 
-        public void GetCompleted()
+        public string[] GetAssignmentList(string username, string password)
         {
-            throw new NotImplementedException();
+            var client = new WebClient ();
+            client.Encoding = System.Text.Encoding.UTF8;
+
+            string msg = "TeacherGetAssignmentList " + username + " " + password;
+            string response = client.UploadString(host, msg);
+
+            return response.Split(' ');
         }
 
-        public void AddFeedback()
+        public string AddFeedback(string file, string filename, string grade, string username, string password)
         {
-            throw new NotImplementedException();
+            var client = new WebClient ();
+            client.Encoding = System.Text.Encoding.UTF8;
+
+            string msg = "AddAssignment " + grade + " " + username + " " + password + " " + filename + " " + file;
+            string response = client.UploadString(host, msg);
+
+            return response;
         }
     }
 }
