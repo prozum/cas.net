@@ -104,6 +104,11 @@ namespace CAS.NET.Server
 				file = file + msg[i];
 			}
 
+			if (db.ValidateUser(username, password) != 1)
+			{
+				return "Invalid teacher";
+			}
+
 			db.AddAssignment(username, filename, file, grade);
 
 			return "Successfully added assignment";
@@ -124,6 +129,11 @@ namespace CAS.NET.Server
 			}
 			//password = GetStringFromPosition(msg, ref n);
 
+			if (db.ValidateUser(username, password) != 1)
+			{
+				return "Invalid teacher";
+			}
+
 			return string.Join(" ", db.TeacherGetAssignmentList(username));
 		}
 
@@ -141,6 +151,12 @@ namespace CAS.NET.Server
 			grade = GetStringFromPosition(msg, ref n);
 			username = GetStringFromPosition(msg, ref n);
 			password = GetStringFromPosition(msg, ref n);
+
+			if (db.ValidateUser(username, password) != 1)
+			{
+				return "Invalid teacher";
+			}
+
 			//filename = GetStringFromPosition(msg, ref n);
 
 			/* because a file can contain spaces, GetStringFromPosition doesn't work then */
@@ -172,6 +188,11 @@ namespace CAS.NET.Server
 				filename = filename + msg[i];
 			}
 
+			if (db.ValidateUser(username, password) != 1)
+			{
+				return "Invalid teacher";
+			}
+
 			return db.GetCompleted(filename, grade);
 		}
 
@@ -191,7 +212,13 @@ namespace CAS.NET.Server
 			{
 				password = password + msg[i];
 			}
+
 			//password = GetStringFromPosition(msg, ref n);
+
+			if (db.ValidateUser(username, password) != 0)
+			{
+				return "Invalid student";
+			}
 
 			return string.Join(" ", db.StudentGetAssignmentList(grade));
 		}
@@ -211,12 +238,10 @@ namespace CAS.NET.Server
            	username = GetStringFromPosition(msg, ref n);
             password = GetStringFromPosition(msg, ref n);
 
-			/*
-			if (!db.ValidateUser(username, password))
+			if (db.ValidateUser(username, password) != 0)
 			{
-				return "Wrong username or password";
+				return "Invalid student";
 			}
-			*/
 
 			//filename = GetStringFromPosition(msg, ref n);
 
@@ -244,12 +269,10 @@ namespace CAS.NET.Server
 			username = GetStringFromPosition(msg, ref n);
 			password = GetStringFromPosition(msg, ref n);
 
-			/*
-			if (!db.ValidateUser(username, password, grade))
+			if (db.ValidateUser(username, password) != 0)
 			{
-				return "Wrong username or password";
+				return "Invalid student";
 			}
-			*/
 
 			filename = GetStringFromPosition(msg, ref n);
 

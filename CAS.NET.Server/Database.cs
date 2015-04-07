@@ -167,7 +167,6 @@ namespace CAS.NET.Server
 		{
 			string file;
 			int FileColumn = 2;
-			int StudentsGivenFeedback = 0;;
 
 			using (conn = new MySqlConnection(db)) {
 				conn.Open();
@@ -354,10 +353,6 @@ namespace CAS.NET.Server
 			{
 				rdr.Read();
 				return rdr.GetString(GradeColumn);
-			}
-			else
-			{
-				return "Wrong username or password";
 			}
 		}
 
