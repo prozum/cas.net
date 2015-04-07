@@ -12,15 +12,15 @@ namespace CAS.NET.Server
         public Database(string db)
         {
             this.db = db;
-            CreateUserDB (db);
-            CreateAssignmentDB (db);
-            CreateCompletedDB (db);
-            CreateFeedbackDB (db);
+            CreateUserDB(db);
+            CreateAssignmentDB(db);
+            CreateCompletedDB(db);
+            CreateFeedbackDB(db);
         }
 
         private void CreateUserDB(string db)
         {
-            try 
+            try
             {
                 conn = new MySqlConnection(db);
                 conn.Open();
@@ -32,12 +32,12 @@ namespace CAS.NET.Server
                 cmd.ExecuteNonQuery();
 
             }
-            catch (MySqlException ex) 
+            catch (MySqlException ex)
             {
                 Console.WriteLine(ex);
 
             }
-            finally 
+            finally
             {
                 conn.Close();
             }
@@ -46,7 +46,7 @@ namespace CAS.NET.Server
 
         private void CreateAssignmentDB(string db)
         {
-            try 
+            try
             {
                 conn = new MySqlConnection(db);
                 conn.Open();
@@ -57,12 +57,12 @@ namespace CAS.NET.Server
                                     File TEXT CHARACTER SET binary, Grade TEXT CHARACTER SET binary)";
                 cmd.ExecuteNonQuery();
             }
-            catch (MySqlException ex) 
+            catch (MySqlException ex)
             {
                 Console.WriteLine(ex);
 
             }
-            finally 
+            finally
             {
                 conn.Close();
             }
@@ -70,7 +70,7 @@ namespace CAS.NET.Server
 
         private void CreateCompletedDB(string db)
         {
-            try 
+            try
             {
                 conn = new MySqlConnection(db);
                 conn.Open();
@@ -81,12 +81,12 @@ namespace CAS.NET.Server
                                     File TEXT CHARACTER SET binary, Grade TEXT CHARACTER SET binary, FeedbackGiven INTEGER)";
                 cmd.ExecuteNonQuery();
             }
-            catch (MySqlException ex) 
+            catch (MySqlException ex)
             {
                 Console.WriteLine(ex);
 
             }
-            finally 
+            finally
             {
                 conn.Close();
             }
@@ -94,7 +94,7 @@ namespace CAS.NET.Server
 
         private void CreateFeedbackDB(string db)
         {
-            try 
+            try
             {
                 conn = new MySqlConnection(db);
                 conn.Open();
@@ -110,7 +110,7 @@ namespace CAS.NET.Server
                 Console.WriteLine(ex);
 
             }
-            finally 
+            finally
             {
                 conn.Close();
             }
@@ -118,11 +118,12 @@ namespace CAS.NET.Server
 
         public void AddAssignment(string username, string filename, string file, string grade)
         {
-            using (conn = new MySqlConnection(db)) {
+            using (conn = new MySqlConnection(db))
+            {
                 conn.Open();
                 const string stm = "SELECT VERSION()";
 
-                var cmd = new MySqlCommand (stm, conn);
+                var cmd = new MySqlCommand(stm, conn);
                 cmd.CommandText = "INSERT INTO Assignment(Username, FileName, File, Grade) VALUES(@username, @filename, @file, @grade)";
                 cmd.Parameters.AddWithValue("@username", username);
                 cmd.Parameters.AddWithValue("@filename", filename);
@@ -137,21 +138,22 @@ namespace CAS.NET.Server
             List<string> FileList = new List<string>();
             int FileNameColumn = 1;
 
-            using (conn = new MySqlConnection(db)) {
+            using (conn = new MySqlConnection(db))
+            {
                 conn.Open();
                 const string stm = "SELECT VERSION()";
 
-                var cmd = new MySqlCommand (stm, conn);
+                var cmd = new MySqlCommand(stm, conn);
                 cmd.CommandText = "SELECT * FROM Assignment WHERE Username = @username";
-                cmd.Parameters.AddWithValue ("@Username", username);
+                cmd.Parameters.AddWithValue("@Username", username);
 
-                var rdr = cmd.ExecuteReader ();
+                var rdr = cmd.ExecuteReader();
 
                 if (rdr.HasRows)
                 {
-                    while(rdr.Read())
+                    while (rdr.Read())
                     {
-                        FileList.Add(rdr.GetString (FileNameColumn));
+                        FileList.Add(rdr.GetString(FileNameColumn));
                     }
                 }
                 else
@@ -168,14 +170,15 @@ namespace CAS.NET.Server
             string file;
             int FileColumn = 2;
 
-            using (conn = new MySqlConnection(db)) {
+            using (conn = new MySqlConnection(db))
+            {
                 conn.Open();
                 const string stm = "SELECT VERSION()";
 
-                var cmd = new MySqlCommand (stm, conn);
+                var cmd = new MySqlCommand(stm, conn);
                 cmd.CommandText = "SELECT * FROM Completed WHERE FileName = @filename AND Grade = @grade AND FeedbackGiven = @feedback";
-                cmd.Parameters.AddWithValue ("@filename", filename);
-                cmd.Parameters.AddWithValue ("@grade", grade);
+                cmd.Parameters.AddWithValue("@filename", filename);
+                cmd.Parameters.AddWithValue("@grade", grade);
                 cmd.Parameters.AddWithValue("@feedback", 0);
 
                 using (var rdr = cmd.ExecuteReader())
@@ -196,16 +199,17 @@ namespace CAS.NET.Server
 
         public void AddFeedback(string filename, string file, string grade)
         {
-            using (conn = new MySqlConnection(db)) {
+            using (conn = new MySqlConnection(db))
+            {
                 conn.Open();
                 const string stm = "SELECT VERSION()";
                 int UsernameColumn = 0;
                 string username;
 
-                var cmd = new MySqlCommand (stm, conn);
+                var cmd = new MySqlCommand(stm, conn);
                 cmd.CommandText = "SELECT * FROM Completed WHERE FileName = @filename AND Grade = @grade AND FeedbackGiven = @feedback";
-                cmd.Parameters.AddWithValue ("@filename", filename);
-                cmd.Parameters.AddWithValue ("@grade", grade);
+                cmd.Parameters.AddWithValue("@filename", filename);
+                cmd.Parameters.AddWithValue("@grade", grade);
                 cmd.Parameters.AddWithValue("@feedback", 0);
 
                 using (var rdr = cmd.ExecuteReader())
@@ -238,21 +242,22 @@ namespace CAS.NET.Server
             string file;
             int FileColumn = 2;
 
-            using (conn = new MySqlConnection(db)) {
+            using (conn = new MySqlConnection(db))
+            {
                 conn.Open();
                 const string stm = "SELECT VERSION()";
 
-                var cmd = new MySqlCommand (stm, conn);
+                var cmd = new MySqlCommand(stm, conn);
                 cmd.CommandText = "SELECT * FROM Assignment WHERE FileName = @filename AND Grade = @grade";
-                cmd.Parameters.AddWithValue ("@filename", filename);
-                cmd.Parameters.AddWithValue ("@grade", grade);
+                cmd.Parameters.AddWithValue("@filename", filename);
+                cmd.Parameters.AddWithValue("@grade", grade);
 
-                var rdr = cmd.ExecuteReader ();
+                var rdr = cmd.ExecuteReader();
 
                 if (rdr.HasRows)
                 {
                     rdr.Read();
-                    file = rdr.GetString (FileColumn);
+                    file = rdr.GetString(FileColumn);
 
                 }
                 else
@@ -269,21 +274,22 @@ namespace CAS.NET.Server
             List<string> FileList = new List<string>();
             int FileNameColumn = 1;
 
-            using (conn = new MySqlConnection(db)) {
+            using (conn = new MySqlConnection(db))
+            {
                 conn.Open();
                 const string stm = "SELECT VERSION()";
 
-                var cmd = new MySqlCommand (stm, conn);
+                var cmd = new MySqlCommand(stm, conn);
                 cmd.CommandText = "SELECT * FROM Assignment WHERE Grade = @grade";
-                cmd.Parameters.AddWithValue ("@grade", grade);
+                cmd.Parameters.AddWithValue("@grade", grade);
 
-                var rdr = cmd.ExecuteReader ();
+                var rdr = cmd.ExecuteReader();
 
                 if (rdr.HasRows)
                 {
-                    while(rdr.Read())
+                    while (rdr.Read())
                     {
-                        FileList.Add(rdr.GetString (FileNameColumn));
+                        FileList.Add(rdr.GetString(FileNameColumn));
                     }
 
                 }
@@ -298,11 +304,12 @@ namespace CAS.NET.Server
 
         public void AddCompleted(string username, string filename, string file, string grade)
         {
-            using (conn = new MySqlConnection(db)) {
+            using (conn = new MySqlConnection(db))
+            {
                 conn.Open();
                 const string stm = "SELECT VERSION()";
 
-                var cmd = new MySqlCommand (stm, conn);
+                var cmd = new MySqlCommand(stm, conn);
                 cmd.CommandText = "INSERT INTO Completed(Username, FileName, File, Grade, FeedbackGiven) VALUES(@username, @filename, @file, @grade, @feedback)";
                 cmd.Parameters.AddWithValue("@username", username);
                 cmd.Parameters.AddWithValue("@filename", filename);
@@ -319,11 +326,11 @@ namespace CAS.NET.Server
 
             string stm = "SELECT * FROM Account WHERE Username = @username AND Password = @password";
 
-            var cmd = new MySqlCommand (stm, conn);
-            cmd.Parameters.AddWithValue ("@username", username);
-            cmd.Parameters.AddWithValue ("@password", password);
+            var cmd = new MySqlCommand(stm, conn);
+            cmd.Parameters.AddWithValue("@username", username);
+            cmd.Parameters.AddWithValue("@password", password);
 
-            var rdr = cmd.ExecuteReader ();
+            var rdr = cmd.ExecuteReader();
 
             if (rdr.HasRows)
             {
@@ -343,17 +350,19 @@ namespace CAS.NET.Server
 
             string stm = "SELECT * FROM Account WHERE Username = @username AND Password = @password";
 
-            var cmd = new MySqlCommand (stm, conn);
-            cmd.Parameters.AddWithValue ("@username", username);
-            cmd.Parameters.AddWithValue ("@password", password);
+            var cmd = new MySqlCommand(stm, conn);
+            cmd.Parameters.AddWithValue("@username", username);
+            cmd.Parameters.AddWithValue("@password", password);
 
-            var rdr = cmd.ExecuteReader ();
+            var rdr = cmd.ExecuteReader();
 
             if (rdr.HasRows)
             {
                 rdr.Read();
                 return rdr.GetString(GradeColumn);
             }
+
+            return null;
         }
 
         /*
