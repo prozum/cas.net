@@ -81,8 +81,6 @@ namespace Ast
             {
                 return new Error("Function has no definition");
             }
-
-            throw new NotImplementedException();
         }
 
         private Expression HardcodedFunctions()
