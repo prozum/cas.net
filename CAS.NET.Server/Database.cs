@@ -6,7 +6,7 @@ namespace CAS.NET.Server
 {
 	public class Database
 	{
-		private string db;
+		private readonly string db;
 		private MySqlConnection conn;
 
 		public Database(string db)
@@ -27,7 +27,7 @@ namespace CAS.NET.Server
 
 				string stm = "SELECT VERSION()";   
 				MySqlCommand cmd = new MySqlCommand(stm, conn);
-				cmd.CommandText = @"CREATE TABLE IF NOT EXISTS User(Username VARCHAR(8) PRIMARY KEY,
+				cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Account(Username VARCHAR(8) PRIMARY KEY,
 									Password TEXT CHARACTER SET binary, Grade TEXT CHARACTER SET binary, Privilege INT)";
 				cmd.ExecuteNonQuery();
 
@@ -53,8 +53,8 @@ namespace CAS.NET.Server
 
 				string stm = "SELECT VERSION()";   
 				MySqlCommand cmd = new MySqlCommand(stm, conn);
-				cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Assignment(Username VARCHAR(8),
-									File TEXT CHARACTER SET binary, Grade TEXT CHARACTER SET binary) ENGINE=INNODB";
+				cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Assignment(Username VARCHAR(8), FileName TEXT CHARACTER SET binary,
+									File TEXT CHARACTER SET binary, Grade TEXT CHARACTER SET binary)";
 				cmd.ExecuteNonQuery();
 			}
 			catch (MySqlException ex) 
@@ -77,8 +77,8 @@ namespace CAS.NET.Server
 
 				string stm = "SELECT VERSION()";   
 				MySqlCommand cmd = new MySqlCommand(stm, conn);
-				cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Completed(Username VARCHAR(8), TaskName TEXT CHARACTER SET binary,
-									SaveFileName TEXT CHARACTER SET binary, Grade TEXT CHARACTER SET binary)";
+				cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Completed(Username VARCHAR(8), FileName TEXT CHARACTER SET binary,
+									File TEXT CHARACTER SET binary, Grade TEXT CHARACTER SET binary, FeedbackGiven INTEGER)";
 				cmd.ExecuteNonQuery();
 			}
 			catch (MySqlException ex) 
@@ -99,13 +99,13 @@ namespace CAS.NET.Server
 				conn = new MySqlConnection(db);
 				conn.Open();
 
-				string stm = "SELECT VERSION()";   
+				string stm = "SELECT VERSION()";
 				MySqlCommand cmd = new MySqlCommand(stm, conn);
-				cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Feedback(Username VARCHAR(8), TaskName TEXT CHARACTER SET binary,
-									SaveFileName TEXT CHARACTER SET binary, Grade TEXT CHARACTER SET binary)";
+				cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Feedback(Username VARCHAR(8), FileName TEXT CHARACTER SET binary,
+									File TEXT CHARACTER SET binary, Grade TEXT CHARACTER SET binary)";
 				cmd.ExecuteNonQuery();
 			}
-			catch (MySqlException ex) 
+			catch (MySqlException ex)
 			{
 				Console.WriteLine(ex);
 
@@ -113,6 +113,251 @@ namespace CAS.NET.Server
 			finally 
 			{
 				conn.Close();
+			}
+		}
+
+		public void AddAssignment(string username, string filename, string file, string grade)
+		{
+			using (conn = new MySqlConnection(db)) {
+				conn.Open();
+				const string stm = "SELECT VERSION()";
+
+				var cmd = new MySqlCommand (stm, conn);
+				cmd.CommandText = "INSERT INTO Assignment(Username, FileName, File, Grade) VALUES(@username, @filename, @file, @grade)";
+				cmd.Parameters.AddWithValue("@username", username);
+				cmd.Parameters.AddWithValue("@filename", filename);
+				cmd.Parameters.AddWithValue("@file", file);
+				cmd.Parameters.AddWithValue("@grade", grade);
+				cmd.ExecuteNonQuery();
+			}
+		}
+
+		public string[] TeacherGetAssignmentList(string username)
+		{
+			List<string> FileList = new List<string>();
+			int FileNameColumn = 1;
+
+			using (conn = new MySqlConnection(db)) {
+				conn.Open();
+				const string stm = "SELECT VERSION()";
+
+				var cmd = new MySqlCommand (stm, conn);
+				cmd.CommandText = "SELECT * FROM Assignment WHERE Username = @username";
+				cmd.Parameters.AddWithValue ("@Username", username);
+
+				var rdr = cmd.ExecuteReader ();
+
+				if (rdr.HasRows)
+				{
+					while(rdr.Read())
+					{
+						FileList.Add(rdr.GetString (FileNameColumn));
+					}
+				}
+				else
+				{
+					FileList.Add("Error");
+				}
+			}
+
+			return FileList.ToArray();
+		}
+
+		public string GetCompleted(string filename, string grade)
+		{
+			string file;
+			int FileColumn = 2;
+			int StudentsGivenFeedback = 0;;
+
+			using (conn = new MySqlConnection(db)) {
+				conn.Open();
+				const string stm = "SELECT VERSION()";
+
+				var cmd = new MySqlCommand (stm, conn);
+				cmd.CommandText = "SELECT * FROM Completed WHERE FileName = @filename AND Grade = @grade AND FeedbackGiven = @feedback";
+				cmd.Parameters.AddWithValue ("@filename", filename);
+				cmd.Parameters.AddWithValue ("@grade", grade);
+				cmd.Parameters.AddWithValue("@feedback", 0);
+
+				using (var rdr = cmd.ExecuteReader())
+				{
+					if (rdr.HasRows)
+					{
+						file = rdr.GetString(FileColumn);
+					}
+					else
+					{
+						file = "No more assignments to give feedback";
+					}
+				}
+			}
+
+			return file;
+		}
+
+		public void AddFeedback(string filename, string file, string grade)
+		{
+			using (conn = new MySqlConnection(db)) {
+				conn.Open();
+				const string stm = "SELECT VERSION()";
+				int UsernameColumn = 0;
+				string username;
+
+				var cmd = new MySqlCommand (stm, conn);
+				cmd.CommandText = "SELECT * FROM Completed WHERE FileName = @filename AND Grade = @grade AND FeedbackGiven = @feedback";
+				cmd.Parameters.AddWithValue ("@filename", filename);
+				cmd.Parameters.AddWithValue ("@grade", grade);
+				cmd.Parameters.AddWithValue("@feedback", 0);
+
+				using (var rdr = cmd.ExecuteReader())
+				{
+					if (rdr.HasRows)
+					{
+						rdr.Read();
+						username = rdr.GetString(UsernameColumn);
+
+						cmd.CommandText = "INSERT INTO Feedback WHERE Username = @username AND FileName = @filename AND File = @file AND Grade = @grade";
+						cmd.Parameters.AddWithValue("@username", username);
+						cmd.Parameters.AddWithValue("@filename", filename);
+						cmd.Parameters.AddWithValue("@file", file);
+						cmd.Parameters.AddWithValue("@grade", grade);
+						cmd.ExecuteNonQuery();
+
+						cmd.CommandText = "UPDATE Completed SET FeedbackGiven = @feedback WHERE Username = @username AND FileName = @filename AND Grade = @grade";
+						cmd.Parameters.AddWithValue("@feedback", 1);
+						cmd.Parameters.AddWithValue("@username", username);
+						cmd.Parameters.AddWithValue("@filename", filename);
+						cmd.Parameters.AddWithValue("@grade", grade);
+						cmd.ExecuteNonQuery();
+					}
+				}
+			}
+		}
+
+        public string GetAssignment(string filename, string grade)
+		{
+            string file;
+			int FileColumn = 2;
+
+			using (conn = new MySqlConnection(db)) {
+				conn.Open();
+				const string stm = "SELECT VERSION()";
+
+				var cmd = new MySqlCommand (stm, conn);
+				cmd.CommandText = "SELECT * FROM Assignment WHERE FileName = @filename AND Grade = @grade";
+				cmd.Parameters.AddWithValue ("@filename", filename);
+				cmd.Parameters.AddWithValue ("@grade", grade);
+
+				var rdr = cmd.ExecuteReader ();
+
+				if (rdr.HasRows)
+				{
+					rdr.Read();
+					file = rdr.GetString (FileColumn);
+
+				}
+				else
+				{
+					file = "Error";
+				}
+			}
+
+			return file;
+		}
+
+        public string[] StudentGetAssignmentList(string grade)
+		{
+			List<string> FileList = new List<string>();
+			int FileNameColumn = 1;
+
+			using (conn = new MySqlConnection(db)) {
+				conn.Open();
+				const string stm = "SELECT VERSION()";
+
+				var cmd = new MySqlCommand (stm, conn);
+				cmd.CommandText = "SELECT * FROM Assignment WHERE Grade = @grade";
+				cmd.Parameters.AddWithValue ("@grade", grade);
+
+				var rdr = cmd.ExecuteReader ();
+
+				if (rdr.HasRows)
+				{
+					while(rdr.Read())
+					{
+						FileList.Add(rdr.GetString (FileNameColumn));
+					}
+
+				}
+				else
+				{
+					FileList.Add("Error");
+				}
+			}
+
+			return FileList.ToArray();
+		}
+
+		public void AddCompleted(string username, string filename, string file, string grade)
+		{
+			using (conn = new MySqlConnection(db)) {
+				conn.Open();
+				const string stm = "SELECT VERSION()";
+
+				var cmd = new MySqlCommand (stm, conn);
+				cmd.CommandText = "INSERT INTO Completed(Username, FileName, File, Grade, FeedbackGiven) VALUES(@username, @filename, @file, @grade, @feedback)";
+				cmd.Parameters.AddWithValue("@username", username);
+				cmd.Parameters.AddWithValue("@filename", filename);
+				cmd.Parameters.AddWithValue("@file", file);
+				cmd.Parameters.AddWithValue("@grade", grade);
+				cmd.Parameters.AddWithValue("@feedback", 0);
+				cmd.ExecuteNonQuery();
+			}
+		}
+
+		public int ValidateUser(string username, string password)
+		{
+			int PrivilegeColumn = 3;
+
+			string stm = "SELECT * FROM Account WHERE Username = @username AND Password = @password";
+
+			var cmd = new MySqlCommand (stm, conn);
+			cmd.Parameters.AddWithValue ("@username", username);
+			cmd.Parameters.AddWithValue ("@password", password);
+
+			var rdr = cmd.ExecuteReader ();
+
+			if (rdr.HasRows)
+			{
+				rdr.Read();
+				return rdr.GetInt32(PrivilegeColumn);
+			}
+			else
+			{
+				/* wrong username or password */
+				return -1;
+			}
+		}
+
+		public string GetGrade(string username, string password)
+		{
+			int GradeColumn = 2;
+
+			string stm = "SELECT * FROM Account WHERE Username = @username AND Password = @password";
+
+			var cmd = new MySqlCommand (stm, conn);
+			cmd.Parameters.AddWithValue ("@username", username);
+			cmd.Parameters.AddWithValue ("@password", password);
+
+			var rdr = cmd.ExecuteReader ();
+
+			if (rdr.HasRows)
+			{
+				rdr.Read();
+				return rdr.GetString(GradeColumn);
+			}
+			else
+			{
+				return "Wrong username or password";
 			}
 		}
 
@@ -145,20 +390,6 @@ namespace CAS.NET.Server
 			}
 		}
 		*/
-
-		public void AddAssignment(string username, string file, string grade)
-		{
-			using (conn = new MySqlConnection(db)) {
-				conn.Open();
-
-				const string command = "INSERT INTO Assignment(Username, File, Grade) VALUES(@username, @file, @grade)";
-				MySqlCommand cmd = new MySqlCommand(command, conn);
-				cmd.Parameters.AddWithValue("@username", username);
-				cmd.Parameters.AddWithValue("@file", file);
-				cmd.Parameters.AddWithValue("@grade", grade);
-				cmd.ExecuteNonQuery();
-			}
-		}
 
 		/*
 		public void AddCompleted(string username, string taskname, string savefilename, string grade)

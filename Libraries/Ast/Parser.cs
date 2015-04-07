@@ -10,7 +10,7 @@ namespace Ast
 	{
 	    static readonly char[] opValidChars = { '=', '<', '>', '+', '-', '*', '/', '^' };
 
-        public static Expression Parse(Dictionary<string, Expression> definitions, string parseString)
+        public static Expression Parse(Evaluator evaluator, string parseString)
         {
 			Expression curExp;
 			var exs = new Stack<Expression> ();
@@ -31,7 +31,7 @@ namespace Ast
 				if (char.IsLetter ((char)curChar)) {
 
 					//exs.Push (ParseIdentifier (parseReader));
-                    curExp = ParseIdentifier(definitions, parseReader);
+                    curExp = ParseIdentifier(evaluator, parseReader);
 					exs.Push (curExp);
 
 				} else if (char.IsDigit ((char)curChar)) {
@@ -43,7 +43,7 @@ namespace Ast
 				} else if (curChar.Equals ('(')) {
 				
 					//exs.Push (Parse (ExtractSubstring (parseReader))); 
-                    curExp = Parse(definitions, ExtractSubstring(parseReader)); 
+                    curExp = Parse(evaluator, ExtractSubstring(parseReader)); 
 					exs.Push (curExp); 
 
 				} else if (opValidChars.Contains ((char)curChar)) {
@@ -68,7 +68,7 @@ namespace Ast
 
 		private static string ExtractSubstring(StringReader parseReader)
 		{
-			string substring = null;
+			string substring = "";
 
 			int parentEnd = 0;
 			int parentStart = 0;
@@ -110,7 +110,11 @@ namespace Ast
 			if (exs.Count == 1) {
 
 				return exs.Pop ();
-			}
+            }
+            else if (exs.Count < 1)
+            {
+                return new Error("No expressions found");
+            }
 
 			right = exs.Pop ();
 
@@ -164,7 +168,7 @@ namespace Ast
 			return curOp;
         }
 
-        private static Expression ParseIdentifier(Dictionary<string, Expression> definitions, StringReader parseReader)
+        private static Expression ParseIdentifier(Evaluator evaluator, StringReader parseReader)
         {
 			string identifier = "";
 			int curChar;
@@ -178,17 +182,18 @@ namespace Ast
 
 			if ((char)curChar == '(') {
 
-                return ParseFunction(definitions, identifier, parseReader);
+                return ParseFunction(evaluator, identifier, parseReader);
 
             } else {
 
-                return new Symbol(definitions, identifier);
+                return new Symbol(evaluator, identifier);
 
             }
         }
 
-		private static Expression ParseFunction(Dictionary<string, Expression> definitions, string identifier, StringReader parseReader)
+        private static Expression ParseFunction(Evaluator evaluator, string identifier, StringReader parseReader)
 		{
+            Expression res;
 			var args = new List<Expression> ();
 
 			var argString = ExtractSubstring (parseReader);
@@ -196,10 +201,14 @@ namespace Ast
 
 			foreach (string arg in argList) {
 
-                args.Add(Parse(definitions, arg));
+                args.Add(Parse(evaluator, arg));
 			}
 
-			return new Function(identifier, args);
+            res = new Function(identifier, args);
+
+            res.evaluator = evaluator;
+
+            return res;
 		}
 
         enum NumberType { Integer, Rational, Irrational, Complex };
@@ -262,9 +271,18 @@ namespace Ast
 			}
 				
 			switch (op)
-			{
-			case "=":
+            {
+            case ":=":
+                return new Assign();
+            case "=":
+                return new Assign();
 				return new Equal ();
+            case "==":
+                return new BooleanEqual();
+            case "<=":
+                return new LesserOrEqual();
+            case ">=":
+                return new GreaterOrEqual();
 			case "<":
 				return new Lesser ();
 			case ">":

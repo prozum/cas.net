@@ -3,10 +3,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{F1256681-1F4E-495B-A32C-3D5662E78FCC}</ProjectGuid>
+    <ProjectGuid>{3B79653F-FAF6-473C-A0FF-83076AD25FA2}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>ImportExport</RootNamespace>
-    <AssemblyName>ImportExport</AssemblyName>
+    <RootNamespace>Ast2LaTeX</RootNamespace>
+    <AssemblyName>Ast2LaTeX</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -17,7 +17,7 @@
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
+    <Externalconsole>true</Externalconsole>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
@@ -26,21 +26,21 @@
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
+    <Externalconsole>true</Externalconsole>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
-    <Compile Include="MetaType.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\..\Libraries\ImEx\ImEx.csproj">
-      <Project>{5150E825-D811-4D68-8C0E-86A1F8573561}</Project>
-      <Name>ImEx</Name>
+    <ProjectReference Include="..\..\Libraries\Ast\Ast.csproj">
+      <Project>{82C03E10-075F-411C-A1F1-D5506C62BE1C}</Project>
+      <Name>Ast</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 </Project>
