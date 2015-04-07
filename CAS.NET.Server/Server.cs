@@ -64,11 +64,11 @@ namespace CAS.NET.Server
 			case "AddFeedback":
 				return TeacherAddFeedback (msg, db);
 			case "TeacherGetAssignmentList":
-				return TeacherGetAssignmentList (msg, db);
-            case "StudentGetAssignmentList":
-                return StudentGetAssignmentList(msg, db);
+				return TeacherGetAssignmentList (msg, db);            
             case "GetAssignment":
             	return StudentGetAssignment (msg, db);
+            case "StudentGetAssignmentList":
+                return StudentGetAssignmentList(msg, db);
 			case "AddCompleted":
 				return StudentAddCompleted (msg, db);
 			case "GetFeedback":
