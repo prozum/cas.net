@@ -4,11 +4,12 @@ namespace Ast
 {
     public abstract class Number : Expression 
     {
-
         public override Expression Evaluate()
         {
             return this;
         }
+
+        
     }
 
     public class Integer : Number
@@ -24,30 +25,72 @@ namespace Ast
         {
             return value.ToString ();
         }
+
+        public override bool CompareTo(Expression other)
+        {
+            if (other is Number)
+            {
+                if (other is Integer)
+                {
+                    if (value == (other as Integer).value)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                if (other is Rational)
+                {
+                    if (value == (other as Rational).value.value)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                if (other is Irrational)
+                {
+                    if (value == (other as Irrational).value)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                return false;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 
     public class Rational : Number 
     {
         public Integer numerator;
         public Integer denominator;
-        public Irrational value
-        {
-            get
-            {
-                return new Irrational(numerator.value / denominator.value);
-            }
-        }
+        public Irrational value;
 
         public Rational(Integer num, Integer denom)
         {
             numerator = num;
             denominator = denom;
-            //value = new Irrational(num.value / denom.value);
+            value = new Irrational(num.value / denom.value);
         }
 
         public override string ToString()
         {
-            return numerator.ToString () + "/" + denominator.ToString ();
+            return value.ToString ();
         }
 
         public void Reduce(Integer num, Integer denom)
@@ -58,6 +101,54 @@ namespace Ast
         public static Integer Gcd(Integer num, Integer denom)
         {
             throw new NotImplementedException ();
+        }
+
+        public override bool CompareTo(Expression other)
+        {
+            if (other is Number)
+            {
+                if (other is Integer)
+                {
+                    if (value.value == (other as Integer).value)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                if (other is Rational)
+                {
+                    if (value.value == (other as Rational).value.value)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                if (other is Irrational)
+                {
+                    if (value.value == (other as Irrational).value)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                return false;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 
@@ -74,6 +165,54 @@ namespace Ast
         {
             return value.ToString ();
         }
+
+        public override bool CompareTo(Expression other)
+        {
+            if (other is Number)
+            {
+                if (other is Integer)
+                {
+                    if (value == (other as Integer).value)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                if (other is Rational)
+                {
+                    if (value == (other as Rational).value.value)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                if (other is Irrational)
+                {
+                    if (value == (other as Irrational).value)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                return false;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 
     public class Complex : Number 
@@ -84,6 +223,21 @@ namespace Ast
         public override string ToString()
         {
             return real.ToString () + '+' + imag.ToString() + 'i';
+        }
+
+        public override bool CompareTo(Expression other)
+        {
+            var res = base.CompareTo(other);
+
+            if (res)
+            {
+                if (real == (other as Complex).real && real == (imag as Complex).imag)
+                {
+                    res = true;
+                }
+            }
+
+            return res;
         }
     }
 
@@ -100,6 +254,23 @@ namespace Ast
         {
             return value.ToString();
         }
+
+        public override bool CompareTo(Expression other)
+        {
+            var res = base.CompareTo(other);
+
+            if (res)
+            {
+                if (value == (other as Boolean).value)
+                {
+                    res = true;
+                }
+            }
+
+            return res;
+        }
     }
+
+
 }
 

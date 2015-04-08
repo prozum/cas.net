@@ -8,6 +8,7 @@ namespace Ast
         public Dictionary<string, Expression> variableDefinitions = new Dictionary<string, Expression>();
         public Dictionary<string, Expression> functionDefinitions = new Dictionary<string, Expression>();
         public Dictionary<string, List<string>> functionParams = new Dictionary<string, List<string>>();
+        public bool degrees = true;
 
         public Evaluator ()
         {
