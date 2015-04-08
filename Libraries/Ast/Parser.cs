@@ -248,9 +248,9 @@ namespace Ast
             else
             {
                 res = new UserDefinedFunction(identifier, args);
-                res.evaluator = evaluator;
             }
 
+            res.evaluator = evaluator;
             return res;
         }
 

@@ -4,11 +4,12 @@ namespace Ast
 {
     public abstract class Number : Expression 
     {
-
         public override Expression Evaluate()
         {
             return this;
         }
+
+        
     }
 
     public class Integer : Number
@@ -23,6 +24,54 @@ namespace Ast
         public override string ToString()
         {
             return value.ToString ();
+        }
+
+        public override bool CompareTo(Expression other)
+        {
+            if (other is Number)
+            {
+                if (other is Integer)
+                {
+                    if (value == (other as Integer).value)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                if (other is Rational)
+                {
+                    if (value == (other as Rational).value.value)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                if (other is Irrational)
+                {
+                    if (value == (other as Irrational).value)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                return false;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 
@@ -53,6 +102,54 @@ namespace Ast
         {
             throw new NotImplementedException ();
         }
+
+        public override bool CompareTo(Expression other)
+        {
+            if (other is Number)
+            {
+                if (other is Integer)
+                {
+                    if (value.value == (other as Integer).value)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                if (other is Rational)
+                {
+                    if (value.value == (other as Rational).value.value)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                if (other is Irrational)
+                {
+                    if (value.value == (other as Irrational).value)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                return false;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 
     public class Irrational : Number 
@@ -68,6 +165,54 @@ namespace Ast
         {
             return value.ToString ();
         }
+
+        public override bool CompareTo(Expression other)
+        {
+            if (other is Number)
+            {
+                if (other is Integer)
+                {
+                    if (value == (other as Integer).value)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                if (other is Rational)
+                {
+                    if (value == (other as Rational).value.value)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                if (other is Irrational)
+                {
+                    if (value == (other as Irrational).value)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                return false;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 
     public class Complex : Number 
@@ -78,6 +223,21 @@ namespace Ast
         public override string ToString()
         {
             return real.ToString () + '+' + imag.ToString() + 'i';
+        }
+
+        public override bool CompareTo(Expression other)
+        {
+            var res = base.CompareTo(other);
+
+            if (res)
+            {
+                if (real == (other as Complex).real && real == (imag as Complex).imag)
+                {
+                    res = true;
+                }
+            }
+
+            return res;
         }
     }
 
@@ -94,6 +254,23 @@ namespace Ast
         {
             return value.ToString();
         }
+
+        public override bool CompareTo(Expression other)
+        {
+            var res = base.CompareTo(other);
+
+            if (res)
+            {
+                if (value == (other as Boolean).value)
+                {
+                    res = true;
+                }
+            }
+
+            return res;
+        }
     }
+
+
 }
 

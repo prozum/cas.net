@@ -59,8 +59,27 @@ namespace Ast
                 }
             }
 
+            return new Error("Could not evaluate: " + symbol);
+        }
 
-            return new Error("Duuurh");
+        public override bool CompareTo(Expression other)
+        {
+            var res = base.CompareTo(other);
+
+            if ((new BooleanEqual(this.Evaluate(), other.Evaluate()).Evaluate() as Boolean).value && !(this.Evaluate() is Error || other.Evaluate() is Error))
+            {
+                return true;
+            }
+
+            if (res)
+            {
+                if (!(symbol == (other as Symbol).symbol && prefix == (other as Symbol).prefix && exponent == (other as Symbol).exponent))
+                {
+                    res = false;
+                }
+            }
+
+            return res;
         }
     }
 }

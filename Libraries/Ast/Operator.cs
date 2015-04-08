@@ -67,6 +67,11 @@ namespace Ast
             right.SetFunctionCall(functionCall);
             base.SetFunctionCall(functionCall);
         }
+
+        public override bool CompareTo(Expression other)
+        {
+            return (new BooleanEqual(this.Evaluate(), other.Evaluate()).Evaluate() as Boolean).value;
+        }
     }
 
     public class Equal : Operator
@@ -104,6 +109,23 @@ namespace Ast
             return res;
         }
 
+        public override Expression Simplify()
+        {
+            var res = new Assign(left.Evaluate(), right.Evaluate());
+            res.parent = this.parent;
+
+            if (res.left is Error)
+            {
+                res.left = this.left.Simplify();
+            }
+
+            if (res.right is Error)
+            {
+                res.right = this.right.Simplify();
+            }
+
+            return res;
+        }
     }
 
     public class Add : Operator
@@ -117,7 +139,6 @@ namespace Ast
 
         public override Expression Evaluate ()
         {
-
             if (left is Integer && right is Integer)
             {
                 return new Integer((left as Integer).value + (right as Integer).value);
@@ -175,6 +196,37 @@ namespace Ast
         {
             var res = new Add(left.Expand(), right.Expand());
             res.parent = this.parent;
+
+            return res;
+        }
+
+        public override Expression Simplify()
+        {
+            var res = new Add(left.Evaluate(), right.Evaluate());
+            res.parent = this.parent;
+
+            if (res.left is Error && res.right is Error)
+            {
+                if ((this.left is Symbol && this.right is Symbol) && (((this.left as Symbol).symbol == (this.right as Symbol).symbol) && ((new BooleanEqual((this.left as Symbol).exponent, (this.left as Symbol).exponent).Evaluate() as Boolean).value)))
+                {
+                    return new Symbol((this.left as Symbol).evaluator, (this.left as Symbol).symbol, (new Add((this.left as Symbol).prefix, (this.right as Symbol).prefix).Evaluate() as Number), (this.left as Symbol).exponent);
+                }
+
+                if ((this.left is Function && this.right is Function) && this.left.CompareTo(this.right))
+                {
+                    return new Mul(new Integer(2), this.left);
+                }
+            }
+
+            if (res.left is Error)
+            {
+                res.left = this.left.Simplify();
+            }
+
+            if (res.right is Error)
+            {
+                res.right = this.right.Simplify();
+            }
 
             return res;
         }
