@@ -8,7 +8,12 @@ namespace Ast
 {
     public static class Parser
     {
-        static readonly char[] opValidChars = { '=', '<', '>', '+', '-', '*', '/', '^' };
+        static readonly char[] opValidChars = {'=', '<', '>', '+', '-', '*', '/', '^', ':'};
+
+        public static Expression Parse(string parseString)
+        {
+            return Parse(new Evaluator (), parseString);
+        }
 
         public static Expression Parse(Evaluator evaluator, string parseString)
         {
@@ -275,7 +280,7 @@ namespace Ast
             case ":=":
                 return new Assign();
             case "=":
-                return new Assign();
+//                return new Assign();
                 return new Equal ();
             case "==":
                 return new BooleanEqual();

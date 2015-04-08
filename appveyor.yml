@@ -1,2 +1,60 @@
+environment:
+  CoverityProjectToken:
+      secure: k5JpbLODWLUCC4wXpzabZz+y3Otvfp8hNuA1BZI1/c0=
+  CoverityNotificationEmail:
+      secure: SkMoWnYcCR2QVa8COhA8mwLl7sxjWcIbbC0T5nrJLlM=
+
+init:
+# Properties, passed to MSBuild project.
+- ps: |
+    $env:BuildDir = "$env:APPVEYOR_BUILD_FOLDER\.OUTPUT"
+    $env:VersionBuild = "$env:APPVEYOR_BUILD_NUMBER"
+    $env:VersionStage = "$env:APPVEYOR_REPO_BRANCH"
+    $env:VersionTag = "$env:APPVEYOR_REPO_COMMIT"
+
 before_build:
   - nuget restore
+
+build_script:
+- ps: |
+    $buildCmd = "C:\Program Files (x86)\MSBuild\12.0\bin\msbuild.exe"
+    $buildArgs = @(
+      "/m",
+      "/l:C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll",
+      "/p:Configuration=Debug")
+    
+    # If build is not a scheduled one, then simply build the project with
+    # MSBuild.
+    if ($env:APPVEYOR_SCHEDULED_BUILD -eq "False" -Or $env:APPVEYOR_FORCED_BUILD -eq "False") {
+      & $buildCmd $buildArgs
+      return
+    }
+    
+    # Else, build project with Coverity Scan.
+    "Building project with Coverity..."
+    & cov-build.exe --dir cov-int --encoding=UTF-8 $buildCmd $buildArgs
+      
+    # Compress results.
+    $coverityPublisher =
+      "packages\PublishCoverity.0.9.0\PublishCoverity.exe"
+    "Compressing Coverity results..."
+    & "$coverityPublisher" compress `
+      -i "$env:APPVEYOR_BUILD_FOLDER\cov-int" `
+      -o "$env:APPVEYOR_BUILD_FOLDER\$env:APPVEYOR_PROJECT_NAME.zip" `
+      --overwrite
+    
+    # Upload results to Coverity server.
+    $version = "$env:VersionMajor.$env:VersionMinor.$env:VersionPatch" +
+      "-$env:VersionStage+$env:VersionBuild"
+    "Uploading Coverity results..."  
+    & "$coverityPublisher" publish `
+      -t "$env:CoverityProjectToken" `
+      -e "$env:CoverityNotificationEmail" `
+      -r "$env:APPVEYOR_REPO_NAME" `
+      -z "$env:APPVEYOR_BUILD_FOLDER\$env:APPVEYOR_PROJECT_NAME.zip" `
+      -d "CI server scheduled build." `
+      --codeVersion "$version"
+
+shallow_clone: true
+
+cache: packages

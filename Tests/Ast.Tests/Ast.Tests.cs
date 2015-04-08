@@ -15,12 +15,14 @@ namespace Ast.Tests
             string[,] testStrings = {
                 {"(x*y)*f(10-x)-20", "x*y*f(10-x)-20"},
                 {"x*10-20/x", "x*10-20/x"},
-                {"f(x,y,z)=x/y*z", "f(x,y,z)=x/y*z"}
+                {"f(x,y,z)=x/y*z", "f(x,y,z)=x/y*z"},
+                {"x==y", "x==y"},
+                {"x:=y", "x:=y"}
             };
 
             for (int i = 0; i < testStrings.GetLength(0); i++) {
 
-                res = Ast.Parser.Parse(new Dictionary<string,Expression>(), testStrings[i,0]);
+                res = Ast.Parser.Parse(testStrings[i,0]);
                 Assert.AreEqual (testStrings[i,1], res.ToString());
             
             }
@@ -54,7 +56,7 @@ namespace Ast.Tests
 
             for (int i = 0; i < testStrings.GetLength(0); i++) {
 
-                res = Ast.Parser.Parse(new Dictionary<string,Expression>(), testStrings[i,0]);
+                res = Ast.Parser.Parse(testStrings[i,0]);
                 Assert.AreEqual (testStrings[i,1], res.Evaluate().ToString());
 
             }

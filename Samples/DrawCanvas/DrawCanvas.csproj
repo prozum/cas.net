@@ -39,26 +39,26 @@
     <Compile Include="DrawCanvas.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="atk-sharp, Version=3.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+    <Reference Include="atk-sharp">
       <HintPath>..\..\packages\GtkSharp.3.1.2\lib\net45\atk-sharp.dll</HintPath>
     </Reference>
-    <Reference Include="cairo-sharp, Version=1.10.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
+    <Reference Include="cairo-sharp">
       <HintPath>..\..\packages\GtkSharp.3.1.2\lib\net45\cairo-sharp.dll</HintPath>
     </Reference>
-    <Reference Include="gdk-sharp, Version=3.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+    <Reference Include="gdk-sharp">
       <HintPath>..\..\packages\GtkSharp.3.1.2\lib\net45\gdk-sharp.dll</HintPath>
     </Reference>
-    <Reference Include="gio-sharp, Version=3.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+    <Reference Include="gio-sharp">
       <HintPath>..\..\packages\GtkSharp.3.1.2\lib\net45\gio-sharp.dll</HintPath>
     </Reference>
-    <Reference Include="glib-sharp, Version=3.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+    <Reference Include="glib-sharp">
       <HintPath>..\..\packages\GtkSharp.3.1.2\lib\net45\glib-sharp.dll</HintPath>
     </Reference>
-    <Reference Include="pango-sharp, Version=3.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <HintPath>..\..\packages\GtkSharp.3.1.2\lib\net45\pango-sharp.dll</HintPath>
-    </Reference>
-    <Reference Include="gtk-sharp, Version=3.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+    <Reference Include="gtk-sharp">
       <HintPath>..\..\packages\GtkSharp.3.1.2\lib\net45\gtk-sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="pango-sharp">
+      <HintPath>..\..\packages\GtkSharp.3.1.2\lib\net45\pango-sharp.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

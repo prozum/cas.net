@@ -15,42 +15,48 @@ namespace Account
 
         }
 
-        public string[] GetAssignmentList(string grade, string username, string password)
+        public string AddCompleted(string file, string filename, string username, string password)
         {
             var client = new WebClient ();
             client.Encoding = System.Text.Encoding.UTF8;
 
-            string msg = "GetAssignmentList " + grade + " " + username + " " + password;
+            string msg = "AddCompleted " + username + " " + password + " " + filename + " " + file;
+            string response = client.UploadString(host, msg);
+
+            return response;
+        }
+
+        public string[] GetAssignmentList(string username, string password)
+        {
+            var client = new WebClient ();
+            client.Encoding = System.Text.Encoding.UTF8;
+
+            string msg = "StudentGetAssignmentList " + username + " " + password;
             string response = client.UploadString(host, msg);
 
             return response.Split(' ');
         }
 
-        public string GetAssignment(string filename, string grade, string username, string password)
+        public string GetAssignment(string filename, string username, string password)
         {
             var client = new WebClient ();
             client.Encoding = System.Text.Encoding.UTF8;
 
-            string msg = "GetAssignment " + grade + " " + username + " " + password + " " + filename;
+            string msg = "GetAssignment " + username + " " + password + " " + filename;
             string response = client.UploadString(host, msg);
 
             return response;
         }
 
-        public string AddCompleted(string filename, string file, string grade, string username, string password)
+        public string GetFeedback(string filename, string username, string password)
         {
             var client = new WebClient ();
             client.Encoding = System.Text.Encoding.UTF8;
 
-            string msg = "AddCompleted " + grade + " " + username + " " + password + " " + filename;
+            string msg = "GetFeedback " + username + " " + password + " " + filename;
             string response = client.UploadString(host, msg);
 
             return response;
-        }
-
-        public void PushTask()
-        {
-            throw new NotImplementedException();
         }
     }
 }
