@@ -32,7 +32,7 @@ build_script:
     
     # Else, build project with Coverity Scan.
     "Building project with Coverity..."
-    & cov-build.exe --dir cov-int --encoding=UTF-8 $buildCmd $buildArgs
+    & cov-build.exe --dir cov-int $buildCmd $buildArgs
       
     # Compress results.
     $coverityPublisher =
