@@ -48,7 +48,7 @@ namespace TaskGen
                         break;
                 }
             }
-    
+
             task += Numbers[0];
             for (int i = 0; i < varNum-1; i++) {
                 task += Operators [i];
@@ -87,7 +87,7 @@ namespace TaskGen
                 PrintMenu (varMin, varMax, varNum);
 
                 if (In.Key == ConsoleKey.D1) {
-                    task = MakeTask (varMin, varMax, varNum);
+                    task = MakeCalcTask (varMin, varMax, varNum);
                     Console.Clear ();
 
                     Console.WriteLine (task);
