@@ -9,6 +9,7 @@ namespace Ast
     public static class Parser
     {
         static readonly char[] opValidChars = {'=', '<', '>', '+', '-', '*', '/', '^', ':'};
+        static readonly string[] programDefinedFunctions = { "sin", "cos", "tan", "asin", "acos", "atan", "sqrt" };
 
         public static Expression Parse(string parseString)
         {
@@ -33,8 +34,8 @@ namespace Ast
                     parseReader.Read();
                 }
 
-                if (char.IsLetter ((char)curChar)) {
-
+                if (char.IsLetter((char)curChar))
+                {
                     //exs.Push (ParseIdentifier (parseReader));
                     curExp = ParseIdentifier(evaluator, parseReader);
                     exs.Push (curExp);
@@ -190,9 +191,7 @@ namespace Ast
                 return ParseFunction(evaluator, identifier, parseReader);
 
             } else {
-
                 return new Symbol(evaluator, identifier);
-
             }
         }
 
@@ -209,9 +208,48 @@ namespace Ast
                 args.Add(Parse(evaluator, arg));
             }
 
-            res = new Function(identifier, args);
-
-            res.evaluator = evaluator;
+            if (programDefinedFunctions.Contains(identifier.ToLower()))
+            {
+                if (args.Count == 1)
+                {
+                    switch (identifier.ToLower())
+                    {
+                    case "sin":
+                        res = new Sin(identifier, args[0]);
+                        break;
+                    case "cos":
+                        res = new Cos(identifier, args[0]);
+                        break;
+                    case "tan":
+                        res = new Tan(identifier, args[0]);
+                        break;
+                    case "asin":
+                        res = new ASin(identifier, args[0]);
+                        break;
+                    case "acos":
+                        res = new ACos(identifier, args[0]);
+                        break;
+                    case "atan":
+                        res = new ATan(identifier, args[0]);
+                        break;
+                    case "sqrt":
+                        res = new Sqrt(identifier, args[0]);
+                        break;
+                    default:
+                        res = new Error("This should never happen");
+                        break;
+                    }
+                }
+                else
+                {
+                    res = new Error("Unary operation can't have more than one argument");
+                }
+            }
+            else
+            {
+                res = new UserDefinedFunction(identifier, args);
+                res.evaluator = evaluator;
+            }
 
             return res;
         }

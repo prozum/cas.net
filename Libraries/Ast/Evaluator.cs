@@ -19,7 +19,7 @@ namespace Ast
 
             if (exp is Assign)
             {
-                if ((exp as Assign).left is Function)
+                if ((exp as Assign).left is UserDefinedFunction)
                 {
                     var paramNames = new List<string>();
 
@@ -33,10 +33,10 @@ namespace Ast
                         {
                             return new Error("One arg in the function is not a symbol");
                         }
-                    }  
+                    }
 
-                    functionParams.Add(((exp as Assign).left as Function).identifier, paramNames);
-                    functionDefinitions.Add(((exp as Assign).left as Function).identifier, (exp as Assign).right);
+                    functionParams.Add(((exp as Assign).left as UserDefinedFunction).identifier, paramNames);
+                    functionDefinitions.Add(((exp as Assign).left as UserDefinedFunction).identifier, (exp as Assign).right);
 
                     return new Error("Function defined");
                 }
