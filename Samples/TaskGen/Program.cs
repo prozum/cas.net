@@ -1,16 +1,21 @@
-﻿using System;
+﻿// TODO 
+//Omkreds, enhedskonvertering, areal, procentregning
+//afrunding, vinkler
+//(brøker?)
+
+using System;
 using System.Collections.Generic;
 
 namespace TaskGen
 {
     class MainClass
     {
-        static string MakeTask (int varMin, int varMax, int varNum)
+        static string MakeCalcTask (int varMin, int varMax, int varNum)
         {
             List<string> Operators = new List<string> ();
             List<int> Numbers = new List<int> ();
 
-            string task = "";   
+            string task = "";
 
             Random r = new Random (Guid.NewGuid().GetHashCode());
 
@@ -48,7 +53,7 @@ namespace TaskGen
                         break;
                 }
             }
-    
+
             task += Numbers[0];
             for (int i = 0; i < varNum-1; i++) {
                 task += Operators [i];
@@ -87,7 +92,7 @@ namespace TaskGen
                 PrintMenu (varMin, varMax, varNum);
 
                 if (In.Key == ConsoleKey.D1) {
-                    task = MakeTask (varMin, varMax, varNum);
+                    task = MakeCalcTask (varMin, varMax, varNum);
                     Console.Clear ();
 
                     Console.WriteLine (task);
