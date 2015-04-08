@@ -6,16 +6,28 @@ namespace Ast
     public abstract class Function  : Expression
     {
         public string identifier;
+        public Number prefix, exponent;
         public List<Expression> args;
 
-        public Function(string identifier)
+        public Function(string identifier, Number prefix, Number exponent)
         {
             this.identifier = identifier;
+            this.exponent = exponent;
+            this.prefix = prefix;
         }
 
         public override string ToString ()
         {
-            string str = identifier + '(';
+            string str = "";
+
+            if (((prefix is Integer) && (prefix as Integer).value != 1) || ((prefix is Rational) && (prefix as Rational).value.value != 1) || ((prefix is Irrational) && (prefix as Irrational).value != 1))
+            {
+                str += prefix.ToString() + identifier + '(';
+            }
+            else
+            {
+                str += identifier + '(';
+            }
 
             for (int i = 0; i < args.Count; i++) 
             {
@@ -27,7 +39,14 @@ namespace Ast
                 }
             }
 
-            return str + ')';
+            str += ')';
+
+            if (((exponent is Integer) && (exponent as Integer).value != 1) || ((exponent is Rational) && (exponent as Rational).value.value != 1) || ((exponent is Irrational) && (exponent as Irrational).value != 1))
+            {
+                str += '^' + exponent.ToString();
+            }
+
+            return str;
         }
 
         public override bool CompareTo(Expression other)
@@ -36,28 +55,37 @@ namespace Ast
 
             if (res)
             {
-                if (identifier == (other as Function).identifier)
+                if (identifier == (other as Function).identifier && prefix == (other as Function).prefix && exponent == (other as Function).exponent)
                 {
-                    if (args.Count == (other as Function).args.Count)
-                    {
-                        for (int i = 0; i < args.Count; i++)
-                        {
-                            if (!args[i].CompareTo((other as Function).args[i]))
-                            {
-                                res = false;
-                                break;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        res = false;
-                    }
+                    res = CompareArgsTo(other as Function);
                 }
                 else
                 {
                     res = false;
                 }
+            }
+
+            return res;
+        }
+
+        public bool CompareArgsTo(Function other)
+        {
+            bool res = true;
+
+            if (args.Count == (other as Function).args.Count)
+            {
+                for (int i = 0; i < args.Count; i++)
+                {
+                    if (!args[i].CompareTo((other as Function).args[i]))
+                    {
+                        res = false;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                res = false;
             }
 
             return res;
@@ -68,7 +96,8 @@ namespace Ast
     {
         public Dictionary<string, Expression> tempDefinitions;
 
-        public UserDefinedFunction(string identifier, List<Expression> args) : base(identifier)
+        public UserDefinedFunction(string identifier, List<Expression> args) : this(identifier, args, new Integer(1), new Integer(1)) { }
+        public UserDefinedFunction(string identifier, List<Expression> args, Number prefix, Number exponent) : base(identifier, prefix, exponent)
         {
             this.args = args;
         }
@@ -98,7 +127,7 @@ namespace Ast
 
                     res.SetFunctionCall(this);
 
-                    return res.Evaluate();
+                    return new Mul(prefix, new Exp(res, exponent)).Evaluate();
                 }
                 else if (functionParemNames.Count == 0)
                 {
@@ -118,7 +147,8 @@ namespace Ast
 
     public abstract class UnaryOperation : Function
     {
-        public UnaryOperation(string identifier, Expression arg) : base(identifier)
+        public UnaryOperation(string identifier, Expression arg) : this(identifier, arg, new Integer(1), new Integer(1)) { }
+        public UnaryOperation(string identifier, Expression arg, Number prefix, Number exponent) : base(identifier, prefix, exponent)
         {
             this.args = new List<Expression>();
             args.Add(arg);
@@ -128,6 +158,8 @@ namespace Ast
     public class Sin : UnaryOperation
     {
         public Sin(string identifier, Expression arg) : base(identifier, arg) { }
+        public Sin(string identifier, Expression arg, Number prefix, Number exponent) : base(identifier, arg, prefix, exponent) { }
+
 
         public override Expression Evaluate()
         {
@@ -135,17 +167,17 @@ namespace Ast
 
             if (res is Integer)
             {
-                return new Irrational((decimal)Math.Sin((res as Integer).value * Math.Pow((Math.PI / 180), (evaluator.degrees)? 1 : 0)));
+                return new Mul(prefix, new Exp(new Irrational((decimal)Math.Sin((res as Integer).value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
             }
-
+            
             if (res is Rational)
             {
-                return new Irrational((decimal)Math.Sin((double)(res as Rational).value.value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0)));
+                return new Mul(prefix, new Exp(new Irrational((decimal)Math.Sin((double)(res as Rational).value.value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
             }
-
+            
             if (res is Irrational)
             {
-                return new Irrational((decimal)Math.Sin((double)(res as Irrational).value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0)));
+                return new Mul(prefix, new Exp(new Irrational((decimal)Math.Sin((double)(res as Irrational).value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
             }
 
             return new Error("Could not take Sin of: " + args[0]);
@@ -155,23 +187,24 @@ namespace Ast
     public class ASin : UnaryOperation
     {
         public ASin(string identifier, Expression arg) : base(identifier, arg) { }
+        public ASin(string identifier, Expression arg, Number prefix, Number exponent) : base(identifier, arg, prefix, exponent) { }
 
         public override Expression Evaluate()
         {
             var res = args[0].Evaluate();
             if (res is Integer)
             {
-                return new Irrational((decimal)(Math.Asin((res as Integer).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0)));
+                return new Mul(prefix, new Exp(new Irrational((decimal)(Math.Asin((res as Integer).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
             }
 
             if (res is Rational)
             {
-                return new Irrational((decimal)(Math.Asin((double)(res as Rational).value.value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0)));
+                return new Mul(prefix, new Exp(new Irrational((decimal)(Math.Asin((double)(res as Rational).value.value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
             }
 
             if (res is Irrational)
             {
-                return new Irrational((decimal)(Math.Asin((double)(res as Irrational).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0)));
+                return new Mul(prefix, new Exp(new Irrational((decimal)(Math.Asin((double)(res as Irrational).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
             }
 
             return new Error("Could not take ASin of: " + args[0]);
@@ -181,6 +214,7 @@ namespace Ast
     public class Cos : UnaryOperation
     {
         public Cos(string identifier, Expression arg) : base(identifier, arg) { }
+        public Cos(string identifier, Expression arg, Number prefix, Number exponent) : base(identifier, arg, prefix, exponent) { }
 
         public override Expression Evaluate()
         {
@@ -188,17 +222,17 @@ namespace Ast
 
             if (res is Integer)
             {
-                return new Irrational((decimal)Math.Cos((res as Integer).value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0)));
+                return new Mul(prefix, new Exp(new Irrational((decimal)Math.Cos((res as Integer).value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
             }
 
             if (res is Rational)
             {
-                return new Irrational((decimal)Math.Cos((double)(res as Rational).value.value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0)));
+                return new Mul(prefix, new Exp(new Irrational((decimal)Math.Cos((double)(res as Rational).value.value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
             }
 
             if (res is Irrational)
             {
-                return new Irrational((decimal)Math.Cos((double)(res as Irrational).value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0)));
+                return new Mul(prefix, new Exp(new Irrational((decimal)Math.Cos((double)(res as Irrational).value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
             }
 
             return new Error("Could not take Cos of: " + args[0]);
@@ -208,6 +242,7 @@ namespace Ast
     public class ACos : UnaryOperation
     {
         public ACos(string identifier, Expression arg) : base(identifier, arg) { }
+        public ACos(string identifier, Expression arg, Number prefix, Number exponent) : base(identifier, arg, prefix, exponent) { }
 
         public override Expression Evaluate()
         {
@@ -215,17 +250,17 @@ namespace Ast
 
             if (res is Integer)
             {
-                return new Irrational((decimal)(Math.Acos((res as Integer).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0)));
+                return new Mul(prefix, new Exp(new Irrational((decimal)(Math.Acos((res as Integer).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
             }
 
             if (res is Rational)
             {
-                return new Irrational((decimal)(Math.Acos((double)(res as Rational).value.value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0)));
+                return new Mul(prefix, new Exp(new Irrational((decimal)(Math.Acos((double)(res as Rational).value.value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
             }
 
             if (res is Irrational)
             {
-                return new Irrational((decimal)(Math.Acos((double)(res as Irrational).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0)));
+                return new Mul(prefix, new Exp(new Irrational((decimal)(Math.Acos((double)(res as Irrational).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
             }
 
             return new Error("Could not take ACos of: " + args[0]);
@@ -235,6 +270,7 @@ namespace Ast
     public class Tan : UnaryOperation
     {
         public Tan(string identifier, Expression arg) : base(identifier, arg) { }
+        public Tan(string identifier, Expression arg, Number prefix, Number exponent) : base(identifier, arg, prefix, exponent) { }
 
         public override Expression Evaluate()
         {
@@ -242,17 +278,17 @@ namespace Ast
 
             if (res is Integer)
             {
-                return new Irrational((decimal)Math.Tan((res as Integer).value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0)));
+                return new Mul(prefix, new Exp(new Irrational((decimal)Math.Tan((res as Integer).value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
             }
 
             if (res is Rational)
             {
-                return new Irrational((decimal)Math.Tan((double)(res as Rational).value.value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0)));
+                return new Mul(prefix, new Exp(new Irrational((decimal)Math.Tan((double)(res as Rational).value.value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
             }
 
             if (res is Irrational)
             {
-                return new Irrational((decimal)Math.Tan((double)(res as Irrational).value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0)));
+                return new Mul(prefix, new Exp(new Irrational((decimal)Math.Tan((double)(res as Irrational).value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
             }
 
             return new Error("Could not take Tan of: " + args[0]);
@@ -262,6 +298,7 @@ namespace Ast
     public class ATan : UnaryOperation
     {
         public ATan(string identifier, Expression arg) : base(identifier, arg) { }
+        public ATan(string identifier, Expression arg, Number prefix, Number exponent) : base(identifier, arg, prefix, exponent) { }
 
         public override Expression Evaluate()
         {
@@ -269,17 +306,17 @@ namespace Ast
 
             if (res is Integer)
             {
-                return new Irrational((decimal)(Math.Atan((res as Integer).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0)));
+                return new Mul(prefix, new Exp(new Irrational((decimal)(Math.Atan((res as Integer).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
             }
 
             if (res is Rational)
             {
-                return new Irrational((decimal)(Math.Atan((double)(res as Rational).value.value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0)));
+                return new Mul(prefix, new Exp(new Irrational((decimal)(Math.Atan((double)(res as Rational).value.value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
             }
 
             if (res is Irrational)
             {
-                return new Irrational((decimal)(Math.Atan((double)(res as Irrational).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0)));
+                return new Mul(prefix, new Exp(new Irrational((decimal)(Math.Atan((double)(res as Irrational).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
             }
 
             return new Error("Could not take ATan of: " + args[0]);
@@ -289,6 +326,7 @@ namespace Ast
     public class Sqrt : UnaryOperation
     {
         public Sqrt(string identifier, Expression arg) : base(identifier, arg) { }
+        public Sqrt(string identifier, Expression arg, Number prefix, Number exponent) : base(identifier, arg, prefix, exponent) { }
 
         public override Expression Evaluate()
         {
@@ -296,17 +334,18 @@ namespace Ast
 
             if (res is Integer)
             {
-                return new Irrational((decimal)Math.Sqrt((res as Integer).value));
+
+                return new Mul(prefix, new Exp(new Irrational((decimal)Math.Sqrt((res as Integer).value)), exponent)).Evaluate();
             }
 
             if (res is Rational)
             {
-                return new Irrational((decimal)Math.Sqrt((double)(res as Rational).value.value));
+                return new Mul(prefix, new Exp(new Irrational((decimal)Math.Sqrt((double)(res as Rational).value.value)), exponent)).Evaluate();
             }
 
             if (res is Irrational)
             {
-                return new Irrational((decimal)Math.Sqrt((double)(res as Irrational).value));
+                return new Mul(prefix, new Exp(new Irrational((decimal)Math.Sqrt((double)(res as Irrational).value)), exponent)).Evaluate();
             }
 
             return new Error("Could not take Sqrt of: " + args[0]);

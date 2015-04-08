@@ -8,8 +8,6 @@ namespace Ast
         {
             return this;
         }
-
-        
     }
 
     public class Integer : Number

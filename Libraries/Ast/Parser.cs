@@ -215,25 +215,25 @@ namespace Ast
                     switch (identifier.ToLower())
                     {
                     case "sin":
-                        res = new Sin(identifier, args[0]);
+                        res = new Sin(identifier.ToLower(), args[0]);
                         break;
                     case "cos":
-                        res = new Cos(identifier, args[0]);
+                        res = new Cos(identifier.ToLower(), args[0]);
                         break;
                     case "tan":
-                        res = new Tan(identifier, args[0]);
+                        res = new Tan(identifier.ToLower(), args[0]);
                         break;
                     case "asin":
-                        res = new ASin(identifier, args[0]);
+                        res = new ASin(identifier.ToLower(), args[0]);
                         break;
                     case "acos":
-                        res = new ACos(identifier, args[0]);
+                        res = new ACos(identifier.ToLower(), args[0]);
                         break;
                     case "atan":
-                        res = new ATan(identifier, args[0]);
+                        res = new ATan(identifier.ToLower(), args[0]);
                         break;
                     case "sqrt":
-                        res = new Sqrt(identifier, args[0]);
+                        res = new Sqrt(identifier.ToLower(), args[0]);
                         break;
                     default:
                         res = new Error("This should never happen");

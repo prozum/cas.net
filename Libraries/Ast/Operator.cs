@@ -202,30 +202,77 @@ namespace Ast
 
         public override Expression Simplify()
         {
-            var res = new Add(left.Evaluate(), right.Evaluate());
+            Expression res = new Add(left.Evaluate(), right.Evaluate());
             res.parent = this.parent;
 
-            if (res.left is Error && res.right is Error)
+            if ((res as Operator).left is Error && (res as Operator).right is Error)
             {
                 if ((this.left is Symbol && this.right is Symbol) && (((this.left as Symbol).symbol == (this.right as Symbol).symbol) && ((new BooleanEqual((this.left as Symbol).exponent, (this.left as Symbol).exponent).Evaluate() as Boolean).value)))
                 {
-                    return new Symbol((this.left as Symbol).evaluator, (this.left as Symbol).symbol, (new Add((this.left as Symbol).prefix, (this.right as Symbol).prefix).Evaluate() as Number), (this.left as Symbol).exponent);
+                    res = new Symbol((this.left as Symbol).evaluator, (this.left as Symbol).symbol, (new Add((this.left as Symbol).prefix, (this.right as Symbol).prefix).Evaluate() as Number), (this.left as Symbol).exponent);
+
+                    if (((res as Symbol).prefix is Integer && ((res as Symbol).prefix as Integer).value == 0) || ((res as Symbol).prefix is Irrational && ((res as Symbol).prefix as Irrational).value == 0) || ((res as Symbol).prefix is Rational && ((res as Symbol).prefix as Rational).value.value == 0))
+                    {
+                        res = new Integer(0);
+                    }
+
+                    return res;
                 }
 
-                if ((this.left is Function && this.right is Function) && this.left.CompareTo(this.right))
+                if ((this.left is Function && this.right is Function) && ((this.left as Function).identifier == (this.right as Function).identifier && (this.left as Function).CompareArgsTo(this.right as Function) && ((new BooleanEqual((this.left as Function).exponent, (this.left as Function).exponent).Evaluate() as Boolean).value)))
                 {
-                    return new Mul(new Integer(2), this.left);
+                    if (this.left is UserDefinedFunction && this.right is UserDefinedFunction)
+                    {
+                        res = new UserDefinedFunction((this.left as UserDefinedFunction).identifier, (this.left as UserDefinedFunction).args, (new Add((this.left as UserDefinedFunction).prefix, (this.right as UserDefinedFunction).prefix).Evaluate() as Number), (this.left as UserDefinedFunction).exponent);
+	                }
+                    else if (this.left is Sin && this.right is Sin)
+                    {
+                        res = new Sin((this.left as Sin).identifier, (this.left as Sin).args[0], (new Add((this.left as Sin).prefix, (this.right as Sin).prefix).Evaluate() as Number), (this.left as Sin).exponent);
+                    } 
+                    else if (this.left is ASin && this.right is ASin)
+                    {
+                        res = new ASin((this.left as ASin).identifier, (this.left as ASin).args[0], (new Add((this.left as ASin).prefix, (this.right as ASin).prefix).Evaluate() as Number), (this.left as ASin).exponent);
+                    }
+                    else if (this.left is Cos && this.right is Cos)
+                    {
+                        res = new Cos((this.left as Cos).identifier, (this.left as Cos).args[0], (new Add((this.left as Cos).prefix, (this.right as Cos).prefix).Evaluate() as Number), (this.left as Cos).exponent);
+                    }
+                    else if (this.left is ACos && this.right is ACos)
+                    {
+                        res = new ACos((this.left as ACos).identifier, (this.left as ACos).args[0], (new Add((this.left as ACos).prefix, (this.right as ACos).prefix).Evaluate() as Number), (this.left as ACos).exponent);
+                    }
+                    else if (this.left is Tan && this.right is Tan)
+                    {
+                        res = new Tan((this.left as Tan).identifier, (this.left as Tan).args[0], (new Add((this.left as Tan).prefix, (this.right as Tan).prefix).Evaluate() as Number), (this.left as Tan).exponent);
+                    }
+                    else if (this.left is ATan && this.right is ATan)
+                    {
+                        res = new ATan((this.left as ATan).identifier, (this.left as ATan).args[0], (new Add((this.left as ATan).prefix, (this.right as ATan).prefix).Evaluate() as Number), (this.left as ATan).exponent);
+                    }
+                    else if (this.left is Sqrt && this.right is Sqrt)
+                    {
+                        res = new Sqrt((this.left as Sqrt).identifier, (this.left as Sqrt).args[0], (new Add((this.left as Sqrt).prefix, (this.right as Sqrt).prefix).Evaluate() as Number), (this.left as Sqrt).exponent);
+                    }
+                    
+                    if (((res as Function).prefix is Integer && ((res as Function).prefix as Integer).value == 0) || ((res as Function).prefix is Irrational && ((res as Function).prefix as Irrational).value == 0) || ((res as Function).prefix is Rational && ((res as Function).prefix as Rational).value.value == 0))
+                    {
+                        res = new Integer(0);
+                    }
+
+                    return res;
                 }
             }
 
-            if (res.left is Error)
+            //work more on the Simplifyer here Jimmi!
+
+            if ((res as Operator).left is Error)
             {
-                res.left = this.left.Simplify();
+                (res as Operator).left = this.left.Simplify();
             }
 
-            if (res.right is Error)
+            if ((res as Operator).right is Error)
             {
-                res.right = this.right.Simplify();
+                (res as Operator).right = this.right.Simplify();
             }
 
             return res;
