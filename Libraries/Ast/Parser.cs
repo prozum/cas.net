@@ -49,7 +49,7 @@ namespace Ast
                 } else if (curChar.Equals ('(')) {
                 
                     //exs.Push (Parse (ExtractSubstring (parseReader))); 
-                    curExp = Parse(evaluator, ExtractSubstring(parseReader)); 
+                    curExp = ExtractSubExpressions(evaluator, parseReader)[0]; 
                     exs.Push (curExp); 
 
                 } else if (opValidChars.Contains ((char)curChar)) {
@@ -72,8 +72,10 @@ namespace Ast
             return CreateAst (exs, ops);
         }
 
-        private static string ExtractSubstring(StringReader parseReader)
+        private static List<Expression> ExtractSubExpressions(Evaluator evaluator,StringReader parseReader)
         {
+            List<Expression> exps = new List<Expression> ();
+
             string substring = "";
 
             int parentEnd = 0;
@@ -95,6 +97,13 @@ namespace Ast
                         case ')':
                             parentEnd++;
                             break;
+                        case ',':
+                            exps.Add (Parser.Parse(evaluator, substring));
+                            substring = "";
+                            break;
+                        case '\uffff':
+                            exps.Add (new Error("No end parenthesis"));
+                            return exps;
                     }
 
                     parseReader.Read();
@@ -105,7 +114,7 @@ namespace Ast
 
             }
             
-            return substring;
+            return exps;
         }
 
         private static Expression CreateAst(Stack<Expression> exs, Stack<Operator> ops)
@@ -130,35 +139,34 @@ namespace Ast
                 curOp.right = right;
                 right.parent = curOp;
 
-                if (ops.Count > 0) {
-
+                if (ops.Count > 0) 
+                {
                     nextOp = ops.Peek ();
 
-                    if (curOp.priority > nextOp.priority) {
-
+                    if (curOp.priority > nextOp.priority) 
+                    {
                         curOp.left = exs.Pop ();
 
-                        if (curOp.parent == null) {
-
+                        if (curOp.parent == null) 
+                        {
                             curOp.parent = nextOp;
                             right = curOp;
-
-                        } else {
-
+                        } 
+                        else 
+                        {
                             curOp.parent.parent = nextOp;
                             right = curOp.parent;
-
                         }
-
-                    } else {
-
+                    } 
+                    else
+                    {
                         curOp.left = nextOp;
                         nextOp.parent = curOp;
                         right = exs.Pop ();
                     }
-
-                } else {
-
+                } 
+                else 
+                {
                     left = exs.Pop ();
                     left.parent = curOp;
                     curOp.left = left;
@@ -166,8 +174,8 @@ namespace Ast
 
             }
 
-            while (curOp.parent != null) {
-
+            while (curOp.parent != null) 
+            {
                 curOp = (Operator)curOp.parent;
             }
 
@@ -179,18 +187,20 @@ namespace Ast
             string identifier = "";
             int curChar;
 
-            while ((curChar = parseReader.Peek()) != -1 && char.IsLetterOrDigit ((char)curChar)) {
-
-                //int test = curChar;
+            while ((curChar = parseReader.Peek()) != -1 && char.IsLetterOrDigit ((char)curChar))
+            {
                 identifier += (char)curChar;
                 parseReader.Read ();
             }
 
-            if ((char)curChar == '(') {
+            if ((char)curChar == '(')
+            {
 
                 return ParseFunction(evaluator, identifier, parseReader);
 
-            } else {
+            } 
+            else 
+            {
                 return new Symbol(evaluator, identifier);
             }
         }
@@ -198,15 +208,7 @@ namespace Ast
         private static Expression ParseFunction(Evaluator evaluator, string identifier, StringReader parseReader)
         {
             Expression res;
-            var args = new List<Expression> ();
-
-            var argString = ExtractSubstring (parseReader);
-            var argList = argString.Split (',');
-
-            foreach (string arg in argList) {
-
-                args.Add(Parse(evaluator, arg));
-            }
+            var args = ExtractSubExpressions (evaluator, parseReader);
 
             if (programDefinedFunctions.Contains(identifier.ToLower()))
             {
