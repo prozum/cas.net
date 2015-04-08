@@ -53,7 +53,10 @@ namespace CAS.NET.Server
         public static string ExecuteCommand(string msg, Database db)
         {
             string command = msg.Substring(0, msg.IndexOf(" "));
-            msg.Substring(command.Length+1);
+            msg = msg.Substring(command.Length+1);
+
+            Console.WriteLine (command);
+            Console.WriteLine (msg);
                 
             switch (command)
             {
@@ -79,21 +82,18 @@ namespace CAS.NET.Server
         }
 
         public static string TeacherAddAssignment(string msg, Database db)
-        {
-            int n = 0;         
-            string[] strArr = new string[4];
-
-            for (int i = 0; i < strArr.Length; i++)
-            {
-                strArr[i] = msg.Substring(n, msg.IndexOf(" "));
-                n += strArr[i].Length + 1;
-            }
+        {        
+            string[] strArr = msg.Split (' ');
 
             string grade = strArr[0];
             string username = strArr[1];
             string password = strArr[2];
             string filename = strArr[3];
-            string file = msg.Substring(n, msg.Length);
+            string file = String.Empty;
+
+            for (int i = 4; i < strArr.Length; i++) {
+                file += strArr[i];
+            }           
 
             if (db.ValidateUser(username, password) != 1)
             {
@@ -106,15 +106,8 @@ namespace CAS.NET.Server
         }
 
         public static string TeacherGetAssignmentList(string msg, Database db)
-        {
-            int n = 0;        
-            string[] strArr = new string[2];
-
-            for (int i = 0; i < strArr.Length; i++)
-            {
-                strArr[i] = msg.Substring(n, msg.IndexOf(" "));
-                n += strArr[i].Length + 1;
-            }
+        {      
+            string[] strArr = msg.Split(' ');
 
             string username = strArr[0];
             string password = strArr[1];
@@ -128,15 +121,8 @@ namespace CAS.NET.Server
         }
 
         public static string TeacherGetCompleted(string msg, Database db)
-        {
-            int n = 0;         
-            string[] strArr = new string[4];
-
-            for (int i = 0; i < strArr.Length; i++)
-            {
-                strArr[i] = msg.Substring(n, msg.IndexOf(" "));
-                n += strArr[i].Length + 1;
-            }
+        {     
+            string[] strArr = msg.Split (' ');
 
             string grade = strArr[0];
             string username = strArr[1];
@@ -155,20 +141,17 @@ namespace CAS.NET.Server
 
         public static string TeacherAddFeedback(string msg, Database db)
         {
-            int n = 0;         
-            string[] strArr = new string[4];
-
-            for (int i = 0; i < strArr.Length; i++)
-            {
-                strArr[i] = msg.Substring(n, msg.IndexOf(" "));
-                n += strArr[i].Length + 1;
-            }
+            string[] strArr = msg.Split(' ');
 
             string grade = strArr[0];
             string username = strArr[1];
             string password = strArr[2];
             string filename = strArr[3];
-            string file = msg.Substring(n, msg.Length);
+            string file = String.Empty;
+
+            for (int i = 4; i < strArr.Length; i++) {
+                file += strArr[i];
+            }
 
             if (db.ValidateUser(username, password) != 1)
             {
@@ -182,14 +165,7 @@ namespace CAS.NET.Server
 
         public static string StudentGetAssignmentList(string msg, Database db)
         {
-            int n = 0;         
-            string[] strArr = new string[2];
-
-            for (int i = 0; i < strArr.Length; i++)
-            {
-                strArr[i] = msg.Substring(n, msg.IndexOf(" "));
-                n += strArr[i].Length + 1;
-            }
+            string[] strArr = msg.Split (' ');
 
             string username = strArr[0];
             string password = strArr[1];
@@ -205,14 +181,7 @@ namespace CAS.NET.Server
 
         public static string StudentGetAssignment(string msg, Database db)
         {
-            int n = 0;         
-            string[] strArr = new string[3];
-
-            for (int i = 0; i < strArr.Length; i++)
-            {
-                strArr[i] = msg.Substring(n, msg.IndexOf(" "));
-                n += strArr[i].Length + 1;
-            }
+            string[] strArr = msg.Split (' ');
                 
             string username = strArr[0];
             string password = strArr[1];
@@ -229,20 +198,17 @@ namespace CAS.NET.Server
 
         public static string StudentAddCompleted(string msg, Database db)
         {
-            int n = 0;         
-            string[] strArr = new string[3];
-
-            for (int i = 0; i < strArr.Length; i++)
-            {
-                strArr[i] = msg.Substring(n, msg.IndexOf(" "));
-                n += strArr[i].Length + 1;
-            }
+            string[] strArr = msg.Split (' ');         
 
             string username = strArr[0];
             string password = strArr[1];
             string filename = strArr[2];
             string grade = db.GetGrade(username, password);
-            string file = msg.Substring(n, msg.Length);       
+            string file = String.Empty;
+
+            for (int i = 3; i < strArr.Length; i++) {
+                file += strArr[i];
+            }
 
             if (db.ValidateUser(username, password) != 0)
             {
@@ -256,14 +222,7 @@ namespace CAS.NET.Server
 
 		public static string StudentGetFeedback(string msg, Database db)
 		{
-            int n = 0;         
-            string[] strArr = new string[3];
-
-            for (int i = 0; i < strArr.Length; i++)
-            {
-                strArr[i] = msg.Substring(n, msg.IndexOf(" "));
-                n += strArr[i].Length + 1;
-            }
+            string[] strArr = msg.Split (' ');
 
             string username = strArr[0];
             string password = strArr[1];
@@ -273,7 +232,7 @@ namespace CAS.NET.Server
 			if (db.ValidateUser(username, password) != 0)
 			{
 				return "Invalid student";
-			}         
+			}
 
 			return db.GetFeedback(username, filename, grade);
 		}
