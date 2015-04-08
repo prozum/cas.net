@@ -8,10 +8,10 @@ namespace Ast
     {
         public Evaluator evaluator;
         public Operator parent;
-        public Function functionCall;
+        public UserDefinedFunction functionCall;
         public abstract Expression Evaluate();
 
-        public virtual void SetFunctionCall(Function functionCall)
+        public virtual void SetFunctionCall(UserDefinedFunction functionCall)
         {
             this.functionCall = functionCall;
         }

@@ -42,7 +42,7 @@ namespace Ast
         {
             Expression res;
 
-            if (this.functionCall is Function)
+            if (this.functionCall is UserDefinedFunction)
             {
                 if (functionCall.tempDefinitions.ContainsKey(symbol))
                 {
