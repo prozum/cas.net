@@ -25,7 +25,7 @@ build_script:
     
     # If build is not a scheduled one, then simply build the project with
     # MSBuild.
-    if ($env:APPVEYOR_SCHEDULED_BUILD -eq "False" -Or $env:APPVEYOR_FORCED_BUILD -eq "False") {
+    if ($env:APPVEYOR_SCHEDULED_BUILD -ne "True" -Or $env:APPVEYOR_FORCED_BUILD -ne "True") {
       & $buildCmd $buildArgs
       return
     }
