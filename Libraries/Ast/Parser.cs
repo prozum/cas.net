@@ -69,7 +69,10 @@ namespace Ast
                 else if (opValidChars.Contains ((char)curChar)) 
                 {
                     curExp = ParseOperator (parseReader);
-                    ops.Push ((Operator)curExp);
+                    if (curExp is Operator)
+                    {
+                        ops.Push ((Operator)curExp);
+                    }
                 } 
                 else 
                 {
