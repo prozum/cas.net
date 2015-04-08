@@ -21,9 +21,9 @@ public class MainWindow : Window
 
     public void EvaluateEntry()
     {
-        output = Ast.Parser.Parse (eval, entry.Text).Evaluate();
+        output = Ast.Parser.Parse (eval, entry.Text);
 
-        textview.Buffer.Insert (textview.Buffer.StartIter, output.ToString () + "\n");
+        textview.Buffer.Insert (textview.Buffer.StartIter, output.ToString () + " => " + output.Evaluate().ToString()  +"\n");
     }
 
     public MainWindow() : base("MainWindow")
