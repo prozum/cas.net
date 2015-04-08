@@ -1,7 +1,16 @@
 ﻿using Gtk;
+using Ast;
 
 public class MainWindow : Window
 {
+    Evaluator eval;
+    Expression output;
+
+    Grid grid;
+    TextView textview;
+    Entry entry;
+
+
     static void Main(string[] args)
     {
         Application.Init ();
@@ -10,27 +19,30 @@ public class MainWindow : Window
     }
         
 
+    public void EvaluateEntry()
+    {
+        output = Ast.Parser.Parse (eval, entry.Text).Evaluate();
+
+        textview.Buffer.Insert (textview.Buffer.StartIter, output.ToString () + "\n");
+    }
+
     public MainWindow() : base("MainWindow")
     {
-        DeleteEvent += delegate {
-            Application.Quit();
-        };
+        DeleteEvent += (o, a) => Application.Quit ();
 
-        var textview = new TextView();
-        Add (textview);
+        grid = new Grid ();
+        Add (grid);
 
-        var tag = new TextTag ("helloworld-tag");
-        tag.Scale = Pango.Scale.XXLarge;
-        tag.Style = Pango.Style.Italic;
-        tag.Underline = Pango.Underline.Double;
-        tag.Foreground = "blue";
-        tag.Background = "pink";
-        tag.Justification = Justification.Center;
-        var buffer = textview.Buffer;
-        buffer.TagTable.Add (tag);
+        eval = new Evaluator ();
 
-        var insertIter = buffer.StartIter;
-        buffer.InsertWithTagsByName (ref insertIter, "Hello Desktop!\n", "helloworld-tag");
+        entry = new Entry ();
+        entry.Expand = true;
+        entry.Activated += (o, a) => EvaluateEntry ();
+        grid.Attach (entry,0,0,1,1);
+        textview = new TextView();
+        textview.Expand = true;
+        grid.Attach (textview,0,1,1,1);
+
 
         ShowAll ();
     }

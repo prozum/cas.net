@@ -58,3 +58,6 @@ build_script:
 shallow_clone: true
 
 cache: packages
+
+artifacts:
+- path: cov-int\build-log.txt

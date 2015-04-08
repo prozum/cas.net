@@ -79,18 +79,24 @@ namespace Ast
     {
         public Integer numerator;
         public Integer denominator;
-        public Irrational value;
+        public Irrational value
+        {
+            get
+            {
+                return new Irrational(numerator.value / denominator.value);
+            }
+        }
 
         public Rational(Integer num, Integer denom)
         {
             numerator = num;
             denominator = denom;
-            value = new Irrational(num.value / denom.value);
+            //value = new Irrational(num.value / denom.value);
         }
 
         public override string ToString()
         {
-            return value.ToString ();
+            return numerator.ToString () + "/" + denominator.ToString ();
         }
 
         public void Reduce(Integer num, Integer denom)

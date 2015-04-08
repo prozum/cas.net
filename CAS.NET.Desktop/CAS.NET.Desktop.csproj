@@ -62,4 +62,10 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Libraries\Ast\Ast.csproj">
+      <Project>{82C03E10-075F-411C-A1F1-D5506C62BE1C}</Project>
+      <Name>Ast</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

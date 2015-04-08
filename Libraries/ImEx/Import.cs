@@ -3,7 +3,11 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
-//using Ast;
+/* Usage:
+ * Import methods are used for reading from files, and for
+ * deserialising strings back into objects.
+ */
+
 
 namespace ImEx
 {
@@ -11,32 +15,33 @@ namespace ImEx
     public static class Import
     {
         // Returns a deserialised string from file to object T
-        public static T ReadDeserializedFromCasFile<T>(string fileName, string fileDestination)
+        public static T ReadDeserializedFromCasFile<T> (string fileName, string fileDestination)
         {
-            string serializedString = OpenFileToString(fileName + ".cas", "");
-            T deserialisedObject = JsonConvert.DeserializeObject<T>(serializedString);
+            string serializedString = OpenFileToString (fileName + ".cas", "");
+            T deserialisedObject = JsonConvert.DeserializeObject<T> (serializedString);
             return deserialisedObject;
         }
 
         // Returns a serialized string. Useful for creating checksums.
-        public static string ReadSerializedFromCasFile(string fileName, string fileDestination)
+        public static string ReadSerializedFromCasFile (string fileName, string fileDestination)
         {
-            return OpenFileToString(fileName + ".cas", "");
+            return OpenFileToString (fileName + ".cas", "");
         }
 
-        public static T DeserializeString<T>(string serializedString)
+        // Used for deserializing an object of type T.
+        public static T DeserializeString<T> (string serializedString)
         {
-            T deserializedObject = JsonConvert.DeserializeObject<T>(serializedString);
+            T deserializedObject = JsonConvert.DeserializeObject<T> (serializedString);
             return deserializedObject;
         }
 
         // Loads serialized filecontent into strings.
-        private static string OpenFileToString(string fileName, string fileDestination)
+        // TBH: This is the same as ReadSerializedFromCasFile, except it needs the filetype as well.
+        private static string OpenFileToString (string fileName, string fileDestination)
         {
             string s;
-            using (StreamReader sr = new StreamReader(fileName))
-            {
-                s = sr.ReadToEnd();
+            using (StreamReader sr = new StreamReader (fileName)) {
+                s = sr.ReadToEnd ();
             }
             // Catch exception in case file cant be read or doesn't exist.
 

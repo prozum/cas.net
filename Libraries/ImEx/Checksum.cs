@@ -2,6 +2,10 @@
 using System.Security.Cryptography;
 using System.Text;
 
+/* Usage:
+ * TODO: BRB in 100 commits;
+ */
+
 namespace ImEx
 {
     public static class Checksum
@@ -32,7 +36,51 @@ namespace ImEx
                 return sBuileder.ToString ();
             }
         }
-            
+
+        #region BSD Compare
+
+        // Takes two strings, generates their BSD Hashes, and compare them.
+        // Returns true if they are identical
+        public static bool VerifyBSDString (string verStringA, string verStringB)
+        {
+            int verHashA = GetBSDChecksum (verStringA);
+            int verHashB = GetBSDChecksum (verStringB);
+
+            if (verHashA == verHashB) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        // Takes two BSD Hashes and compare them.
+        // Returns true if they are identical
+        public static bool VerifyBSDHash (int verHashA, int verHashB)
+        {
+            if (verHashA == verHashB) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        // Takes one BSD Hash and one string to generate BSD Hash on, and compare them.
+        // Returns true if they are identical
+        public static bool VerifyBSDHashString (int verHashA, string verString)
+        {
+            int verHashB = GetBSDChecksum (verString);
+
+            if (verHashA == verHashB) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        #endregion
+
+        #region MD5 Compare
+
         // Takes two strings, generates their MD5 hashes, and compare them.
         // Returns true if they are identical
         public static bool VerifyMd5String (string verStringA, string verStringB)
@@ -65,6 +113,7 @@ namespace ImEx
             return 0 == comparer.Compare (hashOfVerString, verHash);
         }
 
+        #endregion
     }
 }
 

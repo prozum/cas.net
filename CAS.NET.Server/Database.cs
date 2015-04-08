@@ -121,15 +121,14 @@ namespace CAS.NET.Server
             using (conn = new MySqlConnection(db))
             {
                 conn.Open();
-                const string stm = "SELECT VERSION()";
-
+                const string stm = "INSERT INTO Assignment(Username, FileName, File, Grade) VALUES(@username, @filename, @file, @grade)";
                 var cmd = new MySqlCommand(stm, conn);
-                cmd.CommandText = "INSERT INTO Assignment(Username, FileName, File, Grade) VALUES(@username, @filename, @file, @grade)";
                 cmd.Parameters.AddWithValue("@username", username);
                 cmd.Parameters.AddWithValue("@filename", filename);
                 cmd.Parameters.AddWithValue("@file", file);
                 cmd.Parameters.AddWithValue("@grade", grade);
                 cmd.ExecuteNonQuery();
+                conn.Close ();
             }
         }
 
@@ -356,43 +355,46 @@ namespace CAS.NET.Server
         public int ValidateUser(string username, string password)
         {
             const int PrivilegeColumn = 3;
-
             const string stm = "SELECT * FROM Account WHERE Username = @username AND Password = @password";
 
-            var cmd = new MySqlCommand(stm, conn);
-            cmd.Parameters.AddWithValue("@username", username);
-            cmd.Parameters.AddWithValue("@password", password);
+            using (conn = new MySqlConnection (db)) {
+                conn.Open ();
 
-            var rdr = cmd.ExecuteReader();
+                var cmd = new MySqlCommand (stm, conn);
+                cmd.Parameters.AddWithValue ("@username", username);
+                cmd.Parameters.AddWithValue ("@password", password);
 
-            if (rdr.HasRows)
-            {
-                rdr.Read();
-                return rdr.GetInt32(PrivilegeColumn);
-            }
-            else
-            {
-                /* wrong username or password */
-                return -1;
+                var rdr = cmd.ExecuteReader ();
+
+                if (rdr.HasRows) {
+                    rdr.Read ();
+                    return rdr.GetInt32 (PrivilegeColumn);
+                } else {
+                    /* wrong username or password */
+                    return -1;
+                }
             }
         }
 
         public string GetGrade(string username, string password)
         {
             const int GradeColumn = 2;
-
             const string stm = "SELECT * FROM Account WHERE Username = @username AND Password = @password";
 
-            var cmd = new MySqlCommand(stm, conn);
-            cmd.Parameters.AddWithValue("@username", username);
-            cmd.Parameters.AddWithValue("@password", password);
+            using (conn = new MySqlConnection (db)){
+                conn.Open ();
 
-            var rdr = cmd.ExecuteReader();
+                var cmd = new MySqlCommand(stm, conn);
+                cmd.Parameters.AddWithValue("@username", username);
+                cmd.Parameters.AddWithValue("@password", password);
 
-            if (rdr.HasRows)
-            {
-                rdr.Read();
-                return rdr.GetString(GradeColumn);
+                var rdr = cmd.ExecuteReader();
+
+                if (rdr.HasRows)
+                {
+                    rdr.Read();
+                    return rdr.GetString(GradeColumn);
+                }
             }
 
             return null;
