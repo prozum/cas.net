@@ -61,7 +61,7 @@ namespace Ast
             }
         }
 
-        public override void SetFunctionCall(Function functionCall)
+        public override void SetFunctionCall(UserDefinedFunction functionCall)
         {
             left.SetFunctionCall(functionCall);
             right.SetFunctionCall(functionCall);
