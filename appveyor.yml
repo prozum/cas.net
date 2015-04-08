@@ -21,8 +21,7 @@ build_script:
     $buildArgs = @(
       "/m",
       "/l:C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll",
-      "/p:Configuration=$env:CONFIGURATION",
-      "/p:Platform=$env:PLATFORM")
+      "/p:Configuration=Debug")
     
     # If build is not a scheduled one, then simply build the project with
     # MSBuild.
