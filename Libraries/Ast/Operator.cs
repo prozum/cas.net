@@ -8,8 +8,6 @@ namespace Ast
         public int priority;
         public Expression left,right;
 
-        //public abstract Expression Evaluate();
-
         public Operator(Expression left, Expression right)
         {
             this.left = left;

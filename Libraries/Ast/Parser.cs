@@ -18,53 +18,66 @@ namespace Ast
 
         public static Expression Parse(Evaluator evaluator, string parseString)
         {
-            Expression curExp;
             var exs = new Stack<Expression> ();
             var ops = new Stack<Operator> ();
 
             var parseReader = new StringReader (parseString);
 
+            List<Expression> parExp;
+
+            Expression curExp;
             int curChar;
 
             while ((curChar = parseReader.Peek()) != -1) {
 
                 // Skip whitespace
-                while (char.IsWhiteSpace ((char)curChar)) {
-
+                while (char.IsWhiteSpace ((char)curChar)) 
+                {
                     parseReader.Read();
                 }
 
-                if (char.IsLetter((char)curChar))
+                if (char.IsLetter((char)curChar)) 
                 {
-                    //exs.Push (ParseIdentifier (parseReader));
                     curExp = ParseIdentifier(evaluator, parseReader);
                     exs.Push (curExp);
-
-                } else if (char.IsDigit ((char)curChar)) {
-
-                    //exs.Push (ParseNumber (parseReader));
+                } 
+                else if (char.IsDigit ((char)curChar)) 
+                {
                     curExp = ParseNumber (parseReader);
                     exs.Push (curExp);
 
-                } else if (curChar.Equals ('(')) {
-                
-                    //exs.Push (Parse (ExtractSubstring (parseReader))); 
-                    curExp = ExtractSubExpressions(evaluator, parseReader)[0]; 
-                    exs.Push (curExp); 
+                } 
+                else if (curChar.Equals ('(')) 
+                {
+                    parExp = ExtractSubExpressions(evaluator, parseReader); 
 
-                } else if (opValidChars.Contains ((char)curChar)) {
+                    switch (parExp.Count())
+                    {
+                        case 0:
+                            curExp = new Error("Empty parenthesis");
+                            break;
+                        case 1:
+                            curExp = parExp[0];
+                            exs.Push(curExp);
+                            break;
+                        default:
+                            curExp = new Error("Invalid ',' in parenthesis");
+                            break;
+                    }
 
-                    //ops.Push (ParseOperator (parseReader));
+                } 
+                else if (opValidChars.Contains ((char)curChar)) 
+                {
                     curExp = ParseOperator (parseReader);
                     ops.Push ((Operator)curExp);
-
-                } else {
-
+                } 
+                else 
+                {
                     curExp = new Error ("Error in :" + parseReader.ToString());
                 }
 
-                if (curExp is Error) {
-
+                if (curExp is Error) 
+                {
                     return curExp;
                 }
             }
@@ -74,7 +87,7 @@ namespace Ast
 
         private static List<Expression> ExtractSubExpressions(Evaluator evaluator,StringReader parseReader)
         {
-            List<Expression> exps = new List<Expression> ();
+            List<Expression> exs = new List<Expression> ();
 
             string substring = "";
 
@@ -98,23 +111,21 @@ namespace Ast
                             parentEnd++;
                             break;
                         case ',':
-                            exps.Add (Parser.Parse(evaluator, substring));
+                            exs.Add (Parser.Parse(evaluator, substring));
                             substring = "";
                             break;
                         case '\uffff':
-                            exps.Add (new Error("No end parenthesis"));
-                            return exps;
+                            exs.Add (new Error("No end parenthesis"));
+                            return exs;
                     }
-
                     parseReader.Read();
                 }
-
-                // Eat ')'
                 parseReader.Read();
-
             }
+
+            exs.Add (Parser.Parse(evaluator, substring));
             
-            return exps;
+            return exs;
         }
 
         private static Expression CreateAst(Stack<Expression> exs, Stack<Operator> ops)
@@ -122,19 +133,19 @@ namespace Ast
             Expression left,right;
             Operator curOp = null, nextOp;
 
-            if (exs.Count == 1) {
-
+            if (exs.Count == 1) 
+            {
                 return exs.Pop ();
             }
-            else if (exs.Count < 1)
+            else if (exs.Count == 0)
             {
                 return new Error("No expressions found");
             }
 
             right = exs.Pop ();
 
-            while (ops.Count > 0 ) {
-
+            while (ops.Count > 0 ) 
+            {
                 curOp = ops.Pop ();
                 curOp.right = right;
                 right.parent = curOp;
