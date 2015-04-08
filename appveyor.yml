@@ -60,4 +60,4 @@ shallow_clone: true
 cache: packages
 
 artifact:
-- path: cov-int\build-log.txt
+- path: cas-net\cov-int\build-log.txt
