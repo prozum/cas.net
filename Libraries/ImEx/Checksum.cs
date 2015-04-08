@@ -55,7 +55,7 @@ namespace ImEx
 
         // Takes two BSD Hashes and compare them.
         // Returns true if they are identical
-        public static bool VerifyBSDHash (int verHashA, string verHashB)
+        public static bool VerifyBSDHash (int verHashA, int verHashB)
         {
             if (verHashA == verHashB) {
                 return true;
