@@ -104,9 +104,7 @@ namespace CAS.NET.Server
                 return "Invalid teacher";
             }
 
-            db.AddAssignment(username, filename, file, grade);
-
-            return "Successfully added assignment";
+            return db.AddAssignment(username, filename, file, grade);  
         }
 
         public static string TeacherGetAssignmentList(string msg, Database db)
