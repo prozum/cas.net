@@ -97,18 +97,17 @@ namespace CAS.NET.Server
             string username = strArr[2];
             string password = strArr[3];
             string filename = strArr[4];
-            string fileContent = strArr[5]; //Used for checksum only
             string file = String.Empty;
-
-            // Generates checksum for the file
-            string checksumNew = Checksum.GetMd5Hash(fileContent);
 
             // string[] strArr = { grade, username, password, filename };
 
-            for (int i = 4; i < strArr.Length; i++)
+            for (int i = 5; i < strArr.Length; i++)
             {
                 file += strArr[i];
-            }           
+            }
+
+            // generate checksum for file
+            string checksumNew = Checksum.GetMd5Hash(file);
 
             if (db.CheckPrivilege(username, password) != 1)
             {
