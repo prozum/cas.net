@@ -44,6 +44,7 @@ namespace Ast
                 }
             }
 
+            throw new NotImplementedException();
             return new Error("Cannot evaluate operator expression!");
         }
 
@@ -522,6 +523,11 @@ namespace Ast
         {
             Expression res = new Mul(left.Evaluate(), right.Evaluate());
             res.parent = this.parent;
+
+            if ((left is Sqrt && right is Sqrt) && left.CompareTo(right))
+            {
+                return (left as Sqrt).args[0];
+            }
 
             if ((res as Operator).left is Error && (res as Operator).right is Error)
             {

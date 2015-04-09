@@ -20,7 +20,7 @@ namespace VisualStudioTest
         {
             var evaluator1 = new Evaluator();
             string[,] tests = {
-                                  {"sin(30)","sin(30)"}
+                                  {"sqrt(2)*sqrt(2)","2"}
                               };
 
 
