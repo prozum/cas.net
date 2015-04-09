@@ -83,7 +83,7 @@ namespace Ast
         {
             numerator = num;
             denominator = denom;
-            value = new Irrational(num.value / denom.value);
+            value = new Irrational((decimal)num.value / denom.value);
         }
 
         public override string ToString()
