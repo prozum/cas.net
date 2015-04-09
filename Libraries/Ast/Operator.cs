@@ -346,6 +346,81 @@ namespace Ast
 
             return res;
         }
+
+        public override Expression Simplify()
+        {
+            Expression res = new Sub(left.Evaluate(), right.Evaluate());
+            res.parent = this.parent;
+
+            if ((res as Operator).left is Error && (res as Operator).right is Error)
+            {
+                res = this;
+
+                if ((this.left is Symbol && this.right is Symbol) && (((this.left as Symbol).symbol == (this.right as Symbol).symbol) && ((new BooleanEqual((this.left as Symbol).exponent, (this.left as Symbol).exponent).Evaluate() as Boolean).value)))
+                {
+                    res = new Symbol((this.left as Symbol).evaluator, (this.left as Symbol).symbol, (new Sub((this.left as Symbol).prefix, (this.right as Symbol).prefix).Evaluate() as Number), (this.left as Symbol).exponent);
+
+                    if ((new BooleanEqual((res as Symbol).prefix, new Integer(0)).Evaluate() as Boolean).value)
+                    {
+                        res = new Integer(0);
+                    }
+                }
+                else if ((this.left is Function && this.right is Function) && ((this.left as Function).identifier == (this.right as Function).identifier && (this.left as Function).CompareArgsTo(this.right as Function) && ((new BooleanEqual((this.left as Function).exponent, (this.left as Function).exponent).Evaluate() as Boolean).value)))
+                {
+                    if (this.left is UserDefinedFunction && this.right is UserDefinedFunction)
+                    {
+                        res = new UserDefinedFunction((this.left as UserDefinedFunction).identifier, (this.left as UserDefinedFunction).args, (new Sub((this.left as UserDefinedFunction).prefix, (this.right as UserDefinedFunction).prefix).Evaluate() as Number), (this.left as UserDefinedFunction).exponent);
+                    }
+                    else if (this.left is Sin && this.right is Sin)
+                    {
+                        res = new Sin((this.left as Sin).identifier, (this.left as Sin).args[0], (new Sub((this.left as Sin).prefix, (this.right as Sin).prefix).Evaluate() as Number), (this.left as Sin).exponent);
+                    }
+                    else if (this.left is ASin && this.right is ASin)
+                    {
+                        res = new ASin((this.left as ASin).identifier, (this.left as ASin).args[0], (new Sub((this.left as ASin).prefix, (this.right as ASin).prefix).Evaluate() as Number), (this.left as ASin).exponent);
+                    }
+                    else if (this.left is Cos && this.right is Cos)
+                    {
+                        res = new Cos((this.left as Cos).identifier, (this.left as Cos).args[0], (new Sub((this.left as Cos).prefix, (this.right as Cos).prefix).Evaluate() as Number), (this.left as Cos).exponent);
+                    }
+                    else if (this.left is ACos && this.right is ACos)
+                    {
+                        res = new ACos((this.left as ACos).identifier, (this.left as ACos).args[0], (new Sub((this.left as ACos).prefix, (this.right as ACos).prefix).Evaluate() as Number), (this.left as ACos).exponent);
+                    }
+                    else if (this.left is Tan && this.right is Tan)
+                    {
+                        res = new Tan((this.left as Tan).identifier, (this.left as Tan).args[0], (new Sub((this.left as Tan).prefix, (this.right as Tan).prefix).Evaluate() as Number), (this.left as Tan).exponent);
+                    }
+                    else if (this.left is ATan && this.right is ATan)
+                    {
+                        res = new ATan((this.left as ATan).identifier, (this.left as ATan).args[0], (new Sub((this.left as ATan).prefix, (this.right as ATan).prefix).Evaluate() as Number), (this.left as ATan).exponent);
+                    }
+                    else if (this.left is Sqrt && this.right is Sqrt)
+                    {
+                        res = new Sqrt((this.left as Sqrt).identifier, (this.left as Sqrt).args[0], (new Sub((this.left as Sqrt).prefix, (this.right as Sqrt).prefix).Evaluate() as Number), (this.left as Sqrt).exponent);
+                    }
+
+                    if ((new BooleanEqual((res as Function).prefix, new Integer(0)).Evaluate() as Boolean).value)
+                    {
+                        res = new Integer(0);
+                    }
+                }
+                else
+                {
+                    res = new Sub(left.Simplify(), right.Simplify());
+                }
+            }
+            else if ((res as Operator).left is Error)
+            {
+                (res as Operator).left = this.left.Simplify();
+            }
+            else if ((res as Operator).right is Error)
+            {
+                (res as Operator).right = this.right.Simplify();
+            }
+
+            return res;
+        }
     }
 
     public class Mul : Operator
@@ -440,6 +515,85 @@ namespace Ast
             }
 
             res.parent = this.parent;
+            return res;
+        }
+
+        public override Expression Simplify()
+        {
+            Expression res = new Mul(left.Evaluate(), right.Evaluate());
+            res.parent = this.parent;
+
+            if ((res as Operator).left is Error && (res as Operator).right is Error)
+            {
+                res = this;
+
+                if ((this.left is Symbol && this.right is Symbol) && ((this.left as Symbol).symbol == (this.right as Symbol).symbol))
+                {
+                    res = new Symbol((this.left as Symbol).evaluator, (this.left as Symbol).symbol, (new Mul((this.left as Symbol).prefix, (this.right as Symbol).prefix).Evaluate() as Number), (new Mul((this.left as Symbol).exponent, (this.right as Symbol).exponent).Evaluate() as Number));
+
+                    if ((new BooleanEqual((res as Symbol).prefix, new Integer(0)).Evaluate() as Boolean).value)
+                    {
+                        res = new Integer(0);
+                    }
+                    else if ((new BooleanEqual((res as Symbol).exponent, new Integer(0)).Evaluate() as Boolean).value)
+                    {
+                        res = new Integer(1);
+                    }
+                }
+                else if ((this.left is Function && this.right is Function) && ((this.left as Function).identifier == (this.right as Function).identifier && (this.left as Function).CompareArgsTo(this.right as Function)))
+                {
+                    if (this.left is UserDefinedFunction && this.right is UserDefinedFunction)
+                    {
+                        res = new UserDefinedFunction((this.left as Function).identifier, (this.left as Function).args, (new Mul((this.left as Function).prefix, (this.right as Function).prefix).Evaluate() as Number), (new Mul((this.left as Function).exponent, (this.right as Function).exponent).Evaluate() as Number));
+                    }
+                    else if (this.left is Sin && this.right is Sin)
+                    {
+                        res = new Sin((this.left as Function).identifier, (this.left as Function).args[0], (new Mul((this.left as Function).prefix, (this.right as Function).prefix).Evaluate() as Number), (new Mul((this.left as Function).exponent, (this.right as Function).exponent).Evaluate() as Number));
+                    }
+                    else if (this.left is ASin && this.right is ASin)
+                    {
+                        res = new ASin((this.left as Function).identifier, (this.left as Function).args[0], (new Mul((this.left as Function).prefix, (this.right as Function).prefix).Evaluate() as Number), (new Mul((this.left as Function).exponent, (this.right as Function).exponent).Evaluate() as Number));
+                    }
+                    else if (this.left is Cos && this.right is Cos)
+                    {
+                        res = new Cos((this.left as Function).identifier, (this.left as Function).args[0], (new Mul((this.left as Function).prefix, (this.right as Function).prefix).Evaluate() as Number), (new Mul((this.left as Function).exponent, (this.right as Function).exponent).Evaluate() as Number));
+                    }
+                    else if (this.left is ACos && this.right is ACos)
+                    {
+                        res = new ACos((this.left as Function).identifier, (this.left as Function).args[0], (new Mul((this.left as Function).prefix, (this.right as Function).prefix).Evaluate() as Number), (new Mul((this.left as Function).exponent, (this.right as Function).exponent).Evaluate() as Number));
+                    }
+                    else if (this.left is Tan && this.right is Tan)
+                    {
+                        res = new Tan((this.left as Function).identifier, (this.left as Function).args[0], (new Mul((this.left as Function).prefix, (this.right as Function).prefix).Evaluate() as Number), (new Mul((this.left as Function).exponent, (this.right as Function).exponent).Evaluate() as Number));
+                    }
+                    else if (this.left is ATan && this.right is ATan)
+                    {
+                        res = new ATan((this.left as Function).identifier, (this.left as Function).args[0], (new Mul((this.left as Function).prefix, (this.right as Function).prefix).Evaluate() as Number), (new Mul((this.left as Function).exponent, (this.right as Function).exponent).Evaluate() as Number));
+                    }
+                    else if (this.left is Sqrt && this.right is Sqrt)
+                    {
+                        res = new Sqrt((this.left as Function).identifier, (this.left as Function).args[0], (new Mul((this.left as Function).prefix, (this.right as Function).prefix).Evaluate() as Number), (new Mul((this.left as Function).exponent, (this.right as Function).exponent).Evaluate() as Number));
+                    }
+
+                    if ((new BooleanEqual((res as Symbol).prefix, new Integer(0)).Evaluate() as Boolean).value)
+                    {
+                        res = new Integer(0);
+                    }
+                    else if ((new BooleanEqual((res as Symbol).exponent, new Integer(0)).Evaluate() as Boolean).value)
+                    {
+                        res = new Integer(1);
+                    }
+                }
+            }
+            else if ((res as Operator).left is Error)
+            {
+                (res as Operator).left = this.left.Simplify();
+            }
+            else if ((res as Operator).right is Error)
+            {
+                (res as Operator).right = this.right.Simplify();
+            }
+
             return res;
         }
     }
@@ -551,11 +705,17 @@ namespace Ast
                 if ((this.left is Symbol && this.right is Symbol) && ((this.left as Symbol).symbol == (this.right as Symbol).symbol))
                 {
                     res = new Symbol((this.left as Symbol).evaluator, (this.left as Symbol).symbol, (new Div((this.left as Symbol).prefix, (this.right as Symbol).prefix).Evaluate() as Number), (new Div((this.left as Symbol).exponent, (this.right as Symbol).exponent).Evaluate() as Number));
-                    
-                    return res;
-                }
 
-                if ((this.left is Function && this.right is Function) && ((this.left as Function).identifier == (this.right as Function).identifier && (this.left as Function).CompareArgsTo(this.right as Function)))
+                    if ((new BooleanEqual((res as Symbol).prefix, new Integer(0)).Evaluate() as Boolean).value)
+                    {
+                        res = new Integer(0);
+                    }
+                    else if ((new BooleanEqual((res as Symbol).exponent, new Integer(0)).Evaluate() as Boolean).value)
+                    {
+                        res = new Integer(1);
+                    }
+                } 
+                else if ((this.left is Function && this.right is Function) && ((this.left as Function).identifier == (this.right as Function).identifier && (this.left as Function).CompareArgsTo(this.right as Function)))
                 {
                     if (this.left is UserDefinedFunction && this.right is UserDefinedFunction)
                     {
@@ -590,8 +750,23 @@ namespace Ast
                         res = new Sqrt((this.left as Function).identifier, (this.left as Function).args[0], (new Div((this.left as Function).prefix, (this.right as Function).prefix).Evaluate() as Number), (new Div((this.left as Function).exponent, (this.right as Function).exponent).Evaluate() as Number));
                     }
 
-                    return res;
+                    if ((new BooleanEqual((res as Symbol).prefix, new Integer(0)).Evaluate() as Boolean).value)
+                    {
+                        res = new Integer(0);
+                    }
+                    else if ((new BooleanEqual((res as Symbol).exponent, new Integer(0)).Evaluate() as Boolean).value)
+                    {
+                        res = new Integer(1);
+                    }
                 }
+            }
+            else if ((res as Operator).left is Error)
+            {
+                (res as Operator).left = this.left.Simplify();
+            }
+            else if ((res as Operator).right is Error)
+            {
+                (res as Operator).right = this.right.Simplify();
             }
 
             return res;
@@ -612,6 +787,46 @@ namespace Ast
             if (left is Integer && right is Integer) 
             {
                 return new Integer( (int)Math.Pow((left as Integer).value, (right as Integer).value));
+            }
+
+            if (left is Integer && right is Rational)
+            {
+                return new Exp(new Rational((left as Integer), new Integer(1)), right).Evaluate();
+            }
+
+            if (left is Rational && right is Integer)
+            {
+                return new Exp(left, new Rational((right as Integer), new Integer(1))).Evaluate();
+            }
+
+            if (left is Rational && right is Rational)
+            {
+                return new Irrational((decimal)Math.Pow((double)(left as Rational).value.value, (double)(left as Rational).value.value));
+            }
+
+            if (left is Integer && right is Irrational)
+            {
+                return new Irrational((decimal)Math.Pow((left as Integer).value, (double)(right as Irrational).value));
+            }
+
+            if (left is Irrational && right is Integer)
+            {
+                return new Irrational((decimal)Math.Pow((double)(left as Irrational).value, (right as Integer).value));
+            }
+
+            if (left is Irrational && right is Irrational)
+            {
+                return new Irrational((decimal)Math.Pow((double)(left as Irrational).value, (double)(right as Irrational).value));
+            }
+
+            if (left is Irrational && right is Rational)
+            {
+                return new Irrational((decimal)Math.Pow((double)(left as Irrational).value, (double)(right as Rational).value.value));
+            }
+
+            if (left is Rational && right is Irrational)
+            {
+                return new Irrational((decimal)Math.Pow((double)(left as Rational).value.value, (double)(right as Irrational).value));
             }
 
             return base.Evaluate();
