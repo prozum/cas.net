@@ -92,6 +92,7 @@ namespace Ast
         {
             List<Expression> exs = new List<Expression> ();
 
+            char curChar;
             string substring = "";
 
             int parentEnd = 0;
@@ -103,9 +104,9 @@ namespace Ast
 
                 while (!((char)parseReader.Peek()).Equals(')') && (parentStart == parentEnd))
                 {
-                    substring += (char)parseReader.Peek();
+                    curChar = (char)parseReader.Peek();
                     
-                    switch ((char)parseReader.Peek())
+                    switch (curChar)
                     {
                         case '(':
                             parentStart++;
@@ -120,6 +121,9 @@ namespace Ast
                         case '\uffff':
                             exs.Add (new Error("No end parenthesis"));
                             return exs;
+                        default:
+                            substring += curChar;
+                            break;
                     }
                     parseReader.Read();
                 }
