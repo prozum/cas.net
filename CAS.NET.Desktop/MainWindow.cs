@@ -23,7 +23,7 @@ public class MainWindow : Window
     {
         output = Ast.Parser.Parse (eval, entry.Text);
 
-        textview.Buffer.Insert (textview.Buffer.StartIter, output.ToString () + " => " + output.Evaluate().ToString()  +"\n");
+        textview.Buffer.Insert (textview.Buffer.StartIter, output.ToString () + " => " + output.Simplify().Evaluate().ToString()  +"\n");
     }
 
     public MainWindow() : base("MainWindow")
