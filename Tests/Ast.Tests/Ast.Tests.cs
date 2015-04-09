@@ -17,7 +17,8 @@ namespace Ast.Tests
                 {"x*10-20/x", "x*10-20/x"},
                 {"f(x,y,z)=x/y*z", "f(x,y,z)=x/y*z"},
                 {"x==y", "x==y"},
-                {"x:=y", "x:=y"}
+                {"x:=y", "x:=y"},
+                {"x+x+4*5+x+x+x+x+x", "x+x+4*5+x+x+x+x+x"}
             };
 
             for (int i = 0; i < testStrings.GetLength(0); i++) {
