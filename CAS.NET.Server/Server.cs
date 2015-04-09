@@ -99,7 +99,7 @@ namespace CAS.NET.Server
                 file += strArr[i];
             }           
 
-            if (db.ValidateUser(username, password) != 1)
+            if (db.CheckPrivilege(username, password) != 1)
             {
                 return "Invalid teacher";
             }
@@ -116,7 +116,7 @@ namespace CAS.NET.Server
             string username = strArr[0];
             string password = strArr[1];
 
-            if (db.ValidateUser(username, password) != 1)
+            if (db.CheckPrivilege(username, password) != 1)
             {
                 return "Invalid teacher";
             }
@@ -133,7 +133,7 @@ namespace CAS.NET.Server
             string password = strArr[2];
             string filename = strArr[3];           
 
-            if (db.ValidateUser(username, password) != 1)
+            if (db.CheckPrivilege(username, password) != 1)
             {
                 return "Invalid teacher";
             }
@@ -157,7 +157,7 @@ namespace CAS.NET.Server
                 file += strArr[i];
             }
 
-            if (db.ValidateUser(username, password) != 1)
+            if (db.CheckPrivilege(username, password) != 1)
             {
                 return "Invalid teacher";
             }
@@ -178,7 +178,7 @@ namespace CAS.NET.Server
             Console.WriteLine(username + "end");
             Console.WriteLine (password + "end");
 
-            if (db.ValidateUser(username, password) != 0)
+            if (db.CheckPrivilege(username, password) != 0)
             {
                 return "Invalid student";
             }
@@ -195,7 +195,7 @@ namespace CAS.NET.Server
             string filename = strArr[2];
             string grade = db.GetGrade(username, password);
 
-            if (db.ValidateUser(username, password) != 0)
+            if (db.CheckPrivilege(username, password) != 0)
             {
                 return "Invalid student";
             }
@@ -217,7 +217,7 @@ namespace CAS.NET.Server
                 file += strArr[i];
             }
 
-            if (db.ValidateUser(username, password) != 0)
+            if (db.CheckPrivilege(username, password) != 0)
             {
                 return "Invalid student";
             }
@@ -236,7 +236,7 @@ namespace CAS.NET.Server
             string filename = strArr[2];
             string grade = db.GetGrade(username, password);
 
-			if (db.ValidateUser(username, password) != 0)
+			if (db.CheckPrivilege(username, password) != 0)
 			{
 				return "Invalid student";
 			}

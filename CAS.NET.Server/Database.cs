@@ -368,7 +368,7 @@ namespace CAS.NET.Server
 			return file;
 		}
 
-        public int ValidateUser(string username, string password)
+        public int CheckPrivilege(string username, string password)
         {
             const int PrivilegeColumn = 3;
             const string stm = "SELECT * FROM Account WHERE Username = @username AND Password = @password";
