@@ -10,17 +10,17 @@ namespace Account
         private int ID;
         static string host = "http://localhost:8080/";
 
-        public Teacher (string Name)
+        public Teacher(string Name)
         {
 
         }
 
-        public string AddAssignment(string file, string filename, string grade, string username, string password)
+        public string AddAssignment(string checksum, string file, string filename, string grade, string username, string password)
         {
-            var client = new WebClient ();
+            var client = new WebClient();
             client.Encoding = System.Text.Encoding.UTF8;
 
-            string msg = "AddAssignment " + grade + " " + username + " " + password + " " + filename + " " + file;
+            string msg = "AddAssignment " + checksum + " " + grade + " " + username + " " + password + " " + filename + " " + file;
             string response = client.UploadString(host, msg);
 
             return response;
@@ -28,7 +28,7 @@ namespace Account
 
         public string GetCompleted(string filename, string grade, string username, string password)
         {
-            var client = new WebClient ();
+            var client = new WebClient();
             client.Encoding = System.Text.Encoding.UTF8;
 
             string msg = "GetCompleted " + grade + " " + username + " " + password + " " + filename;
@@ -39,7 +39,7 @@ namespace Account
 
         public string[] GetAssignmentList(string username, string password)
         {
-            var client = new WebClient ();
+            var client = new WebClient();
             client.Encoding = System.Text.Encoding.UTF8;
 
             string msg = "TeacherGetAssignmentList " + username + " " + password;
@@ -50,7 +50,7 @@ namespace Account
 
         public string AddFeedback(string file, string filename, string grade, string username, string password)
         {
-            var client = new WebClient ();
+            var client = new WebClient();
             client.Encoding = System.Text.Encoding.UTF8;
 
             string msg = "AddFeedback " + grade + " " + username + " " + password + " " + filename + " " + file;

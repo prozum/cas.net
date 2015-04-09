@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
+using ImEx;
 
 namespace CAS.NET.Server
 {
@@ -10,12 +11,14 @@ namespace CAS.NET.Server
     {
         public static void StartListen(string prefix, Database db)
         {
-            if (string.IsNullOrEmpty (prefix)) {
-                throw new ArgumentException ("prefix");
+            if (string.IsNullOrEmpty(prefix))
+            {
+                throw new ArgumentException("prefix");
             }
 
             // start listening for HTTP requests
-            using (var listener = new HttpListener()) {
+            using (var listener = new HttpListener())
+            {
             
                 listener.Prefixes.Add(prefix);
                 listener.Start();
@@ -32,7 +35,7 @@ namespace CAS.NET.Server
                     string msg;
 
                     // copy client message to a buffer
-                    using(var memoryStream = new MemoryStream())
+                    using (var memoryStream = new MemoryStream())
                     {
                         reader.CopyTo(memoryStream);
                         buffer = memoryStream.ToArray();
@@ -56,57 +59,71 @@ namespace CAS.NET.Server
         {
             // decode command from client message and remove it from msg
             string command = msg.Substring(0, msg.IndexOf(" "));
-            msg = msg.Substring(command.Length+1);
+            msg = msg.Substring(command.Length + 1);
 
-            Console.WriteLine (command);
-            Console.WriteLine (msg);
+            Console.WriteLine(command);
+            Console.WriteLine(msg);
 
             // decode the command and run serverside code for the command
             switch (command)
             {
-            case "AddAssignment":
-            	return TeacherAddAssignment (msg, db);
-            case "GetCompleted":
-                return TeacherGetCompleted (msg, db);
-			case "AddFeedback":
-				return TeacherAddFeedback (msg, db);
-			case "TeacherGetAssignmentList":
-				return TeacherGetAssignmentList (msg, db);            
-            case "GetAssignment":
-            	return StudentGetAssignment (msg, db);
-            case "StudentGetAssignmentList":
-                return StudentGetAssignmentList(msg, db);
-			case "AddCompleted":
-				return StudentAddCompleted (msg, db);
-			case "GetFeedback":
-				return StudentGetFeedback (msg, db);
-            default:
-            	return "Invalid command";
+                case "AddAssignment":
+                    return TeacherAddAssignment(msg, db);
+                case "GetCompleted":
+                    return TeacherGetCompleted(msg, db);
+                case "AddFeedback":
+                    return TeacherAddFeedback(msg, db);
+                case "TeacherGetAssignmentList":
+                    return TeacherGetAssignmentList(msg, db);            
+                case "GetAssignment":
+                    return StudentGetAssignment(msg, db);
+                case "StudentGetAssignmentList":
+                    return StudentGetAssignmentList(msg, db);
+                case "AddCompleted":
+                    return StudentAddCompleted(msg, db);
+                case "GetFeedback":
+                    return StudentGetFeedback(msg, db);
+                default:
+                    return "Invalid command";
             }
         }
 
         public static string TeacherAddAssignment(string msg, Database db)
         {        
-            string[] strArr = msg.Split (' ');
+            string[] strArr = msg.Split(' ');
 
-            string grade = strArr[0];
-            string username = strArr[1];
-            string password = strArr[2];
-            string filename = strArr[3];
+            string checksum = strArr[0];
+            string grade = strArr[1];
+            string username = strArr[2];
+            string password = strArr[3];
+            string filename = strArr[4];
             string file = String.Empty;
 
-            for (int i = 4; i < strArr.Length; i++) {
-                file += strArr[i];
-            }           
+            // string[] strArr = { grade, username, password, filename };
 
-            if (db.ValidateUser(username, password) != 1)
+            for (int i = 5; i < strArr.Length; i++)
+            {
+                file += strArr[i];
+            }
+
+            // generate checksum for file
+            string checksumNew = Checksum.GetMd5Hash(file);
+
+            if (db.CheckPrivilege(username, password) != 1)
             {
                 return "Invalid teacher";
             }
 
-            db.AddAssignment(username, filename, file, grade);
+            // Writes the checksums
+            Console.WriteLine(checksum + " <=> " + checksumNew);
 
-            return "Successfully added assignment";
+            // Prevents the server from saving the files if it's checksum is invalid
+            if (Checksum.VerifyMd5Hash(checksum, checksumNew) == false)
+            {
+                return "Failed adding assignment - Please try again.";
+            }
+
+            return db.AddAssignment(username, filename, file, grade);  
         }
 
         public static string TeacherGetAssignmentList(string msg, Database db)
@@ -116,7 +133,7 @@ namespace CAS.NET.Server
             string username = strArr[0];
             string password = strArr[1];
 
-            if (db.ValidateUser(username, password) != 1)
+            if (db.CheckPrivilege(username, password) != 1)
             {
                 return "Invalid teacher";
             }
@@ -126,14 +143,14 @@ namespace CAS.NET.Server
 
         public static string TeacherGetCompleted(string msg, Database db)
         {     
-            string[] strArr = msg.Split (' ');
+            string[] strArr = msg.Split(' ');
 
             string grade = strArr[0];
             string username = strArr[1];
             string password = strArr[2];
             string filename = strArr[3];           
 
-            if (db.ValidateUser(username, password) != 1)
+            if (db.CheckPrivilege(username, password) != 1)
             {
                 return "Invalid teacher";
             }
@@ -153,11 +170,12 @@ namespace CAS.NET.Server
             string filename = strArr[3];
             string file = String.Empty;
 
-            for (int i = 4; i < strArr.Length; i++) {
+            for (int i = 4; i < strArr.Length; i++)
+            {
                 file += strArr[i];
             }
 
-            if (db.ValidateUser(username, password) != 1)
+            if (db.CheckPrivilege(username, password) != 1)
             {
                 return "Invalid teacher";
             }
@@ -169,16 +187,16 @@ namespace CAS.NET.Server
 
         public static string StudentGetAssignmentList(string msg, Database db)
         {
-            string[] strArr = msg.Split (' ');
+            string[] strArr = msg.Split(' ');
 
             string username = strArr[0];
             string password = strArr[1];
             string grade = db.GetGrade(username, password);
 
             Console.WriteLine(username + "end");
-            Console.WriteLine (password + "end");
+            Console.WriteLine(password + "end");
 
-            if (db.ValidateUser(username, password) != 0)
+            if (db.CheckPrivilege(username, password) != 0)
             {
                 return "Invalid student";
             }
@@ -188,14 +206,14 @@ namespace CAS.NET.Server
 
         public static string StudentGetAssignment(string msg, Database db)
         {
-            string[] strArr = msg.Split (' ');
+            string[] strArr = msg.Split(' ');
                 
             string username = strArr[0];
             string password = strArr[1];
             string filename = strArr[2];
             string grade = db.GetGrade(username, password);
 
-            if (db.ValidateUser(username, password) != 0)
+            if (db.CheckPrivilege(username, password) != 0)
             {
                 return "Invalid student";
             }
@@ -205,7 +223,7 @@ namespace CAS.NET.Server
 
         public static string StudentAddCompleted(string msg, Database db)
         {
-            string[] strArr = msg.Split (' ');         
+            string[] strArr = msg.Split(' ');         
 
             string username = strArr[0];
             string password = strArr[1];
@@ -213,11 +231,12 @@ namespace CAS.NET.Server
             string grade = db.GetGrade(username, password);
             string file = String.Empty;
 
-            for (int i = 3; i < strArr.Length; i++) {
+            for (int i = 3; i < strArr.Length; i++)
+            {
                 file += strArr[i];
             }
 
-            if (db.ValidateUser(username, password) != 0)
+            if (db.CheckPrivilege(username, password) != 0)
             {
                 return "Invalid student";
             }
@@ -227,21 +246,21 @@ namespace CAS.NET.Server
             return "Successfully added completed assignment";
         }
 
-		public static string StudentGetFeedback(string msg, Database db)
-		{
-            string[] strArr = msg.Split (' ');
+        public static string StudentGetFeedback(string msg, Database db)
+        {
+            string[] strArr = msg.Split(' ');
 
             string username = strArr[0];
             string password = strArr[1];
             string filename = strArr[2];
             string grade = db.GetGrade(username, password);
 
-			if (db.ValidateUser(username, password) != 0)
-			{
-				return "Invalid student";
-			}
+            if (db.CheckPrivilege(username, password) != 0)
+            {
+                return "Invalid student";
+            }
 
-			return db.GetFeedback(username, filename, grade);
-		}
+            return db.GetFeedback(username, filename, grade);
+        }
     }
 }

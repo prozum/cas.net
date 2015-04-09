@@ -116,19 +116,28 @@ namespace CAS.NET.Server
             }
         }
 
-        public void AddAssignment(string username, string filename, string file, string grade)
+        public string AddAssignment(string username, string filename, string file, string grade)
         {
-            using (conn = new MySqlConnection(db))
+            if (!this.CheckFilenameExists(username, filename))
             {
-                conn.Open();
-                const string stm = "INSERT INTO Assignment(Username, FileName, File, Grade) VALUES(@username, @filename, @file, @grade)";
-                var cmd = new MySqlCommand(stm, conn);
-                cmd.Parameters.AddWithValue("@username", username);
-                cmd.Parameters.AddWithValue("@filename", filename);
-                cmd.Parameters.AddWithValue("@file", file);
-                cmd.Parameters.AddWithValue("@grade", grade);
-                cmd.ExecuteNonQuery();
-                conn.Close ();
+                using (conn = new MySqlConnection(db))
+                {
+                    conn.Open();
+                    const string stm = "INSERT INTO Assignment(Username, FileName, File, Grade) VALUES(@username, @filename, @file, @grade)";
+                    var cmd = new MySqlCommand(stm, conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@filename", filename);
+                    cmd.Parameters.AddWithValue("@file", file);
+                    cmd.Parameters.AddWithValue("@grade", grade);
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+                }
+
+                return "Successfully added assignment";
+            }
+            else
+            {
+                return "Filename already taken";
             }
         }
 
@@ -368,7 +377,7 @@ namespace CAS.NET.Server
 			return file;
 		}
 
-        public int ValidateUser(string username, string password)
+        public int CheckPrivilege(string username, string password)
         {
             const int PrivilegeColumn = 3;
             const string stm = "SELECT * FROM Account WHERE Username = @username AND Password = @password";
@@ -414,6 +423,30 @@ namespace CAS.NET.Server
             }
 
             return null;
+        }
+
+        public bool CheckFilenameExists(string username, string filename)
+        {
+            const string stm = "SELECT * FROM Assignment WHERE Username = @username AND FileName = @filename";
+
+            using (conn = new MySqlConnection (db)) {
+                conn.Open ();
+
+                var cmd = new MySqlCommand (stm, conn);
+                cmd.Parameters.AddWithValue ("@username", username);
+                cmd.Parameters.AddWithValue ("@filename", filename);
+
+                var rdr = cmd.ExecuteReader ();
+
+                if (rdr.HasRows)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
 
         /*
