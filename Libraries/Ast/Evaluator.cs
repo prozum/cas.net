@@ -54,7 +54,7 @@ namespace Ast
             }
             else
             {
-                return exp.Evaluate();
+                return exp.Simplify().Evaluate();
             }
         }
 
