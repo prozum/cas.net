@@ -66,7 +66,7 @@ namespace Ast
         {
             var res = base.CompareTo(other);
 
-            if ((new BooleanEqual(this.Evaluate(), other.Evaluate()).Evaluate() as Boolean).value && !(this.Evaluate() is Error || other.Evaluate() is Error))
+            if (!(this.Evaluate() is Error || other.Evaluate() is Error) && (new BooleanEqual(this.Evaluate(), other.Evaluate()).Evaluate() as Boolean).value)
             {
                 return true;
             }

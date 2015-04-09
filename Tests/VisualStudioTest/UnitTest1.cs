@@ -20,8 +20,6 @@ namespace VisualStudioTest
         {
             var evaluator1 = new Evaluator();
 
-            evaluator1.definitions.Add("x", new Integer(5));
-
             Assert.AreEqual("10", (evaluator1.Evaluation("x+5") as Integer).ToString());
         }
 
@@ -31,6 +29,26 @@ namespace VisualStudioTest
             var evaluator1 = new Evaluator();
 
             Assert.AreEqual("f(a,b)", evaluator1.Evaluation("f(a,b)").ToString());
+        }
+
+        [TestMethod]
+        public void Simplify()
+        {
+            var evaluator1 = new Evaluator();
+            var testkvat = new Add(new Add(new Exp(new Symbol(evaluator1, "z"), new Integer(2)), new Exp(new Symbol(evaluator1, "y"), new Integer(2))), new Mul(new Integer(2), new Mul(new Symbol(evaluator1, "x"), new Symbol(evaluator1, "y"))));
+            var teststring = "x+x+4*5+x+x+x+x+x";
+
+            string prev = "";
+            Expression test = Parser.Parse(teststring);
+            Expression current = test;
+
+            do
+	        {
+	            prev = current.ToString();
+                current = current.Simplify();
+	        } while (prev != current.ToString());
+
+            Assert.AreEqual(test.ToString(), test.Simplify().ToString());
         }
     }
 }
