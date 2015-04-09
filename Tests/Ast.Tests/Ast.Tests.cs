@@ -52,7 +52,12 @@ namespace Ast.Tests
             string[,] testStrings = {
                 {"10.10*20", "202.00"},
                 {"10", "10"},
-                {"2^8", "256"}
+                {"2^8", "256"},
+                {"cos(2)", "0.999390827"},
+                {"4^40000/0", "fug"},
+                {"sqrt(2)*sqrt(2)", "2"},
+                {"(1/9)*9", "9"}
+
             };
 
             for (int i = 0; i < testStrings.GetLength(0); i++) {
