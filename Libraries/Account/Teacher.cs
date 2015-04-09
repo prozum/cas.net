@@ -53,7 +53,7 @@ namespace Account
             var client = new WebClient ();
             client.Encoding = System.Text.Encoding.UTF8;
 
-            string msg = "AddAssignment " + grade + " " + username + " " + password + " " + filename + " " + file;
+            string msg = "AddFeedback " + grade + " " + username + " " + password + " " + filename + " " + file;
             string response = client.UploadString(host, msg);
 
             return response;

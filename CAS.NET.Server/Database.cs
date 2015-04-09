@@ -184,6 +184,7 @@ namespace CAS.NET.Server
                 {
                     if (rdr.HasRows)
                     {
+                        rdr.Read();
                         file = rdr.GetString(FileColumn);
                     }
                     else
@@ -198,15 +199,15 @@ namespace CAS.NET.Server
 
         public void AddFeedback(string filename, string file, string grade)
         {
+            string username = String.Empty;
+            const int UsernameColumn = 0;
+
             using (conn = new MySqlConnection(db))
             {
                 conn.Open();
-                const string stm = "SELECT VERSION()";
-                const int UsernameColumn = 0;
-                string username;
+                const string stm = "SELECT * FROM Completed WHERE FileName = @filename AND Grade = @grade AND FeedbackGiven = @feedback";
 
                 var cmd = new MySqlCommand(stm, conn);
-                cmd.CommandText = "SELECT * FROM Completed WHERE FileName = @filename AND Grade = @grade AND FeedbackGiven = @feedback";
                 cmd.Parameters.AddWithValue("@filename", filename);
                 cmd.Parameters.AddWithValue("@grade", grade);
                 cmd.Parameters.AddWithValue("@feedback", 0);
@@ -217,21 +218,36 @@ namespace CAS.NET.Server
                     {
                         rdr.Read();
                         username = rdr.GetString(UsernameColumn);
-
-                        cmd.CommandText = "INSERT INTO Feedback WHERE Username = @username AND FileName = @filename AND File = @file AND Grade = @grade";
-                        cmd.Parameters.AddWithValue("@username", username);
-                        cmd.Parameters.AddWithValue("@filename", filename);
-                        cmd.Parameters.AddWithValue("@file", file);
-                        cmd.Parameters.AddWithValue("@grade", grade);
-                        cmd.ExecuteNonQuery();
-
-                        cmd.CommandText = "UPDATE Completed SET FeedbackGiven = @feedback WHERE Username = @username AND FileName = @filename AND Grade = @grade";
-                        cmd.Parameters.AddWithValue("@feedback", 1);
-                        cmd.Parameters.AddWithValue("@username", username);
-                        cmd.Parameters.AddWithValue("@filename", filename);
-                        cmd.Parameters.AddWithValue("@grade", grade);
-                        cmd.ExecuteNonQuery();
                     }
+                }
+            }
+
+            Console.WriteLine("nooot yet");
+
+            if (username != String.Empty)
+            {
+                using (conn = new MySqlConnection(db))
+                {
+                    conn.Open();
+                    var cmd = new MySqlCommand("INSERT INTO Feedback(Username, FileName, File, Grade) Values(@username, @filename, @file, @grade)", conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@filename", filename);
+                    cmd.Parameters.AddWithValue("@file", file);
+                    cmd.Parameters.AddWithValue("@grade", grade);
+                    cmd.ExecuteNonQuery();
+                }
+
+                Console.WriteLine("not yet");
+
+                using (conn = new MySqlConnection(db))
+                {
+                    conn.Open();
+                    var cmd = new MySqlCommand("UPDATE Completed SET FeedbackGiven = @newfeedback WHERE Username = @username AND FileName = @filename AND Grade = @grade", conn);
+                    cmd.Parameters.AddWithValue("@newfeedback", 1);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@filename", filename);
+                    cmd.Parameters.AddWithValue("@grade", grade);
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
@@ -352,7 +368,7 @@ namespace CAS.NET.Server
 			return file;
 		}
 
-        public int ValidateUser(string username, string password)
+        public int CheckPrivilege(string username, string password)
         {
             const int PrivilegeColumn = 3;
             const string stm = "SELECT * FROM Account WHERE Username = @username AND Password = @password";

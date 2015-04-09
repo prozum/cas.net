@@ -14,6 +14,7 @@ namespace CAS.NET.Server
                 throw new ArgumentException ("prefix");
             }
 
+            // start listening for HTTP requests
             using (var listener = new HttpListener()) {
             
                 listener.Prefixes.Add(prefix);
@@ -30,6 +31,7 @@ namespace CAS.NET.Server
                     byte[] buffer;
                     string msg;
 
+                    // copy client message to a buffer
                     using(var memoryStream = new MemoryStream())
                     {
                         reader.CopyTo(memoryStream);
@@ -39,8 +41,8 @@ namespace CAS.NET.Server
 
                     Console.WriteLine(msg);
 
-                    var remsg = ExecuteCommand(msg, db);
-
+                    // execute client message and get message for client
+                    string remsg = ExecuteCommand(msg, db);
                     buffer = System.Text.Encoding.UTF8.GetBytes(remsg);
                     response.ContentLength64 = buffer.Length;
                     System.IO.Stream output = response.OutputStream;
@@ -52,12 +54,14 @@ namespace CAS.NET.Server
 
         public static string ExecuteCommand(string msg, Database db)
         {
+            // decode command from client message and remove it from msg
             string command = msg.Substring(0, msg.IndexOf(" "));
             msg = msg.Substring(command.Length+1);
 
             Console.WriteLine (command);
             Console.WriteLine (msg);
-                
+
+            // decode the command and run serverside code for the command
             switch (command)
             {
             case "AddAssignment":
@@ -95,7 +99,7 @@ namespace CAS.NET.Server
                 file += strArr[i];
             }           
 
-            if (db.ValidateUser(username, password) != 1)
+            if (db.CheckPrivilege(username, password) != 1)
             {
                 return "Invalid teacher";
             }
@@ -112,7 +116,7 @@ namespace CAS.NET.Server
             string username = strArr[0];
             string password = strArr[1];
 
-            if (db.ValidateUser(username, password) != 1)
+            if (db.CheckPrivilege(username, password) != 1)
             {
                 return "Invalid teacher";
             }
@@ -129,7 +133,7 @@ namespace CAS.NET.Server
             string password = strArr[2];
             string filename = strArr[3];           
 
-            if (db.ValidateUser(username, password) != 1)
+            if (db.CheckPrivilege(username, password) != 1)
             {
                 return "Invalid teacher";
             }
@@ -153,7 +157,7 @@ namespace CAS.NET.Server
                 file += strArr[i];
             }
 
-            if (db.ValidateUser(username, password) != 1)
+            if (db.CheckPrivilege(username, password) != 1)
             {
                 return "Invalid teacher";
             }
@@ -171,7 +175,10 @@ namespace CAS.NET.Server
             string password = strArr[1];
             string grade = db.GetGrade(username, password);
 
-            if (db.ValidateUser(username, password) != 0)
+            Console.WriteLine(username + "end");
+            Console.WriteLine (password + "end");
+
+            if (db.CheckPrivilege(username, password) != 0)
             {
                 return "Invalid student";
             }
@@ -188,7 +195,7 @@ namespace CAS.NET.Server
             string filename = strArr[2];
             string grade = db.GetGrade(username, password);
 
-            if (db.ValidateUser(username, password) != 0)
+            if (db.CheckPrivilege(username, password) != 0)
             {
                 return "Invalid student";
             }
@@ -210,14 +217,14 @@ namespace CAS.NET.Server
                 file += strArr[i];
             }
 
-            if (db.ValidateUser(username, password) != 0)
+            if (db.CheckPrivilege(username, password) != 0)
             {
                 return "Invalid student";
             }
 
             db.AddCompleted(username, filename, file, grade);
 
-            return "Successfully added assignment";
+            return "Successfully added completed assignment";
         }
 
 		public static string StudentGetFeedback(string msg, Database db)
@@ -229,7 +236,7 @@ namespace CAS.NET.Server
             string filename = strArr[2];
             string grade = db.GetGrade(username, password);
 
-			if (db.ValidateUser(username, password) != 0)
+			if (db.CheckPrivilege(username, password) != 0)
 			{
 				return "Invalid student";
 			}
