@@ -17,7 +17,6 @@ namespace Ast
 
         public override Expression Evaluate()
         {
-
             return new Boolean((new Greater(left, right).Evaluate() as Boolean).value == false && (new Lesser(left, right).Evaluate() as Boolean).value == false);
         }
     }

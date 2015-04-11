@@ -24,6 +24,12 @@ namespace Ast
                 {
                     var paramNames = new List<string>();
 
+                    if (functionDefinitions.ContainsKey(((exp as Assign).left as UserDefinedFunction).identifier))
+                    {
+                        functionDefinitions.Remove(((exp as Assign).left as UserDefinedFunction).identifier);
+                        functionParams.Remove(((exp as Assign).left as UserDefinedFunction).identifier);
+                    }
+
                     foreach (var item in ((exp as Assign).left as Function).args)
                     {   
                         if (item is Symbol)
@@ -43,6 +49,11 @@ namespace Ast
                 }
                 else if ((exp as Assign).left is Symbol)
                 {
+                    if (variableDefinitions.ContainsKey(((exp as Assign).left as Symbol).symbol))
+                    {
+                        variableDefinitions.Remove(((exp as Assign).left as Symbol).symbol);
+                    }
+
                     variableDefinitions.Add(((exp as Assign).left as Symbol).symbol, (exp as Assign).right);
 
                     return new Error("Varialbe defined");
@@ -54,8 +65,23 @@ namespace Ast
             }
             else
             {
-                return exp.Simplify().Evaluate();
+                return new Error(SimplifyExp(exp).ToString());
+                return SimplifyExp(exp).Evaluate();
             }
+        }
+
+        public static Expression SimplifyExp(Expression exp)
+        {
+            var prevExp = "";
+            
+            do
+            {
+                prevExp = exp.ToString();
+
+                exp = exp.Simplify();
+            } while (exp.ToString() != prevExp);
+
+            return exp;
         }
 
         public Expression Expand(string inputString)

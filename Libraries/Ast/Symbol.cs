@@ -8,6 +8,7 @@ namespace Ast
         public Number prefix, exponent;
         public string symbol;
 
+        public Symbol() : this(null, null, new Integer(1), new Integer(1)) { }
         public Symbol(Evaluator evaluator, string sym) : this(evaluator, sym, new Integer(1), new Integer(1)) { }
         public Symbol(Evaluator evaluator, string sym, Number prefix, Number exponent)
         {
@@ -64,22 +65,39 @@ namespace Ast
 
         public override bool CompareTo(Expression other)
         {
-            var res = base.CompareTo(other);
+            Expression thisEvaluated, otherEvaluated;
+            var sameType = base.CompareTo(other);
 
-            if (!(this.Evaluate() is Error || other.Evaluate() is Error) && (new BooleanEqual(this.Evaluate(), other.Evaluate()).Evaluate() as Boolean).value)
+            if (!((thisEvaluated = this.Evaluate()) is Error || (otherEvaluated = other.Evaluate()) is Error))
             {
-                return true;
+                return (new BooleanEqual(this.Evaluate(), other.Evaluate()).Evaluate() as Boolean).value;
             }
 
-            if (res)
+            if (sameType)
             {
-                if (!(symbol == (other as Symbol).symbol && prefix == (other as Symbol).prefix && exponent == (other as Symbol).exponent))
+                if (symbol == (other as Symbol).symbol && prefix.CompareTo((other as Symbol).prefix) && exponent.CompareTo((other as Symbol).exponent))
                 {
-                    res = false;
+                    return true;
                 }
+
+                return false;
             }
 
-            return res;
+            return false;
+        }
+
+        public override Expression Simplify()
+        {
+            if (prefix.CompareTo(new Integer(0)))
+            {
+                return new Integer(0);
+            }
+            if (exponent.CompareTo(new Integer(0)))
+            {
+                return new Integer(1);
+            }
+
+            return base.Simplify();
         }
     }
 }

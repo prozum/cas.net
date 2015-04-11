@@ -76,7 +76,7 @@ namespace Ast
                 } 
                 else 
                 {
-                    curExp = new Error ("Error in :" + parseReader.ToString());
+                    curExp = new Error ("Error in: " + parseReader.ToString());
                 }
 
                 if (curExp is Error) 
