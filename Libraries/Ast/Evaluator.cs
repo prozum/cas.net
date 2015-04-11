@@ -63,9 +63,16 @@ namespace Ast
                     return new Error("Left expression is not a variable or function");
                 }
             }
+            else if (exp is Simplify)
+            {
+                return new Error((exp as Simplify).Evaluate().ToString());
+            }
+            else if (exp is Expand)
+            {
+                return new Error((exp as Expand).Evaluate().ToString());
+            }
             else
             {
-                return new Error(SimplifyExp(exp).ToString());
                 return SimplifyExp(exp).Evaluate();
             }
         }
@@ -84,9 +91,8 @@ namespace Ast
             return exp;
         }
 
-        public Expression Expand(string inputString)
+        public static Expression ExpandExp(Expression exp)
         {
-            var exp = Parser.Parse(this, inputString);
             var prevExp = "";
 
             do

@@ -397,5 +397,25 @@ namespace Ast
             throw new NotImplementedException();
         }
     }
+
+    public class Simplify : UnaryOperation
+    {
+        public Simplify(string identifier, Expression arg) : base(identifier, arg) { }
+
+        public override Expression Evaluate()
+        {
+            return Evaluator.SimplifyExp(args[0]);
+        }
+    }
+
+    public class Expand : UnaryOperation
+    {
+        public Expand(string identifier, Expression arg) : base(identifier, arg) { }
+
+        public override Expression Evaluate()
+        {
+            return Evaluator.ExpandExp(args[0]);
+        }
+    }
 }
 
