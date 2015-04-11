@@ -41,6 +41,11 @@ namespace Ast
 
         public override Expression Evaluate()
         {
+            return GetValue().Evaluate();
+        }
+
+        private Expression GetValue()
+        {
             Expression res;
 
             if (this.functionCall is UserDefinedFunction)
@@ -48,7 +53,7 @@ namespace Ast
                 if (functionCall.tempDefinitions.ContainsKey(symbol))
                 {
                     functionCall.tempDefinitions.TryGetValue(symbol, out res);
-                    return new Mul(prefix, new Exp(res, exponent)).Evaluate();
+                    return new Mul(prefix, new Exp(res, exponent));
                 }
             }
             else
@@ -56,34 +61,26 @@ namespace Ast
                 if (evaluator.variableDefinitions.ContainsKey(symbol))
                 {
                     evaluator.variableDefinitions.TryGetValue(symbol, out res);
-                    return new Mul(prefix, new Exp(res, exponent)).Evaluate();
+                    return new Mul(prefix, new Exp(res, exponent));
                 }
             }
 
-            return new Error("Could not evaluate: " + symbol);
+            return new Error("Could not get Symbol value");
         }
 
         public override bool CompareTo(Expression other)
         {
-            Expression thisEvaluated, otherEvaluated;
-            var sameType = base.CompareTo(other);
-
-            if (!((thisEvaluated = this.Evaluate()) is Error || (otherEvaluated = other.Evaluate()) is Error))
-            {
-                return (new BooleanEqual(this.Evaluate(), other.Evaluate()).Evaluate() as Boolean).value;
-            }
-
-            if (sameType)
+            if (other is Symbol)
             {
                 if (symbol == (other as Symbol).symbol && prefix.CompareTo((other as Symbol).prefix) && exponent.CompareTo((other as Symbol).exponent))
                 {
                     return true;
                 }
 
-                return false;
+                return GetValue().CompareTo((other as Symbol).GetValue());
             }
 
-            return false;
+            return other.CompareTo(this.GetValue());
         }
 
         public override Expression Simplify()

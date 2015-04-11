@@ -51,21 +51,17 @@ namespace Ast
 
         public override bool CompareTo(Expression other)
         {
-            var res = base.CompareTo(other);
-
-            if (res)
+            if (other is Function)
             {
-                if (identifier == (other as Function).identifier && prefix.CompareTo((other as Function).prefix) && exponent.CompareTo((other as Function).exponent))
-                {
-                    res = CompareArgsTo(other as Function);
-                }
-                else
-                {
-                    res = false;
-                }
+                return identifier == (other as Function).identifier && prefix.CompareTo((other as Function).prefix) && exponent.CompareTo((other as Function).exponent) && CompareArgsTo(other as Function);
             }
 
-            return res;
+            if (this is UserDefinedFunction)
+            {
+                return (this as UserDefinedFunction).GetValue().CompareTo(other);
+            }
+
+            return false;
         }
 
         public bool CompareArgsTo(Function other)
@@ -119,6 +115,11 @@ namespace Ast
 
         public override Expression Evaluate()
         {
+            return GetValue().Evaluate();
+        }
+
+        public Expression GetValue()
+        {
             List<string> functionParemNames;
             Expression res;
 
@@ -142,7 +143,7 @@ namespace Ast
 
                     res.SetFunctionCall(this);
 
-                    return new Mul(prefix, new Exp(res, exponent)).Evaluate();
+                    return new Mul(prefix, new Exp(res, exponent));
                 }
                 else if (functionParemNames.Count == 0)
                 {

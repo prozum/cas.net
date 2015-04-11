@@ -69,25 +69,11 @@ namespace Ast
 
         public override bool CompareTo(Expression other)
         {
-            Expression thisEvaluated, otherEvaluated;
+            Expression thisEvaluated = Evaluator.SimplifyExp(Evaluate());
+            Expression otherEvaluated = Evaluator.SimplifyExp(other.Evaluate());
             bool sameType = base.CompareTo(other);
 
-            if ((thisEvaluated = Evaluate()) is Error || (otherEvaluated = other.Evaluate()) is Error)
-            {
-                if (sameType)
-                {
-                    if (Evaluator.SimplifyExp(left).CompareTo(Evaluator.SimplifyExp((other as Operator).left)) && Evaluator.SimplifyExp(right).CompareTo(Evaluator.SimplifyExp((other as Operator).right)))
-                    {
-                        return true;
-                    }
-
-                    return false;
-                }
-
-                return false;
-            }
-
-             return (new BooleanEqual(thisEvaluated, otherEvaluated).Evaluate() as Boolean).value;
+            return thisEvaluated.CompareTo(otherEvaluated);
         }
 
         protected void NewFunction(Expression left, Expression right, ref Expression res)
@@ -216,7 +202,7 @@ namespace Ast
         public Add(Expression left, Expression right) : base(left, right)
         {
             symbol = "+";
-            priority = 10;
+            priority = 20;
         }
 
         public override Expression Evaluate ()
@@ -448,7 +434,7 @@ namespace Ast
         public Sub(Expression left, Expression right) : base(left, right)
         {
             symbol = "-";
-            priority = 10;
+            priority = 20;
         }
 
         public override Expression Evaluate ()
@@ -578,7 +564,7 @@ namespace Ast
         public Mul(Expression left, Expression right) : base(left, right)
         {
             symbol = "*";
-            priority = 20;
+            priority = 30;
         }
 
         public override Expression Evaluate ()
@@ -731,7 +717,7 @@ namespace Ast
         public Div(Expression left, Expression right) : base(left, right)
         {
             symbol = "/";
-            priority = 20;
+            priority = 30;
         }
 
         /* fix errors */
@@ -885,7 +871,7 @@ namespace Ast
         public Exp(Expression left, Expression right) : base(left, right)
         {
             symbol = "^";
-            priority = 30;
+            priority = 40;
         }
 
         public override Expression Evaluate()
