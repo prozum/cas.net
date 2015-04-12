@@ -161,7 +161,7 @@ namespace Ast
                 {
                     nextOp = ops.Peek ();
 
-                    if (curOp.priority > nextOp.priority) 
+                    if (curOp.priority >= nextOp.priority) 
                     {
                         curOp.left = exs.Pop ();
 
