@@ -19,6 +19,7 @@ namespace Account
         {
             var client = new WebClient();
             client.Encoding = System.Text.Encoding.UTF8;
+            client.Credentials = new NetworkCredential(username, password);
 
             string msg = "AddAssignment " + checksum + " " + grade + " " + username + " " + password + " " + filename + " " + file;
             string response = client.UploadString(host, msg);
@@ -30,6 +31,7 @@ namespace Account
         {
             var client = new WebClient();
             client.Encoding = System.Text.Encoding.UTF8;
+            client.Credentials = new NetworkCredential(username, password);
 
             string msg = "GetCompleted " + grade + " " + username + " " + password + " " + filename;
             string response = client.UploadString(host, msg);
@@ -41,6 +43,7 @@ namespace Account
         {
             var client = new WebClient();
             client.Encoding = System.Text.Encoding.UTF8;
+            client.Credentials = new NetworkCredential(username, password);
 
             string msg = "TeacherGetAssignmentList " + username + " " + password;
             string response = client.UploadString(host, msg);
@@ -52,6 +55,7 @@ namespace Account
         {
             var client = new WebClient();
             client.Encoding = System.Text.Encoding.UTF8;
+            client.Credentials = new NetworkCredential(username, password);
 
             string msg = "AddFeedback " + grade + " " + username + " " + password + " " + filename + " " + file;
             string response = client.UploadString(host, msg);

@@ -21,6 +21,7 @@ namespace CAS.NET.Server
             {
             
                 listener.Prefixes.Add(prefix);
+                listener.AuthenticationSchemes = AuthenticationSchemes.Basic;
                 listener.Start();
 
                 while (true)
@@ -29,6 +30,10 @@ namespace CAS.NET.Server
                     var context = listener.GetContext();
                     var request = context.Request;
                     var response = context.Response;
+
+                    HttpListenerBasicIdentity identity = (HttpListenerBasicIdentity)context.User.Identity;
+                    Console.WriteLine(identity.Name);
+                    Console.WriteLine(identity.Password);
 
                     Stream reader = request.InputStream;
                     byte[] buffer;
