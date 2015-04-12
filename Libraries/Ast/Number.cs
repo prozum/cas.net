@@ -26,42 +26,23 @@ namespace Ast
 
         public override bool CompareTo(Expression other)
         {
-            if (other is Number)
+            Expression evaluatedOther;
+
+            if (!((evaluatedOther = other.Evaluate()) is Error))
             {
                 if (other is Integer)
                 {
-                    if (value == (other as Integer).value)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    return value == (other as Integer).value;
                 }
 
                 if (other is Rational)
                 {
-                    if (value == (other as Rational).value.value)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    return value == (other as Rational).value.value;
                 }
 
                 if (other is Irrational)
                 {
-                    if (value == (other as Irrational).value)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    return value == (other as Irrational).value;
                 }
 
                 return false;
@@ -103,42 +84,23 @@ namespace Ast
 
         public override bool CompareTo(Expression other)
         {
-            if (other is Number)
+            Expression evaluatedOther;
+
+            if (!((evaluatedOther = other.Evaluate()) is Error))
             {
                 if (other is Integer)
                 {
-                    if (value.value == (other as Integer).value)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    return value.value == (other as Integer).value;
                 }
 
                 if (other is Rational)
                 {
-                    if (value.value == (other as Rational).value.value)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    return value.value == (other as Rational).value.value;
                 }
 
                 if (other is Irrational)
                 {
-                    if (value.value == (other as Irrational).value)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    return value.value == (other as Irrational).value;
                 }
 
                 return false;
@@ -166,42 +128,23 @@ namespace Ast
 
         public override bool CompareTo(Expression other)
         {
-            if (other is Number)
+            Expression evaluatedOther;
+
+            if (!((evaluatedOther = other.Evaluate()) is Error))
             {
                 if (other is Integer)
                 {
-                    if (value == (other as Integer).value)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    return value == (other as Integer).value;
                 }
 
                 if (other is Rational)
                 {
-                    if (value == (other as Rational).value.value)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    return value == (other as Rational).value.value;
                 }
 
                 if (other is Irrational)
                 {
-                    if (value == (other as Irrational).value)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    return value == (other as Irrational).value;
                 }
 
                 return false;
@@ -255,20 +198,8 @@ namespace Ast
 
         public override bool CompareTo(Expression other)
         {
-            var res = base.CompareTo(other);
-
-            if (res)
-            {
-                if (value == (other as Boolean).value)
-                {
-                    res = true;
-                }
-            }
-
-            return res;
+            return base.CompareTo(other) && value == (other as Boolean).value;
         }
     }
-
-
 }
 

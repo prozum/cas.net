@@ -80,30 +80,14 @@ namespace ImportExport
 
             #endregion
 
-            #region Checksum
 
-            // Validate using BSD Checksum
-            Console.WriteLine("BSD:");
-            string ChecksumString;
-            Console.WriteLine("person == person");
-            PrintValidation(
-                CompareBSDChecksum(
-                    Checksum.GetBSDChecksum(
-                        Export.Serialize(person)), 
-                    Checksum.GetBSDChecksum(
-                        Import.ReadSerializedFromCasFile("person", ""))));
-            Console.WriteLine("person == person2");
-            PrintValidation(
-                CompareBSDChecksum(
-                    Checksum.GetBSDChecksum(
-                        Export.Serialize(person)), 
-                    Checksum.GetBSDChecksum(
-                        Import.ReadSerializedFromCasFile("person2", ""))));
+            #region Checksum
 
             Console.WriteLine("\nMD5:");
             Console.WriteLine("person == person");
 
             // Valudate using MD5 hash
+            string ChecksumString;
             string S_CSumEx;
             string S_CSumIm;
             bool Valid;

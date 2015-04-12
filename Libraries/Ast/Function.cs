@@ -51,21 +51,17 @@ namespace Ast
 
         public override bool CompareTo(Expression other)
         {
-            var res = base.CompareTo(other);
-
-            if (res)
+            if (other is Function)
             {
-                if (identifier == (other as Function).identifier && prefix == (other as Function).prefix && exponent == (other as Function).exponent)
-                {
-                    res = CompareArgsTo(other as Function);
-                }
-                else
-                {
-                    res = false;
-                }
+                return identifier == (other as Function).identifier && prefix.CompareTo((other as Function).prefix) && exponent.CompareTo((other as Function).exponent) && CompareArgsTo(other as Function);
             }
 
-            return res;
+            if (this is UserDefinedFunction)
+            {
+                return (this as UserDefinedFunction).GetValue().CompareTo(other);
+            }
+
+            return false;
         }
 
         public bool CompareArgsTo(Function other)
@@ -90,12 +86,27 @@ namespace Ast
 
             return res;
         }
+
+        public override Expression Simplify()
+        {
+            if (prefix.CompareTo(new Integer(0)))
+            {
+                return new Integer(0);
+            }
+            if (exponent.CompareTo(new Integer(0)))
+            {
+                return new Integer(1);
+            }
+
+            return base.Simplify();
+        }
     }
 
     public class UserDefinedFunction : Function
     {
         public Dictionary<string, Expression> tempDefinitions;
 
+        public UserDefinedFunction() : this(null, null, new Integer(1), new Integer(1)) { }
         public UserDefinedFunction(string identifier, List<Expression> args) : this(identifier, args, new Integer(1), new Integer(1)) { }
         public UserDefinedFunction(string identifier, List<Expression> args, Number prefix, Number exponent) : base(identifier, prefix, exponent)
         {
@@ -103,6 +114,11 @@ namespace Ast
         }
 
         public override Expression Evaluate()
+        {
+            return GetValue().Evaluate();
+        }
+
+        public Expression GetValue()
         {
             List<string> functionParemNames;
             Expression res;
@@ -127,7 +143,7 @@ namespace Ast
 
                     res.SetFunctionCall(this);
 
-                    return new Mul(prefix, new Exp(res, exponent)).Evaluate();
+                    return new Mul(prefix, new Exp(res, exponent));
                 }
                 else if (functionParemNames.Count == 0)
                 {
@@ -147,6 +163,7 @@ namespace Ast
 
     public abstract class UnaryOperation : Function
     {
+        public UnaryOperation() : this(null, null, new Integer(1), new Integer(1)) { }
         public UnaryOperation(string identifier, Expression arg) : this(identifier, arg, new Integer(1), new Integer(1)) { }
         public UnaryOperation(string identifier, Expression arg, Number prefix, Number exponent) : base(identifier, prefix, exponent)
         {
@@ -157,6 +174,7 @@ namespace Ast
 
     public class Sin : UnaryOperation
     {
+        public Sin() : this(null, null, new Integer(1), new Integer(1)) { }
         public Sin(string identifier, Expression arg) : base(identifier, arg) { }
         public Sin(string identifier, Expression arg, Number prefix, Number exponent) : base(identifier, arg, prefix, exponent) { }
 
@@ -186,6 +204,7 @@ namespace Ast
 
     public class ASin : UnaryOperation
     {
+        public ASin() : this(null, null, new Integer(1), new Integer(1)) { }
         public ASin(string identifier, Expression arg) : base(identifier, arg) { }
         public ASin(string identifier, Expression arg, Number prefix, Number exponent) : base(identifier, arg, prefix, exponent) { }
 
@@ -213,6 +232,7 @@ namespace Ast
 
     public class Cos : UnaryOperation
     {
+        public Cos() : this(null, null, new Integer(1), new Integer(1)) { }
         public Cos(string identifier, Expression arg) : base(identifier, arg) { }
         public Cos(string identifier, Expression arg, Number prefix, Number exponent) : base(identifier, arg, prefix, exponent) { }
 
@@ -241,6 +261,7 @@ namespace Ast
 
     public class ACos : UnaryOperation
     {
+        public ACos() : this(null, null, new Integer(1), new Integer(1)) { }
         public ACos(string identifier, Expression arg) : base(identifier, arg) { }
         public ACos(string identifier, Expression arg, Number prefix, Number exponent) : base(identifier, arg, prefix, exponent) { }
 
@@ -269,6 +290,7 @@ namespace Ast
 
     public class Tan : UnaryOperation
     {
+        public Tan() : this(null, null, new Integer(1), new Integer(1)) { }
         public Tan(string identifier, Expression arg) : base(identifier, arg) { }
         public Tan(string identifier, Expression arg, Number prefix, Number exponent) : base(identifier, arg, prefix, exponent) { }
 
@@ -297,6 +319,7 @@ namespace Ast
 
     public class ATan : UnaryOperation
     {
+        public ATan() : this(null, null, new Integer(1), new Integer(1)) { }
         public ATan(string identifier, Expression arg) : base(identifier, arg) { }
         public ATan(string identifier, Expression arg, Number prefix, Number exponent) : base(identifier, arg, prefix, exponent) { }
 
@@ -325,6 +348,7 @@ namespace Ast
 
     public class Sqrt : UnaryOperation
     {
+        public Sqrt() : this(null, null, new Integer(1), new Integer(1)) { }
         public Sqrt(string identifier, Expression arg) : base(identifier, arg) { }
         public Sqrt(string identifier, Expression arg, Number prefix, Number exponent) : base(identifier, arg, prefix, exponent) { }
 
@@ -334,7 +358,6 @@ namespace Ast
 
             if (res is Integer)
             {
-
                 return new Mul(prefix, new Exp(new Irrational((decimal)Math.Sqrt((res as Integer).value)), exponent)).Evaluate();
             }
 
@@ -350,6 +373,20 @@ namespace Ast
 
             return new Error("Could not take Sqrt of: " + args[0]);
         }
+
+        public override Expression Simplify()
+        {
+            Expression res;
+
+            if (exponent.CompareTo(new Integer(2)))
+            {
+                res = args[0];
+            }
+
+            res = base.Simplify();
+
+            return res;
+        }
     }
 
     public class Negation : UnaryOperation
@@ -359,6 +396,26 @@ namespace Ast
         public override Expression Evaluate()
         {
             throw new NotImplementedException();
+        }
+    }
+
+    public class Simplify : UnaryOperation
+    {
+        public Simplify(string identifier, Expression arg) : base(identifier, arg) { }
+
+        public override Expression Evaluate()
+        {
+            return Evaluator.SimplifyExp(args[0]);
+        }
+    }
+
+    public class Expand : UnaryOperation
+    {
+        public Expand(string identifier, Expression arg) : base(identifier, arg) { }
+
+        public override Expression Evaluate()
+        {
+            return Evaluator.ExpandExp(args[0]);
         }
     }
 }

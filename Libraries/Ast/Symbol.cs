@@ -8,6 +8,7 @@ namespace Ast
         public Number prefix, exponent;
         public string symbol;
 
+        public Symbol() : this(null, null, new Integer(1), new Integer(1)) { }
         public Symbol(Evaluator evaluator, string sym) : this(evaluator, sym, new Integer(1), new Integer(1)) { }
         public Symbol(Evaluator evaluator, string sym, Number prefix, Number exponent)
         {
@@ -40,6 +41,11 @@ namespace Ast
 
         public override Expression Evaluate()
         {
+            return GetValue().Evaluate();
+        }
+
+        private Expression GetValue()
+        {
             Expression res;
 
             if (this.functionCall is UserDefinedFunction)
@@ -47,7 +53,7 @@ namespace Ast
                 if (functionCall.tempDefinitions.ContainsKey(symbol))
                 {
                     functionCall.tempDefinitions.TryGetValue(symbol, out res);
-                    return new Mul(prefix, new Exp(res, exponent)).Evaluate();
+                    return new Mul(prefix, new Exp(res, exponent));
                 }
             }
             else
@@ -55,31 +61,40 @@ namespace Ast
                 if (evaluator.variableDefinitions.ContainsKey(symbol))
                 {
                     evaluator.variableDefinitions.TryGetValue(symbol, out res);
-                    return new Mul(prefix, new Exp(res, exponent)).Evaluate();
+                    return new Mul(prefix, new Exp(res, exponent));
                 }
             }
 
-            return new Error("Could not evaluate: " + symbol);
+            return new Error("Could not get Symbol value");
         }
 
         public override bool CompareTo(Expression other)
         {
-            var res = base.CompareTo(other);
-
-            if (!(this.Evaluate() is Error || other.Evaluate() is Error) && (new BooleanEqual(this.Evaluate(), other.Evaluate()).Evaluate() as Boolean).value)
+            if (other is Symbol)
             {
-                return true;
-            }
-
-            if (res)
-            {
-                if (!(symbol == (other as Symbol).symbol && prefix == (other as Symbol).prefix && exponent == (other as Symbol).exponent))
+                if (symbol == (other as Symbol).symbol && prefix.CompareTo((other as Symbol).prefix) && exponent.CompareTo((other as Symbol).exponent))
                 {
-                    res = false;
+                    return true;
                 }
+
+                return GetValue().CompareTo((other as Symbol).GetValue());
             }
 
-            return res;
+            return other.CompareTo(this.GetValue());
+        }
+
+        public override Expression Simplify()
+        {
+            if (prefix.CompareTo(new Integer(0)))
+            {
+                return new Integer(0);
+            }
+            if (exponent.CompareTo(new Integer(0)))
+            {
+                return new Integer(1);
+            }
+
+            return base.Simplify();
         }
     }
 }

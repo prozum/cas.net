@@ -10,22 +10,7 @@ namespace ImEx
 {
     public static class Checksum
     {
-        // BSD checksum algotithm, rewritten for C#
-        // Computes 16 bit checksum
-        /*
-        public static int GetBSDChecksum (string checksumString)
-        {
-            int checksum = 0;
-
-            foreach (char c in checksumString) {
-                checksum = (checksum >> 1) + ((checksum & 1) << 15);
-                checksum += c;
-                checksum &= 0xffff;
-            }
-            return checksum;
-        }
-        */
-
+        // MD5 Checksum
         // Generates a 128 bit (16 byte) hash in hexadecimal form
         public static string GetMd5Hash(string hashableString)
         {
@@ -40,49 +25,6 @@ namespace ImEx
                 return sBuileder.ToString();
             }
         }
-        /*
-        #region BSD Compare
-
-        // Takes two strings, generates their BSD Hashes, and compare them.
-        // Returns true if they are identical
-        public static bool VerifyBSDString (string verStringA, string verStringB)
-        {
-            int verHashA = GetBSDChecksum (verStringA);
-            int verHashB = GetBSDChecksum (verStringB);
-
-            if (verHashA == verHashB) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        // Takes two BSD Hashes and compare them.
-        // Returns true if they are identical
-        public static bool VerifyBSDHash (int verHashA, int verHashB)
-        {
-            if (verHashA == verHashB) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        // Takes one BSD Hash and one string to generate BSD Hash on, and compare them.
-        // Returns true if they are identical
-        public static bool VerifyBSDHashString (int verHashA, string verString)
-        {
-            int verHashB = GetBSDChecksum (verString);
-
-            if (verHashA == verHashB) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        #endregion
-        */
 
         #region MD5 Compare
 

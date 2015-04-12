@@ -12,13 +12,12 @@ namespace Ast
         public BooleanEqual(Expression left, Expression right) : base(left, right)
         {
             symbol = "==";
-            priority = 0;
+            priority = 10;
         }
 
         public override Expression Evaluate()
         {
-
-            return new Boolean((new Greater(left, right).Evaluate() as Boolean).value == false && (new Lesser(left, right).Evaluate() as Boolean).value == false);
+            return new Boolean(left.CompareTo(right));
         }
     }
 
@@ -28,7 +27,7 @@ namespace Ast
         public Lesser(Expression left, Expression right) : base(left, right)
         {
             symbol = "<";
-            priority = 0;
+            priority = 10;
         }
 
         public override Expression Evaluate()
@@ -43,7 +42,7 @@ namespace Ast
         public LesserOrEqual(Expression left, Expression right) : base(left, right)
         {
             symbol = "<=";
-            priority = 0;
+            priority = 10;
         }
 
         public override Expression Evaluate()
@@ -58,57 +57,66 @@ namespace Ast
         public Greater(Expression left, Expression right) : base(left, right)
         {
             symbol = ">";
-            priority = 0;
+            priority = 10;
         }
 
         public override Expression Evaluate()
         {
-            if (left is Integer && right is Integer)
-            {
-                return new Boolean((left as Integer).value > (right as Integer).value);
-            }
+            Expression evaluatedLeft, evaluatedRight;
 
-            if (left is Integer && right is Rational)
+            if (!((evaluatedLeft = left.Evaluate()) is Error || (evaluatedRight = right.Evaluate()) is Error))
             {
-                return new Greater(new Rational((left as Integer), new Integer(1)), right).Evaluate();
-            }
+                if (evaluatedLeft is Integer && evaluatedRight is Integer)
+                {
+                    return new Boolean((evaluatedLeft as Integer).value > (evaluatedRight as Integer).value);
+                }
 
-            if (left is Rational && right is Integer)
+                if (evaluatedLeft is Integer && evaluatedRight is Rational)
+                {
+                    return new Greater(new Rational((evaluatedLeft as Integer), new Integer(1)), evaluatedRight).Evaluate();
+                }
+
+                if (evaluatedLeft is Rational && evaluatedRight is Integer)
+                {
+                    return new Greater(evaluatedLeft, new Rational((evaluatedRight as Integer), new Integer(1))).Evaluate();
+                }
+
+                if (evaluatedLeft is Rational && evaluatedRight is Rational)
+                {
+                    return new Boolean((evaluatedLeft as Rational).numerator.value * (evaluatedRight as Rational).denominator.value > (evaluatedRight as Rational).numerator.value * (evaluatedLeft as Rational).denominator.value);
+                }
+
+                if (evaluatedLeft is Integer && evaluatedRight is Irrational)
+                {
+                    return new Boolean((evaluatedLeft as Integer).value > (evaluatedRight as Irrational).value);
+                }
+
+                if (evaluatedLeft is Irrational && evaluatedRight is Integer)
+                {
+                    return new Boolean((evaluatedLeft as Irrational).value > (evaluatedRight as Integer).value);
+                }
+
+                if (evaluatedLeft is Irrational && evaluatedRight is Irrational)
+                {
+                    return new Boolean((evaluatedLeft as Irrational).value > (evaluatedRight as Irrational).value);
+                }
+
+                if (evaluatedLeft is Irrational && evaluatedRight is Rational)
+                {
+                    return new Boolean((evaluatedLeft as Irrational).value > (evaluatedRight as Rational).value.value);
+                }
+
+                if (evaluatedLeft is Rational && evaluatedRight is Irrational)
+                {
+                    return new Boolean((evaluatedLeft as Rational).value.value > (evaluatedRight as Irrational).value);
+                }
+
+                return new Boolean(false);
+            }
+            else
             {
-                return new Greater(left, new Rational((right as Integer), new Integer(1))).Evaluate();
+                return new Boolean(false);
             }
-
-            if (left is Rational && right is Rational)
-            {
-                return new Boolean((left as Rational).numerator.value * (right as Rational).denominator.value > (right as Rational).numerator.value * (left as Rational).denominator.value);
-            }
-
-            if (left is Integer && right is Irrational)
-            {
-                return new Boolean((left as Integer).value > (right as Irrational).value);
-            }
-
-            if (left is Irrational && right is Integer)
-            {
-                return new Boolean((left as Irrational).value > (right as Integer).value);
-            }
-
-            if (left is Irrational && right is Irrational)
-            {
-                return new Boolean((left as Irrational).value > (right as Irrational).value);
-            }
-
-            if (left is Irrational && right is Rational)
-            {
-                return new Boolean((left as Irrational).value > (right as Rational).value.value);
-            }
-
-            if (left is Rational && right is Irrational)
-            {
-                return new Boolean((left as Rational).value.value > (right as Irrational).value);
-            }
-
-            return base.Evaluate();
         }
     }
 
@@ -118,7 +126,7 @@ namespace Ast
         public GreaterOrEqual(Expression left, Expression right) : base(left, right)
         {
             symbol = ">=";
-            priority = 0;
+            priority = 10;
         }
 
         public override Expression Evaluate()
