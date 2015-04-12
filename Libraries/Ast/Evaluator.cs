@@ -56,7 +56,7 @@ namespace Ast
 
                     variableDefinitions.Add(((exp as Assign).left as Symbol).symbol, (exp as Assign).right);
 
-                    return new Error("Varialbe defined");
+                    return new Error("Variable defined");
                 }
                 else
                 {
