@@ -7,15 +7,17 @@ namespace Account
 {
     public class Teacher
     {
-        private int ID;
+        private string username;
+        private string password;
         static string host = "http://localhost:8080/";
 
-        public Teacher(string Name)
+        public Teacher(string username, string password)
         {
-
+            this.username = username;
+            this.password = password;
         }
 
-        public string AddAssignment(string checksum, string file, string filename, string grade, string username, string password)
+        public string AddAssignment(string checksum, string file, string filename, string grade)
         {
             var client = new WebClient();
             client.Encoding = System.Text.Encoding.UTF8;
@@ -27,7 +29,7 @@ namespace Account
             return response;
         }
 
-        public string GetCompleted(string filename, string grade, string username, string password)
+        public string GetCompleted(string filename, string grade)
         {
             var client = new WebClient();
             client.Encoding = System.Text.Encoding.UTF8;
@@ -39,7 +41,7 @@ namespace Account
             return response;
         }
 
-        public string[] GetAssignmentList(string username, string password)
+        public string[] GetAssignmentList()
         {
             var client = new WebClient();
             client.Encoding = System.Text.Encoding.UTF8;
@@ -51,7 +53,7 @@ namespace Account
             return response.Split(' ');
         }
 
-        public string AddFeedback(string file, string filename, string grade, string username, string password)
+        public string AddFeedback(string file, string filename, string grade)
         {
             var client = new WebClient();
             client.Encoding = System.Text.Encoding.UTF8;
