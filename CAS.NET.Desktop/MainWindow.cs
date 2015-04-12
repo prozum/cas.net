@@ -7,8 +7,12 @@ public class MainWindow : Window
     Expression output, input;
 
     Grid grid;
+
     TextView textview;
+    TextBuffer buffer;
+
     Entry entry;
+
 
 
     static void Main(string[] args)
@@ -24,7 +28,7 @@ public class MainWindow : Window
         input = Ast.Parser.Parse (eval, entry.Text);
         output = eval.Evaluation(entry.Text);
 
-        textview.Buffer.Insert(textview.Buffer.StartIter, input.ToString() + " => " + output.ToString() + "\n");
+        buffer.Insert(buffer.StartIter, input.ToString() + " => " + output.ToString() + "\n");
     }
 
     public MainWindow() : base("MainWindow")
@@ -39,13 +43,16 @@ public class MainWindow : Window
         eval = new Evaluator ();
 
         entry = new Entry ();
-        entry.Expand = true;
         entry.Activated += (o, a) => EvaluateEntry ();
-        grid.Attach (entry,0,0,1,1);
+        grid.Attach (entry, 0, 0, 1, 1);
+
         textview = new TextView();
         textview.Expand = true;
-        grid.Attach (textview,0,1,1,1);
-
+        textview.Editable = false;
+        var sw = new ScrolledWindow ();
+        sw.Add(textview);
+        grid.Attach (sw, 0, 1, 1, 1);
+        buffer = textview.Buffer;
 
         ShowAll ();
     }
