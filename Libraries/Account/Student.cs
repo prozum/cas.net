@@ -23,7 +23,7 @@ namespace Account
             client.Encoding = System.Text.Encoding.UTF8;
             client.Credentials = new NetworkCredential(username, password);
 
-            string msg = "AddCompleted " + username + " " + password + " " + filename + " " + file;
+            string msg = "AddCompleted " + filename + " " + file;
             string response = client.UploadString(host, msg);
 
             return response;
@@ -35,7 +35,7 @@ namespace Account
             client.Encoding = System.Text.Encoding.UTF8;
             client.Credentials = new NetworkCredential(username, password);
 
-            string msg = "StudentGetAssignmentList " + username + " " + password;
+            string msg = "StudentGetAssignmentList ";
             string response = client.UploadString(host, msg);
 
             return response.Split(' ');
@@ -47,7 +47,7 @@ namespace Account
             client.Encoding = System.Text.Encoding.UTF8;
             client.Credentials = new NetworkCredential(username, password);
 
-            string msg = "GetAssignment " + username + " " + password + " " + filename;
+            string msg = "GetAssignment " + filename;
             string response = client.UploadString(host, msg);
 
             return response;
@@ -59,7 +59,7 @@ namespace Account
             client.Encoding = System.Text.Encoding.UTF8;
             client.Credentials = new NetworkCredential(username, password);
 
-            string msg = "GetFeedback " + username + " " + password + " " + filename;
+            string msg = "GetFeedback " + filename;
             string response = client.UploadString(host, msg);
 
             return response;

@@ -401,17 +401,16 @@ namespace CAS.NET.Server
             }
         }
 
-        public string GetGrade(string username, string password)
+        public string GetGrade(string username)
         {
             const int GradeColumn = 2;
-            const string stm = "SELECT * FROM Account WHERE Username = @username AND Password = @password";
+            const string stm = "SELECT * FROM Account WHERE Username = @username";
 
             using (conn = new MySqlConnection (db)){
                 conn.Open ();
 
                 var cmd = new MySqlCommand(stm, conn);
                 cmd.Parameters.AddWithValue("@username", username);
-                cmd.Parameters.AddWithValue("@password", password);
 
                 var rdr = cmd.ExecuteReader();
 
