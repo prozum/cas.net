@@ -31,6 +31,8 @@ public class MainWindow : Window
     {
         DeleteEvent += (o, a) => Application.Quit ();
 
+        SetSizeRequest(500, 500);
+
         grid = new Grid ();
         Add (grid);
 
