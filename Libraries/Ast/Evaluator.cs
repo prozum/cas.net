@@ -77,7 +77,6 @@ namespace Ast
             }
             else
             {
-                return new Error(SimplifyExp(exp).ToString());
                 return SimplifyExp(exp).Evaluate();
             }
         }
