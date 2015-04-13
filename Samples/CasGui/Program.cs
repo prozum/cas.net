@@ -8,11 +8,16 @@ namespace Gui.Tests
     {
         VBox oVB;
         VBox iVB;
-        int varMin, varMax, varNum;
+        int globVarMin, globVarMax, globVarNum;
 
         public CASGui()
             : base("CAS.Net gui")
         {
+
+            globVarMax = 10;
+            globVarMin = 1;
+            globVarNum = 2;
+
             SetSizeRequest(300, 500);
             oVB = new VBox(false, 2);
             iVB = new VBox(false, 2);
@@ -39,7 +44,7 @@ namespace Gui.Tests
             exit.Activated += OnActivated;
 
             MenuItem properties = new MenuItem("Properties");
-            properties.Activated += (o, a) => OnActivatedProperties(1, 10, 2);
+            properties.Activated += (o, a) => OnActivatedProperties(globVarMin, globVarMax, globVarNum);
 
             filemenu.Append(properties);
             filemenu.Append(exit);
@@ -104,8 +109,13 @@ namespace Gui.Tests
             Button ok = new Button("Confirm");
             Button cancel = new Button("Cancel");
 
-            cancel.Clicked += delegate
+            cancel.Clicked += (object sender, EventArgs e) => myWindow.Destroy();
+
+            ok.Clicked += delegate(object sender, EventArgs e)
             {
+                globVarMin = sbMin.ValueAsInt;
+                globVarMax = sbMax.ValueAsInt;
+                globVarNum = sbNum.ValueAsInt;
                 myWindow.Destroy();
             };
 
@@ -142,7 +152,7 @@ namespace Gui.Tests
 
         public Label SetupLabAss()
         {
-            Label labAss = new Label(TaskGen.MakeCalcTask(1, 10, 2));
+            Label labAss = new Label(TaskGen.MakeCalcTask(globVarMin, globVarMax, globVarNum));
             return labAss;
         }
 
