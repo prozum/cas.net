@@ -8,7 +8,7 @@ script:
   - sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password passwd'
   - sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password passwd'
   - sudo apt-get -y install mysql-server
-  - mysql -u root -p'passwd' -e "create database if not exists mydb"
+  - mysql -u root -p'passwd' -e 'create database if not exists mydb'
   - xbuild /p:Configuration=Release CAS.NET.sln
 
 notifications:
