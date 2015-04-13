@@ -34,33 +34,33 @@ namespace Ast
                     {   
                         if (item is Symbol)
                         {
-                            paramNames.Add((item as Symbol).symbol);
+                            paramNames.Add((item as Symbol).identifier);
                         } 
                         else
                         {
-                            return new Error("One arg in the function is not a symbol");
+                            return new Error("Evaluator> One arg in the function is not a symbol");
                         }
                     }
 
                     functionParams.Add(((exp as Assign).left as UserDefinedFunction).identifier, paramNames);
                     functionDefinitions.Add(((exp as Assign).left as UserDefinedFunction).identifier, (exp as Assign).right);
 
-                    return new Error("Function defined");
+                    return new Error("Evaluator> Function defined");
                 }
                 else if ((exp as Assign).left is Symbol)
                 {
-                    if (variableDefinitions.ContainsKey(((exp as Assign).left as Symbol).symbol))
+                    if (variableDefinitions.ContainsKey(((exp as Assign).left as Symbol).identifier))
                     {
-                        variableDefinitions.Remove(((exp as Assign).left as Symbol).symbol);
+                        variableDefinitions.Remove(((exp as Assign).left as Symbol).identifier);
                     }
 
-                    variableDefinitions.Add(((exp as Assign).left as Symbol).symbol, (exp as Assign).right);
+                    variableDefinitions.Add(((exp as Assign).left as Symbol).identifier, (exp as Assign).right);
 
-                    return new Error("Variable defined");
+                    return new Error("Evaluator> Variable defined");
                 }
                 else
                 {
-                    return new Error("Left expression is not a variable or function");
+                    return new Error("Evaluator> Left expression is not a variable or function");
                 }
             }
             else if (exp is Simplify)
@@ -73,7 +73,7 @@ namespace Ast
             }
             else
             {
-                //return new Error(SimplifyExp(exp).ToString());
+                return new Error(SimplifyExp(exp).ToString());
                 return SimplifyExp(exp).Evaluate();
             }
         }

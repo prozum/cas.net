@@ -20,7 +20,7 @@ namespace Ast2LaTeX
                 Operator op = (Operator)ex;
                 return AstLatex (op.left) + op.symbol + AstLatex (op.right);
             } else if (ex is Symbol) {
-                return (ex as Symbol).symbol;
+                return (ex as Symbol).identifier;
             } else if (ex is Number) {
                 return ReturnNumberValue (ex as Number);
             } else {

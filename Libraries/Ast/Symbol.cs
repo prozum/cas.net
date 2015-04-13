@@ -3,35 +3,33 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class Symbol : Expression
+    public class Symbol : NotNumber
     {
-        public Number prefix, exponent;
-        public string symbol;
-
         public Symbol() : this(null, null, new Integer(1), new Integer(1)) { }
         public Symbol(Evaluator evaluator, string sym) : this(evaluator, sym, new Integer(1), new Integer(1)) { }
-        public Symbol(Evaluator evaluator, string sym, Number prefix, Number exponent)
+        public Symbol(Evaluator evaluator, string sym, Number prefix, Number exponent) : base(sym, prefix, exponent)
         {
-            this.exponent = exponent;
-            this.prefix = prefix;
-            this.symbol = sym;
             this.evaluator = evaluator;
         }
 
         public override string ToString()
         {
             string res = "";
-
-            if (((prefix is Integer) && (prefix as Integer).value != 1) || ((prefix is Rational) && (prefix as Rational).value.value != 1) || ((prefix is Irrational) && (prefix as Irrational).value != 1))
+            
+             if (prefix.CompareTo(new Integer(-1)))
             {
-                res = prefix.ToString() + symbol;
+                res = "-" + identifier;
+            }
+            else if (!prefix.CompareTo(new Integer(1)))
+            {
+                res = prefix.ToString() + identifier;
             }
             else
             {
-                res = symbol;
+                res = identifier;
             }
 
-            if (((exponent is Integer) && (exponent as Integer).value != 1) || ((exponent is Rational) && (exponent as Rational).value.value != 1) || ((exponent is Irrational) && (exponent as Irrational).value != 1))
+            if (!exponent.CompareTo(new Integer(1)))
             {
                 res += "^" + exponent.ToString();
             }
@@ -44,7 +42,7 @@ namespace Ast
             return GetValue().Evaluate();
         }
 
-        private Expression GetValue() { return GetValue(symbol); }
+        private Expression GetValue() { return GetValue(identifier); }
         private Expression GetValue(string callerSymbol)
         {
             Expression res;
@@ -52,15 +50,15 @@ namespace Ast
             if (this.functionCall is UserDefinedFunction)
             {
 
-                if (functionCall.tempDefinitions.ContainsKey(symbol))
+                if (functionCall.tempDefinitions.ContainsKey(identifier))
                 {
-                    functionCall.tempDefinitions.TryGetValue(symbol, out res);
+                    functionCall.tempDefinitions.TryGetValue(identifier, out res);
 
                     if (res is Symbol)
                     {
-                        if ((res as Symbol).symbol == callerSymbol)
+                        if ((res as Symbol).identifier == callerSymbol)
                         {
-                            return new Error("Could not get value of: " + callerSymbol);
+                            return new Error("Symbol> Could not get value of: " + callerSymbol);
                         }
 
                         return (res as Symbol).GetValue(callerSymbol);
@@ -71,15 +69,15 @@ namespace Ast
             }
             else
             {
-                if (evaluator.variableDefinitions.ContainsKey(symbol))
+                if (evaluator.variableDefinitions.ContainsKey(identifier))
                 {
-                    evaluator.variableDefinitions.TryGetValue(symbol, out res);
+                    evaluator.variableDefinitions.TryGetValue(identifier, out res);
 
                     if (res is Symbol)
                     {
-                        if ((res as Symbol).symbol == callerSymbol)
+                        if ((res as Symbol).identifier == callerSymbol)
                         {
-                            return new Error("Could not get value of: " + callerSymbol);
+                            return new Error("Symbol> Could not get value of: " + callerSymbol);
                         }
 
                         return (res as Symbol).GetValue(callerSymbol);
@@ -89,14 +87,14 @@ namespace Ast
                 }
             }
 
-            return new Error("Could not get Symbol value");
+            return new Error("Symbol> Could not get Symbol value");
         }
 
         public override bool CompareTo(Expression other)
         {
             if (other is Symbol)
             {
-                if (symbol == (other as Symbol).symbol && prefix.CompareTo((other as Symbol).prefix) && exponent.CompareTo((other as Symbol).exponent))
+                if (identifier == (other as Symbol).identifier && prefix.CompareTo((other as Symbol).prefix) && exponent.CompareTo((other as Symbol).exponent))
                 {
                     return true;
                 }

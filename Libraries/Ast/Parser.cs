@@ -54,14 +54,14 @@ namespace Ast
                     switch (parExp.Count())
                     {
                         case 0:
-                            curExp = new Error("Empty parenthesis");
+                            curExp = new Error("Parser> Empty parenthesis");
                             break;
                         case 1:
                             curExp = parExp[0];
                             exs.Push(curExp);
                             break;
                         default:
-                            curExp = new Error("Invalid ',' in parenthesis");
+                            curExp = new Error("Parser> Invalid ',' in parenthesis");
                             break;
                     }
 
@@ -76,7 +76,7 @@ namespace Ast
                 } 
                 else 
                 {
-                    curExp = new Error ("Error in: " + parseReader.ToString());
+                    curExp = new Error("Parser> Error in: " + parseReader.ToString());
                 }
 
                 if (curExp is Error) 
@@ -119,7 +119,7 @@ namespace Ast
                             substring = "";
                             break;
                         case '\uffff':
-                            exs.Add (new Error("No end parenthesis"));
+                            exs.Add(new Error("Parser> No end parenthesis"));
                             return exs;
                         default:
                             substring += curChar;
@@ -146,7 +146,7 @@ namespace Ast
             }
             else if (exs.Count == 0)
             {
-                return new Error("No expressions found");
+                return new Error("Parser> No expressions found");
             }
 
             right = exs.Pop ();
@@ -262,13 +262,13 @@ namespace Ast
                         res = new Expand(identifier.ToLower(), args[0]);
                         break;
                     default:
-                        res = new Error("This should never happen");
+                        res = new Error("Parser> This should never happen");
                         break;
                     }
                 }
                 else
                 {
-                    res = new Error("Unary operation can't have more than one argument");
+                    res = new Error("Parser> Unary operation can't have more than one argument");
                 }
             }
             else
@@ -298,7 +298,7 @@ namespace Ast
                     //More than one dot. Error!
                     if (resultType == NumberType.Irrational )
                     {
-                        return new Error("Parser: unexpected extra decimal seperator in: " + parseReader.ToString());
+                        return new Error("Parser> Parser: unexpected extra decimal seperator in: " + parseReader.ToString());
                     }
 
                     number += (char)parseReader.Read();
@@ -324,7 +324,7 @@ namespace Ast
                 case NumberType.Complex:
                     return new Complex();
                 default:
-                    return new Error ("Parser: unknown error in:" + parseReader.ToString ());
+                    return new Error("Parser> Parser: unknown error in:" + parseReader.ToString());
             }
         }
 
@@ -367,7 +367,7 @@ namespace Ast
             case "^":
                 return new Exp ();
             default:
-                return new Error ("Parser: operator not supported: " + op);
+                return new Error("Parser> Parser: operator not supported: " + op);
             }
         }
     }
