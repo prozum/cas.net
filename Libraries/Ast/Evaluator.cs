@@ -35,7 +35,7 @@ namespace Ast
                         if (item is Symbol)
                         {
                             paramNames.Add((item as Symbol).symbol);
-                        } 
+                        }
                         else
                         {
                             return new Error("One arg in the function is not a symbol");
@@ -70,6 +70,10 @@ namespace Ast
             else if (exp is Expand)
             {
                 return new Error((exp as Expand).Evaluate().ToString());
+            }
+            else if (exp is Range)
+            {
+                return new Error((exp as Range).Evaluate().ToString());
             }
             else
             {

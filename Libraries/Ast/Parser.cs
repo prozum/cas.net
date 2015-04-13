@@ -9,7 +9,7 @@ namespace Ast
     public static class Parser
     {
         static readonly char[] opValidChars = {'=', '<', '>', '+', '-', '*', '/', '^', ':'};
-        static readonly string[] programDefinedFunctions = { "sin", "cos", "tan", "asin", "acos", "atan", "sqrt", "simplify", "expand" };
+        static readonly string[] programDefinedFunctions = { "sin", "cos", "tan", "asin", "acos", "atan", "sqrt", "simplify", "expand","range" };
 
         public static Expression Parse(string parseString)
         {
@@ -295,6 +295,9 @@ namespace Ast
                         break;
                     case "expand":
                         res = new Expand(identifier.ToLower(), args[0]);
+                        break;
+                    case "range":
+                        res = new Range(identifier.ToLower(), args[0]);
                         break;
                     default:
                         res = new Error("This should never happen");
