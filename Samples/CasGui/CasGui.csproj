@@ -73,4 +73,10 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\TaskGenLib\TaskGenLib.csproj">
+      <Project>{882174F5-0B72-4DF3-997F-BD2EB16C6E6C}</Project>
+      <Name>TaskGenLib</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>
