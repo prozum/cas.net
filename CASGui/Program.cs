@@ -13,9 +13,12 @@ namespace Gui.Tests
             oVB = new VBox(false, 2);
             iVB = new VBox(false, 2);
             Label lbl = new Label("hej");
-
-            iVB.Add(lbl);
+            Table table1 = new Table(2, 2, false);
             ScrolledWindow scroll = new ScrolledWindow();
+
+            Entry entry = new Entry();
+            entry.HeightRequest = 20;
+            entry.WidthRequest = 100;
 
             SetPosition(WindowPosition.Center);
 
@@ -39,11 +42,17 @@ namespace Gui.Tests
             mb.Append(file);
             #endregion Menuer
 
-            oVB.Add(mb);
+            table1.Attach(SetupLabAss("3+4"), 0, 1, 0, 1, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 3, 3); //Assignment
+            table1.Attach(entry, 1, 2, 0, 1, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 3, 3); //answer
+            table1.Attach(SetupTV(100, 100, ""), 0, 2, 1, 2, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 3, 3); // MR
+
+            gen.Activated += (o, a) => OnActivatedGen();
+
+            iVB.Add(table1);
+            oVB.PackStart(mb, false, false, 8);
             oVB.Add(scroll);
             scroll.Add(iVB);
-
-
+            
             Add(oVB);
             ShowAll();
         }
@@ -59,6 +68,39 @@ namespace Gui.Tests
         {
             Application.Quit();
         }
+
+        void OnActivatedGen()
+        {
+            Table table = new Table(2, 2, false);
+            Entry entry = new Entry();
+            entry.HeightRequest = 20;
+            entry.WidthRequest = 100;
+            entry.Buffer.Text = "";
+
+            table.Attach(SetupLabAss("3+4"), 0, 1, 0, 1, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 3, 3); //Assignment
+            table.Attach(entry, 4, 5, 0, 1, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 3, 3); //answer
+            table.Attach(SetupTV(100, 100, ""), 0, 5, 2, 3, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 3, 3); // MR
+            iVB.Add(table);
+            ShowAll();
+
+        }
+
+        public Label SetupLabAss(string ass)
+        {
+            Label labAss = new Label(ass);
+            return labAss;
+        }
+
+        public TextView SetupTV(int h, int w, string text)
+        {
+            TextView t = new TextView();
+            t.HeightRequest = h;
+            t.WidthRequest = w;
+            t.Buffer.Text = text;
+            t.Visible = true;
+            return t;
+        }
     }
 }
+
 
