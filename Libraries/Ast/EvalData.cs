@@ -2,7 +2,7 @@
 
 namespace Ast
 {
-    public enum EvalType {Assign, Info, Error, Plot};
+    public enum EvalType {Assign, Print, Info, Error, Plot};
 
 
     public class EvalData
