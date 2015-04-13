@@ -44,15 +44,28 @@ namespace Ast
             return GetValue().Evaluate();
         }
 
-        private Expression GetValue()
+        private Expression GetValue() { return GetValue(symbol); }
+        private Expression GetValue(string callerSymbol)
         {
             Expression res;
 
             if (this.functionCall is UserDefinedFunction)
             {
+
                 if (functionCall.tempDefinitions.ContainsKey(symbol))
                 {
                     functionCall.tempDefinitions.TryGetValue(symbol, out res);
+
+                    if (res is Symbol)
+                    {
+                        if ((res as Symbol).symbol == callerSymbol)
+                        {
+                            return new Error("Could not get value of: " + callerSymbol);
+                        }
+
+                        return (res as Symbol).GetValue(callerSymbol);
+                    }
+
                     return new Mul(prefix, new Exp(res, exponent));
                 }
             }
@@ -61,6 +74,17 @@ namespace Ast
                 if (evaluator.variableDefinitions.ContainsKey(symbol))
                 {
                     evaluator.variableDefinitions.TryGetValue(symbol, out res);
+
+                    if (res is Symbol)
+                    {
+                        if ((res as Symbol).symbol == callerSymbol)
+                        {
+                            return new Error("Could not get value of: " + callerSymbol);
+                        }
+
+                        return (res as Symbol).GetValue(callerSymbol);
+                    }
+
                     return new Mul(prefix, new Exp(res, exponent));
                 }
             }

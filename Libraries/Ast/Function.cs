@@ -118,7 +118,8 @@ namespace Ast
             return GetValue().Evaluate();
         }
 
-        public Expression GetValue()
+        public Expression GetValue() { return GetValue(identifier); }
+        private Expression GetValue(string callerIdentifier)
         {
             List<string> functionParemNames;
             Expression res;
@@ -142,6 +143,16 @@ namespace Ast
                     evaluator.functionDefinitions.TryGetValue(identifier, out res);
 
                     res.SetFunctionCall(this);
+
+                    if (res is UserDefinedFunction)
+                    {
+                        if ((res as UserDefinedFunction).identifier == callerIdentifier)
+                        {
+                            return new Error("Could not get value of: " + callerIdentifier);
+                        }
+
+                        return (res as UserDefinedFunction).GetValue(callerIdentifier);
+                    }
 
                     return new Mul(prefix, new Exp(res, exponent));
                 }
@@ -376,16 +387,12 @@ namespace Ast
 
         public override Expression Simplify()
         {
-            Expression res;
-
             if (exponent.CompareTo(new Integer(2)))
             {
-                res = args[0];
+                return args[0];
             }
 
-            res = base.Simplify();
-
-            return res;
+            return base.Simplify();
         }
     }
 

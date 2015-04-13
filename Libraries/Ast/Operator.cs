@@ -71,7 +71,6 @@ namespace Ast
         {
             Expression thisEvaluated = Evaluator.SimplifyExp(Evaluate());
             Expression otherEvaluated = Evaluator.SimplifyExp(other.Evaluate());
-            bool sameType = base.CompareTo(other);
 
             return thisEvaluated.CompareTo(otherEvaluated);
         }
@@ -289,10 +288,10 @@ namespace Ast
             {
                 NewFunction(left, right, ref res);
             }
-            else if ((res as Operator).left.CompareTo((res as Operator).right))
-            {
-                res = new Mul(new Integer(2), (res as Operator).left);
-            }
+            //else if ((res as Operator).left.CompareTo((res as Operator).right))
+            //{
+            //    res = new Mul(new Integer(2), (res as Operator).left);
+            //}
 
             if (res is Operator && !((evaluatedLeft = (res as Operator).left.Evaluate()) is Error))
             {
