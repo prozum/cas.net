@@ -31,9 +31,9 @@ namespace Gui.Tests
 
             MenuItem gen = new MenuItem("Generate Assignment");
             gen.Activated += delegate
-            {
-                //OnActivatedGen();
-            };
+                {
+                    //OnActivatedGen();
+                };
 
             MenuItem exit = new MenuItem("Exit");
             exit.Activated += OnActivated;
@@ -52,7 +52,7 @@ namespace Gui.Tests
             oVB.PackStart(mb, false, false, 8);
             oVB.Add(scroll);
             scroll.Add(iVB);
-            
+
             Add(oVB);
             ShowAll();
         }
@@ -102,5 +102,3 @@ namespace Gui.Tests
         }
     }
 }
-
-
