@@ -401,17 +401,16 @@ namespace CAS.NET.Server
             }
         }
 
-        public string GetGrade(string username, string password)
+        public string GetGrade(string username)
         {
             const int GradeColumn = 2;
-            const string stm = "SELECT * FROM Account WHERE Username = @username AND Password = @password";
+            const string stm = "SELECT * FROM Account WHERE Username = @username";
 
             using (conn = new MySqlConnection (db)){
                 conn.Open ();
 
                 var cmd = new MySqlCommand(stm, conn);
                 cmd.Parameters.AddWithValue("@username", username);
-                cmd.Parameters.AddWithValue("@password", password);
 
                 var rdr = cmd.ExecuteReader();
 
@@ -448,65 +447,5 @@ namespace CAS.NET.Server
                 }
             }
         }
-
-        /*
-        public void AddUser(string login, string password, string grade, int privilege)
-        {
-            using (var Connection = new SQLiteConnection(this.db)) {
-                Connection.Open();
-
-                using (var cmd = new SQLiteCommand(Connection)) {
-                    cmd.CommandText = "INSERT INTO User VALUES(login, password, grade, privilege)";
-                    cmd.ExecuteNonQuery();
-                }
-
-                Connection.Close();
-            }
-        }
-
-        public void RemoveUser(string username)
-        {
-            using (var Connection = new SQLiteConnection(this.db)) {
-                Connection.Open();
-
-                using (var cmd = new SQLiteCommand(Connection)) {
-                    cmd.CommandText = "DELETE FROM User WHERE Username = username";
-                    cmd.ExecuteNonQuery();
-                }
-
-                Connection.Close();
-            }
-        }
-        */
-
-        /*
-        public void AddCompleted(string username, string taskname, string savefilename, string grade)
-        {
-            using (var Connection = new SQLiteConnection(this.db)) {
-                Connection.Open();
-
-                using (var cmd = new SQLiteCommand(Connection)) {
-                    cmd.CommandText = "INSERT INTO Completed VALUES(username, taskname, savefilename, grade)";
-                    cmd.ExecuteNonQuery();
-                }
-
-                Connection.Close();
-            }
-        }
-
-        public void AddFeedback(string username, string taskname, string savefilename, string grade)
-        {
-            using (var Connection = new SQLiteConnection(this.db)) {
-                Connection.Open();
-
-                using (var cmd = new SQLiteCommand(Connection)) {
-                    cmd.CommandText = "INSERT INTO Feedback VALUES(username, taskname, savefilename, grade)";
-                    cmd.ExecuteNonQuery();
-                }
-
-                Connection.Close();
-            }
-        }
-        */
     }
 }

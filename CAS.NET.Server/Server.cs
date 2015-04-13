@@ -21,6 +21,7 @@ namespace CAS.NET.Server
             {
             
                 listener.Prefixes.Add(prefix);
+                listener.AuthenticationSchemes = AuthenticationSchemes.Basic;
                 listener.Start();
 
                 while (true)
@@ -29,6 +30,8 @@ namespace CAS.NET.Server
                     var context = listener.GetContext();
                     var request = context.Request;
                     var response = context.Response;
+
+                    HttpListenerBasicIdentity identity = (HttpListenerBasicIdentity)context.User.Identity;
 
                     Stream reader = request.InputStream;
                     byte[] buffer;
@@ -45,7 +48,7 @@ namespace CAS.NET.Server
                     Console.WriteLine(msg);
 
                     // execute client message and get message for client
-                    string remsg = ExecuteCommand(msg, db);
+                    string remsg = ExecuteCommand(identity.Name, identity.Password, msg, db);
                     buffer = System.Text.Encoding.UTF8.GetBytes(remsg);
                     response.ContentLength64 = buffer.Length;
                     System.IO.Stream output = response.OutputStream;
@@ -55,64 +58,72 @@ namespace CAS.NET.Server
             }
         }
 
-        public static string ExecuteCommand(string msg, Database db)
+        public static string ExecuteCommand(string username, string password, string msg, Database db)
         {
             // decode command from client message and remove it from msg
             string command = msg.Substring(0, msg.IndexOf(" "));
             msg = msg.Substring(command.Length + 1);
 
-            Console.WriteLine(command);
-            Console.WriteLine(msg);
+            int Privilege = db.CheckPrivilege(username, password);
+
+            //Console.WriteLine(command);
+            //Console.WriteLine(msg);
 
             // decode the command and run serverside code for the command
-            switch (command)
+
+            switch (Privilege)
             {
-                case "AddAssignment":
-                    return TeacherAddAssignment(msg, db);
-                case "GetCompleted":
-                    return TeacherGetCompleted(msg, db);
-                case "AddFeedback":
-                    return TeacherAddFeedback(msg, db);
-                case "TeacherGetAssignmentList":
-                    return TeacherGetAssignmentList(msg, db);            
-                case "GetAssignment":
-                    return StudentGetAssignment(msg, db);
-                case "StudentGetAssignmentList":
-                    return StudentGetAssignmentList(msg, db);
-                case "AddCompleted":
-                    return StudentAddCompleted(msg, db);
-                case "GetFeedback":
-                    return StudentGetFeedback(msg, db);
+                case 0:
+                    switch (command)
+                    {
+                        case "GetAssignment":
+                            return StudentGetAssignment(username, msg, db);
+                        case "StudentGetAssignmentList":
+                            return StudentGetAssignmentList(username, msg, db);
+                        case "AddCompleted":
+                            return StudentAddCompleted(username, msg, db);
+                        case "GetFeedback":
+                            return StudentGetFeedback(username, msg, db);
+                        default:
+                            return "Invalid command";
+                    }
+                case 1:
+                    switch (command)
+                    {
+                        case "AddAssignment":
+                            return TeacherAddAssignment(username, msg, db);
+                        case "GetCompleted":
+                            return TeacherGetCompleted(username, msg, db);
+                        case "AddFeedback":
+                            return TeacherAddFeedback(username, msg, db);
+                        case "TeacherGetAssignmentList":
+                            return TeacherGetAssignmentList(username, msg, db);
+                        default:
+                            return "Invalid command";
+                    }
                 default:
-                    return "Invalid command";
+                    return "Invalid user";
             }
         }
 
-        public static string TeacherAddAssignment(string msg, Database db)
+        public static string TeacherAddAssignment(string username, string msg, Database db)
         {        
             string[] strArr = msg.Split(' ');
 
             string checksum = strArr[0];
             string grade = strArr[1];
-            string username = strArr[2];
-            string password = strArr[3];
-            string filename = strArr[4];
+            string filename = strArr[2];
             string file = String.Empty;
 
             // string[] strArr = { grade, username, password, filename };
 
-            for (int i = 5; i < strArr.Length; i++)
+            for (int i = 3; i < strArr.Length; i++)
             {
                 file += strArr[i];
             }
 
             // generate checksum for file
             string checksumNew = Checksum.GetMd5Hash(file);
-
-            if (db.CheckPrivilege(username, password) != 1)
-            {
-                return "Invalid teacher";
-            }
 
             // Writes the checksums
             Console.WriteLine(checksum + " <=> " + checksumNew);
@@ -126,58 +137,34 @@ namespace CAS.NET.Server
             return db.AddAssignment(username, filename, file, grade);  
         }
 
-        public static string TeacherGetAssignmentList(string msg, Database db)
+        public static string TeacherGetAssignmentList(string username, string msg, Database db)
         {      
-            string[] strArr = msg.Split(' ');
-
-            string username = strArr[0];
-            string password = strArr[1];
-
-            if (db.CheckPrivilege(username, password) != 1)
-            {
-                return "Invalid teacher";
-            }
-
             return string.Join(" ", db.TeacherGetAssignmentList(username));
         }
 
-        public static string TeacherGetCompleted(string msg, Database db)
+        public static string TeacherGetCompleted(string username, string msg, Database db)
         {     
             string[] strArr = msg.Split(' ');
 
             string grade = strArr[0];
-            string username = strArr[1];
-            string password = strArr[2];
-            string filename = strArr[3];           
-
-            if (db.CheckPrivilege(username, password) != 1)
-            {
-                return "Invalid teacher";
-            }
+            string filename = strArr[1];
 
             /* teachers can use this to get other classes completed assignments */
             /* todo fix */
             return db.GetCompleted(filename, grade);
         }
 
-        public static string TeacherAddFeedback(string msg, Database db)
+        public static string TeacherAddFeedback(string username, string msg, Database db)
         {
             string[] strArr = msg.Split(' ');
 
             string grade = strArr[0];
-            string username = strArr[1];
-            string password = strArr[2];
-            string filename = strArr[3];
+            string filename = strArr[1];
             string file = String.Empty;
 
-            for (int i = 4; i < strArr.Length; i++)
+            for (int i = 2; i < strArr.Length; i++)
             {
                 file += strArr[i];
-            }
-
-            if (db.CheckPrivilege(username, password) != 1)
-            {
-                return "Invalid teacher";
             }
 
             db.AddFeedback(filename, file, grade);
@@ -185,60 +172,33 @@ namespace CAS.NET.Server
             return "Successfully added feedback";
         }
 
-        public static string StudentGetAssignmentList(string msg, Database db)
+        public static string StudentGetAssignmentList(string username, string msg, Database db)
         {
-            string[] strArr = msg.Split(' ');
-
-            string username = strArr[0];
-            string password = strArr[1];
-            string grade = db.GetGrade(username, password);
-
-            Console.WriteLine(username + "end");
-            Console.WriteLine(password + "end");
-
-            if (db.CheckPrivilege(username, password) != 0)
-            {
-                return "Invalid student";
-            }
-
+            string grade = db.GetGrade(username);
             return string.Join(" ", db.StudentGetAssignmentList(grade));
         }
 
-        public static string StudentGetAssignment(string msg, Database db)
+        public static string StudentGetAssignment(string username, string msg, Database db)
         {
             string[] strArr = msg.Split(' ');
-                
-            string username = strArr[0];
-            string password = strArr[1];
-            string filename = strArr[2];
-            string grade = db.GetGrade(username, password);
 
-            if (db.CheckPrivilege(username, password) != 0)
-            {
-                return "Invalid student";
-            }
+            string filename = strArr[0];
+            string grade = db.GetGrade(username);
 
             return db.GetAssignment(filename, grade);
         }
 
-        public static string StudentAddCompleted(string msg, Database db)
+        public static string StudentAddCompleted(string username, string msg, Database db)
         {
             string[] strArr = msg.Split(' ');         
 
-            string username = strArr[0];
-            string password = strArr[1];
-            string filename = strArr[2];
-            string grade = db.GetGrade(username, password);
+            string filename = strArr[0];
+            string grade = db.GetGrade(username);
             string file = String.Empty;
 
-            for (int i = 3; i < strArr.Length; i++)
+            for (int i = 1; i < strArr.Length; i++)
             {
                 file += strArr[i];
-            }
-
-            if (db.CheckPrivilege(username, password) != 0)
-            {
-                return "Invalid student";
             }
 
             db.AddCompleted(username, filename, file, grade);
@@ -246,19 +206,12 @@ namespace CAS.NET.Server
             return "Successfully added completed assignment";
         }
 
-        public static string StudentGetFeedback(string msg, Database db)
+        public static string StudentGetFeedback(string username, string msg, Database db)
         {
             string[] strArr = msg.Split(' ');
 
-            string username = strArr[0];
-            string password = strArr[1];
-            string filename = strArr[2];
-            string grade = db.GetGrade(username, password);
-
-            if (db.CheckPrivilege(username, password) != 0)
-            {
-                return "Invalid student";
-            }
+            string filename = strArr[0];
+            string grade = db.GetGrade(username);
 
             return db.GetFeedback(username, filename, grade);
         }
