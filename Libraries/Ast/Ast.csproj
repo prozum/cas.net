@@ -40,9 +40,9 @@
     <Compile Include="Function.cs" />
     <Compile Include="Symbol.cs" />
     <Compile Include="Operator.cs" />
-    <Compile Include="Error.cs" />
     <Compile Include="Evaluator.cs" />
     <Compile Include="List.cs" />
+    <Compile Include="Message.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
