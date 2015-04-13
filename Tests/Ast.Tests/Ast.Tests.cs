@@ -12,7 +12,7 @@ namespace Ast.Tests
         {
             Expression res;
 
-            string[,] testStrings = 
+            string[,] testStrings =
             {
                 {"(x*y)*f(10-x)-20", "x*y*f(10-x)-20"},
                 {"x*10-20/x", "x*10-20/x"},
@@ -22,11 +22,10 @@ namespace Ast.Tests
                 {"x+x+4*5+x+x+x+x+x", "x+x+4*5+x+x+x+x+x"}
             };
 
-            for (int i = 0; i < testStrings.GetLength(0); i++) {
-
+            for (int i = 0; i < testStrings.GetLength(0); i++) 
+            {
                 res = Ast.Parser.Parse(testStrings[i,0]);
                 Assert.AreEqual (testStrings[i,1], res.ToString());
-            
             }
         }
 
@@ -37,11 +36,10 @@ namespace Ast.Tests
 
             string[] testStrings = {"10.10"};
 
-            foreach (string testString in testStrings) {
-
+            foreach (string testString in testStrings) 
+            {
                 res = Ast.Parser.ParseNumber(new System.IO.StringReader(testString));
                 Assert.AreEqual (testString, res.ToString());
-
             }
         }
 
@@ -55,21 +53,20 @@ namespace Ast.Tests
                 {"10.10*20", "202.00"},
                 {"10", "10"},
                 {"2^8", "256"},
+                {"2^62", "4611686018427387904"},
+                {"2^64", "18446744073709551616"},
                 {"cos(2)", "0.999390827019096"},
                 {"4^40000/0", "fug"},
                 {"sqrt(2)*sqrt(2)", "2"},
                 {"(1/9)*9", "9"}
-
             };
 
-            for (int i = 0; i < testStrings.GetLength(0); i++) {
-
+            for (int i = 0; i < testStrings.GetLength(0); i++) 
+            {
                 res = Ast.Parser.Parse(testStrings[i,0]);
                 Assert.AreEqual (testStrings[i,1], res.Evaluate().ToString());
-
             }
         }
-
     }
 }
 
