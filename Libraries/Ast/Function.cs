@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Ast
@@ -416,6 +417,30 @@ namespace Ast
         public override Expression Evaluate()
         {
             return Evaluator.ExpandExp(args[0]);
+        }
+    }
+
+    public class Range : UnaryOperation
+    {
+        public Range(string identifier, Expression arg) : base(identifier, arg) { }
+
+        public override Expression Evaluate()
+        {
+            if (args[0] is Integer)
+            {
+                var list = new Ast.List ();
+
+                Int64 max = ((Integer)args[0]).value;
+
+                for (Int64 i = 0; i < max; i++)
+                {
+                    list.elements.Add(new Integer(i));
+                }
+
+                return list;
+            }
+
+            return new Error("Range only supports integers");
         }
     }
 }

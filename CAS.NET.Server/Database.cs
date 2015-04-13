@@ -231,8 +231,6 @@ namespace CAS.NET.Server
                 }
             }
 
-            Console.WriteLine("nooot yet");
-
             if (username != String.Empty)
             {
                 using (conn = new MySqlConnection(db))
@@ -447,5 +445,77 @@ namespace CAS.NET.Server
                 }
             }
         }
+
+		public void CleanAssignment()
+		{
+			try
+			{
+				conn = new MySqlConnection(db);
+				conn.Open();
+
+				const string stm = "SELECT VERSION()";   
+				MySqlCommand cmd = new MySqlCommand(stm, conn);
+				cmd.CommandText = @"DELETE FROM Assignment";
+				cmd.ExecuteNonQuery();
+
+			}
+			catch (MySqlException ex)
+			{
+				Console.WriteLine(ex);
+
+			}
+			finally
+			{
+				conn.Close();
+			}
+		}
+
+		public void CleanCompleted()
+		{
+			try
+			{
+				conn = new MySqlConnection(db);
+				conn.Open();
+
+				const string stm = "SELECT VERSION()";   
+				MySqlCommand cmd = new MySqlCommand(stm, conn);
+				cmd.CommandText = @"DELETE FROM Completed";
+				cmd.ExecuteNonQuery();
+
+			}
+			catch (MySqlException ex)
+			{
+				Console.WriteLine(ex);
+
+			}
+			finally
+			{
+				conn.Close();
+			}
+		}
+
+		public void CleanFeedback()
+		{
+			try
+			{
+				conn = new MySqlConnection(db);
+				conn.Open();
+
+				const string stm = "SELECT VERSION()";   
+				MySqlCommand cmd = new MySqlCommand(stm, conn);
+				cmd.CommandText = @"DELETE FROM Feedback";
+				cmd.ExecuteNonQuery();
+
+			}
+			catch (MySqlException ex)
+			{
+				Console.WriteLine(ex);
+
+			}
+			finally
+			{
+				conn.Close();
+			}
+		}
     }
 }

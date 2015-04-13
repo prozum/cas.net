@@ -71,6 +71,10 @@ namespace Ast
             {
                 return new Error((exp as Expand).Evaluate().ToString());
             }
+            else if (exp is Range)
+            {
+                return new Error((exp as Range).Evaluate().ToString());
+            }
             else
             {
                 return new Error(SimplifyExp(exp).ToString());
