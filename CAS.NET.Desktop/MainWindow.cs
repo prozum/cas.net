@@ -36,6 +36,9 @@ public class MainWindow : Window
 
         switch (output.type)
         {
+            case EvalType.Print:
+                buffer.Insert(ref insertIter, output.msg + "\n");
+                break;
             case EvalType.Assign:
                 buffer.Insert(ref insertIter, input.ToString() + " => " + output.ToString() + "\n");
                 break;
@@ -105,7 +108,9 @@ public class MainWindow : Window
         buffer = textView.Buffer;
 
         var infoTag = new TextTag ("info");
+        infoTag.Foreground = "blue";
         var errorTag = new TextTag ("error");
+        errorTag.Foreground = "red";
         buffer.TagTable.Add(infoTag);
         buffer.TagTable.Add(errorTag);
 
