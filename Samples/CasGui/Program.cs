@@ -1,7 +1,6 @@
 ﻿using System;
 using Gtk;
-using TaskGen;
-
+using TaskGenLib;
 
 namespace Gui.Tests
 {
@@ -33,9 +32,9 @@ namespace Gui.Tests
 
             MenuItem gen = new MenuItem("Generate Assignment");
             gen.Activated += delegate
-                {
-                    //OnActivatedGen();
-                };
+            {
+                //OnActivatedGen();
+            };
 
             MenuItem exit = new MenuItem("Exit");
             exit.Activated += OnActivated;
@@ -44,7 +43,7 @@ namespace Gui.Tests
             mb.Append(file);
             #endregion Menuer
 
-            table1.Attach(SetupLabAss("3+4"), 0, 1, 0, 1, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 3, 3); //Assignment
+            table1.Attach(SetupLabAss(), 0, 1, 0, 1, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 3, 3); //Assignment
             table1.Attach(entry, 1, 2, 0, 1, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 3, 3); //answer
             table1.Attach(SetupTV(100, 100, ""), 0, 2, 1, 2, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 3, 3); // MR
 
@@ -79,7 +78,7 @@ namespace Gui.Tests
             entry.WidthRequest = 100;
             entry.Buffer.Text = "";
 
-            table.Attach(SetupLabAss("3+4"), 0, 1, 0, 1, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 3, 3); //Assignment
+            table.Attach(SetupLabAss(), 0, 1, 0, 1, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 3, 3); //Assignment
             table.Attach(entry, 4, 5, 0, 1, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 3, 3); //answer
             table.Attach(SetupTV(100, 100, ""), 0, 5, 2, 3, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 3, 3); // MR
             iVB.Add(table);
@@ -87,9 +86,9 @@ namespace Gui.Tests
 
         }
 
-        public Label SetupLabAss(string ass)
+        public Label SetupLabAss()
         {
-            Label labAss = new Label(ass);
+            Label labAss = new Label(TaskGen.MakeCalcTask(1,10,2));
             return labAss;
         }
 
