@@ -12,9 +12,9 @@ namespace Ast
 
     public class Integer : Number
     {
-        public int value;
+        public Int64 value;
 
-        public Integer(int value)
+        public Integer(Int64 value)
         {
             this.value = value;
         }

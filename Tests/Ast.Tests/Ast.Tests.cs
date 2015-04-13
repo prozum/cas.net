@@ -12,7 +12,8 @@ namespace Ast.Tests
         {
             Expression res;
 
-            string[,] testStrings = {
+            string[,] testStrings = 
+            {
                 {"(x*y)*f(10-x)-20", "x*y*f(10-x)-20"},
                 {"x*10-20/x", "x*10-20/x"},
                 {"f(x,y,z)=x/y*z", "f(x,y,z)=x/y*z"},
@@ -49,7 +50,8 @@ namespace Ast.Tests
         {
             Expression res;
 
-            string[,] testStrings = {
+            string[,] testStrings = 
+            {
                 {"10.10*20", "202.00"},
                 {"10", "10"},
                 {"2^8", "256"},

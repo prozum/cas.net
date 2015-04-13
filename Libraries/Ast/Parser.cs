@@ -318,7 +318,7 @@ namespace Ast
             switch (resultType)
             {
                 case NumberType.Integer:
-                    return new Integer(int.Parse(number));
+                    return new Integer(Int64.Parse(number));
                 case NumberType.Irrational:
                     return new Irrational(decimal.Parse(number));
                 case NumberType.Complex:

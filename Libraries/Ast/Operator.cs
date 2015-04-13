@@ -878,7 +878,7 @@ namespace Ast
         {
             if (left is Integer && right is Integer) 
             {
-                return new Integer( (int)Math.Pow((left as Integer).value, (right as Integer).value));
+                return new Integer( (Int64)Math.Pow((left as Integer).value, (right as Integer).value));
             }
 
             if (left is Integer && right is Rational)
