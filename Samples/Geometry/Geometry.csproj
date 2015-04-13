@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProjectGuid>{71941514-6E26-489B-8843-EB9D273B95D2}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Triangle</RootNamespace>
+    <RootNamespace>Geometry</RootNamespace>
     <AssemblyName>Triangle</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
@@ -36,6 +36,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Triangle.cs" />
+    <Compile Include="Circle.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
