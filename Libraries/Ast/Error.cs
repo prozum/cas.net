@@ -20,6 +20,11 @@ namespace Ast
         {
             return this;
         }
+
+        public override bool CompareTo(Expression other)
+        {
+            return false;
+        }
     }
 }
 

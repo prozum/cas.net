@@ -49,5 +49,9 @@
       <Project>{CEA736B0-9A43-44FF-A369-C9D310C9C238}</Project>
       <Name>CAS.NET.Server</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\Libraries\ImEx\ImEx.csproj">
+      <Project>{5150E825-D811-4D68-8C0E-86A1F8573561}</Project>
+      <Name>ImEx</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

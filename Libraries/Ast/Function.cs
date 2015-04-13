@@ -4,18 +4,11 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public abstract class Function  : Expression
+    public abstract class Function : NotNumber
     {
-        public string identifier;
-        public Number prefix, exponent;
         public List<Expression> args;
 
-        public Function(string identifier, Number prefix, Number exponent)
-        {
-            this.identifier = identifier;
-            this.exponent = exponent;
-            this.prefix = prefix;
-        }
+        public Function(string identifier, Number prefix, Number exponent) : base(identifier, prefix, exponent) { }
 
         public override string ToString ()
         {
@@ -149,7 +142,7 @@ namespace Ast
                     {
                         if ((res as UserDefinedFunction).identifier == callerIdentifier)
                         {
-                            return new Error("Could not get value of: " + callerIdentifier);
+                            return new Error("UserDefinedFunction> Could not get value of: " + callerIdentifier);
                         }
 
                         return (res as UserDefinedFunction).GetValue(callerIdentifier);
@@ -159,16 +152,16 @@ namespace Ast
                 }
                 else if (functionParemNames.Count == 0)
                 {
-                    return new Error("Can't call function with 0 parameters");
+                    return new Error("UserDefinedFunction> Can't call function with 0 parameters");
                 }
                 else
                 {
-                    return new Error("Function has the wrong number for parameters");
+                    return new Error("UserDefinedFunction> Function has the wrong number for parameters");
                 }
             }
             else
             {
-                return new Error("Function has no definition");
+                return new Error("UserDefinedFunction> Function has no definition");
             }
         }
     }
@@ -210,7 +203,7 @@ namespace Ast
                 return new Mul(prefix, new Exp(new Irrational((decimal)Math.Sin((double)(res as Irrational).value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
             }
 
-            return new Error("Could not take Sin of: " + args[0]);
+            return new Error("Sin> Could not take Sin of: " + args[0]);
         }
     }
 
@@ -238,7 +231,7 @@ namespace Ast
                 return new Mul(prefix, new Exp(new Irrational((decimal)(Math.Asin((double)(res as Irrational).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
             }
 
-            return new Error("Could not take ASin of: " + args[0]);
+            return new Error("ASin> Could not take ASin of: " + args[0]);
         }
     }
 
@@ -267,7 +260,7 @@ namespace Ast
                 return new Mul(prefix, new Exp(new Irrational((decimal)Math.Cos((double)(res as Irrational).value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
             }
 
-            return new Error("Could not take Cos of: " + args[0]);
+            return new Error("Cos> Could not take Cos of: " + args[0]);
         }
     }
 
@@ -296,7 +289,7 @@ namespace Ast
                 return new Mul(prefix, new Exp(new Irrational((decimal)(Math.Acos((double)(res as Irrational).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
             }
 
-            return new Error("Could not take ACos of: " + args[0]);
+            return new Error("ACos> Could not take ACos of: " + args[0]);
         }
     }
 
@@ -325,7 +318,7 @@ namespace Ast
                 return new Mul(prefix, new Exp(new Irrational((decimal)Math.Tan((double)(res as Irrational).value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
             }
 
-            return new Error("Could not take Tan of: " + args[0]);
+            return new Error("Tan> Could not take Tan of: " + args[0]);
         }
     }
 
@@ -354,7 +347,7 @@ namespace Ast
                 return new Mul(prefix, new Exp(new Irrational((decimal)(Math.Atan((double)(res as Irrational).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
             }
 
-            return new Error("Could not take ATan of: " + args[0]);
+            return new Error("ATan> Could not take ATan of: " + args[0]);
         }
     }
 
@@ -383,7 +376,7 @@ namespace Ast
                 return new Mul(prefix, new Exp(new Irrational((decimal)Math.Sqrt((double)(res as Irrational).value)), exponent)).Evaluate();
             }
 
-            return new Error("Could not take Sqrt of: " + args[0]);
+            return new Error("Sqrt> Could not take Sqrt of: " + args[0]);
         }
 
         public override Expression Simplify()

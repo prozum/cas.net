@@ -37,18 +37,18 @@ namespace Ast
                 }
 
                 // Functions & Variables
-                if (char.IsLetter((char)curChar))
+                if (char.IsLetter((char)curChar)) 
                 {
                     curExp = ParseIdentifier(evaluator, parseReader);
                     exs.Push(curExp);
-                }
+                } 
                 // Numbers
                 else if (char.IsDigit((char)curChar))
                 {
                     curExp = ParseNumber(parseReader);
                     exs.Push(curExp);
 
-                }
+                } 
                 // Parenthesis
                 else if (curChar.Equals('('))
                 {
@@ -57,18 +57,18 @@ namespace Ast
                     switch (parExp.Count())
                     {
                         case 0:
-                            curExp = new Error("Empty parenthesis");
+                            curExp = new Error("Parser> Empty parenthesis");
                             break;
                         case 1:
                             curExp = parExp[0];
                             exs.Push(curExp);
                             break;
                         default:
-                            curExp = new Error("Invalid ',' in parenthesis");
+                            curExp = new Error("Parser> Invalid ',' in parenthesis");
                             break;
                     }
 
-                }
+                } 
                 // Lists
                 else if (curChar.Equals('{'))
                 {
@@ -83,10 +83,10 @@ namespace Ast
                     {
                         ops.Push ((Operator)curExp);
                     }
-                }
+                } 
                 else 
                 {
-                    curExp = new Error ("Error in: " + parseReader.ToString());
+                    curExp = new Error("Parser> Error in: " + parseReader.ToString());
                 }
 
                 if (curExp is Error) 
@@ -136,28 +136,28 @@ namespace Ast
                 while (!((char)parseReader.Peek()).Equals(End) && (parentStart == parentEnd))
                 {
                     curChar = (char)parseReader.Peek();
-
+                    
                     if (curChar.Equals(Start))
                     {
-                        parentStart++;
+                            parentStart++;
                     } 
                     else if (curChar.Equals(End))
                     {
-                        parentEnd++;
+                            parentEnd++;
                     }
                     else if (curChar.Equals(Sep))
                     {
-                        exs.Add (Parser.Parse(evaluator, substring));
-                        substring = "";
+                            exs.Add (Parser.Parse(evaluator, substring));
+                            substring = "";
                     }
                     else if (curChar.Equals('\uffff'))
                     {
                         exs.Add (new Error("No end char"));
-                        return exs;
+                            return exs;
                     }
                     else
                     {
-                        substring += curChar;
+                            substring += curChar;
                     }
 
                     parseReader.Read();
@@ -181,7 +181,7 @@ namespace Ast
             }
             else if (exs.Count == 0)
             {
-                return new Error("No expressions found");
+                return new Error("Parser> No expressions found");
             }
 
             right = exs.Pop ();
@@ -300,13 +300,13 @@ namespace Ast
                         res = new Range(identifier.ToLower(), args[0]);
                         break;
                     default:
-                        res = new Error("This should never happen");
+                        res = new Error("Parser> This should never happen");
                         break;
                     }
                 }
                 else
                 {
-                    res = new Error("Unary operation can't have more than one argument");
+                    res = new Error("Parser> Unary operation can't have more than one argument");
                 }
             }
             else
@@ -347,7 +347,7 @@ namespace Ast
                     //More than one dot. Error!
                     if (resultType == NumberType.Irrational )
                     {
-                        return new Error("Parser: unexpected extra decimal seperator in: " + parseReader.ToString());
+                        return new Error("Parser> Parser: unexpected extra decimal seperator in: " + parseReader.ToString());
                     }
 
                     number += (char)parseReader.Read();
@@ -373,7 +373,7 @@ namespace Ast
                 case NumberType.Complex:
                     return new Complex();
                 default:
-                    return new Error ("Parser: unknown error in:" + parseReader.ToString ());
+                    return new Error("Parser> Parser: unknown error in:" + parseReader.ToString());
             }
         }
 
@@ -417,7 +417,7 @@ namespace Ast
             case "^":
                 return new Exp ();
             default:
-                return new Error ("Parser: operator not supported: " + op);
+                return new Error("Parser> Parser: operator not supported: " + op);
             }
         }
     }
