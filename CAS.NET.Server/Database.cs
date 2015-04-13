@@ -446,6 +446,30 @@ namespace CAS.NET.Server
             }
         }
 
+		public void CleanAccount()
+		{
+			try
+			{
+				conn = new MySqlConnection(db);
+				conn.Open();
+
+				const string stm = "SELECT VERSION()";   
+				MySqlCommand cmd = new MySqlCommand(stm, conn);
+				cmd.CommandText = @"DELETE FROM Account";
+				cmd.ExecuteNonQuery();
+
+			}
+			catch (MySqlException ex)
+			{
+				Console.WriteLine(ex);
+
+			}
+			finally
+			{
+				conn.Close();
+			}
+		}
+
 		public void CleanAssignment()
 		{
 			try
@@ -506,6 +530,32 @@ namespace CAS.NET.Server
 				cmd.CommandText = @"DELETE FROM Feedback";
 				cmd.ExecuteNonQuery();
 
+			}
+			catch (MySqlException ex)
+			{
+				Console.WriteLine(ex);
+
+			}
+			finally
+			{
+				conn.Close();
+			}
+		}
+
+		public void AddUser(string username, string password, string grade, int privilege)
+		{
+			try
+			{
+				conn = new MySqlConnection(db);
+				conn.Open();
+
+				const string stm = @"INSERT INTO Account(Username, Password, Grade, Privilege) Values(@username, @password, @grade, @privilege)";   
+				MySqlCommand cmd = new MySqlCommand(stm, conn);
+				cmd.Parameters.AddWithValue("@username", username);
+				cmd.Parameters.AddWithValue("@password", password);
+				cmd.Parameters.AddWithValue("@grade", grade);
+				cmd.Parameters.AddWithValue("@privilege", privilege);
+				cmd.ExecuteNonQuery();
 			}
 			catch (MySqlException ex)
 			{
