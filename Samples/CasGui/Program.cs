@@ -1,6 +1,5 @@
 ﻿using System;
 using Gtk;
-using TaskGen;
 
 
 namespace Gui.Tests
@@ -10,7 +9,8 @@ namespace Gui.Tests
         VBox oVB;
         VBox iVB;
 
-        public CASGui() : base("CAS.Net gui")
+        public CASGui()
+            : base("CAS.Net gui")
         {
             SetSizeRequest(300, 500);
             oVB = new VBox(false, 2);
@@ -33,9 +33,9 @@ namespace Gui.Tests
 
             MenuItem gen = new MenuItem("Generate Assignment");
             gen.Activated += delegate
-                {
-                    //OnActivatedGen();
-                };
+            {
+                //OnActivatedGen();
+            };
 
             MenuItem exit = new MenuItem("Exit");
             exit.Activated += OnActivated;
