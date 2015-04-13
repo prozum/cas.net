@@ -70,6 +70,12 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Samples\TaskGen\TaskGen.csproj">
+      <Project>{0b05c9ea-1dd4-4526-80c6-ef7f98b9f27f}</Project>
+      <Name>TaskGen</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\GtkSharp.3.1.0\build\net45\GtkSharp.targets" Condition="Exists('..\packages\GtkSharp.3.1.0\build\net45\GtkSharp.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
