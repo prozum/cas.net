@@ -1,5 +1,7 @@
 ﻿using System;
 using Gtk;
+using TaskGen;
+
 
 namespace Gui.Tests
 {
@@ -10,9 +12,9 @@ namespace Gui.Tests
 
         public CASGui() : base("CAS.Net gui")
         {
+            SetSizeRequest(300, 500);
             oVB = new VBox(false, 2);
             iVB = new VBox(false, 2);
-            Label lbl = new Label("hej");
             Table table1 = new Table(2, 2, false);
             ScrolledWindow scroll = new ScrolledWindow();
 
