@@ -30,6 +30,27 @@ namespace Ast.Tests
         }
 
         [Test]
+        public void Simplify()
+        {
+            Expression res;
+
+            string[,] testStrings =
+            {
+                {"x+x+x+x", "4x"},
+                {"x+y+x+y", "2x+2y"},
+                {"x-x-x", "-x"},
+                {"x*x*x","x^3"},
+                {"x+x+x-y-y-y-y","3x+-2y"}
+            };
+
+            for (int i = 0; i < testStrings.GetLength(0); i++)
+            {
+                res = Evaluator.SimplifyExp(Ast.Parser.Parse(testStrings[i, 0]));
+                Assert.AreEqual(testStrings[i, 1], res.ToString());
+            }
+        }
+
+        [Test]
         public void ParseNumber()
         {
             Expression res;

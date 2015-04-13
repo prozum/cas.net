@@ -52,6 +52,7 @@ namespace Ast
         {
             if (parent == null || priority >= parent.priority)
             {
+                return '(' + left.ToString() + symbol + right.ToString() + ')';
                 return left.ToString () + symbol + right.ToString ();
             } 
             else 
@@ -251,7 +252,15 @@ namespace Ast
             Expression evaluatedLeft, evaluatedRight, res = null;
             Operator simplifiedOperator = new Add(Evaluator.SimplifyExp(left), Evaluator.SimplifyExp(right));
 
-            if (simplifiedOperator.left is Add)
+            if (simplifiedOperator.left is Number && simplifiedOperator.left.CompareTo(new Integer(0)))
+            {
+                res = simplifiedOperator.right;
+            }
+            else if (simplifiedOperator.right is Number && simplifiedOperator.right.CompareTo(new Integer(0)))
+            {
+                res = simplifiedOperator.left;
+            }
+            else if (simplifiedOperator.left is Add)
             {
                 res = (simplifiedOperator.left as Add).SimplifyMultiAdd(simplifiedOperator.right);
             }
@@ -450,7 +459,7 @@ namespace Ast
             Expression res = null;
 
             right = Evaluator.SimplifyExp(new Mul(new Integer(-1), right));
-            res = new Add(left, right).Simplify();
+             res = new Add(left, right).Simplify();
 
             res.parent = parent;
             return res;
@@ -831,7 +840,7 @@ namespace Ast
         {
             if (left is Integer && right is Integer) 
             {
-                return new Integer( (Int64)Math.Pow((left as Integer).value, (right as Integer).value));
+                return new Integer( (int)Math.Pow((left as Integer).value, (right as Integer).value));
             }
 
             if (left is Integer && right is Rational)
