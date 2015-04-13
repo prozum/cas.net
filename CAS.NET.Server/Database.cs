@@ -567,5 +567,27 @@ namespace CAS.NET.Server
 				conn.Close();
 			}
 		}
+
+		public void CreateDB()
+		{
+			try
+			{
+				conn = new MySqlConnection(db);
+				conn.Open();
+
+				const string stm = @"CREATE DATABASE IF NOT EXISTS mydb";   
+				MySqlCommand cmd = new MySqlCommand(stm, conn);
+				cmd.ExecuteNonQuery();
+			}
+			catch (MySqlException ex)
+			{
+				Console.WriteLine(ex);
+
+			}
+			finally
+			{
+				conn.Close();
+			}
+		}
     }
 }
