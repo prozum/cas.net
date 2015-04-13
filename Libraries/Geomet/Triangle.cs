@@ -78,6 +78,10 @@ namespace Geomet
                 return 0;
             }
         }
+        public static double areaSimple(double width, double height)
+        {
+            return 0.5 * height * width;
+        }
         //Check if valid triangle
         public static bool Verify(double a, double b, double c) {
             if (a + b > c || a + c > b || b + c > a) {
