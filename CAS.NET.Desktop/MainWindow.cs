@@ -4,7 +4,8 @@ using Ast;
 public class MainWindow : Window
 {
     Evaluator eval;
-    Expression output, input;
+    Expression input;
+    EvalData output;
 
     Grid grid;
 
@@ -31,7 +32,23 @@ public class MainWindow : Window
         input = Ast.Parser.Parse (eval, entry.Text);
         output = eval.Evaluation(entry.Text);
 
-        buffer.Insert(buffer.StartIter, input.ToString() + " => " + output.ToString() + "\n");
+        TextIter insertIter = buffer.StartIter;
+
+        switch (output.type)
+        {
+            case EvalType.Assign:
+                buffer.Insert(ref insertIter, input.ToString() + " => " + output.ToString() + "\n");
+                break;
+            case EvalType.Error:
+                buffer.InsertWithTagsByName(ref insertIter, output.msg + "\n", "error");
+                break;
+            case EvalType.Info:
+                buffer.InsertWithTagsByName(ref insertIter, output.msg + "\n", "info");
+                break;
+            case EvalType.Plot:
+                //buffer.Insert(buffer.StartIter, input.ToString() + " => " + output.ToString() + "\n");
+                break;
+        }
     }
 
     public void CreateDefTree()
@@ -86,6 +103,12 @@ public class MainWindow : Window
         sw.Add(textView);
         grid.Attach (sw, 0, 1, 1, 1);
         buffer = textView.Buffer;
+
+        var infoTag = new TextTag ("info");
+        var errorTag = new TextTag ("error");
+        buffer.TagTable.Add(infoTag);
+        buffer.TagTable.Add(errorTag);
+
 
         CreateDefTree();
         grid.Attach(defTree, 1, 0, 1, 2);
