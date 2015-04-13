@@ -37,4 +37,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\Geomet\Geomet.csproj">
+      <Project>{3B778CA7-302F-4838-B6DA-9193929403D7}</Project>
+      <Name>Geomet</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

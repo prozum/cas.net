@@ -7,6 +7,12 @@ namespace Ast
     {
         public List<Expression> elements;
 
+        public List()
+        {
+            elements = new List<Expression> ();
+        }
+
+
         public override Expression Evaluate()
         {
             return this;

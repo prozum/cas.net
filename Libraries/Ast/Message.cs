@@ -2,11 +2,11 @@
 
 namespace Ast
 {
-    public class Error : Expression
+    public abstract class Message : Expression
     {
         public string message;
 
-        public Error (string message)
+        public Message (string message)
         {
             this.message = message;
         }
@@ -24,6 +24,20 @@ namespace Ast
         public override bool CompareTo(Expression other)
         {
             return false;
+        }
+    }
+
+    public class Info: Message
+    {
+        public Info(string message) : base(message)
+        {
+        }
+    }
+
+    public class Error: Message
+    {
+        public Error(string message) : base(message)
+        {
         }
     }
 }
