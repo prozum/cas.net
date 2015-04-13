@@ -8,6 +8,7 @@ namespace Gui.Tests
     {
         VBox oVB;
         VBox iVB;
+        int varMin, varMax, varNum;
 
         public CASGui() : base("CAS.Net gui")
         {
@@ -31,13 +32,15 @@ namespace Gui.Tests
             file.Submenu = filemenu;
 
             MenuItem gen = new MenuItem("Generate Assignment");
-            gen.Activated += delegate
-            {
-                //OnActivatedGen();
-            };
+            gen.Activated += (o, a) => OnActivatedGen();
 
             MenuItem exit = new MenuItem("Exit");
             exit.Activated += OnActivated;
+
+            MenuItem properties = new MenuItem("Properties");
+            properties.Activated += (o,a) => OnActivatedProperties(1,10,2);
+
+            filemenu.Append(properties);
             filemenu.Append(exit);
             filemenu.Append(gen);
             mb.Append(file);
@@ -47,7 +50,6 @@ namespace Gui.Tests
             table1.Attach(entry, 1, 2, 0, 1, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 3, 3); //answer
             table1.Attach(SetupTV(100, 100, ""), 0, 2, 1, 2, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 3, 3); // MR
 
-            gen.Activated += (o, a) => OnActivatedGen();
 
             iVB.Add(table1);
             oVB.PackStart(mb, false, false, 8);
@@ -57,12 +59,58 @@ namespace Gui.Tests
             Add(oVB);
             ShowAll();
         }
-
+            
         public static void Main(string[] args)
         {
             Application.Init();
             new CASGui();
             Application.Run();
+        }
+
+        void OnActivatedProperties(int min, int max, int num)
+        {
+            Window myWindow = new Window ("This is a window");
+            myWindow.SetDefaultSize (200, 200);
+
+            VBox vbox = new VBox(false, 2);
+            HBox hbox = new HBox(false, 2);
+
+            string smin = min.ToString();
+            string smax = max.ToString();
+            string snum = num.ToString();
+
+            Label varMin = new Label("VarMin");
+            Label varMax = new Label("varMax");
+            Label varNum = new Label("varNum");
+
+            Table table = new Table(2, 4, false);
+
+            table.Attach(varMin, 0, 1, 0, 1, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
+            table.Attach(varMax, 0, 1, 1, 2, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
+            table.Attach(varNum, 0, 1, 2, 3, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
+
+            SpinButton sbMin = new SpinButton(0,100000000,1);
+            sbMin.WidthRequest = 10;
+            SpinButton sbMax = new SpinButton(0,100000000,1);
+            sbMax.WidthRequest = 10;
+            SpinButton sbNum = new SpinButton(0,5,1);
+            sbNum.WidthRequest = 10;
+
+            table.Attach(sbMin, 1, 2, 0, 1, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
+            table.Attach(sbMax, 1, 2, 1, 2, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
+            table.Attach(sbNum, 1, 2, 2, 3, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
+
+            Button ok = new Button("Confirm");
+            Button cancel = new Button("Cancel");
+
+            hbox.Add(cancel);
+            hbox.Add(ok);
+
+            vbox.Add(table);
+            vbox.Add(hbox);
+
+            myWindow.Add(vbox);
+            myWindow.ShowAll ();
         }
 
         void OnActivated(object sender, EventArgs args)
