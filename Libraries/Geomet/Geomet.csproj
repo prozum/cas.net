@@ -37,6 +37,7 @@
     <Compile Include="Sphere.cs" />
     <Compile Include="Triangle.cs" />
     <Compile Include="Square.cs" />
+    <Compile Include="Currency.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
