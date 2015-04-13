@@ -11,7 +11,7 @@ namespace ClientServer
     public class Test
     {
 		const string host = "http://localhost:8080/";
-		const string database = @"server=localhost;userid=root;password=;database=mydb";
+		const string database = @"server=localhost;userid=travis2;database=mydb";
 
 		Teacher teacher = new Teacher("teacher", "passwd0");
 		Student student1 = new Student("student1", "passwd1");
