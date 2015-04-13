@@ -10,7 +10,8 @@ namespace Gui.Tests
         VBox iVB;
         int varMin, varMax, varNum;
 
-        public CASGui() : base("CAS.Net gui")
+        public CASGui()
+            : base("CAS.Net gui")
         {
             SetSizeRequest(300, 500);
             oVB = new VBox(false, 2);
@@ -38,7 +39,7 @@ namespace Gui.Tests
             exit.Activated += OnActivated;
 
             MenuItem properties = new MenuItem("Properties");
-            properties.Activated += (o,a) => OnActivatedProperties(1,10,2);
+            properties.Activated += (o, a) => OnActivatedProperties(1, 10, 2);
 
             filemenu.Append(properties);
             filemenu.Append(exit);
@@ -59,7 +60,7 @@ namespace Gui.Tests
             Add(oVB);
             ShowAll();
         }
-            
+
         public static void Main(string[] args)
         {
             Application.Init();
@@ -69,8 +70,8 @@ namespace Gui.Tests
 
         void OnActivatedProperties(int min, int max, int num)
         {
-            Window myWindow = new Window ("This is a window");
-            myWindow.SetDefaultSize (200, 200);
+            Window myWindow = new Window("This is a window");
+            myWindow.SetDefaultSize(200, 200);
 
             VBox vbox = new VBox(false, 2);
             HBox hbox = new HBox(false, 2);
@@ -89,11 +90,11 @@ namespace Gui.Tests
             table.Attach(varMax, 0, 1, 1, 2, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
             table.Attach(varNum, 0, 1, 2, 3, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
 
-            SpinButton sbMin = new SpinButton(0,100000000,1);
+            SpinButton sbMin = new SpinButton(0, 100000000, 1);
             sbMin.WidthRequest = 10;
-            SpinButton sbMax = new SpinButton(0,100000000,1);
+            SpinButton sbMax = new SpinButton(0, 100000000, 1);
             sbMax.WidthRequest = 10;
-            SpinButton sbNum = new SpinButton(0,5,1);
+            SpinButton sbNum = new SpinButton(0, 5, 1);
             sbNum.WidthRequest = 10;
 
             table.Attach(sbMin, 1, 2, 0, 1, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
@@ -103,6 +104,11 @@ namespace Gui.Tests
             Button ok = new Button("Confirm");
             Button cancel = new Button("Cancel");
 
+            cancel.Clicked += delegate
+            {
+                myWindow.Destroy();
+            };
+
             hbox.Add(cancel);
             hbox.Add(ok);
 
@@ -110,7 +116,7 @@ namespace Gui.Tests
             vbox.Add(hbox);
 
             myWindow.Add(vbox);
-            myWindow.ShowAll ();
+            myWindow.ShowAll();
         }
 
         void OnActivated(object sender, EventArgs args)
@@ -136,7 +142,7 @@ namespace Gui.Tests
 
         public Label SetupLabAss()
         {
-            Label labAss = new Label(TaskGen.MakeCalcTask(1,10,2));
+            Label labAss = new Label(TaskGen.MakeCalcTask(1, 10, 2));
             return labAss;
         }
 
