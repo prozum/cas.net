@@ -14,7 +14,7 @@ namespace Ast
         {
         }
 
-        public Expression Evaluation(string inputString)
+        public EvalData Evaluation(string inputString)
         {
             var exp = Parser.Parse(this, inputString);
 
@@ -38,14 +38,16 @@ namespace Ast
                         } 
                         else
                         {
-                            return new Error("Evaluator> One arg in the function is not a symbol");
+                            //return new Error("Evaluator> One arg in the function is not a symbol");
+                            return new EvalData(EvalType.Error, "Evaluator> One arg in the function is not a symbol");
                         }
                     }
 
                     functionParams.Add(((exp as Assign).left as UserDefinedFunction).identifier, paramNames);
                     functionDefinitions.Add(((exp as Assign).left as UserDefinedFunction).identifier, (exp as Assign).right);
 
-                    return new Error("Evaluator> Function defined");
+                    //return new Info("Evaluator> Function defined");
+                    return new EvalData(EvalType.Info, "Evaluator> Function defined");
                 }
                 else if ((exp as Assign).left is Symbol)
                 {
@@ -56,28 +58,28 @@ namespace Ast
 
                     variableDefinitions.Add(((exp as Assign).left as Symbol).identifier, (exp as Assign).right);
 
-                    return new Error("Evaluator> Variable defined");
+                    return new EvalData(EvalType.Info,"Evaluator> Variable defined");
                 }
                 else
                 {
-                    return new Error("Evaluator> Left expression is not a variable or function");
+                    return new EvalData(EvalType.Error,"Evaluator> Left expression is not a variable or function");
                 }
             }
             else if (exp is Simplify)
             {
-                return new Error((exp as Simplify).Evaluate().ToString());
+                return new EvalData(EvalType.Info, (exp as Simplify).Evaluate().ToString());
             }
             else if (exp is Expand)
             {
-                return new Error((exp as Expand).Evaluate().ToString());
+                return new EvalData(EvalType.Info, (exp as Expand).Evaluate().ToString());
             }
             else if (exp is Range)
             {
-                return new Error((exp as Range).Evaluate().ToString());
+                return new EvalData(EvalType.Info, (exp as Range).Evaluate().ToString());
             }
             else
             {
-                return SimplifyExp(exp).Evaluate();
+                return new EvalData(EvalType.Info, (SimplifyExp(exp).Evaluate().ToString()));
             }
         }
 

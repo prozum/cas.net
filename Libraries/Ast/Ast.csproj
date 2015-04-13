@@ -43,6 +43,7 @@
     <Compile Include="Evaluator.cs" />
     <Compile Include="List.cs" />
     <Compile Include="Message.cs" />
+    <Compile Include="EvalData.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
