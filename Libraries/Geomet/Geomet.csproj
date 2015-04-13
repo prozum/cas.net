@@ -34,7 +34,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Circle.cs" />
     <Compile Include="Cube.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Sphere.cs" />
     <Compile Include="Triangle.cs" />
   </ItemGroup>

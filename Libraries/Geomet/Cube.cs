@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Geometry
+namespace Geomet
 {
     public class Cube
     {
