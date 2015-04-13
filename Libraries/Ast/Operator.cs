@@ -17,7 +17,7 @@ namespace Ast
 
         public override Expression Evaluate()
         {
-            if (left is Operator || left is Symbol || left is Function || right is Operator || right is Symbol || right is Function)
+            if (left is Operator || left is NotNumber || right is Operator || right is NotNumber)
             {
                 if (this is Add)
                 {
@@ -52,7 +52,6 @@ namespace Ast
         {
             if (parent == null || priority >= parent.priority)
             {
-                return '(' + left.ToString() + symbol + right.ToString() + ')';
                 return left.ToString () + symbol + right.ToString ();
             } 
             else 
@@ -122,14 +121,14 @@ namespace Ast
 
             res = new Equal(Evaluator.SimplifyExp(left), Evaluator.SimplifyExp(right));
 
-            if (!((evaluatedLeft = (res as Operator).left.Evaluate()) is Error))
+            if (!((evaluatedLeft = (res as Equal).left.Evaluate()) is Error))
             {
-                (res as Operator).left = evaluatedLeft;
+                (res as Equal).left = evaluatedLeft;
             }
 
-            if (!((evaluatedRight = (res as Operator).right.Evaluate()) is Error))
+            if (!((evaluatedRight = (res as Equal).right.Evaluate()) is Error))
             {
-                (res as Operator).right = evaluatedRight;
+                (res as Equal).right = evaluatedRight;
             }
 
             res.parent = parent;
@@ -160,14 +159,14 @@ namespace Ast
 
             res = new Assign(Evaluator.SimplifyExp(left), Evaluator.SimplifyExp(right));
 
-            if (!((evaluatedLeft = (res as Operator).left.Evaluate()) is Error))
+            if (!((evaluatedLeft = (res as Assign).left.Evaluate()) is Error))
             {
-                (res as Operator).left = evaluatedLeft;
+                (res as Assign).left = evaluatedLeft;
             }
 
-            if (!((evaluatedRight = (res as Operator).right.Evaluate()) is Error))
+            if (!((evaluatedRight = (res as Assign).right.Evaluate()) is Error))
             {
-                (res as Operator).right = evaluatedRight;
+                (res as Assign).right = evaluatedRight;
             }
 
             res.parent = parent;
@@ -281,14 +280,14 @@ namespace Ast
             //    res = new Mul(new Integer(2), (res as Operator).left);
             //}
 
-            if (res is Operator && !((evaluatedLeft = (res as Operator).left.Evaluate()) is Error))
+            if (res is Add && !((evaluatedLeft = (res as Add).left.Evaluate()) is Error))
             {
-                (res as Operator).left = evaluatedLeft;
+                (res as Add).left = evaluatedLeft;
             }
 
-            if (res is Operator && !((evaluatedRight = (res as Operator).right.Evaluate()) is Error))
+            if (res is Add && !((evaluatedRight = (res as Add).right.Evaluate()) is Error))
             {
-                (res as Operator).right = evaluatedRight;
+                (res as Add).right = evaluatedRight;
             }
 
             res.parent = parent;
@@ -459,7 +458,7 @@ namespace Ast
             Expression res = null;
 
             right = Evaluator.SimplifyExp(new Mul(new Integer(-1), right));
-             res = new Add(left, right).Simplify();
+            res = new Add(left, right).Simplify();
 
             res.parent = parent;
             return res;
@@ -598,14 +597,14 @@ namespace Ast
             //    res = new Mul(new Integer(2), (res as Operator).left);
             //}
 
-            if (res is Operator && !((evaluatedLeft = (res as Operator).left.Evaluate()) is Error))
+            if (res is Mul && !((evaluatedLeft = (res as Mul).left.Evaluate()) is Error))
             {
-                (res as Operator).left = evaluatedLeft;
+                (res as Mul).left = evaluatedLeft;
             }
 
-            if (res is Operator && !((evaluatedRight = (res as Operator).right.Evaluate()) is Error))
+            if (res is Mul && !((evaluatedRight = (res as Mul).right.Evaluate()) is Error))
             {
-                (res as Operator).right = evaluatedRight;
+                (res as Mul).right = evaluatedRight;
             }
 
             res.parent = parent;
@@ -811,14 +810,14 @@ namespace Ast
             {
                 res = new Div(Evaluator.SimplifyExp(left), Evaluator.SimplifyExp(right));
 
-                if (!((evaluatedLeft = (res as Operator).left.Evaluate()) is Error))
+                if (!((evaluatedLeft = (res as Div).left.Evaluate()) is Error))
                 {
-                    (res as Operator).left = evaluatedLeft;
+                    (res as Div).left = evaluatedLeft;
                 }
 
-                if (!((evaluatedRight = (res as Operator).right.Evaluate()) is Error))
+                if (!((evaluatedRight = (res as Div).right.Evaluate()) is Error))
                 {
-                    (res as Operator).right = evaluatedRight;
+                    (res as Div).right = evaluatedRight;
                 }
             }
 

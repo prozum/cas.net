@@ -19,7 +19,10 @@ namespace Ast.Tests
                 {"f(x,y,z)=x/y*z", "f(x,y,z)=x/y*z"},
                 {"x==y", "x==y"},
                 {"x:=y", "x:=y"},
-                {"x+x+4*5+x+x+x+x+x", "x+x+4*5+x+x+x+x+x"}
+                {"x+x+4*5+x+x+x+x+x", "x+x+4*5+x+x+x+x+x"},
+                {"(x+x)*(y+y)","(x+x)*(y+y)"},
+                {"sin(sqrt(90))", "sin(sqrt(90))"},
+                {"x + x + y", "x+x+y"}
             };
 
             for (int i = 0; i < testStrings.GetLength(0); i++) 

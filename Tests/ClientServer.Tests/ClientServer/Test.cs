@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Account;
 using CAS.NET.Server;
 using ImEx;
@@ -10,7 +11,7 @@ namespace ClientServer
     public class Test
     {
 		const string host = "http://localhost:8080/";
-		const string database = @"server=localhost;userid=root;password=passwd;database=mydb";
+		const string database = @"server=localhost;userid=root;password=;database=mydb";
 
 		Teacher teacher = new Teacher("teacher", "passwd0");
 		Student student1 = new Student("student1", "passwd1");
@@ -19,7 +20,12 @@ namespace ClientServer
 		Student student4 = new Student("student4", "passwd4");
 		Student student5 = new Student("student5", "passwd5");
 
-		Database db = new Database(database);
+		static Database db = new Database(database);
+
+		static void run()
+		{
+			Server.StartListen (host, db);
+		}
 
         [Test()]
         public void TestCase()
@@ -27,6 +33,20 @@ namespace ClientServer
 			db.CleanAssignment ();
 			db.CleanCompleted ();
 			db.CleanFeedback ();
+			db.CleanAccount ();
+
+			//db.CreateDB ();
+
+			Thread thread = new Thread(run);
+			thread.Start ();
+
+			db.AddUser ("student1", "passwd1", "9A2016", 0);
+			db.AddUser ("student2", "passwd2", "9A2016", 0);
+			db.AddUser ("student3", "passwd3", "9A2016", 0);
+			db.AddUser ("student4", "passwd4", "9A2016", 0);
+			db.AddUser ("student5", "passwd5", "9A2016", 0);
+			db.AddUser ("teacher", "passwd0", "teacher", 1);
+
 			string assignment = "2+2=4";
 			string assignmentName = "AssignmentFilename";
 			string checksum = ImEx.Checksum.GetMd5Hash (assignment);
@@ -85,11 +105,15 @@ namespace ClientServer
 			string addFeedback5 = teacher.AddFeedback (assignment, assignmentName, grade);
 			string getFeedback5 = student1.GetFeedback (assignmentName);
 
+			Assert.AreEqual (teacher.GetCompleted(assignmentName, grade), "No more assignments to give feedback");
+
 			Assert.AreEqual (assignment, student1.GetFeedback(assignmentName));
 			Assert.AreEqual (assignment, student2.GetFeedback(assignmentName));
 			Assert.AreEqual (assignment, student3.GetFeedback(assignmentName));
 			Assert.AreEqual (assignment, student4.GetFeedback(assignmentName));
 			Assert.AreEqual (assignment, student5.GetFeedback(assignmentName));
+
+			thread.Abort ();
         }
     }
 }

@@ -109,7 +109,7 @@ namespace Ast
 
         public override Expression Evaluate()
         {
-            return GetValue().Evaluate();
+            return Evaluator.SimplifyExp(GetValue()).Evaluate();
         }
 
         public Expression GetValue() { return GetValue(identifier); }
