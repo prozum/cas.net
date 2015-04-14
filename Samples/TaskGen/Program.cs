@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using Ast;
 
 namespace TaskGen
 {
@@ -93,6 +94,13 @@ namespace TaskGen
             Console.WriteLine ("4. Set varNum (is {0})", varNum);
         }
 
+        static string GetAnswer (string task)
+        {       
+            string answer = Parser.Parse (task).Evaluate ().ToString ();
+
+            return answer;
+        }
+
         public static void Main ()
         {
             string task;
@@ -102,7 +110,6 @@ namespace TaskGen
             int varNum = 2; 
 
             ConsoleKeyInfo In;
-
             PrintMenu (varMin, varMax, varNum);
 
             do {
@@ -115,6 +122,7 @@ namespace TaskGen
                     task = MakeCalcTask (varMin, varMax, varNum);
                     Console.Clear ();
                     Console.WriteLine (task);
+                    Console.WriteLine (GetAnswer (task));
                 } else if (In.Key == ConsoleKey.D2) {
                     Console.Clear ();
                     Console.Write ("enter new value: ");
