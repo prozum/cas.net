@@ -347,7 +347,7 @@ namespace Ast
                     //More than one dot. Error!
                     if (resultType == NumberType.Irrational )
                     {
-                        return new Error("Parser> Parser: unexpected extra decimal seperator in: " + parseReader.ToString());
+                        return new Error("Parser> unexpected extra decimal seperator in: " + parseReader.ToString());
                     }
 
                     number += (char)parseReader.Read();
@@ -373,7 +373,7 @@ namespace Ast
                 case NumberType.Complex:
                     return new Complex();
                 default:
-                    return new Error("Parser> Parser: unknown error in:" + parseReader.ToString());
+                    return new Error("Parser> unknown error in:" + parseReader.ToString());
             }
         }
 
@@ -417,7 +417,7 @@ namespace Ast
             case "^":
                 return new Exp ();
             default:
-                return new Error("Parser> Parser: operator not supported: " + op);
+                return new Error("Parser> operator not supported: " + op);
             }
         }
     }
