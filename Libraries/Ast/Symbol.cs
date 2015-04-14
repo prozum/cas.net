@@ -6,6 +6,8 @@ namespace Ast
     public class Symbol : NotNumber
     {
         public Symbol() : this(null, null, new Integer(1), new Integer(1)) { }
+        public Symbol(Symbol symbolExp) : this(symbolExp.evaluator, symbolExp.identifier, new Integer(1), new Integer(1)) { }
+        public Symbol(Symbol symbolExp, Number prefix, Number exponent) : this(symbolExp.evaluator, symbolExp.identifier, prefix, exponent) { }
         public Symbol(Evaluator evaluator, string sym) : this(evaluator, sym, new Integer(1), new Integer(1)) { }
         public Symbol(Evaluator evaluator, string sym, Number prefix, Number exponent) : base(sym, prefix, exponent)
         {

@@ -79,7 +79,7 @@ namespace Ast
             }
             else
             {
-                return new EvalData(EvalType.Print, (SimplifyExp(exp).ToString()));
+                return new EvalData(EvalType.Print, (SimplifyExp(exp).Evaluate().ToString()));
             }
         }
 
