@@ -367,13 +367,26 @@ namespace Ast
             switch (resultType)
             {
                 case NumberType.Integer:
-                    return new Integer(Int64.Parse(number));
+                    Int64 intRes;
+                    if (Int64.TryParse(number, out intRes))
+                        return new Integer(intRes);
+                    else
+                        return new Error("Parser> Integer overflow");
+                    break;
                 case NumberType.Irrational:
-                    return new Irrational(decimal.Parse(number));
+                    decimal decRes;
+                    if (decimal.TryParse(number, out decRes))
+                        return new Irrational(decRes);
+                    else
+                        return new Error("Parser> Decimal overflow");
+                    break;
                 case NumberType.Complex:
-                    return new Complex();
+                    return new Error("Parser> Complex numbers not supported yet");
+                    //return new Complex();
+                    break;
                 default:
                     return new Error("Parser> unknown error in:" + parseReader.ToString());
+                    break;
             }
         }
 
