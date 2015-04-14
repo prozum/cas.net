@@ -9,6 +9,7 @@ namespace Gui.Tests
         VBox oVB;
         VBox iVB;
         int globVarMin, globVarMax, globVarNum;
+        string casfile;
 
         public static void Main(string[] args)
         {
@@ -48,6 +49,9 @@ namespace Gui.Tests
             MenuItem file = new MenuItem("MenuTest");
             file.Submenu = filemenu;
 
+            MenuItem openFile = new MenuItem("Open File");
+            openFile.Activated += (o, a) => OpenFile();
+
             MenuItem properties = new MenuItem("Properties");
             properties.Activated += (o, a) => OnActivatedProperties(globVarMin, globVarMax, globVarNum);
 
@@ -68,6 +72,7 @@ namespace Gui.Tests
             MenuItem text = new MenuItem("Text Field");
             text.Activated += (object sender, EventArgs e) => AddTextBox();
 
+            filemenu.Append(openFile);
             filemenu.Append(properties);
             filemenu.Append(exit);
             addFileMenu.Append(gen);
@@ -223,6 +228,26 @@ namespace Gui.Tests
             return t;
         }
 
+        void OpenFile()
+        {
+            OperatingSystem os = Environment.OSVersion;
+            Console.WriteLine(os.ToString());
+
+            FileChooserDialog filechooser = new FileChooserDialog("Open file...", this, FileChooserAction.Open, "Cancel", ResponseType.Cancel, "Open", ResponseType.Accept);
+
+            filechooser.AddButton(Stock.Cancel, ResponseType.Cancel);
+            filechooser.AddButton(Stock.Open, ResponseType.Ok);
+
+            filechooser.Filter = new FileFilter();
+            filechooser.Filter.AddPattern("*.cas");
+
+            if(filechooser.Run() == (int)ResponseType.Accept)
+            {
+                casfile = filechooser.Filename;
+            }
+
+            filechooser.Destroy();
+        }
 
     }
 }
