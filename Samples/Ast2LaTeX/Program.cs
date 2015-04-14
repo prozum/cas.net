@@ -1,9 +1,6 @@
 ﻿using System;
 using Ast;
 
-using System;
-using Ast;
-
 namespace Ast2LaTeX
 {
     class MainClass
