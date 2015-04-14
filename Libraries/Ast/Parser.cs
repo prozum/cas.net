@@ -33,7 +33,7 @@ namespace Ast
                 // Skip whitespace
                 while (char.IsWhiteSpace ((char)curChar)) 
                 {
-                    parseReader.Read();
+                    curChar = parseReader.Read();
                 }
 
                 // Functions & Variables
@@ -133,31 +133,33 @@ namespace Ast
             {
                 parseReader.Read();
 
-                while (!((char)parseReader.Peek()).Equals(End) && (parentStart == parentEnd))
+                while (!((char)parseReader.Peek()).Equals(End) || (parentStart != parentEnd))
                 {
                     curChar = (char)parseReader.Peek();
                     
                     if (curChar.Equals(Start))
                     {
-                            parentStart++;
+                        substring += curChar;
+                        parentStart++;
                     } 
                     else if (curChar.Equals(End))
                     {
-                            parentEnd++;
+                        substring += curChar;
+                        parentEnd++;
                     }
                     else if (curChar.Equals(Sep))
                     {
-                            exs.Add (Parser.Parse(evaluator, substring));
-                            substring = "";
+                        exs.Add (Parser.Parse(evaluator, substring));
+                        substring = "";
                     }
                     else if (curChar.Equals('\uffff'))
                     {
                         exs.Add (new Error("No end char"));
-                            return exs;
+                        return exs;
                     }
                     else
                     {
-                            substring += curChar;
+                        substring += curChar;
                     }
 
                     parseReader.Read();
@@ -248,9 +250,7 @@ namespace Ast
 
             if ((char)curChar == '(')
             {
-
                 return ParseFunction(evaluator, identifier, parseReader);
-
             } 
             else 
             {
@@ -306,7 +306,7 @@ namespace Ast
                 }
                 else
                 {
-                    res = new Error("Parser> Unary operation can't have more than one argument");
+                    res = new Error("Parser> Unary operators can't have more than one argument");
                 }
             }
             else
