@@ -11,7 +11,7 @@ namespace ClientServer
     public class Test
     {
 		const string host = "http://localhost:8080/";
-		const string database = @"server=localhost;userid=root;password=;database=mydb";
+		const string database = @"server=localhost;userid=travis2;database=mydb";
 
 		Teacher teacher = new Teacher("teacher", "passwd0");
 		Student student1 = new Student("student1", "passwd1");
@@ -21,10 +21,11 @@ namespace ClientServer
 		Student student5 = new Student("student5", "passwd5");
 
 		static Database db = new Database(database);
+		Server server = new Server(host, db);
 
-		static void run()
+		void run()
 		{
-			Server.StartListen (host, db);
+			server.StartListen();
 		}
 
         [Test()]
@@ -34,8 +35,6 @@ namespace ClientServer
 			db.CleanCompleted ();
 			db.CleanFeedback ();
 			db.CleanAccount ();
-
-			//db.CreateDB ();
 
 			Thread thread = new Thread(run);
 			thread.Start ();
