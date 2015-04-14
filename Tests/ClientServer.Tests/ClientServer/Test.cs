@@ -21,10 +21,11 @@ namespace ClientServer
 		Student student5 = new Student("student5", "passwd5");
 
 		static Database db = new Database(database);
+		Server server = new Server(host, db);
 
-		static void run()
+		void run()
 		{
-			Server.StartListen (host, db);
+			server.StartListen();
 		}
 
         [Test()]
@@ -34,8 +35,6 @@ namespace ClientServer
 			db.CleanCompleted ();
 			db.CleanFeedback ();
 			db.CleanAccount ();
-
-			//db.CreateDB ();
 
 			Thread thread = new Thread(run);
 			thread.Start ();

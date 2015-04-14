@@ -7,8 +7,9 @@ namespace CAS.NET.Server
         public static void Main (string[] args)
         {
             string cs = @"server=localhost;userid=root;password=" + args[0] + ";database=mydb";
-            Database DB = new Database(cs);
-            Server.StartListen("http://localhost:8080/", DB);
+            Database db = new Database(cs);
+			Server server = new Server("http://localhost:8080/", db);
+			server.StartListen();
             Console.WriteLine ("Hello World!");
         }
     }

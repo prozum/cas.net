@@ -7,9 +7,18 @@ using ImEx;
 
 namespace CAS.NET.Server
 {
-    public static class Server
+    public class Server
     {
-        public static void StartListen(string prefix, Database db)
+		Database db;
+		string prefix;
+
+		public Server(string prefix, Database db)
+		{
+			this.db = db;
+			this.prefix = prefix;
+		}
+
+        public void StartListen()
         {
             if (string.IsNullOrEmpty(prefix))
             {
@@ -30,8 +39,7 @@ namespace CAS.NET.Server
                     var context = listener.GetContext();
                     var request = context.Request;
                     var response = context.Response;
-
-                    HttpListenerBasicIdentity identity = (HttpListenerBasicIdentity)context.User.Identity;
+                    var identity = (HttpListenerBasicIdentity)context.User.Identity;
 
                     Stream reader = request.InputStream;
                     byte[] buffer;
@@ -58,7 +66,7 @@ namespace CAS.NET.Server
             }
         }
 
-        public static string ExecuteCommand(string username, string password, string msg, Database db)
+        private string ExecuteCommand(string username, string password, string msg, Database db)
         {
             // decode command from client message and remove it from msg
             string command = msg.Substring(0, msg.IndexOf(" "));
@@ -106,7 +114,7 @@ namespace CAS.NET.Server
             }
         }
 
-        public static string TeacherAddAssignment(string username, string msg, Database db)
+        private string TeacherAddAssignment(string username, string msg, Database db)
         {        
             string[] strArr = msg.Split(' ');
 
@@ -114,8 +122,6 @@ namespace CAS.NET.Server
             string grade = strArr[1];
             string filename = strArr[2];
             string file = String.Empty;
-
-            // string[] strArr = { grade, username, password, filename };
 
             for (int i = 3; i < strArr.Length; i++)
             {
@@ -137,12 +143,12 @@ namespace CAS.NET.Server
             return db.AddAssignment(username, filename, file, grade);  
         }
 
-        public static string TeacherGetAssignmentList(string username, string msg, Database db)
+		private string TeacherGetAssignmentList(string username, string msg, Database db)
         {      
             return string.Join(" ", db.TeacherGetAssignmentList(username));
         }
 
-        public static string TeacherGetCompleted(string username, string msg, Database db)
+		private string TeacherGetCompleted(string username, string msg, Database db)
         {     
             string[] strArr = msg.Split(' ');
 
@@ -154,7 +160,7 @@ namespace CAS.NET.Server
             return db.GetCompleted(filename, grade);
         }
 
-        public static string TeacherAddFeedback(string username, string msg, Database db)
+        private string TeacherAddFeedback(string username, string msg, Database db)
         {
             string[] strArr = msg.Split(' ');
 
@@ -172,13 +178,13 @@ namespace CAS.NET.Server
             return "Successfully added feedback";
         }
 
-        public static string StudentGetAssignmentList(string username, string msg, Database db)
+        private string StudentGetAssignmentList(string username, string msg, Database db)
         {
             string grade = db.GetGrade(username);
             return string.Join(" ", db.StudentGetAssignmentList(grade));
         }
 
-        public static string StudentGetAssignment(string username, string msg, Database db)
+        private string StudentGetAssignment(string username, string msg, Database db)
         {
             string[] strArr = msg.Split(' ');
 
@@ -188,7 +194,7 @@ namespace CAS.NET.Server
             return db.GetAssignment(filename, grade);
         }
 
-        public static string StudentAddCompleted(string username, string msg, Database db)
+        private string StudentAddCompleted(string username, string msg, Database db)
         {
             string[] strArr = msg.Split(' ');         
 
@@ -206,7 +212,7 @@ namespace CAS.NET.Server
             return "Successfully added completed assignment";
         }
 
-        public static string StudentGetFeedback(string username, string msg, Database db)
+        private string StudentGetFeedback(string username, string msg, Database db)
         {
             string[] strArr = msg.Split(' ');
 
