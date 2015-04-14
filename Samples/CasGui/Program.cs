@@ -1,7 +1,6 @@
 ﻿using System;
 using Gtk;
 using TaskGenLib;
-using ImEx;
 
 namespace Gui.Tests
 {
@@ -53,6 +52,9 @@ namespace Gui.Tests
             MenuItem file = new MenuItem("File");
             file.Submenu = filemenu;
 
+            MenuItem newFile = new MenuItem("New File");
+            newFile.Activated += (object sender, EventArgs e) => ClearWindow();
+
             MenuItem openFile = new MenuItem("Open File");
             openFile.Activated += (o, a) => OpenFile();
 
@@ -87,7 +89,7 @@ namespace Gui.Tests
             MenuItem login = new MenuItem("Login");
             login.Activated += (object sender, EventArgs e) => LoginScreen();
 
-
+            filemenu.Append(newFile);
             filemenu.Append(openFile);
             filemenu.Append(saveFile);
             filemenu.Append(properties);
@@ -400,6 +402,14 @@ namespace Gui.Tests
 
             loginWindow.Add(vbox);
             loginWindow.ShowAll();
+        }
+
+        void ClearWindow()
+        {
+            foreach (Widget item in iVB)
+            {
+                iVB.Remove(item);
+            }
         }
     }
 }
