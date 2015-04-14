@@ -31,6 +31,7 @@
     <Reference Include="System" />
     <Reference Include="nunit.framework">
       <HintPath>..\..\..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+      <Package>nunit</Package>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -41,15 +42,15 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Libraries\Account\Account.csproj">
+    <ProjectReference Include="..\..\Libraries\Account\Account.csproj">
       <Project>{926EE758-EDA5-4B92-BFE8-419C54909810}</Project>
       <Name>Account</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\CAS.NET.Server\CAS.NET.Server.csproj">
+    <ProjectReference Include="..\..\CAS.NET.Server\CAS.NET.Server.csproj">
       <Project>{CEA736B0-9A43-44FF-A369-C9D310C9C238}</Project>
       <Name>CAS.NET.Server</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Libraries\ImEx\ImEx.csproj">
+    <ProjectReference Include="..\..\Libraries\ImEx\ImEx.csproj">
       <Project>{5150E825-D811-4D68-8C0E-86A1F8573561}</Project>
       <Name>ImEx</Name>
     </ProjectReference>

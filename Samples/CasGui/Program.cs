@@ -11,6 +11,7 @@ namespace Gui.Tests
         int globVarMin, globVarMax, globVarNum;
         string casfile;
 
+        [STAThread]
         public static void Main(string[] args)
         {
             Application.Init();
@@ -231,23 +232,61 @@ namespace Gui.Tests
         void OpenFile()
         {
             OperatingSystem os = Environment.OSVersion;
-            Console.WriteLine(os.ToString());
+            PlatformID pid = os.Platform;
 
-            FileChooserDialog filechooser = new FileChooserDialog("Open file...", this, FileChooserAction.Open, "Cancel", ResponseType.Cancel, "Open", ResponseType.Accept);
-
-            filechooser.AddButton(Stock.Cancel, ResponseType.Cancel);
-            filechooser.AddButton(Stock.Open, ResponseType.Ok);
-
-            filechooser.Filter = new FileFilter();
-            filechooser.Filter.AddPattern("*.cas");
-
-            if(filechooser.Run() == (int)ResponseType.Accept)
+            switch(pid)
             {
-                casfile = filechooser.Filename;
+                case PlatformID.Win32S:
+                case PlatformID.Win32Windows:
+                case PlatformID.WinCE:
+                case PlatformID.Win32NT: // <- if one, this is the one we really need
+                {
+                    System.IO.Stream myStream = null;
+                    System.Windows.Forms.OpenFileDialog filechooser = new System.Windows.Forms.OpenFileDialog();
+
+                    filechooser.InitialDirectory = "c:\\";
+                    filechooser.Filter = "cas files (*.cas)|*.cas";
+                    filechooser.FilterIndex = 2;
+                    filechooser.RestoreDirectory = true;
+
+                    if(filechooser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
+                        if ((myStream = filechooser.OpenFile()) != null)
+                        {
+                            using (myStream)
+                            {
+                                // Insert code to read the stream here.
+                            }
+                        }
+                    }
+
+                    break;
+                }
+                case PlatformID.Unix:
+                case PlatformID.MacOSX:
+                {
+                    FileChooserDialog filechooser = new FileChooserDialog("Open file...", this, FileChooserAction.Open, "Cancel", ResponseType.Cancel, "Open", ResponseType.Accept);
+
+                    filechooser.AddButton(Stock.Cancel, ResponseType.Cancel);
+                    filechooser.AddButton(Stock.Open, ResponseType.Ok);
+
+                    filechooser.Filter = new FileFilter();
+                    filechooser.Filter.AddPattern("*.cas");
+
+                    if (filechooser.Run() == (int)ResponseType.Accept)
+                    {
+                        casfile = filechooser.Filename;
+                    }
+
+                    filechooser.Destroy();
+
+                    break;
+                }
+                default:
+                {
+                    break;
+                }
             }
-
-            filechooser.Destroy();
         }
-
     }
 }
