@@ -33,7 +33,7 @@ namespace Ast
                 // Skip whitespace
                 while (char.IsWhiteSpace ((char)curChar)) 
                 {
-                    parseReader.Read();
+                    curChar = parseReader.Read();
                 }
 
                 // Functions & Variables
@@ -133,31 +133,33 @@ namespace Ast
             {
                 parseReader.Read();
 
-                while (!((char)parseReader.Peek()).Equals(End) && (parentStart == parentEnd))
+                while (!((char)parseReader.Peek()).Equals(End) || (parentStart != parentEnd))
                 {
                     curChar = (char)parseReader.Peek();
                     
                     if (curChar.Equals(Start))
                     {
-                            parentStart++;
+                        substring += curChar;
+                        parentStart++;
                     } 
                     else if (curChar.Equals(End))
                     {
-                            parentEnd++;
+                        substring += curChar;
+                        parentEnd++;
                     }
                     else if (curChar.Equals(Sep))
                     {
-                            exs.Add (Parser.Parse(evaluator, substring));
-                            substring = "";
+                        exs.Add (Parser.Parse(evaluator, substring));
+                        substring = "";
                     }
                     else if (curChar.Equals('\uffff'))
                     {
                         exs.Add (new Error("No end char"));
-                            return exs;
+                        return exs;
                     }
                     else
                     {
-                            substring += curChar;
+                        substring += curChar;
                     }
 
                     parseReader.Read();
@@ -248,9 +250,7 @@ namespace Ast
 
             if ((char)curChar == '(')
             {
-
                 return ParseFunction(evaluator, identifier, parseReader);
-
             } 
             else 
             {
@@ -306,7 +306,7 @@ namespace Ast
                 }
                 else
                 {
-                    res = new Error("Parser> Unary operation can't have more than one argument");
+                    res = new Error("Parser> Unary operators can't have more than one argument");
                 }
             }
             else
@@ -347,7 +347,7 @@ namespace Ast
                     //More than one dot. Error!
                     if (resultType == NumberType.Irrational )
                     {
-                        return new Error("Parser> Parser: unexpected extra decimal seperator in: " + parseReader.ToString());
+                        return new Error("Parser> unexpected extra decimal seperator in: " + parseReader.ToString());
                     }
 
                     number += (char)parseReader.Read();
@@ -367,13 +367,22 @@ namespace Ast
             switch (resultType)
             {
                 case NumberType.Integer:
-                    return new Integer(Int64.Parse(number));
+                    Int64 intRes;
+                    if (Int64.TryParse(number, out intRes))
+                        return new Integer(intRes);
+                    else
+                        return new Error("Parser> Integer overflow");
                 case NumberType.Irrational:
-                    return new Irrational(decimal.Parse(number));
+                    decimal decRes;
+                    if (decimal.TryParse(number, out decRes))
+                        return new Irrational(decRes);
+                    else
+                        return new Error("Parser> Decimal overflow");
                 case NumberType.Complex:
-                    return new Complex();
+                    return new Error("Parser> Complex numbers not supported yet");
+                    //return new Complex();
                 default:
-                    return new Error("Parser> Parser: unknown error in:" + parseReader.ToString());
+                    return new Error("Parser> unknown error in:" + parseReader.ToString());
             }
         }
 
@@ -417,7 +426,7 @@ namespace Ast
             case "^":
                 return new Exp ();
             default:
-                return new Error("Parser> Parser: operator not supported: " + op);
+                return new Error("Parser> operator not supported: " + op);
             }
         }
     }

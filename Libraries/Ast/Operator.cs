@@ -713,7 +713,10 @@ namespace Ast
         {
             if (left is Integer && right is Integer)
             {
-                return new Rational((left as Integer), (right as Integer));
+                if ((right as Integer).value != 0)
+                    return new Rational((left as Integer), (right as Integer));
+                else
+                    return new Error("Evaluator> Cannot divide by zero");
             }
 
             if (left is Integer && right is Rational)
@@ -839,7 +842,7 @@ namespace Ast
         {
             if (left is Integer && right is Integer) 
             {
-                return new Integer( (int)Math.Pow((left as Integer).value, (right as Integer).value));
+                return new Integer( (Int64)Math.Pow((left as Integer).value, (right as Integer).value));
             }
 
             if (left is Integer && right is Rational)
