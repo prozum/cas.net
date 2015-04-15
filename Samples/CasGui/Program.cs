@@ -173,6 +173,8 @@ namespace Gui.Tests
 
         public void UpdateWorkspace()
         {
+            mt.Clear();
+
             foreach (Widget w in lw)
             {
                 if (w.GetType() == typeof(Entry))
@@ -291,9 +293,14 @@ namespace Gui.Tests
             OperatingSystem os = Environment.OSVersion;
             PlatformID pid = os.Platform;
 
+            Console.WriteLine(mt.Count);
+
             UpdateWorkspace();
+
+            Console.WriteLine(mt.Count);
+
             casFile = ImEx.Export.Serialize(mt);
-            Console.WriteLine(casFile);
+            Console.WriteLine("CAS FILE:::\n" + casFile);
 
             switch (pid)
             {
@@ -361,16 +368,122 @@ namespace Gui.Tests
             Button buttonMoveUp = new Button("↑");
             buttonMoveUp.HeightRequest = 10;
             buttonMoveUp.WidthRequest = 10;
+            buttonMoveUp.Clicked += delegate(object sender, EventArgs e)
+            {
+                
+                Console.WriteLine(lw.Count);
+
+                foreach (Widget item in lw)
+                {
+                    Console.WriteLine("Item in lw: " + item.ToString());
+                }
+
+                int ID = lw.IndexOf(widget);
+                Console.WriteLine("ID: " + ID);
+                if (ID >= 1)
+                {
+                    Console.WriteLine("Inside deligate");
+                    Console.WriteLine("Moving ID: " + lw.IndexOf(widget));
+                    Widget w = lw[ID];
+                    Console.WriteLine("Got widget");
+                    lw.RemoveAt(ID);
+                    Console.WriteLine("Removed Widget\nInserting widget @ " + ID);
+                    lw.Insert(ID - 1, w);
+                    Console.WriteLine("Inserted Widget");
+                    Redraw();
+                }
+
+                foreach (Widget item in lw)
+                {
+                    Console.WriteLine("Item in lw: " + item.ToString());
+                }
+
+
+                Console.WriteLine(lw.Count);
+            };
 
             Button buttonMoveDown = new Button("↓");
             buttonMoveDown.HeightRequest = 10;
             buttonMoveDown.WidthRequest = 10;
+            buttonMoveDown.Clicked += delegate(object sender, EventArgs e)
+            {
+
+                Console.WriteLine(lw.Count);
+
+                foreach (Widget item in lw)
+                {
+                    Console.WriteLine("Item in lw: " + item.ToString());
+                }
+
+                int ID = lw.IndexOf(widget);
+                Console.WriteLine("ID: " + ID);
+                if (ID <= lw.Count - 2)
+                {
+                    Console.WriteLine("Inside deligate");
+                    Console.WriteLine("Moving ID: " + lw.IndexOf(widget));
+                    Widget w = lw[ID];
+                    Console.WriteLine("Got widget");
+                    lw.RemoveAt(ID);
+                    Console.WriteLine("Removed Widget\nInserting widget @ " + ID);
+                    lw.Insert(ID + 1, w);
+                    Console.WriteLine("Inserted Widget");
+                    Redraw();
+                }
+
+                foreach (Widget item in lw)
+                {
+                    Console.WriteLine("Item in lw: " + item.ToString());
+                }
+
+
+                Console.WriteLine(lw.Count);
+            };
 
             grid.Attach(widget, 1, 1, 1, 2);
             grid.Attach(buttonMoveUp, 2, 1, 1, 1);
             grid.Attach(buttonMoveDown, 2, 2, 1, 1);
 
             return grid;
+        }
+
+        void Redraw()
+        {
+            UpdateWorkspace();
+
+            lw.Clear();
+
+            foreach (Widget w in globalGrid)
+            {
+                globalGrid.Remove(w);
+            }
+
+            foreach (var item in mt)
+            {
+                if (item.type == typeof(Entry))
+                {
+                    Entry entry = new Entry();
+                    entry.Text = item.metastring0;
+                    entry.HeightRequest = item.metaint0;
+                    entry.WidthRequest = item.metaint1;
+                    lw.Add(entry);
+                }
+                if (item.type == typeof(TextView))
+                {
+                    TextView textView = new TextView();
+                    textView.Buffer.Text = item.metastring0;
+                    textView.HeightRequest = item.metaint0;
+                    textView.WidthRequest = item.metaint1;
+                    lw.Add(textView);
+                }
+            }
+
+            foreach (Widget item in lw)
+            {
+                globalGrid.Attach(MovableWidget(item), 1, gridNumber, 1, 1);
+                gridNumber++;
+            }
+
+            ShowAll();
         }
 
         /*
