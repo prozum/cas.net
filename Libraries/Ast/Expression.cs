@@ -38,7 +38,8 @@ namespace Ast
             }
         }
 
+        public abstract bool ContainsNotNumber(NotNumber other);
+
         //public abstract string ToString ();
-        //public abstract bool Contains (Expression a);
     }
 }
