@@ -41,6 +41,9 @@ namespace Gui.Tests
 
             MenuBar menuBar = new MenuBar();
             Menu fileMenu = new Menu();
+            Menu addMenu = new Menu();
+
+
 
             MenuItem file = new MenuItem("File");
             file.Submenu = fileMenu;
@@ -54,17 +57,29 @@ namespace Gui.Tests
             MenuItem saveFile = new MenuItem("Save File");
             saveFile.Activated += (o, a) => SaveFile();
 
+
+
+            MenuItem addItem = new MenuItem("Add");
+            addItem.Submenu = addMenu;
+
+            MenuItem addEntry = new MenuItem("Entry");
+            addEntry.Activated += (object sender, EventArgs e) => AddEntryWidget();
+
+            MenuItem addTextView = new MenuItem("TextView");
+            addTextView.Activated += (object sender, EventArgs e) => AddTextViewWidget();
+
+
             fileMenu.Append(newFile);
             fileMenu.Append(openFile);
             fileMenu.Append(saveFile);
 
+            addMenu.Append(addEntry);
+            addMenu.Append(addTextView);
+
             menuBar.Append(file);
+            menuBar.Append(addItem);
 
             #endregion
-
-            //lw.Add(EntryWidget());
-            //lw.Add(EntryWidget());
-            //lw.Add(EntryWidget());
 
             int elementNumber = 0;
 
@@ -84,11 +99,55 @@ namespace Gui.Tests
 
         }
 
+        public void AddEntryWidget()
+        {
+            Entry entry = (Entry)EntryWidget();
+            lw.Add(entry);
+
+            int elementNumber = 0;
+
+            foreach (Widget item in lw)
+            {
+                globalGrid.Attach(item, 1, elementNumber, 1, 1);
+                elementNumber++;
+            }
+
+            ShowAll();
+        }
+
+        public void AddTextViewWidget()
+        {
+            TextView textView = (TextView)TextViewWidget();
+            lw.Add(textView);
+
+            int elementNumber = 0;
+
+            foreach (Widget item in lw)
+            {
+                globalGrid.Attach(item, 1, elementNumber, 1, 1);
+                elementNumber++;
+            }
+
+            ShowAll();
+        }
+
+
+
+        public Widget TextViewWidget()
+        {
+            TextView textView = new TextView();
+            textView.HeightRequest = 100;
+            textView.WidthRequest = Window.Width;
+            textView.Visible = true;
+
+            return textView;
+        }
+
         public Widget EntryWidget()
         {
             Entry entry = new Entry();
             entry.HeightRequest = 20;
-            entry.WidthRequest = 100;
+            entry.WidthRequest = Window.Width;
             entry.Buffer.Text = "";
 
             return entry;
@@ -127,7 +186,22 @@ namespace Gui.Tests
                 if (w.GetType() == typeof(Entry))
                 {
                     Entry en = (Entry)w;
-                    MetaType mtlmt = new MetaType(en.GetType(), en.Text);
+                    MetaType mtlmt = new MetaType();
+                    mtlmt.type = en.GetType();
+                    mtlmt.metastring0 = en.Text;
+                    mtlmt.metaint0 = en.HeightRequest;
+                    mtlmt.metaint1 = en.WidthRequest;
+
+                    mt.Add(mtlmt);
+                }
+                if (w.GetType() == typeof(TextView))
+                {
+                    TextView tv = (TextView)w;
+                    MetaType mtlmt = new MetaType();
+                    mtlmt.type = tv.GetType();
+                    mtlmt.metastring0 = tv.Buffer.Text;
+                    mtlmt.metaint0 = tv.HeightRequest;
+                    mtlmt.metaint1 = tv.WidthRequest;
                     mt.Add(mtlmt);
                 }
             }
@@ -196,8 +270,18 @@ namespace Gui.Tests
                 if (item.type == typeof(Entry))
                 {
                     Entry entry = new Entry();
-                    entry.Text = item.@string;
+                    entry.Text = item.metastring0;
+                    entry.HeightRequest = item.metaint0;
+                    entry.WidthRequest = item.metaint1;
                     lw.Add(entry);
+                }
+                if (item.type == typeof(TextView))
+                {
+                    TextView textView = new TextView();
+                    textView.Buffer.Text = item.metastring0;
+                    textView.HeightRequest = item.metaint0;
+                    textView.WidthRequest = item.metaint1;
+                    lw.Add(textView);
                 }
             }
 
