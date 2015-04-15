@@ -120,7 +120,7 @@ namespace Ast
 
     public class Error: Message
     {
-        public Error(string message) : base(message)
+        public Error(object obj, string message) : base(obj.GetType().Name + "> " +message)
         {
         }
     }

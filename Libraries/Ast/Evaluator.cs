@@ -10,13 +10,16 @@ namespace Ast
         public Dictionary<string, List<string>> functionParams = new Dictionary<string, List<string>>();
         public bool degrees = true;
 
+        public Parser parser;
+
         public Evaluator ()
         {
+            parser = new Parser (this);
         }
 
         public EvalData Evaluation(string inputString)
         {
-            var exp = Parser.Parse(this, inputString);
+            var exp = parser.Parse(this, inputString);
 
             if (exp is Assign)
             {

@@ -45,7 +45,7 @@ namespace Ast
                 }
             }
 
-            return new Error("Operator> Cannot evaluate operator expression!");
+            return new Error(this, "Cannot evaluate operator expression!");
         }
 
         public override string ToString()
@@ -716,7 +716,7 @@ namespace Ast
                 if ((right as Integer).value != 0)
                     return new Rational((left as Integer), (right as Integer));
                 else
-                    return new Error("Evaluator> Cannot divide by zero");
+                    return new Error(this, "Cannot divide by zero");
             }
 
             if (left is Integer && right is Rational)

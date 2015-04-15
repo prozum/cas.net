@@ -60,7 +60,7 @@ namespace Ast
                     {
                         if ((res as Symbol).identifier == callerSymbol)
                         {
-                            return new Error("Symbol> Could not get value of: " + callerSymbol);
+                            return new Error(this, "Could not get value of: " + callerSymbol);
                         }
 
                         return (res as Symbol).GetValue(callerSymbol);
@@ -79,7 +79,7 @@ namespace Ast
                     {
                         if ((res as Symbol).identifier == callerSymbol)
                         {
-                            return new Error("Symbol> Could not get value of: " + callerSymbol);
+                            return new Error(this, "Could not get value of: " + callerSymbol);
                         }
 
                         return (res as Symbol).GetValue(callerSymbol);
@@ -89,7 +89,7 @@ namespace Ast
                 }
             }
 
-            return new Error("Symbol> Could not get Symbol value");
+            return new Error(this, " Could not get Symbol value");
         }
 
         public override bool CompareTo(Expression other)
