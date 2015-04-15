@@ -55,9 +55,7 @@
     <Reference Include="glib-sharp">
       <HintPath>..\..\packages\GtkSharp.3.1.2\lib\net45\glib-sharp.dll</HintPath>
     </Reference>
-    <Reference Include="gtk-sharp">
-      <HintPath>..\..\packages\GtkSharp.3.1.2\lib\net45\gtk-sharp.dll</HintPath>
-    </Reference>
+    <Reference Include="gtk-sharp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
