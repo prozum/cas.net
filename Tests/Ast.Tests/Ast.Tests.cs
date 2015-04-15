@@ -7,6 +7,15 @@ namespace Ast.Tests
     [TestFixture]
     public class AstTests
     {
+        public Evaluator eval;
+        public Parser parser;
+
+        public AstTests()
+        {
+            eval = new Evaluator ();
+            parser = new Parser(eval);
+        }
+
         [Test]
         public void Parse()
         {
@@ -27,7 +36,7 @@ namespace Ast.Tests
 
             for (int i = 0; i < testStrings.GetLength(0); i++) 
             {
-                res = Ast.Parser.Parse(testStrings[i,0]);
+                res = parser.Parse(testStrings[i,0]);
                 Assert.AreEqual (testStrings[i,1], res.ToString());
             }
         }
@@ -48,7 +57,7 @@ namespace Ast.Tests
 
             for (int i = 0; i < testStrings.GetLength(0); i++)
             {
-                res = Evaluator.SimplifyExp(Ast.Parser.Parse(testStrings[i, 0]));
+                res = Evaluator.SimplifyExp(parser.Parse(testStrings[i, 0]));
                 Assert.AreEqual(testStrings[i, 1], res.ToString());
             }
         }
@@ -62,7 +71,7 @@ namespace Ast.Tests
 
             foreach (string testString in testStrings) 
             {
-                res = Ast.Parser.ParseNumber(new System.IO.StringReader(testString));
+                res = parser.ParseNumber(new System.IO.StringReader(testString));
                 Assert.AreEqual (testString, res.ToString());
             }
         }
@@ -79,14 +88,14 @@ namespace Ast.Tests
                 {"2^8", "256"},
                 {"2^62", "4611686018427387904"},
                 {"cos(2)", "0.999390827019096"},
-                {"4^40000/0", "Evaluator> Cannot divide by zero"},
+                {"4^40000/0", "Div> Cannot divide by zero"},
                 {"(1/9)*9", "1"},
                 {"sqrt(2)*sqrt(2)", "2"}
             };
 
             for (int i = 0; i < testStrings.GetLength(0); i++) 
             {
-                res = Ast.Parser.Parse(testStrings[i,0]);
+                res = parser.Parse(testStrings[i,0]);
                 Assert.AreEqual (testStrings[i,1], res.Evaluate().ToString());
             }
         }
