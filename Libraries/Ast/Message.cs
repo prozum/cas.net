@@ -26,89 +26,10 @@ namespace Ast
             return false;
         }
 
-        #region Add Overload
-        public static Message operator +(Message left, Expression right)
+        public override bool ContainsNotNumber(NotNumber other)
         {
-            return left;
+            return true;
         }
-
-        public static Message operator +(Expression left, Message right)
-        {
-            return right;
-        }
-
-        public static Message operator +(Message left, Message right)
-        {
-            return left;
-        }
-        #endregion
-
-        #region Sub Overload
-        public static Message operator -(Message left, Expression right)
-        {
-            return left;
-        }
-
-        public static Message operator -(Expression left, Message right)
-        {
-            return right;
-        }
-
-        public static Message operator -(Message left, Message right)
-        {
-            return left;
-        }
-        #endregion
-
-        #region Div Overload
-        public static Message operator /(Message left, Expression right)
-        {
-            return left;
-        }
-
-        public static Message operator /(Expression left, Message right)
-        {
-            return right;
-        }
-
-        public static Message operator /(Message left, Message right)
-        {
-            return left;
-        }
-        #endregion
-
-        #region Exp Overload
-        public static Message operator ^(Message left, Expression right)
-        {
-            return left;
-        }
-
-        public static Message operator ^(Expression left, Message right)
-        {
-            return right;
-        }
-
-        public static Message operator ^(Message left, Message right)
-        {
-            return left;
-        }
-        #endregion
-
-        #region LessThan Overload
-
-        #endregion
-
-        #region LessThanOrEqual Overload
-
-        #endregion
-
-        #region GreaterThan Overload
-
-        #endregion
-
-        #region GreaterThanOrEqual Overload
-
-        #endregion
     }
 
     public class Info: Message

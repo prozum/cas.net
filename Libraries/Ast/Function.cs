@@ -94,6 +94,14 @@ namespace Ast
 
             return base.Simplify();
         }
+
+        protected override T MakeClone<T>()
+        {
+            T res = base.MakeClone<T>();
+            (res as Function).args = new List<Expression>(args);
+
+            return res;
+        }
     }
 
     public class UserDefinedFunction : Function
@@ -109,11 +117,12 @@ namespace Ast
 
         public override Expression Evaluate()
         {
+            
             return Evaluator.SimplifyExp(GetValue()).Evaluate();
         }
 
-        public Expression GetValue() { return GetValue(identifier); }
-        private Expression GetValue(string callerIdentifier)
+        public Expression GetValue() { return GetValue(this); }
+        public Expression GetValue(NotNumber other)
         {
             List<string> functionParemNames;
             Expression res;
@@ -138,17 +147,12 @@ namespace Ast
 
                     res.SetFunctionCall(this);
 
-                    if (res is UserDefinedFunction)
+                    if (res.ContainsNotNumber(other))
                     {
-                        if ((res as UserDefinedFunction).identifier == callerIdentifier)
-                        {
-                            return new Error("UserDefinedFunction> Could not get value of: " + callerIdentifier);
-                        }
-
-                        return (res as UserDefinedFunction).GetValue(callerIdentifier);
+                        return new Error("UserDefinedFunction> Could not get value of: " + other.identifier);
                     }
 
-                    return new Mul(prefix, new Exp(res, exponent));
+                    return ReturnValue(res);
                 }
                 else if (functionParemNames.Count == 0)
                 {
@@ -163,6 +167,46 @@ namespace Ast
             {
                 return new Error("UserDefinedFunction> Function has no definition");
             }
+        }
+
+        private Expression ReturnValue(Expression definition)
+        {
+            Expression res = null;
+
+            if (prefix.CompareTo(new Integer(0)))
+            {
+                res = new Integer(0);
+            }
+            else
+            {
+                if (exponent.CompareTo(new Integer(0)))
+                {
+                    res = prefix.Clone();
+                }
+                else
+                {
+                    if (!exponent.CompareTo(new Integer(1)))
+                    {
+                        res = new Exp(definition, exponent);
+                    }
+                    else
+                    {
+                        res = definition;
+                    }
+
+                    if (!prefix.CompareTo(new Integer(1)))
+                    {
+                        return new Mul(prefix, res);
+                    }
+	            }
+            }
+
+            return res;
+        }
+
+        public override NotNumber Clone()
+        {
+            return MakeClone<UserDefinedFunction>();
         }
     }
 
@@ -182,7 +226,6 @@ namespace Ast
         public Sin() : this(null, null, new Integer(1), new Integer(1)) { }
         public Sin(string identifier, Expression arg) : base(identifier, arg) { }
         public Sin(string identifier, Expression arg, Number prefix, Number exponent) : base(identifier, arg, prefix, exponent) { }
-
 
         public override Expression Evaluate()
         {
@@ -204,6 +247,11 @@ namespace Ast
             }
 
             return new Error("Sin> Could not take Sin of: " + args[0]);
+        }
+
+        public override NotNumber Clone()
+        {
+            return MakeClone<Sin>();
         }
     }
 
@@ -232,6 +280,11 @@ namespace Ast
             }
 
             return new Error("ASin> Could not take ASin of: " + args[0]);
+        }
+
+        public override NotNumber Clone()
+        {
+            return MakeClone<ASin>();
         }
     }
 
@@ -262,6 +315,11 @@ namespace Ast
 
             return new Error("Cos> Could not take Cos of: " + args[0]);
         }
+
+        public override NotNumber Clone()
+        {
+            return MakeClone<Cos>();
+        }
     }
 
     public class ACos : UnaryOperation
@@ -290,6 +348,11 @@ namespace Ast
             }
 
             return new Error("ACos> Could not take ACos of: " + args[0]);
+        }
+
+        public override NotNumber Clone()
+        {
+            return MakeClone<ACos>();
         }
     }
 
@@ -320,6 +383,11 @@ namespace Ast
 
             return new Error("Tan> Could not take Tan of: " + args[0]);
         }
+
+        public override NotNumber Clone()
+        {
+            return MakeClone<Tan>();
+        }
     }
 
     public class ATan : UnaryOperation
@@ -348,6 +416,11 @@ namespace Ast
             }
 
             return new Error("ATan> Could not take ATan of: " + args[0]);
+        }
+
+        public override NotNumber Clone()
+        {
+            return MakeClone<ATan>();
         }
     }
 
@@ -388,6 +461,11 @@ namespace Ast
 
             return base.Simplify();
         }
+
+        public override NotNumber Clone()
+        {
+            return MakeClone<Sqrt>();
+        }
     }
 
     public class Negation : UnaryOperation
@@ -395,6 +473,11 @@ namespace Ast
         public Negation(string identifier, Expression arg) : base(identifier, arg) { }
 
         public override Expression Evaluate()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override NotNumber Clone()
         {
             throw new NotImplementedException();
         }
@@ -408,6 +491,11 @@ namespace Ast
         {
             return Evaluator.SimplifyExp(args[0]);
         }
+
+        public override NotNumber Clone()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class Expand : UnaryOperation
@@ -417,6 +505,11 @@ namespace Ast
         public override Expression Evaluate()
         {
             return Evaluator.ExpandExp(args[0]);
+        }
+
+        public override NotNumber Clone()
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -441,6 +534,11 @@ namespace Ast
             }
 
             return new Error("Range only supports integers");
+        }
+
+        public override NotNumber Clone()
+        {
+            throw new NotImplementedException();
         }
     }
 }

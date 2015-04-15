@@ -17,34 +17,6 @@ namespace Ast
 
         public override Expression Evaluate()
         {
-            if (left is Operator || left is NotNumber || right is Operator || right is NotNumber)
-            {
-                if (this is Add)
-                {
-                    return new Add(left.Evaluate(), right.Evaluate()).Evaluate();
-                }
-
-                if (this is Sub)
-                {
-                    return new Sub(left.Evaluate(), right.Evaluate()).Evaluate();
-                }
-
-                if (this is Mul)
-                {
-                    return new Mul(left.Evaluate(), right.Evaluate()).Evaluate();
-                }
-
-                if (this is Div)
-                {
-                    return new Div(left.Evaluate(), right.Evaluate()).Evaluate();
-                }
-
-                if (this is Exp)
-                {
-                    return new Exp(left.Evaluate(), right.Evaluate()).Evaluate();
-                }
-            }
-
             return new Error("Operator> Cannot evaluate operator expression!");
         }
 
@@ -95,6 +67,11 @@ namespace Ast
             }
 
             return thisEvaluated.CompareTo(otherEvaluated);
+        }
+
+        public override bool ContainsNotNumber(NotNumber other)
+        {
+            return left.ContainsNotNumber(other) || right.ContainsNotNumber(other);
         }
     }
 
@@ -185,6 +162,24 @@ namespace Ast
 
         public override Expression Evaluate ()
         {
+            if (left is Number)
+            {
+                return (left as Number).AddWith(right);
+            }
+
+            if (right is Number)
+            {
+                return (right as Number).AddWith(left);
+            }
+
+            if (left is Operator || left is NotNumber || right is Operator || right is NotNumber)
+            {
+                return new Add(left.Evaluate(), right.Evaluate()).Evaluate();
+            }
+
+            return base.Evaluate();
+
+            /*
             if (left is Integer && right is Integer)
             {
                 return new Integer((left as Integer).value + (right as Integer).value);
@@ -236,6 +231,7 @@ namespace Ast
             }
 
             return base.Evaluate();
+            */
         }
 
         public override Expression Expand()
@@ -372,9 +368,9 @@ namespace Ast
 
         private Expression NotNumberOperation(NotNumber left, NotNumber right)
         {
-            Expression res = left;
+            NotNumber res = left.Clone();
 
-            (res as NotNumber).prefix = new Add(left.prefix, right.prefix).Evaluate() as Number;
+            res.prefix = left.prefix.AddWith(right.prefix) as Number;
 
             res.parent = parent;
             return res;
@@ -392,6 +388,24 @@ namespace Ast
 
         public override Expression Evaluate ()
         {
+            if (left is Number)
+            {
+                return (left as Number).SubWith(right);
+            }
+
+            if (right is Number)
+            {
+                return (right as Number).SubWith(left);
+            }
+
+            if (left is Operator || left is NotNumber || right is Operator || right is NotNumber)
+            {
+                return new Sub(left.Evaluate(), right.Evaluate()).Evaluate();
+            }
+
+            return base.Evaluate();
+
+            /*
             if (left is Integer && right is Integer) 
             {
                 return new Integer((left as Integer).value - (right as Integer).value);
@@ -443,6 +457,7 @@ namespace Ast
             }
 
             return base.Evaluate();
+            */
         }
 
         public override Expression Expand()
@@ -463,7 +478,6 @@ namespace Ast
             res.parent = parent;
             return res;
         }
-
     }
 
     public class Mul : Operator
@@ -477,6 +491,24 @@ namespace Ast
 
         public override Expression Evaluate ()
         {
+            if (left is Number)
+            {
+                return (left as Number).MulWith(right);
+            }
+
+            if (right is Number)
+            {
+                return (right as Number).MulWith(left);
+            }
+
+            if (left is Operator || left is NotNumber || right is Operator || right is NotNumber)
+            {
+                return new Mul(left.Evaluate(), right.Evaluate()).Evaluate();
+            }
+
+            return base.Evaluate();
+
+            /*
             if (left is Integer && right is Integer) 
             {
                 return new Integer((left as Integer).value * (right as Integer).value);
@@ -524,6 +556,7 @@ namespace Ast
             }
 
             return base.Evaluate();
+            */
         }
 
         public override Expression Expand()
@@ -687,12 +720,12 @@ namespace Ast
             return res;
         }
 
-        private Expression NotNumberOperation(NotNumber left, NotNumber right)
+        private NotNumber NotNumberOperation(NotNumber left, NotNumber right)
         {
-            Expression res = left;
+            NotNumber res = left.Clone();
 
-            (res as NotNumber).prefix = new Mul(left.prefix, right.prefix).Evaluate() as Number;
-            (res as NotNumber).exponent = new Add(left.exponent, right.exponent).Evaluate() as Number;
+            res.prefix = left.prefix.MulWith(right.prefix) as Number;
+            res.exponent = left.exponent.AddWith(right.exponent) as Number;
 
             return res;
         }
@@ -708,9 +741,26 @@ namespace Ast
             priority = 30;
         }
 
-        /* fix errors */
         public override Expression Evaluate()
         {
+            if (left is Number)
+            {
+                return (left as Number).DivWith(right);
+            }
+
+            if (right is Number)
+            {
+                return (right as Number).DivWith(left);
+            }
+
+            if (left is Operator || left is NotNumber || right is Operator || right is NotNumber)
+            {
+                return new Div(left.Evaluate(), right.Evaluate()).Evaluate();
+            }
+
+            return base.Evaluate();
+
+            /*
             if (left is Integer && right is Integer)
             {
                 if ((right as Integer).value != 0)
@@ -760,6 +810,7 @@ namespace Ast
             }
 
             return base.Evaluate();
+            */
         }
 
         public override Expression Expand()
@@ -840,6 +891,24 @@ namespace Ast
 
         public override Expression Evaluate()
         {
+            if (left is Number)
+            {
+                return (left as Number).ExpWith(right);
+            }
+
+            if (right is Number)
+            {
+                return (right as Number).ExpWith(left);
+            }
+
+            if (left is Operator || left is NotNumber || right is Operator || right is NotNumber)
+            {
+                return new Exp(left.Evaluate(), right.Evaluate()).Evaluate();
+            }
+
+            return base.Evaluate();
+
+            /*
             if (left is Integer && right is Integer) 
             {
                 return new Integer( (Int64)Math.Pow((left as Integer).value, (right as Integer).value));
@@ -886,6 +955,7 @@ namespace Ast
             }
 
             return base.Evaluate();
+            */
         }
 
         public override Expression Expand()

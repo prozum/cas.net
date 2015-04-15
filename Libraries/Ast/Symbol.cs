@@ -44,8 +44,8 @@ namespace Ast
             return Evaluator.SimplifyExp(GetValue()).Evaluate();
         }
 
-        private Expression GetValue() { return GetValue(identifier); }
-        private Expression GetValue(string callerSymbol)
+        public Expression GetValue() { return GetValue(this); }
+        public Expression GetValue(NotNumber other)
         {
             Expression res;
 
@@ -56,17 +56,12 @@ namespace Ast
                 {
                     functionCall.tempDefinitions.TryGetValue(identifier, out res);
 
-                    if (res is Symbol)
+                    if (res.ContainsNotNumber(other) && res.Evaluate() is Error)
                     {
-                        if ((res as Symbol).identifier == callerSymbol)
-                        {
-                            return new Error("Symbol> Could not get value of: " + callerSymbol);
-                        }
-
-                        return (res as Symbol).GetValue(callerSymbol);
+                        return new Error("Symbol> Could not get value of: " + other.identifier);
                     }
 
-                    return new Mul(prefix, new Exp(res, exponent));
+                    return ReturnValue(res);
                 }
             }
             else
@@ -75,21 +70,51 @@ namespace Ast
                 {
                     evaluator.variableDefinitions.TryGetValue(identifier, out res);
 
-                    if (res is Symbol)
+                    if (res.ContainsNotNumber(other))
                     {
-                        if ((res as Symbol).identifier == callerSymbol)
-                        {
-                            return new Error("Symbol> Could not get value of: " + callerSymbol);
-                        }
-
-                        return (res as Symbol).GetValue(callerSymbol);
+                        return new Error("Symbol> Could not get value of: " + other.identifier);
                     }
 
-                    return new Mul(prefix, new Exp(res, exponent));
+                    return ReturnValue(res);
                 }
             }
 
             return new Error("Symbol> Could not get Symbol value");
+        }
+
+        private Expression ReturnValue(Expression definition)
+        {
+            Expression res = null;
+
+            if (prefix.CompareTo(new Integer(0)))
+            {
+                res = new Integer(0);
+            }
+            else
+            {
+                if (exponent.CompareTo(new Integer(0)))
+                {
+                    res = prefix.Clone();
+                }
+                else
+                {
+                    if (!exponent.CompareTo(new Integer(1)))
+                    {
+                        res = new Exp(definition, exponent);
+                    }
+                    else
+                    {
+                        res = definition;
+                    }
+
+                    if (!prefix.CompareTo(new Integer(1)))
+                    {
+                        return new Mul(prefix, res);
+                    }
+                }
+            }
+
+            return res;
         }
 
         public override bool CompareTo(Expression other)
@@ -119,6 +144,11 @@ namespace Ast
             }
 
             return base.Simplify();
+        }
+
+        public override NotNumber Clone()
+        {
+            return MakeClone<Symbol>();
         }
     }
 }
