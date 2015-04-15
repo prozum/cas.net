@@ -1,16 +1,26 @@
 ﻿using System;
 using Gtk;
 using TaskGenLib;
+using System.Collections.Generic;
+using ImEx;
 
 namespace Gui.Tests
 {
     class CASGui : Window
     {
+        /*
         VBox oVB;
         VBox iVB;
         int globVarMin, globVarMax, globVarNum;
         string casFile;
         string username, password;
+        */
+
+        List<Widget> lw = new List<Widget>();
+        List<MetaType> mt = new List<MetaType>();
+        Grid globalGrid = new Grid();
+        VBox vboxWindow = new VBox(false, 2);
+        string casFile = "";
 
         [STAThread]
         public static void Main(string[] args)
@@ -19,6 +29,254 @@ namespace Gui.Tests
             new CASGui();
             Application.Run();
         }
+
+        public CASGui()
+            : base("CAS.NET")
+        {
+            DeleteEvent += (o, a) => Application.Quit();
+
+            SetSizeRequest(300, 500);
+
+            #region Menu
+
+            MenuBar menuBar = new MenuBar();
+            Menu fileMenu = new Menu();
+
+            MenuItem file = new MenuItem("File");
+            file.Submenu = fileMenu;
+
+            MenuItem newFile = new MenuItem("New File");
+            newFile.Activated += (o, a) => ClearWindow();
+
+            MenuItem openFile = new MenuItem("Open File");
+            openFile.Activated += (o, a) => OpenFile();
+
+            MenuItem saveFile = new MenuItem("Save File");
+            saveFile.Activated += (o, a) => SaveFile();
+
+            fileMenu.Append(newFile);
+            fileMenu.Append(openFile);
+            fileMenu.Append(saveFile);
+
+            menuBar.Append(file);
+
+            #endregion
+
+            //lw.Add(EntryWidget());
+            //lw.Add(EntryWidget());
+            //lw.Add(EntryWidget());
+
+            int elementNumber = 0;
+
+            foreach (Widget item in lw)
+            {
+                globalGrid.Attach(item, 1, elementNumber, 1, 1);
+                elementNumber++;
+            }
+
+            vboxWindow.Add(menuBar);
+            vboxWindow.Add(globalGrid);
+
+            Add(vboxWindow);
+
+            ShowAll();
+
+
+        }
+
+        public Widget EntryWidget()
+        {
+            Entry entry = new Entry();
+            entry.HeightRequest = 20;
+            entry.WidthRequest = 100;
+            entry.Buffer.Text = "";
+
+            return entry;
+        }
+
+        /*
+        public Widget ButtonWidget(string buttonText)
+        {
+            Button button = new Button(buttonText);
+            button.Clicked += delegate(object sender, EventArgs e)
+            {
+                foreach (Widget w in lw)
+                {
+                    if (w.GetType() == typeof(Entry))
+                    {
+                        Entry en = (Entry)w;
+                        ls.Add(en.Text);
+
+                    }
+                }
+
+                foreach (var item in ls)
+                {
+                    Console.WriteLine(item);
+                }
+            };
+
+            return button;
+        }
+        */
+
+        public void UpdateWorkspace()
+        {
+            foreach (Widget w in lw)
+            {
+                if (w.GetType() == typeof(Entry))
+                {
+                    Entry en = (Entry)w;
+                    MetaType mtlmt = new MetaType(en.GetType(), en.Text);
+                    mt.Add(mtlmt);
+                }
+            }
+        }
+
+        void OpenFile()
+        {
+            OperatingSystem os = Environment.OSVersion;
+            PlatformID pid = os.Platform;
+
+            switch (pid)
+            {
+                case PlatformID.Win32S:
+                case PlatformID.Win32Windows:
+                case PlatformID.WinCE:
+                case PlatformID.Win32NT: // <- if one, this is the one we really need
+                    {
+                        System.IO.Stream myStream = null;
+                        System.Windows.Forms.OpenFileDialog filechooser = new System.Windows.Forms.OpenFileDialog();
+
+                        filechooser.InitialDirectory = "c:\\";
+                        filechooser.Filter = "cas files (*.cas)|*.cas";
+                        filechooser.FilterIndex = 2;
+                        filechooser.RestoreDirectory = true;
+
+                        if (filechooser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                        {
+                            casFile = System.IO.File.ReadAllText(filechooser.FileName);
+                        }
+
+                        break;
+                    }
+                case PlatformID.Unix:
+                case PlatformID.MacOSX:
+                    {
+                        FileChooserDialog filechooser = new FileChooserDialog("Open file...", this, FileChooserAction.Open, "Cancel", ResponseType.Cancel, "Open", ResponseType.Accept);
+
+                        filechooser.Filter = new FileFilter();
+                        filechooser.Filter.AddPattern("*.cas");
+
+                        if (filechooser.Run() == (int)ResponseType.Accept)
+                        {
+                            casFile = System.IO.File.ReadAllText(filechooser.Filename);
+                        }
+
+                        filechooser.Destroy();
+
+                        break;
+                    }
+                default:
+                    {
+                        break;
+                    }
+            }
+
+            ClearWindow();
+
+            mt.Clear();
+            List<MetaType> mtlmt = new List<MetaType>();
+            mtlmt = Import.DeserializeString<List<MetaType>>(casFile);
+            mt = mtlmt;
+            lw.Clear();
+
+            foreach (var item in mt)
+            {
+                if (item.type == typeof(Entry))
+                {
+                    Entry entry = new Entry();
+                    entry.Text = item.@string;
+                    lw.Add(entry);
+                }
+            }
+
+            int elementNumber = 0;
+
+            foreach (Widget item in lw)
+            {
+                globalGrid.Attach(item, 1, elementNumber, 1, 1);
+                elementNumber++;
+            }
+
+            ShowAll();
+        }
+
+        void SaveFile()
+        {
+            OperatingSystem os = Environment.OSVersion;
+            PlatformID pid = os.Platform;
+
+            UpdateWorkspace();
+            casFile = ImEx.Export.Serialize(mt);
+            Console.WriteLine(casFile);
+
+            switch (pid)
+            {
+
+                case PlatformID.Win32S:
+                case PlatformID.Win32Windows:
+                case PlatformID.WinCE:
+                case PlatformID.Win32NT: // <- if one, this is the one we really need
+                    {
+                        System.IO.Stream myStream = null;
+                        System.Windows.Forms.SaveFileDialog filechooser = new System.Windows.Forms.SaveFileDialog();
+
+                        filechooser.InitialDirectory = "c:\\";
+                        filechooser.Filter = "cas files (*.cas)|*.cas";
+                        filechooser.FilterIndex = 2;
+                        filechooser.RestoreDirectory = true;
+
+                        if (filechooser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                        {
+                            System.IO.File.WriteAllText(filechooser.FileName, casFile);
+                        }
+
+                        break;
+                    }
+                case PlatformID.Unix:
+                case PlatformID.MacOSX:
+                    {
+                        FileChooserDialog filechooser = new FileChooserDialog("Save File...", this, FileChooserAction.Save, "Cancel", ResponseType.Cancel, "Save", ResponseType.Accept);
+
+                        filechooser.Filter = new FileFilter();
+                        filechooser.Filter.AddPattern("*.cas");
+
+                        if (filechooser.Run() == (int)ResponseType.Accept)
+                        {
+                            System.IO.File.WriteAllText(filechooser.Filename, casFile);
+                        }
+
+                        filechooser.Destroy();
+
+                        break;
+                    }
+                default:
+                    {
+                        break;
+                    }
+            }
+        }
+
+        void ClearWindow()
+        {
+            foreach (Widget item in globalGrid)
+            {
+                globalGrid.Remove(item);
+            }
+        }
+
+        /*
 
         public CASGui()
             : base("CAS.Net gui")
@@ -411,5 +669,6 @@ namespace Gui.Tests
                 iVB.Remove(item);
             }
         }
+        */
     }
 }

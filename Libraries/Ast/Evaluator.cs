@@ -66,10 +66,6 @@ namespace Ast
                     return new MsgData(MsgType.Error, "Evaluator> Left expression is not a variable or function");
                 }
             }
-            else if (exp is Function)
-            {
-                return new MsgData(MsgType.Info, (exp as Function).Evaluate().ToString());
-            }
             else if (exp is Error)
             {
                 return new MsgData(MsgType.Error, exp.ToString());

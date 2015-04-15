@@ -8,6 +8,63 @@ namespace Ast
         {
             return this;
         }
+
+        public abstract Number Clone();
+
+        public virtual Expression AddWith(Expression other)
+        {
+            if (other is Error)
+            {
+                return other;
+            }
+
+            return AddWith(other.Evaluate());
+        }
+
+        public virtual Expression SubWith(Expression other)
+        {
+            if (other is Error)
+            {
+                return other;
+            }
+
+            return SubWith(other.Evaluate());
+        }
+
+        public virtual Expression MulWith(Expression other)
+        {
+            if (other is Error)
+            {
+                return other;
+            }
+
+            return MulWith(other.Evaluate());
+        }
+
+        public virtual Expression DivWith(Expression other)
+        {
+            if (other is Error)
+            {
+                return other;
+            }
+
+            return DivWith(other.Evaluate());
+        }
+
+        public virtual Expression ExpWith(Expression other)
+        {
+            if (other is Error)
+            {
+                return other;
+            }
+
+            return ExpWith(other.Evaluate());
+        }
+
+        public override bool ContainsNotNumber(NotNumber other)
+        {
+            return false;
+        }
     }
 
     public class Integer : Number
@@ -51,6 +108,131 @@ namespace Ast
             {
                 return false;
             }
+        }
+
+        public override Number Clone()
+        {
+            return new Integer(value);
+        }
+
+        public override Expression AddWith(Expression other)
+        {
+            if (other is Number)
+            {
+                if (other is Integer)
+                {
+                    return new Integer(value + (other as Integer).value);
+                }
+
+                if (other is Rational)
+                {
+                    return new Rational(this, new Integer(1)).AddWith(other);
+                }
+
+                if (other is Irrational)
+                {
+                    return new Irrational(value + (other as Irrational).value);
+                }
+            }
+
+            return base.AddWith(other);
+        }
+
+        public override Expression SubWith(Expression other)
+        {
+            if (other is Number)
+            {
+                if (other is Integer)
+                {
+                    return new Integer(value - (other as Integer).value);
+                }
+
+                if (other is Rational)
+                {
+                    return new Rational(this, new Integer(1)).SubWith(other);
+                }
+
+                if (other is Irrational)
+                {
+                    return new Irrational(value - (other as Irrational).value);
+                }
+            }
+
+            return base.SubWith(other);
+        }
+
+        public override Expression MulWith(Expression other)
+        {
+            if (other is Number)
+            {
+                if (other is Integer)
+                {
+                    return new Integer(value * (other as Integer).value);
+                }
+
+                if (other is Rational)
+                {
+                    return new Rational(this, new Integer(1)).MulWith(other);
+                }
+
+                if (other is Irrational)
+                {
+                    return new Irrational(value * (other as Irrational).value);
+                }
+            }
+
+            return base.MulWith(other);
+        }
+
+        public override Expression DivWith(Expression other)
+        {
+            if (other is Number)
+            {
+                if (other.CompareTo(new Integer(0)))
+                {
+                    return new Error(this ,"Diving by 0 not allowed");
+                }
+
+                if (other is Integer)
+                {
+                    return new Rational(this, (other as Integer));
+                }
+
+                if (other is Rational)
+                {
+                    return new Rational(this, new Integer(1)).DivWith(other);
+                }
+
+                if (other is Irrational)
+                {
+                    return new Irrational(value / (other as Irrational).value);
+                }
+            }
+
+            return base.DivWith(other);
+        }
+
+        public override Expression ExpWith(Expression other)
+        {
+            if (other is Number)
+            {
+                if (other is Integer)
+                {
+                    return new Irrational((decimal)Math.Pow(value, (other as Integer).value));
+                }
+
+                if (other is Rational)
+                {
+                    return new Rational(this, new Integer(1)).ExpWith(other);
+                }
+
+                if (other is Irrational)
+                {
+                    return new Irrational((decimal)Math.Pow(value, (double)(other as Irrational).value));
+                }
+            }
+
+            return base.ExpWith(other);
         }
 
         /*
@@ -270,6 +452,137 @@ namespace Ast
             }
         }
 
+        public override Number Clone()
+        {
+            return new Rational(numerator.Clone() as Integer, denominator.Clone() as Integer);
+        }
+
+        public override Expression AddWith(Expression other)
+        {
+            if (other is Number)
+            {
+                if (other is Integer)
+                {
+                    return AddWith(new Rational(other as Integer, new Integer(1)));
+                }
+
+                if (other is Rational)
+                {
+                    Integer leftNumerator = numerator.MulWith((other as Rational).denominator) as Integer;
+                    Integer rightNumerator = denominator.MulWith((other as Rational).numerator) as Integer;
+
+                    return new Rational(leftNumerator.AddWith(rightNumerator) as Integer, denominator.MulWith((other as Rational).denominator)as Integer);
+                }
+
+                if (other is Irrational)
+                {
+                    return new Irrational(value.value + (other as Irrational).value);
+                }
+            }
+
+            return base.AddWith(other);
+        }
+
+        public override Expression SubWith(Expression other)
+        {
+            if (other is Number)
+            {
+                if (other is Integer)
+                {
+                    return SubWith(new Rational(other as Integer, new Integer(1)));
+                }
+
+                if (other is Rational)
+                {
+                    Integer leftNumerator = numerator.MulWith((other as Rational).denominator) as Integer;
+                    Integer rightNumerator = denominator.MulWith((other as Rational).numerator) as Integer;
+
+                    return new Rational(leftNumerator.SubWith(rightNumerator) as Integer, denominator.MulWith((other as Rational).denominator) as Integer);
+                }
+
+                if (other is Irrational)
+                {
+                    return new Irrational(value.value - (other as Irrational).value);
+                }
+            }
+
+            return base.SubWith(other);
+        }
+
+        public override Expression MulWith(Expression other)
+        {
+            if (other is Number)
+            {
+                if (other is Integer)
+                {
+                    return MulWith(new Rational(other as Integer, new Integer(1)));
+                }
+
+                if (other is Rational)
+                {
+                    return new Rational(numerator.MulWith((other as Rational).numerator) as Integer, denominator.MulWith((other as Rational).denominator) as Integer);
+                }
+
+                if (other is Irrational)
+                {
+                    return new Irrational(value.value * (other as Irrational).value);
+                }
+            }
+
+            return base.MulWith(other);
+        }
+
+        public override Expression DivWith(Expression other)
+        {
+            if (other is Number)
+            {
+                if (other.CompareTo(new Integer(0)))
+                {
+                    return new Error(this, "Diving by 0 not allowed");
+                }
+
+                if (other is Integer)
+                {
+                    return DivWith(new Rational(other as Integer, new Integer(1)));
+                }
+
+                if (other is Rational)
+                {
+                    return new Rational(denominator, numerator).MulWith(other);
+                }
+
+                if (other is Irrational)
+                {
+                    return new Irrational(value.value / (other as Irrational).value);
+                }
+            }
+
+            return base.DivWith(other);
+        }
+
+        public override Expression ExpWith(Expression other)
+        {
+            if (other is Number)
+            {
+                if (other is Integer)
+                {
+                    return new Rational(numerator.ExpWith(other) as Integer, denominator.ExpWith(other) as Integer);
+                }
+
+                if (other is Rational)
+                {
+                    return ExpWith((other as Rational).value);
+                }
+
+                if (other is Irrational)
+                {
+                    return ((numerator.ExpWith(other)) as Number).DivWith(denominator.ExpWith(other));
+                }
+            }
+
+            return base.ExpWith(other);
+        }
+
         /*
         #region Operator Overloads
         #region Add Overload
@@ -429,6 +742,131 @@ namespace Ast
             }
         }
 
+        public override Number Clone()
+        {
+            return new Irrational(value);
+        }
+
+        public override Expression AddWith(Expression other)
+        {
+            if (other is Number)
+            {
+                if (other is Integer)
+                {
+                    return new Irrational(value + (other as Integer).value);
+                }
+
+                if (other is Rational)
+                {
+                    return AddWith((other as Rational).value);
+                }
+
+                if (other is Irrational)
+                {
+                    return new Irrational(value + (other as Irrational).value);
+                }
+            }
+
+            return base.AddWith(other);
+        }
+
+        public override Expression SubWith(Expression other)
+        {
+            if (other is Number)
+            {
+                if (other is Integer)
+                {
+                    return new Irrational(value - (other as Integer).value);
+                }
+
+                if (other is Rational)
+                {
+                    return SubWith((other as Rational).value);
+                }
+
+                if (other is Irrational)
+                {
+                    return new Irrational(value - (other as Irrational).value);
+                }
+            }
+
+            return base.SubWith(other);
+        }
+
+        public override Expression MulWith(Expression other)
+        {
+            if (other is Number)
+            {
+                if (other is Integer)
+                {
+                    return new Irrational(value * (other as Integer).value);
+                }
+
+                if (other is Rational)
+                {
+                    return MulWith((other as Rational).value);
+                }
+
+                if (other is Irrational)
+                {
+                    return new Irrational(value * (other as Irrational).value);
+                }
+            }
+
+            return base.MulWith(other);
+        }
+
+        public override Expression DivWith(Expression other)
+        {
+            if (other is Number)
+            {
+                if (other.CompareTo(new Integer(0)))
+                {
+                    return new Error(this, "Diving by 0 not allowed");
+                }
+
+                if (other is Integer)
+                {
+                    return new Irrational(value / (other as Integer).value);
+                }
+
+                if (other is Rational)
+                {
+                    return DivWith((other as Rational).value);
+                }
+
+                if (other is Irrational)
+                {
+                    return new Irrational(value / (other as Irrational).value);
+                }
+            }
+
+            return base.DivWith(other);
+        }
+
+        public override Expression ExpWith(Expression other)
+        {
+            if (other is Number)
+            {
+                if (other is Integer)
+                {
+                    return new Irrational((decimal)Math.Pow((double)value, (other as Integer).value));
+                }
+
+                if (other is Rational)
+                {
+                    return ExpWith((other as Rational).value);
+                }
+
+                if (other is Irrational)
+                {
+                    return new Irrational((decimal)Math.Pow((double)value, (double)(other as Irrational).value));
+                }
+            }
+
+            return base.ExpWith(other);
+        }
+
         /*
         #region Operator Overloads
         #region Add Overload
@@ -513,6 +951,11 @@ namespace Ast
 
             return res;
         }
+
+        public override Number Clone()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class Boolean : Number
@@ -532,6 +975,11 @@ namespace Ast
         public override bool CompareTo(Expression other)
         {
             return base.CompareTo(other) && value == (other as Boolean).value;
+        }
+
+        public override Number Clone()
+        {
+            return new Boolean(value);
         }
     }
 }
