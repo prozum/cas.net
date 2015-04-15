@@ -3,10 +3,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A6BE9C65-1637-4E97-A08C-F479621A20AF}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>ClientServer</RootNamespace>
-    <AssemblyName>ClientServer</AssemblyName>
+    <ProjectGuid>{625101C0-C853-4B2C-8359-2E439D15CA25}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Speech</RootNamespace>
+    <AssemblyName>Speech</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -17,7 +17,7 @@
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
+    <Externalconsole>true</Externalconsole>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -25,33 +25,20 @@
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
+    <Externalconsole>true</Externalconsole>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="nunit.framework">
-      <HintPath>..\..\..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+    <Reference Include="TranslatorService.Speech">
+      <HintPath>..\..\packages\TranslatorService.Speech.1.4.0\lib\net40\TranslatorService.Speech.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Test.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Libraries\Account\Account.csproj">
-      <Project>{926EE758-EDA5-4B92-BFE8-419C54909810}</Project>
-      <Name>Account</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\CAS.NET.Server\CAS.NET.Server.csproj">
-      <Project>{CEA736B0-9A43-44FF-A369-C9D310C9C238}</Project>
-      <Name>CAS.NET.Server</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Libraries\ImEx\ImEx.csproj">
-      <Project>{5150E825-D811-4D68-8C0E-86A1F8573561}</Project>
-      <Name>ImEx</Name>
-    </ProjectReference>
   </ItemGroup>
 </Project>
