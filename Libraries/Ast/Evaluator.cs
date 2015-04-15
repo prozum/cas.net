@@ -38,16 +38,14 @@ namespace Ast
                         }
                         else
                         {
-                            //return new Error("Evaluator> One arg in the function is not a symbol");
-                            return new EvalData(EvalType.Error, "Evaluator> One arg in the function is not a symbol");
+                            return new MsgData(MsgType.Error, "Evaluator> One arg in the function is not a symbol");
                         }
                     }
 
                     functionParams.Add(((exp as Assign).left as UserDefinedFunction).identifier, paramNames);
                     functionDefinitions.Add(((exp as Assign).left as UserDefinedFunction).identifier, (exp as Assign).right);
 
-                    //return new Info("Evaluator> Function defined");
-                    return new EvalData(EvalType.Info, "Evaluator> Function defined");
+                    return new MsgData(MsgType.Info, "Evaluator> Function defined");
                 }
                 else if ((exp as Assign).left is Symbol)
                 {
@@ -58,28 +56,28 @@ namespace Ast
 
                     variableDefinitions.Add(((exp as Assign).left as Symbol).identifier, (exp as Assign).right);
 
-                    return new EvalData(EvalType.Info, "Evaluator> Variable defined");
+                    return new MsgData(MsgType.Info, "Evaluator> Variable defined");
                 }
                 else
                 {
-                    return new EvalData(EvalType.Error, "Evaluator> Left expression is not a variable or function");
+                    return new MsgData(MsgType.Error, "Evaluator> Left expression is not a variable or function");
                 }
             }
             else if (exp is Function)
             {
-                return new EvalData(EvalType.Info, (exp as Function).Evaluate().ToString());
+                return new MsgData(MsgType.Info, (exp as Function).Evaluate().ToString());
             }
             else if (exp is Error)
             {
-                return new EvalData(EvalType.Error, exp.ToString());
+                return new MsgData(MsgType.Error, exp.ToString());
             }
             else if (exp is Info)
             {
-                return new EvalData(EvalType.Info, exp.ToString());
+                return new MsgData(MsgType.Info, exp.ToString());
             }
             else
             {
-                return new EvalData(EvalType.Print, (SimplifyExp(exp).ToString()));
+                return new MsgData(MsgType.Print, (SimplifyExp(exp).ToString()));
             }
         }
 
