@@ -11,6 +11,127 @@ namespace TaskGen
 {
     class MainClass
     {
+        static string makeUnitTask (int varMin, int varMax)
+        {
+            //1-Distance
+            int metre = 1;
+            double centimetre = metre * 0.01;
+            double millimetre = metre * 0.001;
+            //2-weight
+            double kilogram = 1;
+            double gram = kilogram * 0.01;
+            //3-volume
+            double cubicMetre = 1;
+            double litre = cubicMetre * 0.001;
+
+            Random r = new Random (Guid.NewGuid ().GetHashCode ());
+            string task = "";
+
+            string unit1 = "";
+            string unit2 = "";
+            int val;
+            int type = r.Next (1, 4);
+
+            switch (type) {
+            case 1:
+                type = r.Next (1, 4);
+                switch (type) {
+                case 1:
+                    unit1 = "metre";
+                    break;
+                case 2:
+                    unit1 = "centimetre";
+                    break;
+                case 3:
+                    unit1 = "millimetre";
+                    break;
+                }
+                type = r.Next (1, 3);
+
+                switch (unit1) {
+                case "metre":
+                    switch (type) {
+                    case 1:
+                        unit2 = "centimetre";
+                        break;
+                    case 2:
+                        unit2 = "millimetre";
+                        break;
+                    }
+                    break;
+                case "centimetre":
+                    switch (type) {
+                    case 1:
+                        unit2 = "metre";
+                        break;
+                    case 2:
+                        unit2 = "millimetre";
+                        break;
+                    }
+                    break;
+                case "millimetre":
+                    switch (type) {
+                    case 1:
+                        unit2 = "metre";
+                        break;
+                    case 2:
+                        unit2 = "centimetre";
+                        break;
+                    }
+                    break;
+                }
+                break;
+
+            case 2:
+                type = r.Next (1, 3);
+
+                switch (type) {
+                case 1:
+                    unit1 = "kilogram";
+                    break;
+                case 2:
+                    unit1 = "gram";
+                    break;
+                }
+                switch (unit1) {
+                case "kilogram":
+                    unit2 = "gram";
+                    break;
+                case "gram":
+                    unit2 = "kilogram";
+                    break;
+                }
+                break;
+            case 3:
+                type = r.Next (1, 3);
+
+                switch (type) {
+                case 1:
+                    unit1 = "cubicmetre";
+                    break;
+                case 2:
+                    unit1 = "litre";
+                    break;
+                }
+                switch (unit1) {
+                case "cubicmetre":
+                    unit2 = "litre";
+                    break;
+                case "litre":
+                    unit2 = "cubicmetre";
+                    break;
+                }
+                break;
+            }
+
+            val = r.Next (varMin, varMax);
+
+            Console.WriteLine ("how many {0}(s) is {1} {2}(s)", unit1, val, unit2);
+
+            return task;
+
+        }
+
         static string makeAreaTask (int varMin, int varMax)
         {
             Random r = new Random (Guid.NewGuid ().GetHashCode ());
@@ -111,6 +232,8 @@ namespace TaskGen
 
             ConsoleKeyInfo In;
             PrintMenu (varMin, varMax, varNum);
+
+            makeUnitTask (4, 7);
 
             do {
                 In = Console.ReadKey (true);

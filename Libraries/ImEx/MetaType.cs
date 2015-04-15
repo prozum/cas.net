@@ -16,16 +16,22 @@ namespace ImEx
         // type and serialized string must be public for deserializing
 
         public Type type;
-        public string serializedString;
+        public string @string;
 
-        public MetaType ()
+        public MetaType()
         {
         }
 
-        public MetaType (object o)
+        public MetaType(object o)
         {
-            this.type = o.GetType ();
-            this.serializedString = Export.Serialize (o);
+            this.type = o.GetType();
+            this.@string = Export.Serialize(o);
+        }
+
+        public MetaType(Type t, string s)
+        {
+            this.type = t;
+            this.@string = s;
         }
     }
 }
