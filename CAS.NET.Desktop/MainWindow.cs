@@ -29,28 +29,29 @@ public class MainWindow : Window
 
     public void EvaluateEntry()
     {
-        input = Ast.Parser.Parse (eval, entry.Text);
+        //input = Ast.Parser.Parse (eval, entry.Text);
         output = eval.Evaluation(entry.Text);
 
         TextIter insertIter = buffer.StartIter;
 
-        switch (output.type)
+        if (output is MsgData)
         {
-            case EvalType.Print:
-                buffer.Insert(ref insertIter, output.msg + "\n");
-                break;
-            case EvalType.Assign:
-                buffer.Insert(ref insertIter, input.ToString() + " => " + output.ToString() + "\n");
-                break;
-            case EvalType.Error:
-                buffer.InsertWithTagsByName(ref insertIter, output.msg + "\n", "error");
-                break;
-            case EvalType.Info:
-                buffer.InsertWithTagsByName(ref insertIter, output.msg + "\n", "info");
-                break;
-            case EvalType.Plot:
-                //buffer.Insert(buffer.StartIter, input.ToString() + " => " + output.ToString() + "\n");
-                break;
+            switch ((output as MsgData).type)
+            {
+                case MsgType.Print:
+                    buffer.Insert(ref insertIter, (output as MsgData).msg + "\n");
+                    break;
+                case MsgType.Error:
+                    buffer.InsertWithTagsByName(ref insertIter, (output as MsgData).msg + "\n", "error");
+                    break;
+                case MsgType.Info:
+                    buffer.InsertWithTagsByName(ref insertIter, (output as MsgData).msg + "\n", "info");
+                    break;
+            }
+        }
+        else if (output is PlotData)
+        {
+
         }
     }
 

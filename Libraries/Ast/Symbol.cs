@@ -65,22 +65,22 @@ namespace Ast
                 }
             }
             else
-            {
+                        {
                 if (evaluator.variableDefinitions.ContainsKey(identifier))
                 {
                     evaluator.variableDefinitions.TryGetValue(identifier, out res);
 
                     if (res.ContainsNotNumber(other))
                     {
-                        return new Error("Symbol> Could not get value of: " + other.identifier);
-                    }
+                        return new Error(this, "Could not get value of: " + other.identifier);
+                        }
 
                     return ReturnValue(res);
-                }
+                    }
             }
 
             return new Error("Symbol> Could not get Symbol value");
-        }
+                }
 
         private Expression ReturnValue(Expression definition)
         {
@@ -103,9 +103,9 @@ namespace Ast
                         res = new Exp(definition, exponent);
                     }
                     else
-                    {
-                        res = definition;
-                    }
+                        {
+                            return new Error("Symbol> Could not get value of: " + callerSymbol);
+                        }
 
                     if (!prefix.CompareTo(new Integer(1)))
                     {

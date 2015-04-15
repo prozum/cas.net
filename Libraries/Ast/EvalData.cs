@@ -2,19 +2,29 @@
 
 namespace Ast
 {
-    public enum EvalType {Assign, Print, Info, Error, Plot};
+    public enum MsgType {Print, Info, Error};
 
 
-    public class EvalData
+    public abstract class EvalData
     {
-        public EvalType type;
+    }
+
+    public class MsgData : EvalData
+    {
+        public MsgType type;
         public string msg;
 
-        public EvalData(EvalType type, string msg)
+        public MsgData(MsgType type, string msg)
         {
             this.type = type;
             this.msg = msg;
         }
+    }
+
+    public class PlotData : EvalData
+    {
+        public Symbol sym;
+        public Expression func;
     }
 }
 

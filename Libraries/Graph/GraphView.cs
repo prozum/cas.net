@@ -1,5 +1,6 @@
-﻿﻿using Gtk;
+﻿using Gtk;
 using Cairo;
+using Ast;
 
 namespace Graph
 {
@@ -11,8 +12,9 @@ namespace Graph
         double scale = 20;
         double a,b,c;
 
-        public GraphView (double a, double b, double c)
+        public GraphView (PlotData plotData)
         {
+            plotData.sym.evaluator.
             SetSizeRequest (600, 600);
             this.a = a;
             this.b = b;
@@ -64,7 +66,9 @@ namespace Graph
             y = a * x*x + b * x + c;
             ct.MoveTo ((x/scale + 0.5) * w, (-y/scale + 0.5) * h);
 
-            for (int i = 1; i <= iter; i++) {
+            
+			for (int i = 1; i <= iter; i++) 
+			{
                 x = ((double)i / iter - 0.5) * scale;
                 y = a * x*x + b * x + c;
 

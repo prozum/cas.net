@@ -10,13 +10,16 @@ namespace Ast
         public Dictionary<string, List<string>> functionParams = new Dictionary<string, List<string>>();
         public bool degrees = true;
 
+        public Parser parser;
+
         public Evaluator ()
         {
+            parser = new Parser (this);
         }
 
         public EvalData Evaluation(string inputString)
         {
-            var exp = Parser.Parse(this, inputString);
+            var exp = parser.Parse(this, inputString);
 
             if (exp is Assign)
             {
@@ -38,16 +41,14 @@ namespace Ast
                         }
                         else
                         {
-                            //return new Error("Evaluator> One arg in the function is not a symbol");
-                            return new EvalData(EvalType.Error, "Evaluator> One arg in the function is not a symbol");
+                            return new MsgData(MsgType.Error, "Evaluator> One arg in the function is not a symbol");
                         }
                     }
 
                     functionParams.Add(((exp as Assign).left as UserDefinedFunction).identifier, paramNames);
                     functionDefinitions.Add(((exp as Assign).left as UserDefinedFunction).identifier, (exp as Assign).right);
 
-                    //return new Info("Evaluator> Function defined");
-                    return new EvalData(EvalType.Info, "Evaluator> Function defined");
+                    return new MsgData(MsgType.Info, "Evaluator> Function defined");
                 }
                 else if ((exp as Assign).left is Symbol)
                 {
@@ -58,24 +59,24 @@ namespace Ast
 
                     variableDefinitions.Add(((exp as Assign).left as Symbol).identifier, (exp as Assign).right);
 
-                    return new EvalData(EvalType.Info, "Evaluator> Variable defined");
+                    return new MsgData(MsgType.Info, "Evaluator> Variable defined");
                 }
                 else
                 {
-                    return new EvalData(EvalType.Error, "Evaluator> Left expression is not a variable or function");
+                    return new MsgData(MsgType.Error, "Evaluator> Left expression is not a variable or function");
                 }
             }
             else if (exp is Error)
             {
-                return new EvalData(EvalType.Error, exp.ToString());
+                return new MsgData(MsgType.Error, exp.ToString());
             }
             else if (exp is Info)
             {
-                return new EvalData(EvalType.Info, exp.ToString());
+                return new MsgData(MsgType.Info, exp.ToString());
             }
             else
             {
-                return new EvalData(EvalType.Print, (SimplifyExp(exp).Evaluate().ToString()));
+                return new MsgData(MsgType.Print, (SimplifyExp(exp).Evaluate().ToString()));
             }
         }
 

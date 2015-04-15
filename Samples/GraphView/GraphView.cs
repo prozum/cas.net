@@ -1,8 +1,11 @@
 ﻿using Gtk;
 using Graph;
+using Ast;
 
 public class MainWindow : Window
 {
+    GraphView graphView;
+
     static void Main(string[] args)
     {
         Application.Init ();
@@ -17,7 +20,12 @@ public class MainWindow : Window
         };
 
         // Setup ui
-        Add (new GraphView (1.17, -5.2, 4.23));
+        Evaluator eval = new Evaluator();
+        eval.Evaluation("x:=range(100)");
+
+        var plot = eval.Evaluation("plot(x*2,x)");
+        graphView = new GraphView((plot as PlotData));
+        Add (graphView);
         ShowAll ();
     }
 }

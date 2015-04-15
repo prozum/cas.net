@@ -6,17 +6,24 @@ using System.Globalization;
 
 namespace Ast
 {
-    public static class Parser
+    public class Parser
     {
         static readonly char[] opValidChars = {'=', '<', '>', '+', '-', '*', '/', '^', ':'};
         static readonly string[] programDefinedFunctions = { "sin", "cos", "tan", "asin", "acos", "atan", "sqrt", "simplify", "expand","range" };
 
-        public static Expression Parse(string parseString)
+        Evaluator eval;
+
+        public Parser(Evaluator eval)
+        {
+            this.eval = eval;
+        }
+
+        public Expression Parse(string parseString)
         {
             return Parse(new Evaluator (), parseString);
         }
 
-        public static Expression Parse(Evaluator evaluator, string parseString)
+        public Expression Parse(Evaluator evaluator, string parseString)
         {
             var exs = new Stack<Expression> ();
             var ops = new Stack<Operator> ();
@@ -57,14 +64,14 @@ namespace Ast
                     switch (parExp.Count())
                     {
                         case 0:
-                            curExp = new Error("Parser> Empty parenthesis");
+                            curExp = new Error(this, "Empty parenthesis");
                             break;
                         case 1:
                             curExp = parExp[0];
                             exs.Push(curExp);
                             break;
                         default:
-                            curExp = new Error("Parser> Invalid ',' in parenthesis");
+                            curExp = new Error(this, "Invalid ',' in parenthesis");
                             break;
                     }
 
@@ -86,7 +93,7 @@ namespace Ast
                 } 
                 else 
                 {
-                    curExp = new Error("Parser> Error in: " + parseReader.ToString());
+                    curExp = new Error(this, "Error in: " + parseReader.ToString());
                 }
 
                 if (curExp is Error) 
@@ -100,7 +107,7 @@ namespace Ast
 
         enum BracketType { Parenthesis, Curly };
 
-        private static List<Expression> ExtractBrackets(Evaluator evaluator, StringReader parseReader, BracketType type)
+        private List<Expression> ExtractBrackets(Evaluator evaluator, StringReader parseReader, BracketType type)
         {
             List<Expression> exs = new List<Expression> ();
 
@@ -125,7 +132,7 @@ namespace Ast
                     Sep = ',';
                     break;
                 default:
-                    exs.Add (new Error("Invalid BracketType"));
+                    exs.Add (new Error(this, "Invalid> BracketType"));
                     return exs;
             }
 
@@ -149,12 +156,12 @@ namespace Ast
                     }
                     else if (curChar.Equals(Sep))
                     {
-                        exs.Add (Parser.Parse(evaluator, substring));
+                        exs.Add (Parse(evaluator, substring));
                         substring = "";
                     }
                     else if (curChar.Equals('\uffff'))
                     {
-                        exs.Add (new Error("No end char"));
+                        exs.Add (new Error(this, "No end char"));
                         return exs;
                     }
                     else
@@ -167,12 +174,12 @@ namespace Ast
                 parseReader.Read();
             }
 
-            exs.Add (Parser.Parse(evaluator, substring));
+            exs.Add (Parse(evaluator, substring));
             
             return exs;
         }
 
-        private static Expression CreateAst(Stack<Expression> exs, Stack<Operator> ops)
+        private Expression CreateAst(Stack<Expression> exs, Stack<Operator> ops)
         {
             Expression left,right;
             Operator curOp = null, nextOp;
@@ -183,7 +190,7 @@ namespace Ast
             }
             else if (exs.Count == 0)
             {
-                return new Error("Parser> No expressions found");
+                return new Error(this, "No expressions found");
             }
 
             right = exs.Pop ();
@@ -237,7 +244,7 @@ namespace Ast
             return curOp;
         }
 
-        private static Expression ParseIdentifier(Evaluator evaluator, StringReader parseReader)
+        private Expression ParseIdentifier(Evaluator evaluator, StringReader parseReader)
         {
             string identifier = "";
             int curChar;
@@ -258,7 +265,7 @@ namespace Ast
             }
         }
 
-        private static Expression ParseFunction(Evaluator evaluator, string identifier, StringReader parseReader)
+        private Expression ParseFunction(Evaluator evaluator, string identifier, StringReader parseReader)
         {
             Expression res;
             var args = ExtractBrackets (evaluator, parseReader, BracketType.Parenthesis);
@@ -300,13 +307,13 @@ namespace Ast
                         res = new Range(identifier.ToLower(), args[0]);
                         break;
                     default:
-                        res = new Error("Parser> This should never happen");
+                        res = new Error(this, "This should never happen");
                         break;
                     }
                 }
                 else
                 {
-                    res = new Error("Parser> Unary operators can't have more than one argument");
+                    res = new Error(this, "Unary operators can't have more than one argument");
                 }
             }
             else
@@ -318,7 +325,7 @@ namespace Ast
             return res;
         }
 
-        private static Expression ParseList(Evaluator evaluator, StringReader parseReader)
+        private Expression ParseList(Evaluator evaluator, StringReader parseReader)
         {
             Ast.List res;
             res = new Ast.List();
@@ -331,7 +338,7 @@ namespace Ast
 
         enum NumberType { Integer, Rational, Irrational, Complex };
 
-        public static Expression ParseNumber(StringReader parseReader)
+        public Expression ParseNumber(StringReader parseReader)
         {
             NumberType resultType = NumberType.Integer;
             string number = "";
@@ -347,7 +354,7 @@ namespace Ast
                     //More than one dot. Error!
                     if (resultType == NumberType.Irrational )
                     {
-                        return new Error("Parser> unexpected extra decimal seperator in: " + parseReader.ToString());
+                        return new Error(this, "unexpected extra decimal seperator in: " + parseReader.ToString());
                     }
 
                     number += (char)parseReader.Read();
@@ -371,25 +378,25 @@ namespace Ast
                     if (Int64.TryParse(number, out intRes))
                         return new Integer(intRes);
                     else
-                        return new Error("Parser> Integer overflow");
+                        return new Error(this, "Integer overflow");
                 case NumberType.Irrational:
                     decimal decRes;
                     if (decimal.TryParse(number, out decRes))
                         return new Irrational(decRes);
                     else
-                        return new Error("Parser> Decimal overflow");
+                        return new Error(this, "Decimal overflow");
                 case NumberType.Complex:
-                    return new Error("Parser> Complex numbers not supported yet");
+                    return new Error(this, "Complex numbers not supported yet");
                     //return new Complex();
                 default:
-                    return new Error("Parser> unknown error in:" + parseReader.ToString());
+                    return new Error(this, "unknown error in:" + parseReader.ToString());
             }
         }
 
 
         enum OperatorType { Equal, LesserThan, GreaterThan, Plus, Minus, Mul, Div };
 
-        private static Expression ParseOperator(StringReader parseReader)
+        private Expression ParseOperator(StringReader parseReader)
         {
             string op = ((char)parseReader.Read()).ToString();
 
@@ -426,7 +433,7 @@ namespace Ast
             case "^":
                 return new Exp ();
             default:
-                return new Error("Parser> operator not supported: " + op);
+                return new Error(this, "operator not supported: " + op);
             }
         }
     }
