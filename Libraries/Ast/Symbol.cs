@@ -58,7 +58,7 @@ namespace Ast
 
                     if (res.ContainsNotNumber(other) && res.Evaluate() is Error)
                     {
-                        return new Error("Symbol> Could not get value of: " + other.identifier);
+                        return new Error(this, "Could not get value of: " + other.identifier);
                     }
 
                     return ReturnValue(res);
@@ -79,7 +79,7 @@ namespace Ast
                     }
             }
 
-            return new Error("Symbol> Could not get Symbol value");
+            return new Error(this, "Could not get Symbol value");
                 }
 
         private Expression ReturnValue(Expression definition)
@@ -103,9 +103,9 @@ namespace Ast
                         res = new Exp(definition, exponent);
                     }
                     else
-                        {
-                            return new Error("Symbol> Could not get value of: " + callerSymbol);
-                        }
+                    {
+                        res = definition;
+                    }
 
                     if (!prefix.CompareTo(new Integer(1)))
                     {

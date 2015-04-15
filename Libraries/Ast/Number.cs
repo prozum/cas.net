@@ -190,7 +190,7 @@ namespace Ast
             {
                 if (other.CompareTo(new Integer(0)))
                 {
-                    return new Error("Diving by 0 not allowed");
+                    return new Error(this ,"Diving by 0 not allowed");
                 }
 
                 if (other is Integer)
@@ -538,7 +538,7 @@ namespace Ast
             {
                 if (other.CompareTo(new Integer(0)))
                 {
-                    return new Error("Diving by 0 not allowed");
+                    return new Error(this, "Diving by 0 not allowed");
                 }
 
                 if (other is Integer)
@@ -822,7 +822,7 @@ namespace Ast
             {
                 if (other.CompareTo(new Integer(0)))
                 {
-                    return new Error("Diving by 0 not allowed");
+                    return new Error(this, "Diving by 0 not allowed");
                 }
 
                 if (other is Integer)

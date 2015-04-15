@@ -149,10 +149,11 @@ namespace Ast
 
                     if (res.ContainsNotNumber(other))
                     {
-                            return new Error(this, "Could not get value of: " + callerIdentifier);
+                        return new Error(this, "Could not get value of: " + other.identifier);
                     }
 
                     return ReturnValue(res);
+                }
                 else if (functionParemNames.Count == 0)
                 {
                     return new Error(this, "Can't call function with 0 parameters");
