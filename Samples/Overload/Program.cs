@@ -4,22 +4,17 @@ namespace Overload
 {
 	abstract class Expression
 	{
-		public virtual Expression Add(Integer n)
+		public virtual Expression Add(Integer e)
 		{
-			return new Error (this, "Don't support adding Integer");
+			return new Error (this, "Don't support adding " + e.GetType().Name);
 		}
 
-		public virtual Expression Add(Irrational n)
+		public virtual Expression Add(Irrational e)
 		{
-			return new Error (this, "Don't support adding Irrational");
+			return new Error (this, "Don't support adding " + e.GetType().Name);
 		}
 
-		public static Expression operator +(Expression r, Integer l)
-		{
-			return r.Add(l);
-		}
-
-		public static Expression operator +(Expression r, Irrational l)
+		public static Expression operator +(Expression r, dynamic l)
 		{
 			return r.Add(l);
 		}
@@ -90,10 +85,10 @@ namespace Overload
 	{
 		public static void Main (string[] args)
 		{
-			var i = new Integer (10);
-			var ir = new Irrational (32.2M);
+			var i = (Expression)new Integer (10);
+			var ir = (Expression) new Irrational (32.2M);
 
-			var n = i + ir;
+			var n = i + i + ir;
 			Console.Write (n.ToString());
 		}
 	}
