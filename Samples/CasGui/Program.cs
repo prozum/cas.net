@@ -9,7 +9,8 @@ namespace Gui.Tests
         VBox oVB;
         VBox iVB;
         int globVarMin, globVarMax, globVarNum;
-        string casfile;
+        string casFile;
+        string username, password;
 
         [STAThread]
         public static void Main(string[] args)
@@ -45,13 +46,20 @@ namespace Gui.Tests
             MenuBar mb = new MenuBar();
             Menu filemenu = new Menu();
             Menu addFileMenu = new Menu();
+            Menu serverMenu = new Menu();
 
 
-            MenuItem file = new MenuItem("MenuTest");
+            MenuItem file = new MenuItem("File");
             file.Submenu = filemenu;
+
+            MenuItem newFile = new MenuItem("New File");
+            newFile.Activated += (object sender, EventArgs e) => ClearWindow();
 
             MenuItem openFile = new MenuItem("Open File");
             openFile.Activated += (o, a) => OpenFile();
+
+            MenuItem saveFile = new MenuItem("Save File");
+            saveFile.Activated += (o, a) => SaveFile();
 
             MenuItem properties = new MenuItem("Properties");
             properties.Activated += (o, a) => OnActivatedProperties(globVarMin, globVarMax, globVarNum);
@@ -73,14 +81,29 @@ namespace Gui.Tests
             MenuItem text = new MenuItem("Text Field");
             text.Activated += (object sender, EventArgs e) => AddTextBox();
 
+
+
+            MenuItem server = new MenuItem("Server");
+            server.Submenu = serverMenu;
+
+            MenuItem login = new MenuItem("Login");
+            login.Activated += (object sender, EventArgs e) => LoginScreen();
+
+            filemenu.Append(newFile);
             filemenu.Append(openFile);
+            filemenu.Append(saveFile);
             filemenu.Append(properties);
             filemenu.Append(exit);
+
             addFileMenu.Append(gen);
             addFileMenu.Append(head);
             addFileMenu.Append(text);
+
+            serverMenu.Append(login);
+
             mb.Append(file);
             mb.Append(addItem);
+            mb.Append(server);
             #endregion Menuer
 
             table1.Attach(SetupLabAss(), 0, 1, 0, 1, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 3, 3); //Assignment
@@ -106,9 +129,9 @@ namespace Gui.Tests
             VBox vbox = new VBox(false, 2);
             HBox hbox = new HBox(false, 2);
 
-            string smin = min.ToString();
-            string smax = max.ToString();
-            string snum = num.ToString();
+            // string smin = min.ToString();
+            // string smax = max.ToString();
+            // string snum = num.ToString();
 
             Label varMin = new Label("VarMin");
             Label varMax = new Label("varMax");
@@ -234,58 +257,158 @@ namespace Gui.Tests
             OperatingSystem os = Environment.OSVersion;
             PlatformID pid = os.Platform;
 
-            switch(pid)
+            switch (pid)
             {
                 case PlatformID.Win32S:
                 case PlatformID.Win32Windows:
                 case PlatformID.WinCE:
                 case PlatformID.Win32NT: // <- if one, this is the one we really need
-                {
-                    System.IO.Stream myStream = null;
-                    System.Windows.Forms.OpenFileDialog filechooser = new System.Windows.Forms.OpenFileDialog();
-
-                    filechooser.InitialDirectory = "c:\\";
-                    filechooser.Filter = "cas files (*.cas)|*.cas";
-                    filechooser.FilterIndex = 2;
-                    filechooser.RestoreDirectory = true;
-
-                    if(filechooser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     {
-                        if ((myStream = filechooser.OpenFile()) != null)
-                        {
-                            using (myStream)
-                            {
-                                // Insert code to read the stream here.
-                            }
-                        }
-                    }
+                        System.IO.Stream myStream = null;
+                        System.Windows.Forms.OpenFileDialog filechooser = new System.Windows.Forms.OpenFileDialog();
 
-                    break;
-                }
+                        filechooser.InitialDirectory = "c:\\";
+                        filechooser.Filter = "cas files (*.cas)|*.cas";
+                        filechooser.FilterIndex = 2;
+                        filechooser.RestoreDirectory = true;
+
+                        if (filechooser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                        {
+                            casFile = System.IO.File.ReadAllText(filechooser.FileName);
+                        }
+
+                        break;
+                    }
                 case PlatformID.Unix:
                 case PlatformID.MacOSX:
-                {
-                    FileChooserDialog filechooser = new FileChooserDialog("Open file...", this, FileChooserAction.Open, "Cancel", ResponseType.Cancel, "Open", ResponseType.Accept);
-
-                    filechooser.AddButton(Stock.Cancel, ResponseType.Cancel);
-                    filechooser.AddButton(Stock.Open, ResponseType.Ok);
-
-                    filechooser.Filter = new FileFilter();
-                    filechooser.Filter.AddPattern("*.cas");
-
-                    if (filechooser.Run() == (int)ResponseType.Accept)
                     {
-                        casfile = filechooser.Filename;
+                        FileChooserDialog filechooser = new FileChooserDialog("Open file...", this, FileChooserAction.Open, "Cancel", ResponseType.Cancel, "Open", ResponseType.Accept);
+
+                        filechooser.Filter = new FileFilter();
+                        filechooser.Filter.AddPattern("*.cas");
+
+                        if (filechooser.Run() == (int)ResponseType.Accept)
+                        {
+                            casFile = System.IO.File.ReadAllText(filechooser.Filename);
+                        }
+
+                        filechooser.Destroy();
+
+                        break;
                     }
-
-                    filechooser.Destroy();
-
-                    break;
-                }
                 default:
-                {
-                    break;
-                }
+                    {
+                        break;
+                    }
+            }
+        }
+
+        void SaveFile()
+        {
+            OperatingSystem os = Environment.OSVersion;
+            PlatformID pid = os.Platform;
+
+            switch (pid)
+            {
+                case PlatformID.Win32S:
+                case PlatformID.Win32Windows:
+                case PlatformID.WinCE:
+                case PlatformID.Win32NT: // <- if one, this is the one we really need
+                    {
+                        System.IO.Stream myStream = null;
+                        System.Windows.Forms.SaveFileDialog filechooser = new System.Windows.Forms.SaveFileDialog();
+                       
+                        filechooser.InitialDirectory = "c:\\";
+                        filechooser.Filter = "cas files (*.cas)|*.cas";
+                        filechooser.FilterIndex = 2;
+                        filechooser.RestoreDirectory = true;
+
+                        if (filechooser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                        {
+                            System.IO.File.WriteAllText(filechooser.FileName, casFile);
+                        }
+
+                        break;
+                    }
+                case PlatformID.Unix:
+                case PlatformID.MacOSX:
+                    {
+                        FileChooserDialog filechooser = new FileChooserDialog("Save File...", this, FileChooserAction.Save, "Cancel", ResponseType.Cancel, "Save", ResponseType.Accept);
+
+                        filechooser.Filter = new FileFilter();
+                        filechooser.Filter.AddPattern("*.cas");
+
+                        if (filechooser.Run() == (int)ResponseType.Accept)
+                        {
+                            System.IO.File.WriteAllText(filechooser.Filename, casFile);
+                        }
+
+                        filechooser.Destroy();
+
+                        break;
+                    }
+                default:
+                    {
+                        break;
+                    }
+            }
+        }
+
+        void LoginScreen()
+        {
+            Window loginWindow = new Window("Login to CAS.NET");
+            loginWindow.SetDefaultSize(200, 200);
+
+            VBox vbox = new VBox(false, 2);
+            HBox hbox = new HBox(false, 2);
+
+            Label labUsername = new Label("Username");
+            Label labPassword = new Label("Password");
+
+            Table table = new Table(2, 3, false);
+
+            table.Attach(labUsername, 0, 1, 0, 1, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
+            table.Attach(labPassword, 0, 1, 1, 2, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
+
+            Entry entryUsername = new Entry();
+            entryUsername.HeightRequest = 20;
+            entryUsername.WidthRequest = 100;
+            entryUsername.Buffer.Text = "";
+
+            Entry entryPassword = new Entry();
+            entryPassword.HeightRequest = 20;
+            entryPassword.WidthRequest = 100;
+            entryPassword.Buffer.Text = "";
+
+            table.Attach(entryUsername, 1, 2, 0, 1, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
+            table.Attach(entryPassword, 1, 2, 1, 2, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
+
+            Button buttonLogin = new Button("Login");
+            buttonLogin.Clicked += delegate(object sender, EventArgs e)
+            {
+                username = entryUsername.Text;
+                password = entryPassword.Text;
+                loginWindow.Destroy();
+            };
+
+            Button buttonCancel = new Button("Cancel");
+            buttonCancel.Clicked += (object sender, EventArgs e) => loginWindow.Destroy();
+
+            hbox.Add(buttonCancel);
+            hbox.Add(buttonLogin);
+
+            vbox.Add(table);
+            vbox.Add(hbox);
+
+            loginWindow.Add(vbox);
+            loginWindow.ShowAll();
+        }
+
+        void ClearWindow()
+        {
+            foreach (Widget item in iVB)
+            {
+                iVB.Remove(item);
             }
         }
     }
