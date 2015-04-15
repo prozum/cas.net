@@ -17,8 +17,10 @@ namespace Gui.Tests
         */
 
         List<Widget> lw = new List<Widget>();
+        List<Widget> lwm = new List<Widget>();
         List<MetaType> mt = new List<MetaType>();
         Grid globalGrid = new Grid();
+        int gridNumber = 1;
         VBox vboxWindow = new VBox(false, 2);
         string casFile = "";
 
@@ -81,13 +83,13 @@ namespace Gui.Tests
 
             #endregion
 
-            int elementNumber = 0;
-
-            foreach (Widget item in lw)
-            {
-                globalGrid.Attach(item, 1, elementNumber, 1, 1);
-                elementNumber++;
-            }
+//            int elementNumber = 0;
+//
+//            foreach (Widget item in lw)
+//            {
+//                globalGrid.Attach(item, 1, elementNumber, 1, 1);
+//                elementNumber++;
+//            }
 
             vboxWindow.Add(menuBar);
             vboxWindow.Add(globalGrid);
@@ -104,13 +106,8 @@ namespace Gui.Tests
             Entry entry = (Entry)EntryWidget();
             lw.Add(entry);
 
-            int elementNumber = 0;
-
-            foreach (Widget item in lw)
-            {
-                globalGrid.Attach(item, 1, elementNumber, 1, 1);
-                elementNumber++;
-            }
+            globalGrid.Attach(MovableWidget(entry), 1, gridNumber, 1, 1);
+            gridNumber++;
 
             ShowAll();
         }
@@ -120,13 +117,8 @@ namespace Gui.Tests
             TextView textView = (TextView)TextViewWidget();
             lw.Add(textView);
 
-            int elementNumber = 0;
-
-            foreach (Widget item in lw)
-            {
-                globalGrid.Attach(item, 1, elementNumber, 1, 1);
-                elementNumber++;
-            }
+            globalGrid.Attach(MovableWidget(textView), 1, gridNumber, 1, 1);
+            gridNumber++;
 
             ShowAll();
         }
@@ -137,7 +129,7 @@ namespace Gui.Tests
         {
             TextView textView = new TextView();
             textView.HeightRequest = 100;
-            textView.WidthRequest = Window.Width;
+            textView.WidthRequest = 300;
             textView.Visible = true;
 
             return textView;
@@ -147,7 +139,7 @@ namespace Gui.Tests
         {
             Entry entry = new Entry();
             entry.HeightRequest = 20;
-            entry.WidthRequest = Window.Width;
+            entry.WidthRequest = 300;
             entry.Buffer.Text = "";
 
             return entry;
@@ -285,12 +277,10 @@ namespace Gui.Tests
                 }
             }
 
-            int elementNumber = 0;
-
             foreach (Widget item in lw)
             {
-                globalGrid.Attach(item, 1, elementNumber, 1, 1);
-                elementNumber++;
+                globalGrid.Attach(MovableWidget(item), 1, gridNumber, 1, 1);
+                gridNumber++;
             }
 
             ShowAll();
@@ -354,10 +344,33 @@ namespace Gui.Tests
 
         void ClearWindow()
         {
+            lw.Clear();
+
             foreach (Widget item in globalGrid)
             {
                 globalGrid.Remove(item);
             }
+
+            gridNumber = 1;
+        }
+
+        public Widget MovableWidget(Widget widget)
+        {
+            Grid grid = new Grid();
+
+            Button buttonMoveUp = new Button("↑");
+            buttonMoveUp.HeightRequest = 10;
+            buttonMoveUp.WidthRequest = 10;
+
+            Button buttonMoveDown = new Button("↓");
+            buttonMoveDown.HeightRequest = 10;
+            buttonMoveDown.WidthRequest = 10;
+
+            grid.Attach(widget, 1, 1, 1, 2);
+            grid.Attach(buttonMoveUp, 2, 1, 1, 1);
+            grid.Attach(buttonMoveDown, 2, 2, 1, 1);
+
+            return grid;
         }
 
         /*
