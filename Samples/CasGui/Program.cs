@@ -46,7 +46,7 @@ namespace Gui.Tests
             file.Submenu = fileMenu;
 
             MenuItem newFile = new MenuItem("New File");
-            newFile.Activated += (object sender, EventArgs e) => ClearWindow();
+            newFile.Activated += (o, a) => ClearWindow();
 
             MenuItem openFile = new MenuItem("Open File");
             openFile.Activated += (o, a) => OpenFile();
@@ -62,9 +62,9 @@ namespace Gui.Tests
 
             #endregion
 
-            lw.Add(EntryWidget());
-            lw.Add(EntryWidget());
-            lw.Add(EntryWidget());
+            //lw.Add(EntryWidget());
+            //lw.Add(EntryWidget());
+            //lw.Add(EntryWidget());
 
             int elementNumber = 0;
 
@@ -182,6 +182,34 @@ namespace Gui.Tests
                         break;
                     }
             }
+
+            ClearWindow();
+
+            mt.Clear();
+            List<MetaType> mtlmt = new List<MetaType>();
+            mtlmt = Import.DeserializeString<List<MetaType>>(casFile);
+            mt = mtlmt;
+            lw.Clear();
+
+            foreach (var item in mt)
+            {
+                if (item.type == typeof(Entry))
+                {
+                    Entry entry = new Entry();
+                    entry.Text = item.@string;
+                    lw.Add(entry);
+                }
+            }
+
+            int elementNumber = 0;
+
+            foreach (Widget item in lw)
+            {
+                globalGrid.Attach(item, 1, elementNumber, 1, 1);
+                elementNumber++;
+            }
+
+            ShowAll();
         }
 
         void SaveFile()
