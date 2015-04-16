@@ -211,6 +211,11 @@ namespace Ast
         {
             return new Error(this, "Cannot evaluate plot");
         }
+
+        public override NotNumber Clone()
+        {
+            return MakeClone<Plot>();
+        }
     }
 
     public abstract class UnaryOperation : Function

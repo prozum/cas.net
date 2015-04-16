@@ -86,7 +86,7 @@ namespace Ast
             }
             else if (exp is Plot)
             {
-                return new PlotData((exp as Plot).args[0] as Symbol, (exp as Plot).args[1] as Function)
+                return new PlotData((exp as Plot).args[0] as Symbol, (exp as Plot).args[1] as Function);
             }
             else
             {
