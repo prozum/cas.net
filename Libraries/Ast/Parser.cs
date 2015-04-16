@@ -318,7 +318,7 @@ namespace Ast
                     case "plot":
                         if ((args[1] is Symbol) && args[0].ContainsNotNumber(args[1] as Symbol))
                         {
-                            res = new Plot(identifier.ToLower(), args);
+                            res = new Plot(identifier.ToLower(), args[0].Simplify(), args[1] as Symbol);
                         }
                         else
                         {

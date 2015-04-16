@@ -72,10 +72,10 @@ namespace Ast
                     if (res.ContainsNotNumber(other))
                     {
                         return new Error(this, "Could not get value of: " + other.identifier);
-                        }
+                    }
 
                     return ReturnValue(res);
-                    }
+                }
             }
 
             return new Error(this, "Could not get Symbol value");
@@ -104,7 +104,7 @@ namespace Ast
             }
             if (exponent.CompareTo(new Integer(0)))
             {
-                return new Integer(1);
+                return prefix;
             }
 
             return base.Simplify();

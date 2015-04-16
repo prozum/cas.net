@@ -200,11 +200,13 @@ namespace Ast
 
     public class Plot : Function
     {
-        public Plot() : this(null, null, new Integer(1), new Integer(1)) { }
-        public Plot(string identifier, List<Expression> args) : this(identifier, args, new Integer(1), new Integer(1)) { }
-        public Plot(string identifier, List<Expression> args, Number prefix, Number exponent) : base(identifier, prefix, exponent)
+        public Plot() : this(null, null, null, new Integer(1), new Integer(1)) { }
+        public Plot(string identifier, Expression func, Symbol sym) : this(identifier, func, sym, new Integer(1), new Integer(1)) { }
+        public Plot(string identifier, Expression func, Symbol sym, Number prefix, Number exponent) : base(identifier, prefix, exponent)
         {
-            this.args = args;
+            args = new List<Expression>();
+            args.Add(func);
+            args.Add(sym);
         }
 
         public override Expression Evaluate()

@@ -23,10 +23,10 @@ namespace Ast
 
     public class PlotData : EvalData
     {
-        public Symbol sym;
         public Expression func;
+        public Symbol sym;
 
-        public PlotData(Symbol sym, Expression func)
+        public PlotData(Expression func, Symbol sym)
         {
             this.sym = sym;
             this.func = func;

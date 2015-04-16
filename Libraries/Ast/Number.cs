@@ -78,7 +78,7 @@ namespace Ast
 
         public override Expression AddWith(Irrational other)
         {
-            return new Irrational(value + other.value);
+            return new Irrational((decimal)value + other.value);
         }
 
         #endregion
@@ -96,7 +96,7 @@ namespace Ast
 
         public override Expression SubWith(Irrational other)
         {
-            return new Irrational(value - other.value);
+            return new Irrational((decimal)value - other.value);
         }
 
         #endregion
@@ -114,7 +114,7 @@ namespace Ast
 
         public override Expression MulWith(Irrational other)
         {
-            return new Irrational(value * other.value);
+            return new Irrational((decimal)value * other.value);
         }
 
         #endregion
@@ -132,7 +132,7 @@ namespace Ast
 
         public override Expression DivWith(Irrational other)
         {
-            return new Irrational(value / other.value);
+            return new Irrational((decimal)value / other.value);
         }
 
         #endregion
@@ -168,7 +168,7 @@ namespace Ast
 
         public override Expression GreaterThan(Irrational other)
         {
-            return new Boolean(value > other.value);
+            return new Boolean((decimal)value > other.value);
         }
 
         #endregion
@@ -186,7 +186,7 @@ namespace Ast
 
         public override Expression LesserThan(Irrational other)
         {
-            return new Boolean(value < other.value);
+            return new Boolean((decimal)value < other.value);
         }
 
         #endregion
@@ -204,7 +204,7 @@ namespace Ast
 
         public override Expression GreaterThanOrEqualTo(Irrational other)
         {
-            return new Boolean(value >= other.value);
+            return new Boolean((decimal)value >= other.value);
         }
 
         #endregion
@@ -222,7 +222,7 @@ namespace Ast
 
         public override Expression LesserThanOrEqualTo(Irrational other)
         {
-            return new Boolean(value <= other.value);
+            return new Boolean((decimal)value <= other.value);
         }
 
         #endregion
@@ -510,7 +510,7 @@ namespace Ast
         #region AddWith
         public override Expression AddWith(Integer other)
         {
-            return new Irrational(value + other.value);
+            return new Irrational(value + (decimal)other.value);
         }
 
         public override Expression AddWith(Rational other)
@@ -528,7 +528,7 @@ namespace Ast
         #region SubWith
         public override Expression SubWith(Integer other)
         {
-            return new Irrational(value - other.value);
+            return new Irrational(value - (decimal)other.value);
         }
 
         public override Expression SubWith(Rational other)
@@ -546,7 +546,7 @@ namespace Ast
         #region MulWith
         public override Expression MulWith(Integer other)
         {
-            return new Irrational(value * other.value);
+            return new Irrational(value * (decimal)other.value);
         }
 
         public override Expression MulWith(Rational other)
@@ -564,7 +564,7 @@ namespace Ast
         #region DivWith
         public override Expression DivWith(Integer other)
         {
-            return new Irrational(value / other.value);
+            return new Irrational(value / (decimal)other.value);
         }
 
         public override Expression DivWith(Rational other)
@@ -600,7 +600,7 @@ namespace Ast
         #region GreaterThan
         public override Expression GreaterThan(Integer other)
         {
-            return new Boolean(value > other.value);
+            return new Boolean(value > (decimal)other.value);
         }
 
         public override Expression GreaterThan(Rational other)
@@ -618,7 +618,7 @@ namespace Ast
         #region LesserThan
         public override Expression LesserThan(Integer other)
         {
-            return new Boolean(value < other.value);
+            return new Boolean(value < (decimal)other.value);
         }
 
         public override Expression LesserThan(Rational other)
@@ -636,7 +636,7 @@ namespace Ast
         #region GreaterThanEqualTo
         public override Expression GreaterThanOrEqualTo(Integer other)
         {
-            return new Boolean(value >= other.value);
+            return new Boolean(value >= (decimal)other.value);
         }
 
         public override Expression GreaterThanOrEqualTo(Rational other)
@@ -654,7 +654,7 @@ namespace Ast
         #region LesserThanOrEqualTo
         public override Expression LesserThanOrEqualTo(Integer other)
         {
-            return new Boolean(value <= other.value);
+            return new Boolean(value <= (decimal)other.value);
         }
 
         public override Expression LesserThanOrEqualTo(Rational other)

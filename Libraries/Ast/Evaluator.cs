@@ -86,7 +86,11 @@ namespace Ast
             }
             else if (exp is Plot)
             {
-                return new PlotData((exp as Plot).args[0] as Symbol, (exp as Plot).args[1] as Function);
+                return new PlotData((exp as Plot).args[0], (exp as Plot).args[1] as Symbol);
+            }
+            else if (exp is Simplify || exp is Expand)
+            {
+                return new MsgData(MsgType.Print, exp.Evaluate().ToString());
             }
             else
             {

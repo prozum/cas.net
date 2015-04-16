@@ -544,12 +544,53 @@ namespace Ast
             return res;
         }
 
+        //implement a^m * b^m
         public override Expression Simplify()
         {
             Expression evaluatedLeft, evaluatedRight, res = null;
             Operator simplifiedOperator = new Mul(Evaluator.SimplifyExp(left), Evaluator.SimplifyExp(right));
 
-            if (simplifiedOperator.left is Mul)
+            if (simplifiedOperator.left is Number)
+            {
+                if (simplifiedOperator.left.CompareTo(new Integer(0)))
+                {
+                    res = new Integer(0);
+                }
+                else if (simplifiedOperator.left.CompareTo(new Integer(1)))
+                {
+                    res = simplifiedOperator.right;
+                }
+                else if (simplifiedOperator.right is NotNumber)
+                {
+                    res = simplifiedOperator.right;
+                    (res as NotNumber).prefix = ((res as NotNumber).prefix * simplifiedOperator.left) as Number;
+                }
+                else
+                {
+                    res = simplifiedOperator;
+                }
+            }
+            else if (simplifiedOperator.right is Number)
+            {
+                if (simplifiedOperator.right.CompareTo(new Integer(0)))
+                {
+                    res = new Integer(0);
+                }
+                else if (simplifiedOperator.right.CompareTo(new Integer(1)))
+                {
+                    res = simplifiedOperator.left;
+                }
+                else if (simplifiedOperator.left is NotNumber)
+                {
+                    res = simplifiedOperator.left;
+                    (res as NotNumber).prefix = ((res as NotNumber).prefix * simplifiedOperator.right) as Number;
+                }
+                else
+                {
+                    res = simplifiedOperator;
+                }
+            }
+            else if (simplifiedOperator.left is Mul)
             {
                 res = (simplifiedOperator.left as Mul).SimplifyMultiMul(simplifiedOperator.right);
             }
@@ -557,19 +598,28 @@ namespace Ast
             {
                 res = (simplifiedOperator.right as Mul).SimplifyMultiMul(simplifiedOperator.left);
             }
-            else if (simplifiedOperator.left is NotNumber && simplifiedOperator.right is Number)
+            else if (simplifiedOperator.left is Div)
             {
-                res = simplifiedOperator.left;
-                (res as NotNumber).prefix = ((res as NotNumber).prefix * simplifiedOperator.right) as Number;
+                res = new Div(new Mul((simplifiedOperator.left as Div).left, simplifiedOperator.right), (simplifiedOperator.left as Div).right);
             }
-            else if (simplifiedOperator.left is Number && simplifiedOperator.right is NotNumber)
+            else if (simplifiedOperator.right is Div)
             {
-                res = simplifiedOperator.right;
-                (res as NotNumber).prefix = ((res as NotNumber).prefix * simplifiedOperator.left) as Number;
+                res = new Div(new Mul((simplifiedOperator.right as Div).left, simplifiedOperator.left), (simplifiedOperator.right as Div).right);
             }
-            else if (simplifiedOperator.left is NotNumber && simplifiedOperator.right is NotNumber && (simplifiedOperator.left as NotNumber).identifier == (simplifiedOperator.right as NotNumber).identifier)
+            else if (simplifiedOperator.left is NotNumber && simplifiedOperator.right is NotNumber)
             {
-                res = NotNumberOperation(simplifiedOperator.left as NotNumber, simplifiedOperator.right as NotNumber);
+                if (((simplifiedOperator.left as NotNumber).identifier == (simplifiedOperator.right as NotNumber).identifier && simplifiedOperator.left.GetType() == simplifiedOperator.right.GetType()))
+                {
+                    res = SameNotNumbersOperation(simplifiedOperator.left as NotNumber, simplifiedOperator.right as NotNumber);
+                }
+                else if (!(simplifiedOperator.left as NotNumber).exponent.CompareTo(new Integer(1)) && (simplifiedOperator.left as NotNumber).exponent.CompareTo((simplifiedOperator.right as NotNumber).exponent))
+                {
+                    res = DifferentNotNumbersOperation(simplifiedOperator.left as NotNumber, simplifiedOperator.right as NotNumber);
+                }
+                else
+                {
+                    res = simplifiedOperator;
+                }
             }
             else
             {
@@ -600,7 +650,15 @@ namespace Ast
 
             if (other is Number)
             {
-                if (left is Number)
+                if (other.CompareTo(new Integer(0)))
+                {
+                    res = new Integer(0);
+                }
+                else if (other.CompareTo(new Integer(1)))
+                {
+                    res = this;
+                }
+                else if (left is Number)
                 {
                     res = new Mul(left * other, right);
                 }
@@ -619,13 +677,21 @@ namespace Ast
             }*/
             else if (other is NotNumber)
             {
-                if (left is NotNumber && (left as NotNumber).identifier == (other as NotNumber).identifier)
+                if (left is NotNumber && ((left as NotNumber).identifier == (other as NotNumber).identifier && left.GetType() == other.GetType()))
                 {
-                    res = new Mul(NotNumberOperation(left as NotNumber, other as NotNumber), right);
+                    res = new Mul(SameNotNumbersOperation(left as NotNumber, other as NotNumber), right);
                 }
-                else if (right is NotNumber && (right as NotNumber).identifier == (other as NotNumber).identifier)
+                else if (right is NotNumber && ((right as NotNumber).identifier == (other as NotNumber).identifier && right.GetType() == other.GetType()))
                 {
-                    res = new Mul(left, NotNumberOperation(right as NotNumber, other as NotNumber));
+                    res = new Mul(left, SameNotNumbersOperation(right as NotNumber, other as NotNumber));
+                }
+                if (left is NotNumber && (!(left as NotNumber).exponent.CompareTo(new Integer(1)) && (left as NotNumber).exponent.CompareTo((other as NotNumber).exponent)))
+                {
+                    res = new Mul(DifferentNotNumbersOperation(left as NotNumber, other as NotNumber), right);
+                }
+                else if (right is NotNumber && (!(right as NotNumber).exponent.CompareTo(new Integer(1)) && (right as NotNumber).exponent.CompareTo((other as NotNumber).exponent)))
+                {
+                    res = new Mul(left, DifferentNotNumbersOperation(right as NotNumber, other as NotNumber));
                 }
                 else if (left is Mul)
                 {
@@ -670,21 +736,32 @@ namespace Ast
             return res;
         }
 
-        private NotNumber NotNumberOperation(NotNumber left, NotNumber right)
+        private Expression SameNotNumbersOperation(NotNumber left, NotNumber right)
         {
-            NotNumber res = left.Clone();
+            Expression res;
 
-            res.prefix = (left.prefix * right.prefix) as Number;
-            res.exponent = (left.exponent + right.exponent) as Number;
+            res = left.Clone();
+            (res as NotNumber).prefix = (left.prefix * right.prefix) as Number;
+            (res as NotNumber).exponent = (left.exponent + right.exponent) as Number;
 
             return res;
+        }
+
+        private Expression DifferentNotNumbersOperation(NotNumber left, NotNumber right)
+        {
+            var newLeft = left.Clone();
+            var newRight = right.Clone();
+            newLeft.exponent = new Integer(1);
+            newRight.exponent = new Integer(1);
+
+            return new Mul(left.prefix * right.prefix, new Exp(new Mul(newLeft, newRight), left.exponent));
         }
     }
 
     public class Div : Operator
     {
-        public Div() : base("/", 30) { }
-        public Div(Expression left, Expression right) : base(left, right, "/", 30) { }
+        public Div() : base("/", 35) { }
+        public Div(Expression left, Expression right) : base(left, right, "/", 35) { }
 
         public override Expression Evaluate()
         {
@@ -726,6 +803,67 @@ namespace Ast
             return res;
         }
 
+        public override Expression Simplify()
+        {
+            Expression evaluatedLeft, evaluatedRight, res = null;
+            Operator simplifiedOperator = new Div(Evaluator.SimplifyExp(left), Evaluator.SimplifyExp(right));
+
+            if (simplifiedOperator.left is Div)
+            {
+                res = new Div((simplifiedOperator.left as Div).left, new Mul((simplifiedOperator.left as Div).right, simplifiedOperator.right));
+            }
+            else if (simplifiedOperator.right is Div)
+            {
+                res = new Div(new Mul(simplifiedOperator.left, (simplifiedOperator.right as Div).right), (simplifiedOperator.right as Div).left);
+            }
+            else if (simplifiedOperator.left is NotNumber && simplifiedOperator.right is NotNumber && (simplifiedOperator.left as NotNumber).identifier == (simplifiedOperator.right as NotNumber).identifier)
+            {
+                res = NotNumberOperation(simplifiedOperator.left as NotNumber, simplifiedOperator.right as NotNumber);
+            }
+            else
+            {
+                res = simplifiedOperator;
+            }
+
+            if (res is Div && !((evaluatedLeft = (res as Div).left.Evaluate()) is Error))
+            {
+                (res as Div).left = evaluatedLeft;
+            }
+
+            if (res is Div && !((evaluatedRight = (res as Div).right.Evaluate()) is Error))
+            {
+                (res as Div).right = evaluatedRight;
+            }
+
+            res.parent = parent;
+            return res;
+        }
+
+        private Expression NotNumberOperation(NotNumber left, NotNumber right)
+        {
+            Expression res;
+
+            if (((left.exponent < right.exponent) as Boolean).value)
+            {
+                var symbol = right.Clone();
+
+                symbol.exponent = (right.exponent - left.exponent) as Number;
+                res = new Div(left.prefix, symbol);
+            }
+            else if (((left.exponent > right.exponent) as Boolean).value)
+            {
+                var symbol = right.Clone();
+
+                symbol.exponent = (left.exponent - right.exponent) as Number;
+                res = new Div(symbol, right.prefix);
+            }
+            else
+            {
+                res = left.prefix / right.prefix;
+            }
+
+            return res;
+        }
     }
 
     public class Exp : Operator
@@ -767,6 +905,43 @@ namespace Ast
             }
 
             res.parent = parent;
+            return res;
+        }
+
+        public override Expression Simplify()
+        {
+            Expression evaluatedLeft, evaluatedRight, res = null;
+            Operator simplifiedOperator = new Exp(Evaluator.SimplifyExp(left), Evaluator.SimplifyExp(right));
+
+            if (simplifiedOperator.left is NotNumber && simplifiedOperator.right is Number)
+            {
+                res = NotNumberOperation(simplifiedOperator.left as NotNumber, simplifiedOperator.right as Number);
+            }
+            else
+            {
+                res = simplifiedOperator;
+            }
+
+            if (res is Exp && !((evaluatedLeft = (res as Exp).left.Evaluate()) is Error))
+            {
+                (res as Exp).left = evaluatedLeft;
+            }
+
+            if (res is Exp && !((evaluatedRight = (res as Exp).right.Evaluate()) is Error))
+            {
+                (res as Exp).right = evaluatedRight;
+            }
+
+            res.parent = parent;
+            return res;
+        }
+
+        private NotNumber NotNumberOperation(NotNumber left, Number right)
+        {
+            var res = left.Clone();
+
+            res.exponent = (res.exponent * right) as Number;
+
             return res;
         }
 
