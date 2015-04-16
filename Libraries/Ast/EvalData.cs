@@ -25,6 +25,12 @@ namespace Ast
     {
         public Symbol sym;
         public Expression func;
+
+        public PlotData(Symbol sym, Expression func)
+        {
+            this.sym = sym;
+            this.func = func;
+        }
     }
 }
 

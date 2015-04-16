@@ -16,7 +16,6 @@ namespace Gui.Tests
         VBox vboxWindow = new VBox(false, 2);
         string casFile = "";
         string username, password;
-        delegate int login(string username, string password);
 
         [STAThread]
         public static void Main(string[] args)
@@ -523,13 +522,12 @@ namespace Gui.Tests
             Button buttonLogin = new Button("Login");
 
             const string host = "http://localhost:8080/";
-            const string command = "Login";
+            const string msg = "Login ";
 
             var client = new WebClient ();
             client.Encoding = System.Text.Encoding.UTF8;
             client.Credentials = new NetworkCredential(username, password);
-            login LoginHandler = (x, y) => int.Parse(client.UploadString(x, y));
-            int privilege = LoginHandler(host, command);
+            int privilege = Int32.Parse(client.UploadString(host, msg), System.Globalization.NumberStyles.AllowLeadingSign);
 
             buttonLogin.Clicked += delegate(object sender, EventArgs e)
             {

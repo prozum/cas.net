@@ -28,7 +28,7 @@ namespace Ast
 
         public override bool ContainsNotNumber(NotNumber other)
         {
-            return true;
+            return false;
         }
     }
 

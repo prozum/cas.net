@@ -8,12 +8,8 @@ namespace Ast
 {
     public class BooleanEqual : Operator
     {
-        public BooleanEqual() : this(null, null) { }
-        public BooleanEqual(Expression left, Expression right) : base(left, right)
-        {
-            symbol = "==";
-            priority = 10;
-        }
+        public BooleanEqual() : base("==", 10) { }
+        public BooleanEqual(Expression left, Expression right) : base(left, right, "==", 10) { }
 
         public override Expression Evaluate()
         {
@@ -23,12 +19,8 @@ namespace Ast
 
     public class Lesser : Operator
     {
-        public Lesser() : this(null, null) { }
-        public Lesser(Expression left, Expression right) : base(left, right)
-        {
-            symbol = "<";
-            priority = 10;
-        }
+        public Lesser() : base("<", 10) { }
+        public Lesser(Expression left, Expression right) : base(left, right, "<", 10) { }
 
         public override Expression Evaluate()
         {
@@ -38,12 +30,8 @@ namespace Ast
 
     public class LesserOrEqual : Operator
     {
-        public LesserOrEqual() : this(null, null) { }
-        public LesserOrEqual(Expression left, Expression right) : base(left, right)
-        {
-            symbol = "<=";
-            priority = 10;
-        }
+        public LesserOrEqual() : base("<=", 10) { }
+        public LesserOrEqual(Expression left, Expression right) : base(left, right, "<=", 10) { }
 
         public override Expression Evaluate()
         {
@@ -53,12 +41,8 @@ namespace Ast
 
     public class Greater : Operator
     {
-        public Greater() : this(null, null) { }
-        public Greater(Expression left, Expression right) : base(left, right)
-        {
-            symbol = ">";
-            priority = 10;
-        }
+        public Greater() : base(">", 10) { }
+        public Greater(Expression left, Expression right) : base(left, right, ">", 10) { }
 
         public override Expression Evaluate()
         {
@@ -68,12 +52,8 @@ namespace Ast
 
     public class GreaterOrEqual : Operator
     {
-        public GreaterOrEqual() : this(null, null) { }
-        public GreaterOrEqual(Expression left, Expression right) : base(left, right)
-        {
-            symbol = ">=";
-            priority = 10;
-        }
+        public GreaterOrEqual() : base(">=", 10) { }
+        public GreaterOrEqual(Expression left, Expression right) : base(left, right, ">=", 10) { }
 
         public override Expression Evaluate()
         {

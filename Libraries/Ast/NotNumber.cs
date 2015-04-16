@@ -35,7 +35,7 @@ namespace Ast
 
         public override bool ContainsNotNumber(NotNumber other)
         {
-            if (identifier == other.identifier && this.GetType() == other.GetType())
+            if (identifier == other.identifier && this.GetType() == other.GetType() && ((other.functionCall == null && functionCall == null) || ((other.functionCall != null && functionCall != null) && other.functionCall.CompareTo(functionCall))))
             {
                 return true;
             }
@@ -48,10 +48,6 @@ namespace Ast
                         return true;
                     }
 	            }
-            }
-            else if (this is UserDefinedFunction)
-            {
-                return (this as UserDefinedFunction).GetValue(other).ContainsNotNumber(other);
             }
             else if (this is Symbol)
             {
@@ -94,6 +90,11 @@ namespace Ast
             }
 
             return res;
+        }
+
+        public override Expression Simplify()
+        {
+            return Clone();
         }
 
         #region AddWith

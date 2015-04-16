@@ -9,10 +9,21 @@ namespace Ast
         public int priority;
         public Expression left,right;
 
-        public Operator(Expression left, Expression right)
+        public Operator(string symbol, int priority)
+        {
+            this.left = null;
+            this.right = null;
+            this.symbol = symbol;
+            this.priority = priority;
+        }
+        public Operator(Expression left, Expression right, string symbol, int priority)
         {
             this.left = left;
             this.right = right;
+            this.left.parent = this;
+            this.right.parent = this;
+            this.symbol = symbol;
+            this.priority = priority;
         }
 
         public override Expression Evaluate()
@@ -239,12 +250,8 @@ namespace Ast
 
     public class Equal : Operator
     {
-        public Equal() : this(null, null) { }
-        public Equal(Expression left, Expression right) : base(left, right)
-        {
-            symbol = "=";
-            priority = 0;
-        }
+        public Equal() : base("=", 0) { }
+        public Equal(Expression left, Expression right) : base(left, right, "=", 0) { }
 
         public override Expression Expand()
         {
@@ -277,12 +284,8 @@ namespace Ast
 
     public class Assign : Operator
     {
-        public Assign() : this(null, null) { }
-        public Assign(Expression left, Expression right) : base(left, right)
-        {
-            symbol = ":=";
-            priority = 0;
-        }
+        public Assign() : base(":=", 0) { }
+        public Assign(Expression left, Expression right) : base(left, right, ":=", 0) { }
 
         public override Expression Expand()
         {
@@ -315,12 +318,8 @@ namespace Ast
 
     public class Add : Operator
     {
-        public Add() : this(null, null) { }
-        public Add(Expression left, Expression right) : base(left, right)
-        {
-            symbol = "+";
-            priority = 20;
-        }
+        public Add() : base("+", 20) { }
+        public Add(Expression left, Expression right) : base(left, right, "+", 20) { }
 
         public override Expression Evaluate ()
         {
@@ -472,12 +471,8 @@ namespace Ast
 
     public class Sub : Operator
     {
-        public Sub() : this(null, null) { }
-        public Sub(Expression left, Expression right) : base(left, right)
-        {
-            symbol = "-";
-            priority = 20;
-        }
+        public Sub() : base("-", 20) { }
+        public Sub(Expression left, Expression right) : base(left, right, "-", 20) { }
 
         public override Expression Evaluate ()
         {
@@ -506,12 +501,8 @@ namespace Ast
 
     public class Mul : Operator
     {
-        public Mul() : this(null, null) { }
-        public Mul(Expression left, Expression right) : base(left, right)
-        {
-            symbol = "*";
-            priority = 30;
-        }
+        public Mul() : base("*", 30) { }
+        public Mul(Expression left, Expression right) : base(left, right, "*", 30) { }
 
         public override Expression Evaluate ()
         {
@@ -688,17 +679,12 @@ namespace Ast
 
             return res;
         }
-
     }
 
     public class Div : Operator
     {
-        public Div() : this(null, null) { }
-        public Div(Expression left, Expression right) : base(left, right)
-        {
-            symbol = "/";
-            priority = 30;
-        }
+        public Div() : base("/", 30) { }
+        public Div(Expression left, Expression right) : base(left, right, "/", 30) { }
 
         public override Expression Evaluate()
         {
@@ -740,46 +726,12 @@ namespace Ast
             return res;
         }
 
-        public override Expression Simplify()
-        {
-            Expression res = null, evaluatedLeft, evaluatedRight;
-
-            if ((left is Symbol && right is Symbol) && ((left as Symbol).identifier == (right as Symbol).identifier))
-            {
-                //res = FunctionOrSymbol<Symbol>(left, right);
-            }
-            else if ((left is Function && right is Function) && ((left as Function).identifier == (right as Function).identifier && (left as Function).CompareArgsTo(right as Function)))
-            {
-                //NewFunction(left, right, ref res);
-            }
-            else
-            {
-                res = new Div(Evaluator.SimplifyExp(left), Evaluator.SimplifyExp(right));
-
-                if (!((evaluatedLeft = (res as Div).left.Evaluate()) is Error))
-                {
-                    (res as Div).left = evaluatedLeft;
-                }
-
-                if (!((evaluatedRight = (res as Div).right.Evaluate()) is Error))
-                {
-                    (res as Div).right = evaluatedRight;
-                }
-            }
-
-            res.parent = parent;
-            return res;
-        }
     }
 
     public class Exp : Operator
     {
-        public Exp() : this(null, null) { }
-        public Exp(Expression left, Expression right) : base(left, right)
-        {
-            symbol = "^";
-            priority = 40;
-        }
+        public Exp() : base("^", 40) { }
+        public Exp(Expression left, Expression right) : base(left, right, "^", 40) { }
 
         public override Expression Evaluate()
         {

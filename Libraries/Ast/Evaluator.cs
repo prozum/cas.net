@@ -25,6 +25,11 @@ namespace Ast
             {
                 if ((exp as Assign).left is UserDefinedFunction)
                 {
+                    if ((exp as Assign).right.ContainsNotNumber((exp as Assign).left as UserDefinedFunction))
+                    {
+                        return new MsgData(MsgType.Error, "Evaluator> Can't define function as it self");
+                    }
+
                     var paramNames = new List<string>();
 
                     if (functionDefinitions.ContainsKey(((exp as Assign).left as UserDefinedFunction).identifier))
@@ -52,6 +57,11 @@ namespace Ast
                 }
                 else if ((exp as Assign).left is Symbol)
                 {
+                    if ((exp as Assign).right.ContainsNotNumber((exp as Assign).left as Symbol))
+                    {
+                        return new MsgData(MsgType.Error, "Evaluator> Can't define symbol as it self");
+                    }
+
                     if (variableDefinitions.ContainsKey(((exp as Assign).left as Symbol).identifier))
                     {
                         variableDefinitions.Remove(((exp as Assign).left as Symbol).identifier);
@@ -73,6 +83,10 @@ namespace Ast
             else if (exp is Info)
             {
                 return new MsgData(MsgType.Info, exp.ToString());
+            }
+            else if (exp is Plot)
+            {
+                return new PlotData((exp as Plot).args[0] as Symbol, (exp as Plot).args[1] as Function);
             }
             else
             {
