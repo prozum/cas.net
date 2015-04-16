@@ -9,7 +9,7 @@ namespace Ast
     public class Parser
     {
         static readonly char[] opValidChars = {'=', '<', '>', '+', '-', '*', '/', '^', ':'};
-        static readonly string[] programDefinedFunctions = { "sin", "cos", "tan", "asin", "acos", "atan", "sqrt", "simplify", "expand","range" };
+        static readonly string[] programDefinedFunctions = { "sin", "cos", "tan", "asin", "acos", "atan", "sqrt", "simplify", "expand", "range", "plot" };
 
         Evaluator eval;
 
@@ -307,13 +307,32 @@ namespace Ast
                         res = new Range(identifier.ToLower(), args[0]);
                         break;
                     default:
-                        res = new Error(this, "This should never happen");
+                        res = new Error(this, identifier + " have the wrong number of arguments");
+                        break;
+                    }
+                }
+                else if (args.Count == 2)
+                {
+                    switch (identifier.ToLower())
+                    {
+                    case "plot":
+                        if ((args[1] is Symbol) && args[0].ContainsNotNumber(args[1] as Symbol))
+                        {
+                            res = new Plot(identifier.ToLower(), args);
+                        }
+                        else
+                        {
+                            res = new Error(this, " Could not plot " + args[1].ToString() + " in " + args[0].ToString());
+                        }
+                        break;
+                    default:
+                        res = new Error(this, identifier + " have the wrong number of arguments");
                         break;
                     }
                 }
                 else
                 {
-                    res = new Error(this, "Unary operators can't have more than one argument");
+                    res = new Error(this, identifier + " have the wrong number of arguments");
                 }
             }
             else

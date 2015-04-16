@@ -51,7 +51,6 @@ namespace Ast
 
             if (this.functionCall is UserDefinedFunction)
             {
-
                 if (functionCall.tempDefinitions.ContainsKey(identifier))
                 {
                     functionCall.tempDefinitions.TryGetValue(identifier, out res);
@@ -65,7 +64,7 @@ namespace Ast
                 }
             }
             else
-                        {
+            {
                 if (evaluator.variableDefinitions.ContainsKey(identifier))
                 {
                     evaluator.variableDefinitions.TryGetValue(identifier, out res);
@@ -80,7 +79,7 @@ namespace Ast
             }
 
             return new Error(this, "Could not get Symbol value");
-                }
+        }
 
         public override bool CompareTo(Expression other)
         {

@@ -102,6 +102,16 @@ namespace Ast
 
             return res;
         }
+
+        public override void SetFunctionCall(UserDefinedFunction functionCall)
+        {
+            foreach (var item in args)
+            {
+                item.SetFunctionCall(functionCall);
+            }
+
+            base.SetFunctionCall(functionCall);
+        }
     }
 
     public class UserDefinedFunction : Function
@@ -171,6 +181,35 @@ namespace Ast
         public override NotNumber Clone()
         {
             return MakeClone<UserDefinedFunction>();
+        }
+
+        public override Expression Simplify()
+        {
+            if (prefix.CompareTo(new Integer(0)))
+            {
+                return new Integer(0);
+            }
+            if (exponent.CompareTo(new Integer(0)))
+            {
+                return new Integer(1);
+            }
+
+            return GetValue();
+        }
+    }
+
+    public class Plot : Function
+    {
+        public Plot() : this(null, null, new Integer(1), new Integer(1)) { }
+        public Plot(string identifier, List<Expression> args) : this(identifier, args, new Integer(1), new Integer(1)) { }
+        public Plot(string identifier, List<Expression> args, Number prefix, Number exponent) : base(identifier, prefix, exponent)
+        {
+            this.args = args;
+        }
+
+        public override Expression Evaluate()
+        {
+            return new Error(this, "Cannot evaluate plot");
         }
     }
 
