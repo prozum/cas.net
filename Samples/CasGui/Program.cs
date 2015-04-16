@@ -3,6 +3,7 @@ using Gtk;
 using TaskGenLib;
 using System.Collections.Generic;
 using ImEx;
+using System.Net;
 
 namespace Gui.Tests
 {
@@ -15,6 +16,7 @@ namespace Gui.Tests
         VBox vboxWindow = new VBox(false, 2);
         string casFile = "";
         string username, password;
+        delegate int login(string username, string password);
 
         [STAThread]
         public static void Main(string[] args)
@@ -519,10 +521,21 @@ namespace Gui.Tests
             table.Attach(entryPassword, 1, 2, 1, 2, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
 
             Button buttonLogin = new Button("Login");
+
+            const string host = "http://localhost:8080/";
+            const string command = "Login";
+
+            var client = new WebClient ();
+            client.Encoding = System.Text.Encoding.UTF8;
+            client.Credentials = new NetworkCredential(username, password);
+            login LoginHandler = (x, y) => int.Parse(client.UploadString(x, y));
+            int privilege = LoginHandler(host, command);
+
             buttonLogin.Clicked += delegate(object sender, EventArgs e)
             {
                 username = entryUsername.Text;
                 password = entryPassword.Text;
+                
                 loginWindow.Destroy();
             };
 
