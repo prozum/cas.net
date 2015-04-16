@@ -83,15 +83,7 @@ namespace Gui.Tests
 
             #endregion
 
-//            int elementNumber = 0;
-//
-//            foreach (Widget item in lw)
-//            {
-//                globalGrid.Attach(item, 1, elementNumber, 1, 1);
-//                elementNumber++;
-//            }
-
-            vboxWindow.Add(menuBar);
+            vboxWindow.PackStart(menuBar, false, false, 2);
             vboxWindow.Add(globalGrid);
 
             Add(vboxWindow);
