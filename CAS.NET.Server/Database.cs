@@ -206,7 +206,7 @@ namespace CAS.NET.Server
             return file;
         }
 
-        public void AddFeedback(string filename, string file, string grade)
+        public string AddFeedback(string filename, string file, string grade)
         {
             string username = String.Empty;
             const int UsernameColumn = 0;
@@ -257,6 +257,8 @@ namespace CAS.NET.Server
                     cmd.ExecuteNonQuery();
                 }
             }
+
+			return "Successfully added feedback";
         }
 
         public string GetAssignment(string filename, string grade)
@@ -324,7 +326,7 @@ namespace CAS.NET.Server
             return FileList.ToArray();
         }
 
-        public void AddCompleted(string username, string filename, string file, string grade)
+        public string AddCompleted(string username, string filename, string file, string grade)
         {
             using (conn = new MySqlConnection(db))
             {
@@ -340,6 +342,8 @@ namespace CAS.NET.Server
                 cmd.Parameters.AddWithValue("@feedback", 0);
                 cmd.ExecuteNonQuery();
             }
+
+			return "Successfully added completed assignment";
         }
 
 		public string GetFeedback(string username, string filename, string grade)
