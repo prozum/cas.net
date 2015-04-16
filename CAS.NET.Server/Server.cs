@@ -76,7 +76,7 @@ namespace CAS.NET.Server
 
 			if (command == "Login")
 			{
-				return Privilege.ToString ("+#;-#");
+				return string.Format ("", Privilege);
 			}
 
             // decode the command and run serverside code for the command
