@@ -8,7 +8,7 @@ namespace WorkView
     class CASGui : Window
     {
         List<Widget> listWidget = new List<Widget>();
-        Grid globalGrid = new Grid();
+        //        Grid globalGrid = new Grid();
         TextView textView;
         TextBuffer buffer;
         VBox vboxWindow = new VBox(false, 2);
@@ -57,7 +57,7 @@ namespace WorkView
             addItem.Submenu = addMenu;
 
             MenuItem addEntry = new MenuItem("Entry");
-            addEntry.Activated += (object sender, EventArgs e) => AddEntryWidget();
+//            addEntry.Activated += (object sender, EventArgs e) => AddEntryWidget();
 
             MenuItem addTextView = new MenuItem("TextView");
             addTextView.Activated += (object sender, EventArgs e) => AddTextViewWidget();
@@ -90,23 +90,18 @@ namespace WorkView
             #endregion
 
             vboxWindow.PackStart(menuBar, false, false, 2);
-            vboxWindow.Add(globalGrid);
+//            vboxWindow.Add(globalGrid);
 
             Add(vboxWindow);
             vboxWindow.Add(textView);
 
+            TextChildAnchor buttonAnchor;
+
+            TextIter insertIter = buffer.StartIter;
+            buttonAnchor = buffer.CreateChildAnchor(ref insertIter);
+            textView.AddChildAtAnchor(ButtonWidget(), buttonAnchor);
+
             ShowAll();
-        }
-
-        public void AddEntryWidget()
-        {
-            Entry entry =  new Entry ();
-            listWidget.Add(entry);
-
-            //globalGrid.Attach(MovableWidget(entry), 1, gridNumber, 1, 1);
-            //gridNumber++;
-
-            entry.Show();
         }
 
         public void AddTextViewWidget()
@@ -121,10 +116,14 @@ namespace WorkView
             Console.Write(s);
             listWidget.Add(textView);
 
-            //globalGrid.Attach(MovableWidget(textView), 1, gridNumber, 1, 1);
-            //gridNumber++;
-
             textView.Show();
+        }
+
+        public Widget ButtonWidget()
+        {
+            Button button = new Button("I am a button");
+
+            return button;
         }
 
     }
