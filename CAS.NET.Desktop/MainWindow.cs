@@ -16,7 +16,8 @@ namespace Desktop
         VBox vboxWindow = new VBox(false, 2);
         string casFile = "";
         string username, password;
-        delegate int login(string username, string password);
+
+        delegate int login(string username,string password);
 
         [STAThread]
         public static void Main(string[] args)
@@ -74,10 +75,10 @@ namespace Desktop
 
             MenuItem logoutItem = new MenuItem("Logout");
             logoutItem.Activated += delegate(object sender, EventArgs e)
-                {
-                    username = null;
-                    password = null;
-                };
+            {
+                username = null;
+                password = null;
+            };
 
 
             fileMenu.Append(newFile);
@@ -149,32 +150,6 @@ namespace Desktop
 
             return entry;
         }
-
-        /*
-        public Widget ButtonWidget(string buttonText)
-        {
-            Button button = new Button(buttonText);
-            button.Clicked += delegate(object sender, EventArgs e)
-            {
-                foreach (Widget w in lw)
-                {
-                    if (w.GetType() == typeof(Entry))
-                    {
-                        Entry en = (Entry)w;
-                        ls.Add(en.Text);
-
-                    }
-                }
-
-                foreach (var item in ls)
-                {
-                    Console.WriteLine(item);
-                }
-            };
-
-            return button;
-        }
-        */
 
         public void UpdateWorkspace()
         {
@@ -374,75 +349,75 @@ namespace Desktop
             buttonMoveUp.HeightRequest = 10;
             buttonMoveUp.WidthRequest = 10;
             buttonMoveUp.Clicked += delegate(object sender, EventArgs e)
+            {
+
+                Console.WriteLine(listWidget.Count);
+
+                foreach (Widget item in listWidget)
                 {
+                    Console.WriteLine("Item in lw: " + item.ToString());
+                }
 
-                    Console.WriteLine(listWidget.Count);
+                int ID = listWidget.IndexOf(widget);
+                Console.WriteLine("ID: " + ID);
+                if (ID >= 1)
+                {
+                    Console.WriteLine("Inside deligate");
+                    Console.WriteLine("Moving ID: " + listWidget.IndexOf(widget));
+                    Widget w = listWidget[ID];
+                    Console.WriteLine("Got widget");
+                    listWidget.RemoveAt(ID);
+                    Console.WriteLine("Removed Widget\nInserting widget @ " + ID);
+                    listWidget.Insert(ID - 1, w);
+                    Console.WriteLine("Inserted Widget");
+                    Redraw();
+                }
 
-                    foreach (Widget item in listWidget)
-                    {
-                        Console.WriteLine("Item in lw: " + item.ToString());
-                    }
-
-                    int ID = listWidget.IndexOf(widget);
-                    Console.WriteLine("ID: " + ID);
-                    if (ID >= 1)
-                    {
-                        Console.WriteLine("Inside deligate");
-                        Console.WriteLine("Moving ID: " + listWidget.IndexOf(widget));
-                        Widget w = listWidget[ID];
-                        Console.WriteLine("Got widget");
-                        listWidget.RemoveAt(ID);
-                        Console.WriteLine("Removed Widget\nInserting widget @ " + ID);
-                        listWidget.Insert(ID - 1, w);
-                        Console.WriteLine("Inserted Widget");
-                        Redraw();
-                    }
-
-                    foreach (Widget item in listWidget)
-                    {
-                        Console.WriteLine("Item in lw: " + item.ToString());
-                    }
+                foreach (Widget item in listWidget)
+                {
+                    Console.WriteLine("Item in lw: " + item.ToString());
+                }
 
 
-                    Console.WriteLine(listWidget.Count);
-                };
+                Console.WriteLine(listWidget.Count);
+            };
 
             Button buttonMoveDown = new Button("↓");
             buttonMoveDown.HeightRequest = 10;
             buttonMoveDown.WidthRequest = 10;
             buttonMoveDown.Clicked += delegate(object sender, EventArgs e)
+            {
+
+                Console.WriteLine(listWidget.Count);
+
+                foreach (Widget item in listWidget)
                 {
+                    Console.WriteLine("Item in lw: " + item.ToString());
+                }
 
-                    Console.WriteLine(listWidget.Count);
+                int ID = listWidget.IndexOf(widget);
+                Console.WriteLine("ID: " + ID);
+                if (ID <= listWidget.Count - 2)
+                {
+                    Console.WriteLine("Inside deligate");
+                    Console.WriteLine("Moving ID: " + listWidget.IndexOf(widget));
+                    Widget w = listWidget[ID];
+                    Console.WriteLine("Got widget");
+                    listWidget.RemoveAt(ID);
+                    Console.WriteLine("Removed Widget\nInserting widget @ " + ID);
+                    listWidget.Insert(ID + 1, w);
+                    Console.WriteLine("Inserted Widget");
+                    Redraw();
+                }
 
-                    foreach (Widget item in listWidget)
-                    {
-                        Console.WriteLine("Item in lw: " + item.ToString());
-                    }
-
-                    int ID = listWidget.IndexOf(widget);
-                    Console.WriteLine("ID: " + ID);
-                    if (ID <= listWidget.Count - 2)
-                    {
-                        Console.WriteLine("Inside deligate");
-                        Console.WriteLine("Moving ID: " + listWidget.IndexOf(widget));
-                        Widget w = listWidget[ID];
-                        Console.WriteLine("Got widget");
-                        listWidget.RemoveAt(ID);
-                        Console.WriteLine("Removed Widget\nInserting widget @ " + ID);
-                        listWidget.Insert(ID + 1, w);
-                        Console.WriteLine("Inserted Widget");
-                        Redraw();
-                    }
-
-                    foreach (Widget item in listWidget)
-                    {
-                        Console.WriteLine("Item in lw: " + item.ToString());
-                    }
+                foreach (Widget item in listWidget)
+                {
+                    Console.WriteLine("Item in lw: " + item.ToString());
+                }
 
 
-                    Console.WriteLine(listWidget.Count);
-                };
+                Console.WriteLine(listWidget.Count);
+            };
 
             grid.Attach(widget, 1, 1, 1, 2);
             grid.Attach(buttonMoveUp, 2, 1, 1, 1);
@@ -522,22 +497,28 @@ namespace Desktop
 
             Button buttonLogin = new Button("Login");
 
-            const string host = "http://localhost:8080/";
-            const string command = "Login";
-
-            var client = new WebClient ();
-            client.Encoding = System.Text.Encoding.UTF8;
-            client.Credentials = new NetworkCredential(username, password);
-            login LoginHandler = (x, y) => int.Parse(client.UploadString(x, y));
-            int privilege = LoginHandler(host, command);
+            int privilege;
 
             buttonLogin.Clicked += delegate(object sender, EventArgs e)
-                {
-                    username = entryUsername.Text;
-                    password = entryPassword.Text;
+            {
+                username = entryUsername.Text;
+                password = entryPassword.Text;
 
-                    loginWindow.Destroy();
-                };
+                const string host = "http://localhost:8080/";
+                const string command = "Login ";
+
+                var client = new WebClient();
+                client.Encoding = System.Text.Encoding.UTF8;
+                client.Credentials = new NetworkCredential(username, password);
+
+                login LoginHandler = (x, y) => int.Parse(client.UploadString(x, y), System.Globalization.NumberStyles.AllowLeadingSign);
+                privilege = LoginHandler(host, command);
+
+                loginWindow.Destroy();
+
+            };
+
+
 
             Button buttonCancel = new Button("Cancel");
             buttonCancel.Clicked += (object sender, EventArgs e) => loginWindow.Destroy();
@@ -551,7 +532,6 @@ namespace Desktop
             loginWindow.Add(vbox);
             loginWindow.ShowAll();
         }
-
 
         /*
 
