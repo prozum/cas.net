@@ -197,9 +197,7 @@ namespace CAS.NET.Server
                 file += strArr[i];
             }
 
-            db.AddFeedback(filename, file, grade);
-
-            return "Successfully added feedback";
+			return db.AddFeedback(filename, file, grade);
         }
 
         private string StudentGetAssignmentList(string username, string msg, Database db)
@@ -241,9 +239,7 @@ namespace CAS.NET.Server
                 file += strArr[i];
             }
 
-            db.AddCompleted(username, filename, file, grade);
-
-            return "Successfully added completed assignment";
+            return db.AddCompleted(username, filename, file, grade);
         }
 
         private string StudentGetFeedback(string username, string msg, Database db)
