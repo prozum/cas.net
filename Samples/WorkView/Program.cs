@@ -1,16 +1,13 @@
 ﻿using System;
 using Gtk;
-using TaskGenLib;
 using System.Collections.Generic;
-using ImEx;
 
 namespace WorkView
 {
     class CASGui : Window
     {
         List<Widget> listWidget = new List<Widget>();
-        List<MetaType> mt = new List<MetaType>();
-        Grid globalGrid = new Grid();
+        Gtk.Grid globalGrid = new Grid();
         int gridNumber = 1;
         VBox vboxWindow = new VBox(false, 2);
         string casFile = "";
