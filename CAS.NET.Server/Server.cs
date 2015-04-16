@@ -74,11 +74,12 @@ namespace CAS.NET.Server
 
             int Privilege = db.CheckPrivilege(username, password);
 
-            //Console.WriteLine(command);
-            //Console.WriteLine(msg);
+			if (command == "Login")
+			{
+				return Privilege.ToString ();
+			}
 
             // decode the command and run serverside code for the command
-
             switch (Privilege)
             {
                 case 0:

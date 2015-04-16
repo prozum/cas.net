@@ -72,7 +72,97 @@ namespace Ast
         public override bool ContainsNotNumber(NotNumber other)
         {
             return left.ContainsNotNumber(other) || right.ContainsNotNumber(other);
-    }
+        }
+
+        #region AddWith
+        public override Expression AddWith(Integer other)
+        {
+            return Evaluate() + other;
+        }
+
+        public override Expression AddWith(Rational other)
+        {
+            return Evaluate() + other;
+        }
+
+        public override Expression AddWith(Irrational other)
+        {
+            return Evaluate() + other;
+        }
+
+        #endregion
+
+        #region SubWith
+        public override Expression SubWith(Integer other)
+        {
+            return Evaluate() - other;
+        }
+
+        public override Expression SubWith(Rational other)
+        {
+            return Evaluate() - other;
+        }
+
+        public override Expression SubWith(Irrational other)
+        {
+            return Evaluate() - other;
+        }
+
+        #endregion
+
+        #region MulWith
+        public override Expression MulWith(Integer other)
+        {
+            return Evaluate() * other;
+        }
+
+        public override Expression MulWith(Rational other)
+        {
+            return Evaluate() * other;
+        }
+
+        public override Expression MulWith(Irrational other)
+        {
+            return Evaluate() * other;
+        }
+
+        #endregion
+
+        #region DivWith
+        public override Expression DivWith(Integer other)
+        {
+            return Evaluate() / other;
+        }
+
+        public override Expression DivWith(Rational other)
+        {
+            return Evaluate() / other;
+        }
+
+        public override Expression DivWith(Irrational other)
+        {
+            return Evaluate() / other;
+        }
+
+        #endregion
+
+        #region ExpWith
+        public override Expression ExpWith(Integer other)
+        {
+            return Evaluate() ^ other;
+        }
+
+        public override Expression ExpWith(Rational other)
+        {
+            return Evaluate() ^ other;
+        }
+
+        public override Expression ExpWith(Irrational other)
+        {
+            return Evaluate() ^ other;
+        }
+
+        #endregion
     }
 
     public class Equal : Operator
@@ -162,22 +252,7 @@ namespace Ast
 
         public override Expression Evaluate ()
         {
-            if (left is Number)
-            {
-                return (left as Number).AddWith(right);
-            }
-
-            if (right is Number)
-            {
-                return (right as Number).AddWith(left);
-            }
-
-            if (left is Operator || left is NotNumber || right is Operator || right is NotNumber)
-            {
-                return new Add(left.Evaluate(), right.Evaluate()).Evaluate();
-            }
-
-            return base.Evaluate();
+            return left + right;
 
             /*
             if (left is Integer && right is Integer)
@@ -370,7 +445,7 @@ namespace Ast
         {
             NotNumber res = left.Clone();
 
-            res.prefix = left.prefix.AddWith(right.prefix) as Number;
+            res.prefix = (left.prefix + right.prefix) as Number;
 
             res.parent = parent;
             return res;
@@ -388,22 +463,7 @@ namespace Ast
 
         public override Expression Evaluate ()
         {
-            if (left is Number)
-            {
-                return (left as Number).SubWith(right);
-            }
-
-            if (right is Number)
-            {
-                return (right as Number).SubWith(left);
-            }
-
-            if (left is Operator || left is NotNumber || right is Operator || right is NotNumber)
-            {
-                return new Sub(left.Evaluate(), right.Evaluate()).Evaluate();
-            }
-
-            return base.Evaluate();
+            return left - right;
 
             /*
             if (left is Integer && right is Integer) 
@@ -491,22 +551,7 @@ namespace Ast
 
         public override Expression Evaluate ()
         {
-            if (left is Number)
-            {
-                return (left as Number).MulWith(right);
-            }
-
-            if (right is Number)
-            {
-                return (right as Number).MulWith(left);
-            }
-
-            if (left is Operator || left is NotNumber || right is Operator || right is NotNumber)
-            {
-                return new Mul(left.Evaluate(), right.Evaluate()).Evaluate();
-            }
-
-            return base.Evaluate();
+            return left * right;
 
             /*
             if (left is Integer && right is Integer) 
@@ -724,8 +769,8 @@ namespace Ast
         {
             NotNumber res = left.Clone();
 
-            res.prefix = left.prefix.MulWith(right.prefix) as Number;
-            res.exponent = left.exponent.AddWith(right.exponent) as Number;
+            res.prefix = (left.prefix * right.prefix) as Number;
+            res.exponent = (left.exponent + right.exponent) as Number;
 
             return res;
         }
@@ -743,22 +788,7 @@ namespace Ast
 
         public override Expression Evaluate()
         {
-            if (left is Number)
-            {
-                return (left as Number).DivWith(right);
-            }
-
-            if (right is Number)
-            {
-                return (right as Number).DivWith(left);
-            }
-
-            if (left is Operator || left is NotNumber || right is Operator || right is NotNumber)
-            {
-                return new Div(left.Evaluate(), right.Evaluate()).Evaluate();
-            }
-
-            return base.Evaluate();
+            return left / right;
 
             /*
             if (left is Integer && right is Integer)
@@ -891,22 +921,7 @@ namespace Ast
 
         public override Expression Evaluate()
         {
-            if (left is Number)
-            {
-                return (left as Number).ExpWith(right);
-            }
-
-            if (right is Number)
-            {
-                return (right as Number).ExpWith(left);
-            }
-
-            if (left is Operator || left is NotNumber || right is Operator || right is NotNumber)
-            {
-                return new Exp(left.Evaluate(), right.Evaluate()).Evaluate();
-            }
-
-            return base.Evaluate();
+            return left ^ right;
 
             /*
             if (left is Integer && right is Integer) 
