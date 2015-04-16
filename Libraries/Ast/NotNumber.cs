@@ -60,5 +60,95 @@ namespace Ast
 
             return false;
         }
+
+        #region AddWith
+        public override Expression AddWith(Integer other)
+        {
+            return Evaluate() + other;
+        }
+
+        public override Expression AddWith(Rational other)
+        {
+            return Evaluate() + other;
+        }
+
+        public override Expression AddWith(Irrational other)
+        {
+            return Evaluate() + other;
+        }
+
+        #endregion
+
+        #region SubWith
+        public override Expression SubWith(Integer other)
+        {
+            return Evaluate() - other;
+        }
+
+        public override Expression SubWith(Rational other)
+        {
+            return Evaluate() - other;
+        }
+
+        public override Expression SubWith(Irrational other)
+        {
+            return Evaluate() - other;
+        }
+
+        #endregion
+
+        #region MulWith
+        public override Expression MulWith(Integer other)
+        {
+            return Evaluate() * other;
+        }
+
+        public override Expression MulWith(Rational other)
+        {
+            return Evaluate() * other;
+        }
+
+        public override Expression MulWith(Irrational other)
+        {
+            return Evaluate() * other;
+        }
+
+        #endregion
+
+        #region DivWith
+        public override Expression DivWith(Integer other)
+        {
+            return Evaluate() / other;
+        }
+
+        public override Expression DivWith(Rational other)
+        {
+            return Evaluate() / other;
+        }
+
+        public override Expression DivWith(Irrational other)
+        {
+            return Evaluate() / other;
+        }
+
+        #endregion
+
+        #region ExpWith
+        public override Expression ExpWith(Integer other)
+        {
+            return Evaluate() ^ other;
+        }
+
+        public override Expression ExpWith(Rational other)
+        {
+            return Evaluate() ^ other;
+        }
+
+        public override Expression ExpWith(Irrational other)
+        {
+            return Evaluate() ^ other;
+        }
+
+        #endregion
     }
 }
