@@ -61,6 +61,41 @@ namespace Ast
             return false;
         }
 
+        protected Expression ReturnValue(Expression definition)
+        {
+            Expression res = null;
+
+            if (prefix.CompareTo(new Integer(0)))
+            {
+                res = new Integer(0);
+            }
+            else
+            {
+                if (exponent.CompareTo(new Integer(0)))
+                {
+                    res = prefix.Clone();
+                }
+                else
+                {
+                    if (!exponent.CompareTo(new Integer(1)))
+                    {
+                        res = new Exp(definition, exponent);
+                    }
+                    else
+                    {
+                        res = definition;
+                    }
+
+                    if (!prefix.CompareTo(new Integer(1)))
+                    {
+                        return new Mul(prefix, res);
+                    }
+                }
+            }
+
+            return res;
+        }
+
         #region AddWith
         public override Expression AddWith(Integer other)
         {
@@ -147,6 +182,78 @@ namespace Ast
         public override Expression ExpWith(Irrational other)
         {
             return Evaluate() ^ other;
+        }
+
+        #endregion
+
+        #region GreaterThan
+        public override Expression GreaterThan(Integer other)
+        {
+            return Evaluate() > other;
+        }
+
+        public override Expression GreaterThan(Rational other)
+        {
+            return Evaluate() > other;
+        }
+
+        public override Expression GreaterThan(Irrational other)
+        {
+            return Evaluate() > other;
+        }
+
+        #endregion
+
+        #region LesserThan
+        public override Expression LesserThan(Integer other)
+        {
+            return Evaluate() < other;
+        }
+
+        public override Expression LesserThan(Rational other)
+        {
+            return Evaluate() < other;
+        }
+
+        public override Expression LesserThan(Irrational other)
+        {
+            return Evaluate() < other;
+        }
+
+        #endregion
+
+        #region GreaterThanOrEqualTo
+        public override Expression GreaterThanOrEqualTo(Integer other)
+        {
+            return Evaluate() >= other;
+        }
+
+        public override Expression GreaterThanOrEqualTo(Rational other)
+        {
+            return Evaluate() >= other;
+        }
+
+        public override Expression GreaterThanOrEqualTo(Irrational other)
+        {
+            return Evaluate() >= other;
+        }
+
+        #endregion
+
+        #region LesserThanOrEqualTo
+        public override Expression LesserThanOrEqualTo(Integer other)
+        {
+            return Evaluate() <= other;
+        }
+
+        public override Expression LesserThanOrEqualTo(Rational other)
+        {
+            return Evaluate() <= other;
+        }
+
+        public override Expression LesserThanOrEqualTo(Irrational other)
+        {
+            return Evaluate() <= other;
         }
 
         #endregion

@@ -163,6 +163,78 @@ namespace Ast
         }
 
         #endregion
+
+        #region GreaterThan
+        public override Expression GreaterThan(Integer other)
+        {
+            return Evaluate() > other;
+        }
+
+        public override Expression GreaterThan(Rational other)
+        {
+            return Evaluate() > other;
+        }
+
+        public override Expression GreaterThan(Irrational other)
+        {
+            return Evaluate() > other;
+        }
+
+        #endregion
+
+        #region LesserThan
+        public override Expression LesserThan(Integer other)
+        {
+            return Evaluate() < other;
+        }
+
+        public override Expression LesserThan(Rational other)
+        {
+            return Evaluate() < other;
+        }
+
+        public override Expression LesserThan(Irrational other)
+        {
+            return Evaluate() < other;
+        }
+
+        #endregion
+
+        #region GreaterThanOrEqualTo
+        public override Expression GreaterThanOrEqualTo(Integer other)
+        {
+            return Evaluate() >= other;
+        }
+
+        public override Expression GreaterThanOrEqualTo(Rational other)
+        {
+            return Evaluate() >= other;
+        }
+
+        public override Expression GreaterThanOrEqualTo(Irrational other)
+        {
+            return Evaluate() >= other;
+        }
+
+        #endregion
+
+        #region LesserThanOrEqualTo
+        public override Expression LesserThanOrEqualTo(Integer other)
+        {
+            return Evaluate() <= other;
+        }
+
+        public override Expression LesserThanOrEqualTo(Rational other)
+        {
+            return Evaluate() <= other;
+        }
+
+        public override Expression LesserThanOrEqualTo(Irrational other)
+        {
+            return Evaluate() <= other;
+        }
+
+        #endregion
     }
 
     public class Equal : Operator
@@ -253,60 +325,6 @@ namespace Ast
         public override Expression Evaluate ()
         {
             return left + right;
-
-            /*
-            if (left is Integer && right is Integer)
-            {
-                return new Integer((left as Integer).value + (right as Integer).value);
-            }
-
-            if (left is Integer && right is Rational)
-            {
-                return new Add(new Rational((left as Integer), new Integer(1)), right).Evaluate();
-            }
-
-            if (left is Rational && right is Integer)
-            {
-                return new Add(left, new Rational((right as Integer), new Integer(1))).Evaluate();
-            }
-
-
-            if (left is Rational && right is Rational)
-            {
-                var leftNumerator = new Integer((left as Rational).numerator.value * (right as Rational).denominator.value);
-                var rightNumerator = new Integer((right as Rational).numerator.value * (left as Rational).denominator.value);
-
-                return new Rational(new Add(leftNumerator, rightNumerator).Evaluate() as Integer,
-                                    new Mul((right as Rational).denominator, (left as Rational).denominator).Evaluate() as Integer);
-            }
-
-            if (left is Integer && right is Irrational)
-            {
-                return new Irrational((left as Integer).value + (right as Irrational).value);
-            }
-
-            if (left is Irrational && right is Integer)
-            {
-                return new Irrational((left as Irrational).value + (right as Integer).value);
-            }
-
-            if (left is Irrational && right is Irrational)
-            {
-                return new Irrational((left as Irrational).value + (right as Irrational).value);
-            }
-
-            if (left is Irrational && right is Rational)
-            {
-                return new Irrational((left as Irrational).value + (right as Rational).value.value);
-            }
-
-            if (left is Rational && right is Irrational)
-            {
-                return new Irrational((left as Rational).value.value + (right as Irrational).value);
-            }
-
-            return base.Evaluate();
-            */
         }
 
         public override Expression Expand()
@@ -373,11 +391,11 @@ namespace Ast
             {
                 if (left is Number)
                 {
-                    res = new Add(new Add(left, other).Evaluate(), right);
+                    res = new Add(left + other, right);
                 }
                 else if (right is Number)
                 {
-                    res = new Add(left, new Add(right, other).Evaluate());
+                    res = new Add(left, right + other);
                 }
                 else
                 {
@@ -464,60 +482,6 @@ namespace Ast
         public override Expression Evaluate ()
         {
             return left - right;
-
-            /*
-            if (left is Integer && right is Integer) 
-            {
-                return new Integer((left as Integer).value - (right as Integer).value);
-            }
-
-            if (left is Integer && right is Rational) 
-            {
-                return new Sub(new Rational((left as Integer), new Integer(1)), right).Evaluate();
-            }
-
-            if (left is Rational && right is Integer) 
-            {
-                return new Sub(left, new Rational((right as Integer), new Integer(1))).Evaluate();
-            }
-
-
-            if (left is Rational && right is Rational)
-            {
-                var leftNumerator = new Integer((left as Rational).numerator.value * (right as Rational).denominator.value);
-                var rightNumerator = new Integer((right as Rational).numerator.value * (left as Rational).denominator.value);
-
-                return new Rational(new Sub(leftNumerator, rightNumerator).Evaluate() as Integer,
-                                    new Mul((right as Rational).denominator, (left as Rational).denominator).Evaluate() as Integer);
-            }
-
-            if (left is Integer && right is Irrational) 
-            {
-                return new Irrational((left as Integer).value - (right as Irrational).value);
-            }
-
-            if (left is Irrational && right is Integer) 
-            {
-                return new Irrational((left as Irrational).value - (right as Integer).value);
-            }
-
-            if (left is Irrational && right is Irrational) 
-            {
-                return new Irrational((left as Irrational).value - (right as Irrational).value);
-            }
-
-            if (left is Irrational && right is Rational) 
-            {
-                return new Irrational((left as Irrational).value - (right as Rational).value.value);
-            }
-
-            if (left is Rational && right is Irrational) 
-            {
-                return new Irrational((left as Rational).value.value - (right as Irrational).value);
-            }
-
-            return base.Evaluate();
-            */
         }
 
         public override Expression Expand()
@@ -552,56 +516,6 @@ namespace Ast
         public override Expression Evaluate ()
         {
             return left * right;
-
-            /*
-            if (left is Integer && right is Integer) 
-            {
-                return new Integer((left as Integer).value * (right as Integer).value);
-            }
-
-            if (left is Integer && right is Rational) 
-            {
-                return new Mul(new Rational((left as Integer), new Integer(1)), right).Evaluate();
-            }
-
-            if (left is Rational && right is Integer) 
-            {
-                return new Mul(left, new Rational((right as Integer), new Integer(1))).Evaluate();
-            }
-
-            if (left is Rational && right is Rational) 
-            {
-                return new Rational(new Mul((left as Rational).numerator, (right as Rational).numerator).Evaluate() as Integer,
-                                   new Mul((left as Rational).denominator, (right as Rational).denominator).Evaluate() as Integer);
-            }
-
-            if (left is Integer && right is Irrational)
-            {
-                return new Irrational((left as Integer).value * (right as Irrational).value);
-            }
-
-            if (left is Irrational && right is Integer) 
-            {
-                return new Irrational((left as Irrational).value * (right as Integer).value);
-            }
-
-            if (left is Irrational && right is Irrational) 
-            {
-                return new Irrational((left as Irrational).value * (right as Irrational).value);
-            }
-
-            if (left is Irrational && right is Rational) 
-            {
-                return new Irrational((left as Irrational).value * (right as Rational).value.value);
-            }
-
-            if (left is Rational && right is Irrational) 
-            {
-                return new Irrational((left as Rational).value.value * (right as Irrational).value);
-            }
-
-            return base.Evaluate();
-            */
         }
 
         public override Expression Expand()
@@ -655,12 +569,12 @@ namespace Ast
             else if (simplifiedOperator.left is NotNumber && simplifiedOperator.right is Number)
             {
                 res = simplifiedOperator.left;
-                (res as NotNumber).prefix = new Mul((res as NotNumber).prefix, simplifiedOperator.right).Evaluate() as Number;
+                (res as NotNumber).prefix = ((res as NotNumber).prefix * simplifiedOperator.right) as Number;
             }
             else if (simplifiedOperator.left is Number && simplifiedOperator.right is NotNumber)
             {
                 res = simplifiedOperator.right;
-                (res as NotNumber).prefix = new Mul((res as NotNumber).prefix, simplifiedOperator.left).Evaluate() as Number;
+                (res as NotNumber).prefix = ((res as NotNumber).prefix * simplifiedOperator.left) as Number;
             }
             else if (simplifiedOperator.left is NotNumber && simplifiedOperator.right is NotNumber && (simplifiedOperator.left as NotNumber).identifier == (simplifiedOperator.right as NotNumber).identifier)
             {
@@ -697,11 +611,11 @@ namespace Ast
             {
                 if (left is Number)
                 {
-                    res = new Mul(new Mul(left, other).Evaluate(), right);
+                    res = new Mul(left * other, right);
                 }
                 else if (right is Number)
                 {
-                    res = new Mul(left, new Mul(right, other).Evaluate());
+                    res = new Mul(left, right * other);
                 }
                 else
                 {
@@ -789,58 +703,6 @@ namespace Ast
         public override Expression Evaluate()
         {
             return left / right;
-
-            /*
-            if (left is Integer && right is Integer)
-            {
-                if ((right as Integer).value != 0)
-                    return new Rational((left as Integer), (right as Integer));
-                else
-                    return new Error(this, "Cannot divide by zero");
-            }
-
-            if (left is Integer && right is Rational)
-            {
-                return new Div(new Rational((left as Integer), new Integer(1)), right).Evaluate();
-            }
-
-            if (left is Rational && right is Integer)
-            {
-                return new Div(left, new Rational((right as Integer), new Integer(1))).Evaluate();
-            }
-
-            if (left is Rational && right is Rational)
-            {
-                return new Mul(new Rational((left as Rational).denominator, (left as Rational).numerator), right).Evaluate();
-            }
-
-            if (left is Integer && right is Irrational)
-            {
-                return new Irrational((left as Integer).value / (right as Irrational).value);
-            }
-
-            if (left is Irrational && right is Integer)
-            {
-                return new Irrational((left as Irrational).value / (right as Integer).value);
-            }
-
-            if (left is Irrational && right is Irrational)
-            {
-                return new Irrational((left as Irrational).value / (right as Irrational).value);
-            }
-
-            if (left is Irrational && right is Rational)
-            {
-                return new Irrational((left as Irrational).value / (right as Rational).value.value);
-            }
-
-            if (left is Rational && right is Irrational)
-            {
-                return new Irrational((left as Rational).value.value / (right as Irrational).value);
-            }
-
-            return base.Evaluate();
-            */
         }
 
         public override Expression Expand()
@@ -922,55 +784,6 @@ namespace Ast
         public override Expression Evaluate()
         {
             return left ^ right;
-
-            /*
-            if (left is Integer && right is Integer) 
-            {
-                return new Integer( (Int64)Math.Pow((left as Integer).value, (right as Integer).value));
-            }
-
-            if (left is Integer && right is Rational)
-            {
-                return new Exp(new Rational((left as Integer), new Integer(1)), right).Evaluate();
-            }
-
-            if (left is Rational && right is Integer)
-            {
-                return new Exp(left, new Rational((right as Integer), new Integer(1))).Evaluate();
-            }
-
-            if (left is Rational && right is Rational)
-            {
-                return new Irrational((decimal)Math.Pow((double)(left as Rational).value.value, (double)(left as Rational).value.value));
-            }
-
-            if (left is Integer && right is Irrational)
-            {
-                return new Irrational((decimal)Math.Pow((left as Integer).value, (double)(right as Irrational).value));
-            }
-
-            if (left is Irrational && right is Integer)
-            {
-                return new Irrational((decimal)Math.Pow((double)(left as Irrational).value, (right as Integer).value));
-            }
-
-            if (left is Irrational && right is Irrational)
-            {
-                return new Irrational((decimal)Math.Pow((double)(left as Irrational).value, (double)(right as Irrational).value));
-            }
-
-            if (left is Irrational && right is Rational)
-            {
-                return new Irrational((decimal)Math.Pow((double)(left as Irrational).value, (double)(right as Rational).value.value));
-            }
-
-            if (left is Rational && right is Irrational)
-            {
-                return new Irrational((decimal)Math.Pow((double)(left as Rational).value.value, (double)(right as Irrational).value));
-            }
-
-            return base.Evaluate();
-            */
         }
 
         public override Expression Expand()

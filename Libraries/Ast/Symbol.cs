@@ -82,41 +82,6 @@ namespace Ast
             return new Error(this, "Could not get Symbol value");
                 }
 
-        private Expression ReturnValue(Expression definition)
-        {
-            Expression res = null;
-
-            if (prefix.CompareTo(new Integer(0)))
-            {
-                res = new Integer(0);
-            }
-            else
-            {
-                if (exponent.CompareTo(new Integer(0)))
-                {
-                    res = prefix.Clone();
-                }
-                else
-                {
-                    if (!exponent.CompareTo(new Integer(1)))
-                    {
-                        res = new Exp(definition, exponent);
-                    }
-                    else
-                    {
-                        res = definition;
-                    }
-
-                    if (!prefix.CompareTo(new Integer(1)))
-                    {
-                        return new Mul(prefix, res);
-                    }
-                }
-            }
-
-            return res;
-        }
-
         public override bool CompareTo(Expression other)
         {
             if (other is Symbol)

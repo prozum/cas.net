@@ -69,14 +69,22 @@ namespace CAS.NET.Server
         private string ExecuteCommand(string username, string password, string msg, Database db)
         {
             // decode command from client message and remove it from msg
-            string command = msg.Substring(0, msg.IndexOf(" "));
+			int index = msg.IndexOf (" ");
+
+			if (index == -1)
+			{
+				return "Invalid string format";
+			}
+
+            string command = msg.Substring(0, index);
             msg = msg.Substring(command.Length + 1);
 
+			// check user privilege level
             int Privilege = db.CheckPrivilege(username, password);
 
 			if (command == "Login")
 			{
-				return string.Format ("", Privilege);
+				return Privilege.ToString ();
 			}
 
             // decode the command and run serverside code for the command
@@ -119,6 +127,11 @@ namespace CAS.NET.Server
         {        
             string[] strArr = msg.Split(' ');
 
+			if (strArr.Length < 4)
+			{
+				return "Invalid string format";
+			}
+
             string checksum = strArr[0];
             string grade = strArr[1];
             string filename = strArr[2];
@@ -153,6 +166,11 @@ namespace CAS.NET.Server
         {     
             string[] strArr = msg.Split(' ');
 
+			if (strArr.Length < 2)
+			{
+				return "Invalid string format";
+			}
+
             string grade = strArr[0];
             string filename = strArr[1];
 
@@ -164,6 +182,11 @@ namespace CAS.NET.Server
         private string TeacherAddFeedback(string username, string msg, Database db)
         {
             string[] strArr = msg.Split(' ');
+
+			if (strArr.Length < 3)
+			{
+				return "Invalid string format";
+			}
 
             string grade = strArr[0];
             string filename = strArr[1];
@@ -189,6 +212,11 @@ namespace CAS.NET.Server
         {
             string[] strArr = msg.Split(' ');
 
+			if (strArr.Length < 1)
+			{
+				return "Invalid string format";
+			}
+
             string filename = strArr[0];
             string grade = db.GetGrade(username);
 
@@ -198,6 +226,11 @@ namespace CAS.NET.Server
         private string StudentAddCompleted(string username, string msg, Database db)
         {
             string[] strArr = msg.Split(' ');         
+
+			if (strArr.Length < 2)
+			{
+				return "Invalid string format";
+			}
 
             string filename = strArr[0];
             string grade = db.GetGrade(username);
@@ -216,6 +249,11 @@ namespace CAS.NET.Server
         private string StudentGetFeedback(string username, string msg, Database db)
         {
             string[] strArr = msg.Split(' ');
+
+			if (strArr.Length < 1)
+			{
+				return "Invalid string format";
+			}
 
             string filename = strArr[0];
             string grade = db.GetGrade(username);

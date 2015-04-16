@@ -133,7 +133,7 @@ namespace Ast
 
         public virtual Expression SubWith(List other)
         {
-            return new Error(this, "Don't support adding " + other.GetType().Name);
+            return new Error(this, "Don't support subbing " + other.GetType().Name);
         }
 
         #endregion
@@ -181,7 +181,7 @@ namespace Ast
 
         public virtual Expression MulWith(List other)
         {
-            return new Error(this, "Don't support adding " + other.GetType().Name);
+            return new Error(this, "Don't support multipying " + other.GetType().Name);
         }
 
         #endregion
@@ -229,7 +229,7 @@ namespace Ast
 
         public virtual Expression DivWith(List other)
         {
-            return new Error(this, "Don't support adding " + other.GetType().Name);
+            return new Error(this, "Don't support diving " + other.GetType().Name);
         }
 
         #endregion
@@ -277,7 +277,199 @@ namespace Ast
 
         public virtual Expression ExpWith(List other)
         {
-            return new Error(this, "Don't support adding " + other.GetType().Name);
+            return new Error(this, "Don't support powering " + other.GetType().Name);
+        }
+
+        #endregion
+
+        #region GreaterThan
+        public virtual Expression GreaterThan(Integer other)
+        {
+            return new Error(this, "Don't support greater than " + other.GetType().Name);
+        }
+
+        public virtual Expression GreaterThan(Rational other)
+        {
+            return new Error(this, "Don't support greater than " + other.GetType().Name);
+        }
+
+        public virtual Expression GreaterThan(Irrational other)
+        {
+            return new Error(this, "Don't support greater than " + other.GetType().Name);
+        }
+
+        public virtual Expression GreaterThan(Boolean other)
+        {
+            return new Error(this, "Don't support greater than " + other.GetType().Name);
+        }
+
+        public virtual Expression GreaterThan(Complex other)
+        {
+            return new Error(this, "Don't support greater than " + other.GetType().Name);
+        }
+
+        public virtual Expression GreaterThan(NotNumber other)
+        {
+            return this > other.Evaluate();
+        }
+
+        public virtual Expression GreaterThan(Operator other)
+        {
+            return this > other.Evaluate();
+        }
+
+        public virtual Expression GreaterThan(Message other)
+        {
+            return new Error(this, "Don't support greater than " + other.GetType().Name);
+        }
+
+        public virtual Expression GreaterThan(List other)
+        {
+            return new Error(this, "Don't support greater than " + other.GetType().Name);
+        }
+
+        #endregion
+
+        #region LesserThan
+        public virtual Expression LesserThan(Integer other)
+        {
+            return new Error(this, "Don't support lesser than " + other.GetType().Name);
+        }
+
+        public virtual Expression LesserThan(Rational other)
+        {
+            return new Error(this, "Don't support lesser than " + other.GetType().Name);
+        }
+
+        public virtual Expression LesserThan(Irrational other)
+        {
+            return new Error(this, "Don't support lesser than " + other.GetType().Name);
+        }
+
+        public virtual Expression LesserThan(Boolean other)
+        {
+            return new Error(this, "Don't support lesser than " + other.GetType().Name);
+        }
+
+        public virtual Expression LesserThan(Complex other)
+        {
+            return new Error(this, "Don't support lesser than " + other.GetType().Name);
+        }
+
+        public virtual Expression LesserThan(NotNumber other)
+        {
+            return this < other.Evaluate();
+        }
+
+        public virtual Expression LesserThan(Operator other)
+        {
+            return this < other.Evaluate();
+        }
+
+        public virtual Expression LesserThan(Message other)
+        {
+            return new Error(this, "Don't support lesser than " + other.GetType().Name);
+        }
+
+        public virtual Expression LesserThan(List other)
+        {
+            return new Error(this, "Don't support lesser than " + other.GetType().Name);
+        }
+
+        #endregion
+
+        #region GreaterThanOrEqualTo
+        public virtual Expression GreaterThanOrEqualTo(Integer other)
+        {
+            return new Error(this, "Don't support greater than or equal to " + other.GetType().Name);
+        }
+
+        public virtual Expression GreaterThanOrEqualTo(Rational other)
+        {
+            return new Error(this, "Don't support greater than or equal to " + other.GetType().Name);
+        }
+
+        public virtual Expression GreaterThanOrEqualTo(Irrational other)
+        {
+            return new Error(this, "Don't support greater than or equal to " + other.GetType().Name);
+        }
+
+        public virtual Expression GreaterThanOrEqualTo(Boolean other)
+        {
+            return new Error(this, "Don't support greater than or equal to " + other.GetType().Name);
+        }
+
+        public virtual Expression GreaterThanOrEqualTo(Complex other)
+        {
+            return new Error(this, "Don't support greater than or equal to " + other.GetType().Name);
+        }
+
+        public virtual Expression GreaterThanOrEqualTo(NotNumber other)
+        {
+            return this >= other.Evaluate();
+        }
+
+        public virtual Expression GreaterThanOrEqualTo(Operator other)
+        {
+            return this >= other.Evaluate();
+        }
+
+        public virtual Expression GreaterThanOrEqualTo(Message other)
+        {
+            return new Error(this, "Don't support greater than or equal to " + other.GetType().Name);
+        }
+
+        public virtual Expression GreaterThanOrEqualTo(List other)
+        {
+            return new Error(this, "Don't support greater than or equal to " + other.GetType().Name);
+        }
+
+        #endregion
+
+        #region LesserThanOrEqualTo
+        public virtual Expression LesserThanOrEqualTo(Integer other)
+        {
+            return new Error(this, "Don't support lesser than or equal " + other.GetType().Name);
+        }
+
+        public virtual Expression LesserThanOrEqualTo(Rational other)
+        {
+            return new Error(this, "Don't support lesser than or equal " + other.GetType().Name);
+        }
+
+        public virtual Expression LesserThanOrEqualTo(Irrational other)
+        {
+            return new Error(this, "Don't support lesser than or equal " + other.GetType().Name);
+        }
+
+        public virtual Expression LesserThanOrEqualTo(Boolean other)
+        {
+            return new Error(this, "Don't support lesser than or equal " + other.GetType().Name);
+        }
+
+        public virtual Expression LesserThanOrEqualTo(Complex other)
+        {
+            return new Error(this, "Don't support lesser than or equal " + other.GetType().Name);
+        }
+
+        public virtual Expression LesserThanOrEqualTo(NotNumber other)
+        {
+            return this <= other.Evaluate();
+        }
+
+        public virtual Expression LesserThanOrEqualTo(Operator other)
+        {
+            return this <= other.Evaluate();
+        }
+
+        public virtual Expression LesserThanOrEqualTo(Message other)
+        {
+            return new Error(this, "Don't support lesser than or equal " + other.GetType().Name);
+        }
+
+        public virtual Expression LesserThanOrEqualTo(List other)
+        {
+            return new Error(this, "Don't support lesser than or equal " + other.GetType().Name);
         }
 
         #endregion
@@ -310,6 +502,26 @@ namespace Ast
         public static Expression operator ^(Expression left, dynamic right)
         {
             return left.ExpWith(right);
+        }
+
+        public static Expression operator >(Expression left, dynamic right)
+        {
+            return left.GreaterThan(right);
+        }
+
+        public static Expression operator <(Expression left, dynamic right)
+        {
+            return left.LesserThan(right);
+        }
+
+        public static Expression operator >=(Expression left, dynamic right)
+        {
+            return left.GreaterThanOrEqualTo(right);
+        }
+
+        public static Expression operator <=(Expression left, dynamic right)
+        {
+            return left.LesserThanOrEqualTo(right);
         }
     }
 }
