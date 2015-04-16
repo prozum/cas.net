@@ -77,6 +77,10 @@
       <Project>{882174F5-0B72-4DF3-997F-BD2EB16C6E6C}</Project>
       <Name>TaskGenLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Libraries\LibUI\LibUI.csproj">
+      <Project>{CCDBA451-4D23-4C88-97B7-07D5AAC3AE7C}</Project>
+      <Name>LibUI</Name>
+    </ProjectReference>
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
