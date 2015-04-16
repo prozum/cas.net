@@ -527,7 +527,7 @@ namespace Gui.Tests
             var client = new WebClient ();
             client.Encoding = System.Text.Encoding.UTF8;
             client.Credentials = new NetworkCredential(username, password);
-            int privilege = Int32.Parse(client.UploadString(host, msg));
+            int privilege = Int32.Parse(client.UploadString(host, msg), System.Globalization.NumberStyles.AllowLeadingSign);
 
             buttonLogin.Clicked += delegate(object sender, EventArgs e)
             {
