@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using Gtk;
 using System.Collections.Generic;
 
@@ -7,11 +8,10 @@ namespace WorkView
     class CASGui : Window
     {
         List<Widget> listWidget = new List<Widget>();
-        Gtk.Grid globalGrid = new Grid();
-        int gridNumber = 1;
+        //        Grid globalGrid = new Grid();
+        TextView textView;
+        TextBuffer buffer;
         VBox vboxWindow = new VBox(false, 2);
-        string casFile = "";
-        string username, password;
 
         [STAThread]
         public static void Main(string[] args)
@@ -24,6 +24,9 @@ namespace WorkView
         public CASGui()
             : base("CAS.NET")
         {
+            textView = new TextView();
+            buffer = textView.Buffer;
+
             DeleteEvent += (o, a) => Application.Quit();
 
             SetSizeRequest(300, 500);
@@ -40,7 +43,7 @@ namespace WorkView
             file.Submenu = fileMenu;
 
             MenuItem newFile = new MenuItem("New File");
-            newFile.Activated += (o, a) => ClearWindow();
+            //newFile.Activated += (o, a) => ClearWindow();
 
             MenuItem openFile = new MenuItem("Open File");
             //openFile.Activated += (o, a) => OpenFile();
@@ -54,7 +57,7 @@ namespace WorkView
             addItem.Submenu = addMenu;
 
             MenuItem addEntry = new MenuItem("Entry");
-            addEntry.Activated += (object sender, EventArgs e) => AddEntryWidget();
+//            addEntry.Activated += (object sender, EventArgs e) => AddEntryWidget();
 
             MenuItem addTextView = new MenuItem("TextView");
             addTextView.Activated += (object sender, EventArgs e) => AddTextViewWidget();
@@ -65,15 +68,10 @@ namespace WorkView
             serverItem.Submenu = serverMenu;
 
             MenuItem loginItem = new MenuItem("Login");
-            loginItem.Activated += (object sender, EventArgs e) => LoginScreen();
+            //loginItem.Activated += (object sender, EventArgs e) => LoginScreen();
 
             MenuItem logoutItem = new MenuItem("Logout");
-            logoutItem.Activated += delegate(object sender, EventArgs e)
-            {
-                username = null;
-                password = null;
-            };
-
+            //logoutItem.Activated += delegate(object sender, EventArgs e)
 
             fileMenu.Append(newFile);
             fileMenu.Append(openFile);
@@ -92,121 +90,41 @@ namespace WorkView
             #endregion
 
             vboxWindow.PackStart(menuBar, false, false, 2);
-            vboxWindow.Add(globalGrid);
+//            vboxWindow.Add(globalGrid);
 
             Add(vboxWindow);
+            vboxWindow.Add(textView);
+
+            TextChildAnchor buttonAnchor;
+
+            TextIter insertIter = buffer.StartIter;
+            buttonAnchor = buffer.CreateChildAnchor(ref insertIter);
+            textView.AddChildAtAnchor(ButtonWidget(), buttonAnchor);
 
             ShowAll();
-
-
-        }
-
-        public void AddEntryWidget()
-        {
-            Entry entry =  new Entry ();
-            listWidget.Add(entry);
-
-            //globalGrid.Attach(MovableWidget(entry), 1, gridNumber, 1, 1);
-            //gridNumber++;
-
-            entry.Show();
         }
 
         public void AddTextViewWidget()
         {
-            TextView textView = new TextView ();
-            listWidget.Add(textView);
+            TextIter start, end;
+            buffer.GetBounds(out start, out end);
 
-            //globalGrid.Attach(MovableWidget(textView), 1, gridNumber, 1, 1);
-            //gridNumber++;
+            //TextView textView = new TextView ();
+            byte[] bs = buffer.Serialize(buffer, buffer.RegisterSerializeTagset(null), buffer.StartIter, buffer.EndIter);
+            //string s = Encoding.UTF8.GetString(bs, 0, bs.Length);
+            string s = Encoding.UTF8.GetString(bs);
+            Console.Write(s);
+            listWidget.Add(textView);
 
             textView.Show();
         }
 
-
-
-
-
-        public void UpdateWorkspace()
+        public Widget ButtonWidget()
         {
-            mt.Clear();
+            Button button = new Button("I am a button");
 
-            foreach (Widget w in listWidget)
-            {
-                if (w.GetType() == typeof(Entry))
-                {
-                    Entry en = (Entry)w;
-                    MetaType mtlmt = new MetaType();
-                    mtlmt.type = en.GetType();
-                    mtlmt.metastring0 = en.Text;
-                    mtlmt.metaint0 = en.HeightRequest;
-                    mtlmt.metaint1 = en.WidthRequest;
-
-                    mt.Add(mtlmt);
-                }
-                if (w.GetType() == typeof(TextView))
-                {
-                    TextView tv = (TextView)w;
-                    MetaType mtlmt = new MetaType();
-                    mtlmt.type = tv.GetType();
-                    mtlmt.metastring0 = tv.Buffer.Text;
-                    mtlmt.metaint0 = tv.HeightRequest;
-                    mtlmt.metaint1 = tv.WidthRequest;
-                    mt.Add(mtlmt);
-                }
-            }
+            return button;
         }
 
-        void ClearWindow()
-        {
-            listWidget.Clear();
-
-            foreach (Widget item in globalGrid)
-            {
-                globalGrid.Remove(item);
-            }
-
-            gridNumber = 1;
-        }
-
-        void Redraw()
-        {
-            UpdateWorkspace();
-
-            listWidget.Clear();
-
-            foreach (Widget w in globalGrid)
-            {
-                globalGrid.Remove(w);
-            }
-
-            foreach (var item in mt)
-            {
-                if (item.type == typeof(Entry))
-                {
-                    Entry entry = new Entry();
-                    entry.Text = item.metastring0;
-                    entry.HeightRequest = item.metaint0;
-                    entry.WidthRequest = item.metaint1;
-                    listWidget.Add(entry);
-                }
-                if (item.type == typeof(TextView))
-                {
-                    TextView textView = new TextView();
-                    textView.Buffer.Text = item.metastring0;
-                    textView.HeightRequest = item.metaint0;
-                    textView.WidthRequest = item.metaint1;
-                    listWidget.Add(textView);
-                }
-            }
-
-            foreach (Widget item in listWidget)
-            {
-                //globalGrid.Attach(MovableWidget(item), 1, gridNumber, 1, 1);
-                gridNumber++;
-            }
-
-            ShowAll();
-        }
     }
 }

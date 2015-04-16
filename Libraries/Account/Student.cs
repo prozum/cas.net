@@ -7,62 +7,39 @@ namespace Account
 {
     public class Student
     {
-        private string username;
-        private string password;
-        static string host = "http://localhost:8080/";
+		private readonly string host;
+		private WebClient client;
 
-        public Student (string username, string password)
+		public Student (string username, string password, string host)
         {
-            this.username = username;
-            this.password = password;
+			this.host = host;
+			client = new WebClient();
+			client.Encoding = System.Text.Encoding.UTF8;
+			client.Credentials = new NetworkCredential(username, password);
         }
 
         public string AddCompleted(string file, string filename)
         {
-            var client = new WebClient ();
-            client.Encoding = System.Text.Encoding.UTF8;
-            client.Credentials = new NetworkCredential(username, password);
-
             string msg = "AddCompleted " + filename + " " + file;
-            string response = client.UploadString(host, msg);
-
-            return response;
+            return client.UploadString(host, msg);
         }
 
         public string[] GetAssignmentList()
         {
-            var client = new WebClient ();
-            client.Encoding = System.Text.Encoding.UTF8;
-            client.Credentials = new NetworkCredential(username, password);
-
             string msg = "StudentGetAssignmentList ";
-            string response = client.UploadString(host, msg);
-
-            return response.Split(' ');
+			return client.UploadString(host, msg).Split(' ');
         }
 
         public string GetAssignment(string filename)
         {
-            var client = new WebClient ();
-            client.Encoding = System.Text.Encoding.UTF8;
-            client.Credentials = new NetworkCredential(username, password);
-
             string msg = "GetAssignment " + filename;
-            string response = client.UploadString(host, msg);
-
-            return response;
+			return client.UploadString(host, msg);
         }
 
-        public string GetFeedback(string filename)
+		public string GetFeedback(string filename)
         {
-            var client = new WebClient ();
-            client.Encoding = System.Text.Encoding.UTF8;
-            client.Credentials = new NetworkCredential(username, password);
-
             string msg = "GetFeedback " + filename;
-            string response = client.UploadString(host, msg);
-
-            return response;
+			return client.UploadString(host, msg);
         }
     }
 }
