@@ -53,6 +53,7 @@
     <Reference Include="pango-sharp, Version=3.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
       <HintPath>..\packages\GtkSharp.3.1.2\lib\net45\pango-sharp.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -67,6 +68,14 @@
     <ProjectReference Include="..\Libraries\Ast\Ast.csproj">
       <Project>{82C03E10-075F-411C-A1F1-D5506C62BE1C}</Project>
       <Name>Ast</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libraries\ImEx\ImEx.csproj">
+      <Project>{5150E825-D811-4D68-8C0E-86A1F8573561}</Project>
+      <Name>ImEx</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libraries\TaskGenLib\TaskGenLib.csproj">
+      <Project>{882174F5-0B72-4DF3-997F-BD2EB16C6E6C}</Project>
+      <Name>TaskGenLib</Name>
     </ProjectReference>
   </ItemGroup>
   <ProjectExtensions>
