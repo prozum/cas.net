@@ -8,21 +8,13 @@ namespace Gui.Tests
 {
     class CASGui : Window
     {
-        /*
-        VBox oVB;
-        VBox iVB;
-        int globVarMin, globVarMax, globVarNum;
-        string casFile;
-        string username, password;
-        */
-
-        List<Widget> lw = new List<Widget>();
-        List<Widget> lwm = new List<Widget>();
+        List<Widget> listWidget = new List<Widget>();
         List<MetaType> mt = new List<MetaType>();
         Grid globalGrid = new Grid();
         int gridNumber = 1;
         VBox vboxWindow = new VBox(false, 2);
         string casFile = "";
+        string username, password;
 
         [STAThread]
         public static void Main(string[] args)
@@ -44,7 +36,7 @@ namespace Gui.Tests
             MenuBar menuBar = new MenuBar();
             Menu fileMenu = new Menu();
             Menu addMenu = new Menu();
-
+            Menu serverMenu = new Menu();
 
 
             MenuItem file = new MenuItem("File");
@@ -71,6 +63,21 @@ namespace Gui.Tests
             addTextView.Activated += (object sender, EventArgs e) => AddTextViewWidget();
 
 
+
+            MenuItem serverItem = new MenuItem("Server");
+            serverItem.Submenu = serverMenu;
+
+            MenuItem loginItem = new MenuItem("Login");
+            loginItem.Activated += (object sender, EventArgs e) => LoginScreen();
+
+            MenuItem logoutItem = new MenuItem("Logout");
+            logoutItem.Activated += delegate(object sender, EventArgs e)
+            {
+                username = null;
+                password = null;
+            };
+
+
             fileMenu.Append(newFile);
             fileMenu.Append(openFile);
             fileMenu.Append(saveFile);
@@ -78,8 +85,12 @@ namespace Gui.Tests
             addMenu.Append(addEntry);
             addMenu.Append(addTextView);
 
+            serverMenu.Append(loginItem);
+            serverMenu.Append(logoutItem);
+
             menuBar.Append(file);
             menuBar.Append(addItem);
+            menuBar.Append(serverItem);
 
             #endregion
 
@@ -96,7 +107,7 @@ namespace Gui.Tests
         public void AddEntryWidget()
         {
             Entry entry = (Entry)EntryWidget();
-            lw.Add(entry);
+            listWidget.Add(entry);
 
             globalGrid.Attach(MovableWidget(entry), 1, gridNumber, 1, 1);
             gridNumber++;
@@ -107,7 +118,7 @@ namespace Gui.Tests
         public void AddTextViewWidget()
         {
             TextView textView = (TextView)TextViewWidget();
-            lw.Add(textView);
+            listWidget.Add(textView);
 
             globalGrid.Attach(MovableWidget(textView), 1, gridNumber, 1, 1);
             gridNumber++;
@@ -167,7 +178,7 @@ namespace Gui.Tests
         {
             mt.Clear();
 
-            foreach (Widget w in lw)
+            foreach (Widget w in listWidget)
             {
                 if (w.GetType() == typeof(Entry))
                 {
@@ -249,7 +260,7 @@ namespace Gui.Tests
             List<MetaType> mtlmt = new List<MetaType>();
             mtlmt = Import.DeserializeString<List<MetaType>>(casFile);
             mt = mtlmt;
-            lw.Clear();
+            listWidget.Clear();
 
             foreach (var item in mt)
             {
@@ -259,7 +270,7 @@ namespace Gui.Tests
                     entry.Text = item.metastring0;
                     entry.HeightRequest = item.metaint0;
                     entry.WidthRequest = item.metaint1;
-                    lw.Add(entry);
+                    listWidget.Add(entry);
                 }
                 if (item.type == typeof(TextView))
                 {
@@ -267,11 +278,11 @@ namespace Gui.Tests
                     textView.Buffer.Text = item.metastring0;
                     textView.HeightRequest = item.metaint0;
                     textView.WidthRequest = item.metaint1;
-                    lw.Add(textView);
+                    listWidget.Add(textView);
                 }
             }
 
-            foreach (Widget item in lw)
+            foreach (Widget item in listWidget)
             {
                 globalGrid.Attach(MovableWidget(item), 1, gridNumber, 1, 1);
                 gridNumber++;
@@ -343,7 +354,7 @@ namespace Gui.Tests
 
         void ClearWindow()
         {
-            lw.Clear();
+            listWidget.Clear();
 
             foreach (Widget item in globalGrid)
             {
@@ -363,35 +374,35 @@ namespace Gui.Tests
             buttonMoveUp.Clicked += delegate(object sender, EventArgs e)
             {
                 
-                Console.WriteLine(lw.Count);
+                Console.WriteLine(listWidget.Count);
 
-                foreach (Widget item in lw)
+                foreach (Widget item in listWidget)
                 {
                     Console.WriteLine("Item in lw: " + item.ToString());
                 }
 
-                int ID = lw.IndexOf(widget);
+                int ID = listWidget.IndexOf(widget);
                 Console.WriteLine("ID: " + ID);
                 if (ID >= 1)
                 {
                     Console.WriteLine("Inside deligate");
-                    Console.WriteLine("Moving ID: " + lw.IndexOf(widget));
-                    Widget w = lw[ID];
+                    Console.WriteLine("Moving ID: " + listWidget.IndexOf(widget));
+                    Widget w = listWidget[ID];
                     Console.WriteLine("Got widget");
-                    lw.RemoveAt(ID);
+                    listWidget.RemoveAt(ID);
                     Console.WriteLine("Removed Widget\nInserting widget @ " + ID);
-                    lw.Insert(ID - 1, w);
+                    listWidget.Insert(ID - 1, w);
                     Console.WriteLine("Inserted Widget");
                     Redraw();
                 }
 
-                foreach (Widget item in lw)
+                foreach (Widget item in listWidget)
                 {
                     Console.WriteLine("Item in lw: " + item.ToString());
                 }
 
 
-                Console.WriteLine(lw.Count);
+                Console.WriteLine(listWidget.Count);
             };
 
             Button buttonMoveDown = new Button("↓");
@@ -400,35 +411,35 @@ namespace Gui.Tests
             buttonMoveDown.Clicked += delegate(object sender, EventArgs e)
             {
 
-                Console.WriteLine(lw.Count);
+                Console.WriteLine(listWidget.Count);
 
-                foreach (Widget item in lw)
+                foreach (Widget item in listWidget)
                 {
                     Console.WriteLine("Item in lw: " + item.ToString());
                 }
 
-                int ID = lw.IndexOf(widget);
+                int ID = listWidget.IndexOf(widget);
                 Console.WriteLine("ID: " + ID);
-                if (ID <= lw.Count - 2)
+                if (ID <= listWidget.Count - 2)
                 {
                     Console.WriteLine("Inside deligate");
-                    Console.WriteLine("Moving ID: " + lw.IndexOf(widget));
-                    Widget w = lw[ID];
+                    Console.WriteLine("Moving ID: " + listWidget.IndexOf(widget));
+                    Widget w = listWidget[ID];
                     Console.WriteLine("Got widget");
-                    lw.RemoveAt(ID);
+                    listWidget.RemoveAt(ID);
                     Console.WriteLine("Removed Widget\nInserting widget @ " + ID);
-                    lw.Insert(ID + 1, w);
+                    listWidget.Insert(ID + 1, w);
                     Console.WriteLine("Inserted Widget");
                     Redraw();
                 }
 
-                foreach (Widget item in lw)
+                foreach (Widget item in listWidget)
                 {
                     Console.WriteLine("Item in lw: " + item.ToString());
                 }
 
 
-                Console.WriteLine(lw.Count);
+                Console.WriteLine(listWidget.Count);
             };
 
             grid.Attach(widget, 1, 1, 1, 2);
@@ -442,7 +453,7 @@ namespace Gui.Tests
         {
             UpdateWorkspace();
 
-            lw.Clear();
+            listWidget.Clear();
 
             foreach (Widget w in globalGrid)
             {
@@ -457,7 +468,7 @@ namespace Gui.Tests
                     entry.Text = item.metastring0;
                     entry.HeightRequest = item.metaint0;
                     entry.WidthRequest = item.metaint1;
-                    lw.Add(entry);
+                    listWidget.Add(entry);
                 }
                 if (item.type == typeof(TextView))
                 {
@@ -465,11 +476,11 @@ namespace Gui.Tests
                     textView.Buffer.Text = item.metastring0;
                     textView.HeightRequest = item.metaint0;
                     textView.WidthRequest = item.metaint1;
-                    lw.Add(textView);
+                    listWidget.Add(textView);
                 }
             }
 
-            foreach (Widget item in lw)
+            foreach (Widget item in listWidget)
             {
                 globalGrid.Attach(MovableWidget(item), 1, gridNumber, 1, 1);
                 gridNumber++;
@@ -477,6 +488,57 @@ namespace Gui.Tests
 
             ShowAll();
         }
+
+        void LoginScreen()
+        {
+            Window loginWindow = new Window("Login to CAS.NET");
+            loginWindow.SetDefaultSize(200, 200);
+
+            VBox vbox = new VBox(false, 2);
+            HBox hbox = new HBox(false, 2);
+
+            Label labUsername = new Label("Username");
+            Label labPassword = new Label("Password");
+
+            Table table = new Table(2, 3, false);
+
+            table.Attach(labUsername, 0, 1, 0, 1, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
+            table.Attach(labPassword, 0, 1, 1, 2, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
+
+            Entry entryUsername = new Entry();
+            entryUsername.HeightRequest = 20;
+            entryUsername.WidthRequest = 100;
+            entryUsername.Buffer.Text = "";
+
+            Entry entryPassword = new Entry();
+            entryPassword.HeightRequest = 20;
+            entryPassword.WidthRequest = 100;
+            entryPassword.Buffer.Text = "";
+
+            table.Attach(entryUsername, 1, 2, 0, 1, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
+            table.Attach(entryPassword, 1, 2, 1, 2, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
+
+            Button buttonLogin = new Button("Login");
+            buttonLogin.Clicked += delegate(object sender, EventArgs e)
+            {
+                username = entryUsername.Text;
+                password = entryPassword.Text;
+                loginWindow.Destroy();
+            };
+
+            Button buttonCancel = new Button("Cancel");
+            buttonCancel.Clicked += (object sender, EventArgs e) => loginWindow.Destroy();
+
+            hbox.Add(buttonCancel);
+            hbox.Add(buttonLogin);
+
+            vbox.Add(table);
+            vbox.Add(hbox);
+
+            loginWindow.Add(vbox);
+            loginWindow.ShowAll();
+        }
+
 
         /*
 
