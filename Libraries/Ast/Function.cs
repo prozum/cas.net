@@ -101,7 +101,7 @@ namespace Ast
             (res as Function).args = new List<Expression>(args);
 
             return res;
-    }
+        }
     }
 
     public class UserDefinedFunction : Function
@@ -168,41 +168,6 @@ namespace Ast
             }
         }
 
-        private Expression ReturnValue(Expression definition)
-        {
-            Expression res = null;
-
-            if (prefix.CompareTo(new Integer(0)))
-            {
-                res = new Integer(0);
-            }
-            else
-            {
-                if (exponent.CompareTo(new Integer(0)))
-                {
-                    res = prefix.Clone();
-                }
-                else
-                {
-                    if (!exponent.CompareTo(new Integer(1)))
-                    {
-                        res = new Exp(definition, exponent);
-                    }
-                    else
-                    {
-                        res = definition;
-                    }
-
-                    if (!prefix.CompareTo(new Integer(1)))
-                    {
-                        return new Mul(prefix, res);
-                    }
-	            }
-            }
-
-            return res;
-        }
-
         public override NotNumber Clone()
         {
             return MakeClone<UserDefinedFunction>();
@@ -232,17 +197,17 @@ namespace Ast
 
             if (res is Integer)
             {
-                return new Mul(prefix, new Exp(new Irrational((decimal)Math.Sin((res as Integer).value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
+                return ReturnValue(new Irrational((decimal)Math.Sin((res as Integer).value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0)))).Evaluate();
             }
             
             if (res is Rational)
             {
-                return new Mul(prefix, new Exp(new Irrational((decimal)Math.Sin((double)(res as Rational).value.value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
+                return ReturnValue(new Irrational((decimal)Math.Sin((double)(res as Rational).value.value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0)))).Evaluate();
             }
             
             if (res is Irrational)
             {
-                return new Mul(prefix, new Exp(new Irrational((decimal)Math.Sin((double)(res as Irrational).value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
+                return ReturnValue(new Irrational((decimal)Math.Sin((double)(res as Irrational).value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0)))).Evaluate();
             }
 
             return new Error(this, "Could not take Sin of: " + args[0]);
@@ -251,7 +216,7 @@ namespace Ast
         public override NotNumber Clone()
         {
             return MakeClone<Sin>();
-    }
+        }
     }
 
     public class ASin : UnaryOperation
@@ -265,17 +230,17 @@ namespace Ast
             var res = args[0].Evaluate();
             if (res is Integer)
             {
-                return new Mul(prefix, new Exp(new Irrational((decimal)(Math.Asin((res as Integer).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
+                return ReturnValue(new Irrational((decimal)(Math.Asin((res as Integer).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0)))).Evaluate();
             }
 
             if (res is Rational)
             {
-                return new Mul(prefix, new Exp(new Irrational((decimal)(Math.Asin((double)(res as Rational).value.value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
+                return ReturnValue(new Irrational((decimal)(Math.Asin((double)(res as Rational).value.value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0)))).Evaluate();
             }
 
             if (res is Irrational)
             {
-                return new Mul(prefix, new Exp(new Irrational((decimal)(Math.Asin((double)(res as Irrational).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
+                return ReturnValue(new Irrational((decimal)(Math.Asin((double)(res as Irrational).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0)))).Evaluate();
             }
 
             return new Error(this, "Could not take ASin of: " + args[0]);
@@ -299,17 +264,17 @@ namespace Ast
 
             if (res is Integer)
             {
-                return new Mul(prefix, new Exp(new Irrational((decimal)Math.Cos((res as Integer).value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
+                return ReturnValue(new Irrational((decimal)Math.Cos((res as Integer).value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0)))).Evaluate();
             }
 
             if (res is Rational)
             {
-                return new Mul(prefix, new Exp(new Irrational((decimal)Math.Cos((double)(res as Rational).value.value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
+                return ReturnValue(new Irrational((decimal)Math.Cos((double)(res as Rational).value.value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0)))).Evaluate();
             }
 
             if (res is Irrational)
             {
-                return new Mul(prefix, new Exp(new Irrational((decimal)Math.Cos((double)(res as Irrational).value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
+                return ReturnValue(new Irrational((decimal)Math.Cos((double)(res as Irrational).value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0)))).Evaluate();
             }
 
             return new Error(this, "Could not take Cos of: " + args[0]);
@@ -330,20 +295,19 @@ namespace Ast
         public override Expression Evaluate()
         {
             var res = args[0].Evaluate();
-
             if (res is Integer)
             {
-                return new Mul(prefix, new Exp(new Irrational((decimal)(Math.Acos((res as Integer).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
+                return ReturnValue(new Irrational((decimal)(Math.Acos((res as Integer).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0)))).Evaluate();
             }
 
             if (res is Rational)
             {
-                return new Mul(prefix, new Exp(new Irrational((decimal)(Math.Acos((double)(res as Rational).value.value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
+                return ReturnValue(new Irrational((decimal)(Math.Acos((double)(res as Rational).value.value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0)))).Evaluate();
             }
 
             if (res is Irrational)
             {
-                return new Mul(prefix, new Exp(new Irrational((decimal)(Math.Acos((double)(res as Irrational).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
+                return ReturnValue(new Irrational((decimal)(Math.Acos((double)(res as Irrational).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0)))).Evaluate();
             }
 
             return new Error(this, "Could not take ACos of: " + args[0]);
@@ -352,7 +316,7 @@ namespace Ast
         public override NotNumber Clone()
         {
             return MakeClone<ACos>();
-    }
+        }
     }
 
     public class Tan : UnaryOperation
@@ -367,17 +331,17 @@ namespace Ast
 
             if (res is Integer)
             {
-                return new Mul(prefix, new Exp(new Irrational((decimal)Math.Tan((res as Integer).value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
+                return ReturnValue(new Irrational((decimal)Math.Tan((res as Integer).value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0)))).Evaluate();
             }
 
             if (res is Rational)
             {
-                return new Mul(prefix, new Exp(new Irrational((decimal)Math.Tan((double)(res as Rational).value.value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
+                return ReturnValue(new Irrational((decimal)Math.Tan((double)(res as Rational).value.value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0)))).Evaluate();
             }
 
             if (res is Irrational)
             {
-                return new Mul(prefix, new Exp(new Irrational((decimal)Math.Tan((double)(res as Irrational).value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
+                return ReturnValue(new Irrational((decimal)Math.Tan((double)(res as Irrational).value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0)))).Evaluate();
             }
 
             return new Error(this, "Could not take Tan of: " + args[0]);
@@ -398,20 +362,19 @@ namespace Ast
         public override Expression Evaluate()
         {
             var res = args[0].Evaluate();
-
             if (res is Integer)
             {
-                return new Mul(prefix, new Exp(new Irrational((decimal)(Math.Atan((res as Integer).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
+                return ReturnValue(new Irrational((decimal)(Math.Atan((res as Integer).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0)))).Evaluate();
             }
 
             if (res is Rational)
             {
-                return new Mul(prefix, new Exp(new Irrational((decimal)(Math.Atan((double)(res as Rational).value.value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
+                return ReturnValue(new Irrational((decimal)(Math.Atan((double)(res as Rational).value.value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0)))).Evaluate();
             }
 
             if (res is Irrational)
             {
-                return new Mul(prefix, new Exp(new Irrational((decimal)(Math.Atan((double)(res as Irrational).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0))), exponent)).Evaluate();
+                return ReturnValue(new Irrational((decimal)(Math.Atan((double)(res as Irrational).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0)))).Evaluate();
             }
 
             return new Error(this, "Could not take ATan of: " + args[0]);
@@ -420,7 +383,7 @@ namespace Ast
         public override NotNumber Clone()
         {
             return MakeClone<ATan>();
-    }
+        }
     }
 
     public class Sqrt : UnaryOperation
@@ -435,17 +398,17 @@ namespace Ast
 
             if (res is Integer)
             {
-                return new Mul(prefix, new Exp(new Irrational((decimal)Math.Sqrt((res as Integer).value)), exponent)).Evaluate();
+                return ReturnValue(new Irrational((decimal)Math.Sqrt((res as Integer).value))).Evaluate();
             }
 
             if (res is Rational)
             {
-                return new Mul(prefix, new Exp(new Irrational((decimal)Math.Sqrt((double)(res as Rational).value.value)), exponent)).Evaluate();
+                return ReturnValue(new Irrational((decimal)Math.Sqrt((double)(res as Rational).value.value))).Evaluate();
             }
 
             if (res is Irrational)
             {
-                return new Mul(prefix, new Exp(new Irrational((decimal)Math.Sqrt((double)(res as Irrational).value)), exponent)).Evaluate();
+                return ReturnValue(new Irrational((decimal)Math.Sqrt((double)(res as Irrational).value))).Evaluate();
             }
 
             return new Error(this, "Could not take Sqrt of: " + args[0]);
@@ -464,7 +427,7 @@ namespace Ast
         public override NotNumber Clone()
         {
             return MakeClone<Sqrt>();
-    }
+        }
     }
 
     public class Negation : UnaryOperation
@@ -494,7 +457,7 @@ namespace Ast
         public override NotNumber Clone()
         {
             throw new NotImplementedException();
-    }
+        }
     }
 
     public class Expand : UnaryOperation
@@ -509,7 +472,7 @@ namespace Ast
         public override NotNumber Clone()
         {
             throw new NotImplementedException();
-    }
+        }
     }
 
     public class Range : UnaryOperation

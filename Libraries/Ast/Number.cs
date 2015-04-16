@@ -155,164 +155,77 @@ namespace Ast
 
         #endregion
 
-        /*
-        #region Operator Overloads
-        #region Add Overload
-        public static Integer operator +(Integer left, Integer right)
+        #region GreaterThan
+        public override Expression GreaterThan(Integer other)
         {
-            return new Integer(left.value + right.value);
+            return new Boolean(value > other.value);
         }
 
-        public static Rational operator +(Integer left, Rational right)
+        public override Expression GreaterThan(Rational other)
         {
-            return new Rational(left, new Integer(1)) + right;
+            return new Rational(this, new Integer(1)) > other;
         }
 
-        public static Rational operator +(Rational left, Integer right)
+        public override Expression GreaterThan(Irrational other)
         {
-            return left + new Rational(right, new Integer(1));
+            return new Boolean(value > other.value);
         }
-
-        public static Irrational operator +(Integer left, Irrational right)
-        {
-            return new Irrational(left.value + right.value);
-        }
-
-        public static Irrational operator +(Irrational left, Integer right)
-        {
-            return new Irrational(left.value + right.value);
-        }
-        #endregion
-
-        #region Sub Overload
-        public static Integer operator -(Integer left, Integer right)
-        {
-            return new Integer(left.value - right.value);
-        }
-
-        public static Rational operator -(Integer left, Rational right)
-        {
-            return new Rational(left, new Integer(1)) - right;
-        }
-
-        public static Rational operator -(Rational left, Integer right)
-        {
-            return left + new Rational(right, new Integer(1));
-        }
-
-        public static Irrational operator -(Integer left, Irrational right)
-        {
-            return new Irrational(left.value - right.value);
-        }
-
-        public static Irrational operator -(Irrational left, Integer right)
-        {
-            return new Irrational(left.value - right.value);
-        }
-        #endregion
-
-        #region Mul Overload
-        public static Integer operator *(Integer left, Integer right)
-        {
-            return new Integer(left.value * right.value);
-        }
-
-        public static Rational operator *(Integer left, Rational right)
-        {
-            return new Rational(left, new Integer(1)) * right;
-        }
-
-        public static Rational operator *(Rational left, Integer right)
-        {
-            return left * new Rational(right, new Integer(1));
-        }
-
-        public static Irrational operator *(Integer left, Irrational right)
-        {
-            return new Irrational(left.value * right.value);
-        }
-
-        public static Irrational operator *(Irrational left, Integer right)
-        {
-            return new Irrational(left.value * right.value);
-        }
-        #endregion
-
-        #region Div Overload
-        public static Integer operator /(Integer left, Integer right)
-        {
-            return new Integer(left.value * right.value);
-        }
-
-        public static Rational operator /(Integer left, Rational right)
-        {
-            return new Rational(left, new Integer(1)) / right;
-        }
-
-        public static Rational operator /(Rational left, Integer right)
-        {
-            return left / new Rational(right, new Integer(1));
-        }
-
-        public static Irrational operator /(Integer left, Irrational right)
-        {
-            return new Irrational(left.value / right.value);
-        }
-
-        public static Irrational operator /(Irrational left, Integer right)
-        {
-            return new Irrational(left.value / right.value);
-        }
-        #endregion
-
-        #region Exp Overload
-        public static Integer operator ^(Integer left, Integer right)
-        {
-            return new Integer((int)Math.Pow(left.value, right.value));
-        }
-
-        public static Irrational operator ^(Integer left, Rational right)
-        {
-            return left ^ right.value;
-        }
-
-        public static Rational operator ^(Rational left, Integer right)
-        {
-            return new Rational(left.numerator ^ right, left.denominator ^ right);
-        }
-
-        public static Irrational operator ^(Integer left, Irrational right)
-        {
-            return new Irrational((decimal)Math.Pow(left.value, (double)right.value));
-        }
-
-        public static Irrational operator ^(Irrational left, Integer right)
-        {
-            return new Irrational((decimal)Math.Pow((double)left.value, right.value));
-        }
-        #endregion
-
-        #region LessThan Overload
 
         #endregion
 
-        #region LessThanOrEqual Overload
+        #region LesserThan
+        public override Expression LesserThan(Integer other)
+        {
+            return new Boolean(value < other.value);
+        }
+
+        public override Expression LesserThan(Rational other)
+        {
+            return new Rational(this, new Integer(1)) < other;
+        }
+
+        public override Expression LesserThan(Irrational other)
+        {
+            return new Boolean(value < other.value);
+        }
 
         #endregion
 
-        #region GreaterThan Overload
+        #region GreaterThanOrEqualTo
+        public override Expression GreaterThanOrEqualTo(Integer other)
+        {
+            return new Boolean(value >= other.value);
+        }
+
+        public override Expression GreaterThanOrEqualTo(Rational other)
+        {
+            return new Rational(this, new Integer(1)) >= other;
+        }
+
+        public override Expression GreaterThanOrEqualTo(Irrational other)
+        {
+            return new Boolean(value >= other.value);
+        }
 
         #endregion
 
-        #region GreaterThanOrEqual Overload
+        #region LesserThanOrEqualTo
+        public override Expression LesserThanOrEqualTo(Integer other)
+        {
+            return new Boolean(value <= other.value);
+        }
+
+        public override Expression LesserThanOrEqualTo(Rational other)
+        {
+            return new Rational(this, new Integer(1)) <= other;
+        }
+
+        public override Expression LesserThanOrEqualTo(Irrational other)
+        {
+            return new Boolean(value <= other.value);
+        }
 
         #endregion
-
-        #region Equal
-
-        #endregion
-        #endregion
-        */
     }
 
     public class Rational : Number 
@@ -473,120 +386,77 @@ namespace Ast
 
         #endregion
 
-        /*
-        #region Operator Overloads
-        #region Add Overload
-        public static Rational operator +(Rational left, Rational right)
+        #region GreaterThan
+        public override Expression GreaterThan(Integer other)
         {
-            var leftNumerator = left.numerator * right.denominator;
-            var rightNumerator = right.numerator * left.denominator;
-
-            return new Rational(leftNumerator + rightNumerator, right.denominator * left.denominator);
+            return value > new Rational(other, new Integer(1));
         }
 
-        public static Irrational operator +(Rational left, Irrational right)
+        public override Expression GreaterThan(Rational other)
         {
-            return new Irrational(left.value.value + right.value);
+            return numerator * other.denominator > other.numerator * denominator;
         }
 
-        public static Irrational operator +(Irrational left, Rational right)
+        public override Expression GreaterThan(Irrational other)
         {
-            return new Irrational(left.value + right.value.value);
+            return value > other;
         }
-        #endregion
-
-        #region Sub Overload
-        public static Rational operator -(Rational left, Rational right)
-        {
-            var leftNumerator = left.numerator * right.denominator;
-            var rightNumerator = right.numerator * left.denominator;
-
-            return new Rational(leftNumerator - rightNumerator, right.denominator * left.denominator);
-        }
-
-        public static Irrational operator -(Rational left, Irrational right)
-        {
-            return new Irrational(left.value.value - right.value);
-        }
-
-        public static Irrational operator -(Irrational left, Rational right)
-        {
-            return new Irrational(left.value - right.value.value);
-        }
-        #endregion
-
-        #region Mul Overload
-        public static Rational operator *(Rational left, Rational right)
-        {
-            return new Rational(left.numerator * right.numerator, left.denominator * right.denominator);
-        }
-
-        public static Irrational operator *(Rational left, Irrational right)
-        {
-            return new Irrational(left.value.value * right.value);
-        }
-
-        public static Irrational operator *(Irrational left, Rational right)
-        {
-            return new Irrational(left.value * right.value.value);
-        }
-        #endregion
-
-        #region Div Overload
-        public static Rational operator /(Rational left, Rational right)
-        {
-            return new Rational(left.denominator, left.numerator) * right;
-        }
-
-        public static Irrational operator /(Rational left, Irrational right)
-        {
-            return new Irrational(left.value.value / right.value);
-        }
-
-        public static Irrational operator /(Irrational left, Rational right)
-        {
-            return new Irrational(left.value / right.value.value);
-        }
-        #endregion
-
-        #region Exp Overload
-        public static Irrational operator ^(Rational left, Rational right)
-        {
-            return left.value ^ right.value;
-        }
-
-        public static Irrational operator ^(Rational left, Irrational right)
-        {
-            return left.value ^ right;
-        }
-
-        public static Irrational operator ^(Irrational left, Rational right)
-        {
-            return left ^ right.value;
-        }
-        #endregion
-
-        #region LessThan Overload
 
         #endregion
 
-        #region LessThanOrEqual Overload
+        #region LesserThan
+        public override Expression LesserThan(Integer other)
+        {
+            return value < new Rational(other, new Integer(1));
+        }
+
+        public override Expression LesserThan(Rational other)
+        {
+            return numerator * other.denominator < other.numerator * denominator;
+        }
+
+        public override Expression LesserThan(Irrational other)
+        {
+            return value < other;
+        }
 
         #endregion
 
-        #region GreaterThan Overload
+        #region GreaterThanOrEqualTo
+        public override Expression GreaterThanOrEqualTo(Integer other)
+        {
+            return value >= new Rational(other, new Integer(1));
+        }
+
+        public override Expression GreaterThanOrEqualTo(Rational other)
+        {
+            return numerator * other.denominator >= other.numerator * denominator;
+        }
+
+        public override Expression GreaterThanOrEqualTo(Irrational other)
+        {
+            return value >= other;
+        }
 
         #endregion
 
-        #region GreaterThanOrEqual Overload
+        #region LesserThanOrEqualTo
+        public override Expression LesserThanOrEqualTo(Integer other)
+        {
+            return value <= new Rational(other, new Integer(1));
+        }
+
+        public override Expression LesserThanOrEqualTo(Rational other)
+        {
+            return numerator * other.denominator <= other.numerator * denominator;
+        }
+
+        public override Expression LesserThanOrEqualTo(Irrational other)
+        {
+            return value <= other;
+        }
 
         #endregion
-
-        #region Equal
-
-        #endregion
-        #endregion
-        */
     }
 
     public class Irrational : Number 
@@ -727,64 +597,77 @@ namespace Ast
 
         #endregion
 
-        /*
-        #region Operator Overloads
-        #region Add Overload
-        public static Irrational operator +(Irrational left, Irrational right)
+        #region GreaterThan
+        public override Expression GreaterThan(Integer other)
         {
-            return new Irrational(left.value + right.value);
+            return new Boolean(value > other.value);
         }
-        #endregion
 
-        #region Sub Overload
-        public static Irrational operator -(Irrational left, Irrational right)
+        public override Expression GreaterThan(Rational other)
         {
-            return new Irrational(left.value - right.value);
+            return new Boolean(value > other.value.value);
         }
-        #endregion
 
-        #region Mul Overload
-        public static Irrational operator *(Irrational left, Irrational right)
+        public override Expression GreaterThan(Irrational other)
         {
-            return new Irrational(left.value * right.value);
+            return new Boolean(value > other.value);
         }
+
         #endregion
 
-        #region Div Overload
-        public static Irrational operator /(Irrational left, Irrational right)
+        #region LesserThan
+        public override Expression LesserThan(Integer other)
         {
-            return new Irrational(left.value / right.value);
+            return new Boolean(value < other.value);
         }
-        #endregion
 
-        #region Exp Overload
-        public static Irrational operator ^(Irrational left, Irrational right)
+        public override Expression LesserThan(Rational other)
         {
-            return new Irrational((decimal)Math.Pow((double)left.value, (double)right.value));
+            return new Boolean(value < other.value.value);
         }
-        #endregion
 
-        #region LessThan Overload
-
-        #endregion
-
-        #region LessThanOrEqual Overload
+        public override Expression LesserThan(Irrational other)
+        {
+            return new Boolean(value < other.value);
+        }
 
         #endregion
 
-        #region GreaterThan Overload
+        #region GreaterThanEqualTo
+        public override Expression GreaterThanOrEqualTo(Integer other)
+        {
+            return new Boolean(value >= other.value);
+        }
+
+        public override Expression GreaterThanOrEqualTo(Rational other)
+        {
+            return new Boolean(value >= other.value.value);
+        }
+
+        public override Expression GreaterThanOrEqualTo(Irrational other)
+        {
+            return new Boolean(value >= other.value);
+        }
 
         #endregion
 
-        #region GreaterThanOrEqual Overload
+        #region LesserThanOrEqualTo
+        public override Expression LesserThanOrEqualTo(Integer other)
+        {
+            return new Boolean(value <= other.value);
+        }
+
+        public override Expression LesserThanOrEqualTo(Rational other)
+        {
+            return new Boolean(value <= other.value.value);
+        }
+
+        public override Expression LesserThanOrEqualTo(Irrational other)
+        {
+            return new Boolean(value <= other.value);
+        }
 
         #endregion
-
-        #region Equal
-
-        #endregion
-        #endregion
-        */
     }
 
     public class Complex : Number 
@@ -803,9 +686,9 @@ namespace Ast
 
             if (res)
             {
-                if (real == (other as Complex).real && real == (imag as Complex).imag)
+                if (!real.CompareTo((other as Complex).real) || !imag.CompareTo((imag as Complex).imag))
                 {
-                    res = true;
+                    res = false;
                 }
             }
 
