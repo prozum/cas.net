@@ -5,6 +5,8 @@ namespace Ast
 {
     public class List : Expression
     {
+        const int MaxElementPrint = 10;
+
         public List<Expression> elements;
 
         public List()
@@ -24,11 +26,19 @@ namespace Ast
 
             for (int i = 0; i < elements.Count; i++) 
             {
-                str += elements[i].ToString ();
-
-                if (i < elements.Count - 1) 
+                if (i >= MaxElementPrint)
                 {
-                    str += ',';
+                    str += "..." + (elements.Count - i).ToString() + "e";
+                    break;
+                }
+                else
+                {
+                    str += elements[i].ToString ();
+
+                    if (i < elements.Count - 1) 
+                    {
+                        str += ',';
+                    }
                 }
             }
 
