@@ -544,7 +544,6 @@ namespace Ast
             return res;
         }
 
-        //implement a^m * b^m
         public override Expression Simplify()
         {
             Expression evaluatedLeft, evaluatedRight, res = null;
@@ -605,6 +604,10 @@ namespace Ast
             else if (simplifiedOperator.right is Div)
             {
                 res = new Div(new Mul((simplifiedOperator.right as Div).left, simplifiedOperator.left), (simplifiedOperator.right as Div).right);
+            }
+            else if ((simplifiedOperator.left is Exp && simplifiedOperator.right is Exp) && (simplifiedOperator.left as Exp).right.CompareTo((simplifiedOperator.right as Exp).right))
+            {
+                res = new Exp(new Mul((simplifiedOperator.left as Exp).left, (simplifiedOperator.right as Exp).left), (simplifiedOperator.left as Exp).right);
             }
             else if (simplifiedOperator.left is NotNumber && simplifiedOperator.right is NotNumber)
             {
@@ -716,6 +719,21 @@ namespace Ast
                     res = new Mul(this, other);
                 }
             }
+            else if (other is Exp)
+            {
+                if (left is Exp && (left as Exp).right.CompareTo((other as Exp).right))
+                {
+                    res = new Mul(right, new Exp(new Mul((left as Exp).left, (other as Exp).left), (left as Exp).right));
+                }
+                else if (right is Exp && (right as Exp).right.CompareTo((other as Exp).right))
+                {
+                    res = new Mul(left, new Exp(new Mul((right as Exp).left, (other as Exp).left), (right as Exp).right));
+                }
+                else
+                {
+                    res = new Mul(this, other);
+                }
+            }
             else
             {
                 if (left.CompareTo(other))
@@ -815,6 +833,10 @@ namespace Ast
             else if (simplifiedOperator.right is Div)
             {
                 res = new Div(new Mul(simplifiedOperator.left, (simplifiedOperator.right as Div).right), (simplifiedOperator.right as Div).left);
+            }
+            else if ((simplifiedOperator.left is Exp && simplifiedOperator.right is Exp) && (simplifiedOperator.left as Exp).left.CompareTo((simplifiedOperator.right as Exp).left))
+            {
+                res = new Exp((simplifiedOperator.left as Exp).left, new Sub((simplifiedOperator.left as Exp).right, (simplifiedOperator.right as Exp).right));
             }
             else if (simplifiedOperator.left is NotNumber && simplifiedOperator.right is NotNumber && (simplifiedOperator.left as NotNumber).identifier == (simplifiedOperator.right as NotNumber).identifier)
             {
