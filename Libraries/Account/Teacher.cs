@@ -2,6 +2,7 @@
 using System.Net;
 using System.Text;
 using System.IO;
+using ImEx;
 
 namespace Account
 {
@@ -18,10 +19,20 @@ namespace Account
 			client.Credentials = new NetworkCredential(username, password);
         }
 
-        public string AddAssignment(string checksum, string file, string filename, string grade)
+        public string AddAssignment(string file, string filename, string grade)
         {
-            string msg = "AddAssignment " + checksum + " " + grade + " " + filename + " " + file;
-			return client.UploadString(host, msg);
+			string checksum = Checksum.GetMd5Hash (file);
+			client.Headers.Add ("Command", "AddAssignment");
+			client.Headers.Add ("Checksum", checksum);
+			client.Headers.Add ("Grade", grade);
+			client.Headers.Add ("Filename", filename);
+			client.Headers.Add ("File", file);
+
+			string msg = client.UploadString(host, String.Empty);
+
+			for (int i = 0; i < client.Headers.; i++) {
+
+			}
         }
 
         public string GetCompleted(string filename, string grade)
@@ -38,7 +49,8 @@ namespace Account
 
         public string AddFeedback(string file, string filename, string grade)
         {
-            string msg = "AddFeedback " + grade + " " + filename + " " + file;
+			string checksum = Checksum.GetMd5Hash (file);
+			string msg = "AddFeedback " + " " + checksum + " " + grade + " " + filename + " " + file;
             return client.UploadString(host, msg);
         }
     }

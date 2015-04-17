@@ -66,7 +66,7 @@ namespace CAS.NET.Server
             }
         }
 
-        private string ExecuteCommand(string username, string password, string msg, Database db)
+		private string ExecuteCommand(string username, string password, string msg, HttpListenerRequest request, Database db)
         {
             // decode command from client message and remove it from msg
 			int index = msg.IndexOf (" ");
@@ -96,7 +96,7 @@ namespace CAS.NET.Server
                         case "GetAssignment":
                             return StudentGetAssignment(username, msg, db);
                         case "StudentGetAssignmentList":
-                            return StudentGetAssignmentList(username, msg, db);
+                            return StudentGetAssignmentList(username, db);
                         case "AddCompleted":
                             return StudentAddCompleted(username, msg, db);
                         case "GetFeedback":
@@ -108,13 +108,14 @@ namespace CAS.NET.Server
                     switch (command)
                     {
                         case "AddAssignment":
-                            return TeacherAddAssignment(username, msg, db);
+                            //return TeacherAddAssignment(username, msg, db);
+							return TeacherAddAssignment(request, db);
                         case "GetCompleted":
-                            return TeacherGetCompleted(username, msg, db);
+                            return TeacherGetCompleted(username, db);
                         case "AddFeedback":
-                            return TeacherAddFeedback(username, msg, db);
+                            return TeacherAddFeedback(username, db);
                         case "TeacherGetAssignmentList":
-                            return TeacherGetAssignmentList(username, msg, db);
+                            return TeacherGetAssignmentList(username, db);
                         default:
                             return "Invalid command";
                     }
@@ -123,8 +124,9 @@ namespace CAS.NET.Server
             }
         }
 
-        private string TeacherAddAssignment(string username, string msg, Database db)
-        {        
+        private string TeacherAddAssignment(string username, HttpListenerRequest request, Database db)
+        {
+			/*
             string[] strArr = msg.Split(' ');
 
 			if (strArr.Length < 4)
@@ -153,16 +155,22 @@ namespace CAS.NET.Server
             {
                 return "Failed adding assignment - Please try again.";
             }
+            */
+
+			string checksum = request.Headers ["Checksum"];
+			string grade = request.Headers ["Grade"];
+			string filename = request.Headers ["Filename"];
+			string file = request.Headers ["File"];
 
             return db.AddAssignment(username, filename, file, grade);  
         }
 
-		private string TeacherGetAssignmentList(string username, string msg, Database db)
+		private string TeacherGetAssignmentList(string username, Database db)
         {      
             return string.Join(" ", db.TeacherGetAssignmentList(username));
         }
 
-		private string TeacherGetCompleted(string username, string msg, Database db)
+		private string TeacherGetCompleted(string msg, Database db)
         {     
             string[] strArr = msg.Split(' ');
 
@@ -179,7 +187,7 @@ namespace CAS.NET.Server
             return db.GetCompleted(filename, grade);
         }
 
-        private string TeacherAddFeedback(string username, string msg, Database db)
+        private string TeacherAddFeedback(string msg, Database db)
         {
             string[] strArr = msg.Split(' ');
 
@@ -200,7 +208,7 @@ namespace CAS.NET.Server
 			return db.AddFeedback(filename, file, grade);
         }
 
-        private string StudentGetAssignmentList(string username, string msg, Database db)
+        private string StudentGetAssignmentList(string username, Database db)
         {
             string grade = db.GetGrade(username);
             return string.Join(" ", db.StudentGetAssignmentList(grade));
