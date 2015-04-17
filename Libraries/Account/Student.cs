@@ -25,12 +25,18 @@ namespace Account
 			client.Headers.Add ("Filename", filename);
 			client.Headers.Add ("File", file);
 
-            return client.UploadString(host, "AddCompleted");
+			string response = client.UploadString(host, "AddCompleted");
+
+			client.Headers.Clear();
+
+			return response;
         }
 
         public string[] GetAssignmentList()
         {
 			string response = client.UploadString(host, "StudentGetAssignmentList");
+
+			client.Headers.Clear();
 
 			if (response == "Success")
 			{
@@ -58,6 +64,8 @@ namespace Account
 
 			string response = client.UploadString(host, "GetAssignment");
 
+			client.Headers.Clear();
+
 			if (response == "Success")
 			{
 				string file = client.ResponseHeaders["File"];
@@ -72,7 +80,7 @@ namespace Account
 					return this.GetAssignment(filename);
 				}
 			}
-
+			Console.WriteLine("noice");
 			return null;
         }
 
@@ -80,6 +88,8 @@ namespace Account
         {
 			client.Headers.Add ("Filename", filename);
 			string response = client.UploadString(host, "GetFeedback");
+
+			client.Headers.Clear();
 
 			if (response == "Success")
 			{

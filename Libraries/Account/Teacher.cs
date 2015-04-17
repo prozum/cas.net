@@ -26,7 +26,11 @@ namespace Account
 			client.Headers.Add ("Filename", filename);
 			client.Headers.Add ("File", file);
 
-			return client.UploadString(host, "AddAssignment");
+			string response = client.UploadString(host, "AddAssignment");
+
+			client.Headers.Clear();
+
+			return response;
         }
 
         public string GetCompleted(string filename, string grade)
@@ -35,6 +39,8 @@ namespace Account
 			client.Headers.Add ("Filename", filename);
 
 			string response = client.UploadString(host, "GetCompleted");
+
+			client.Headers.Clear();
 
 			if (response == "Success")
 			{
