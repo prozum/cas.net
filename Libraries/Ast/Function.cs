@@ -773,21 +773,38 @@ namespace Ast
             if (!isArgsValid())
                 return new ArgError(this);
 
+            Decimal start;
+            Decimal end;
+            Decimal step;
+
             if (args[0] is Integer)
+                start = (args[0] as Integer).value;
+            else if (args[0] is Irrational)
+                start = (args[0] as Irrational).value;
+            else
+                return new Error(this, "argument 1 cannot be: " + args[0].GetType().Name);
+
+            if (args[1] is Integer)
+                end = (args[1] as Integer).value;
+            else if (args[1] is Irrational)
+                end = (args[1] as Irrational).value;
+            else
+                return new Error(this, "argument 2 cannot be: " + args[1].GetType().Name);
+
+            if (args[2] is Integer)
+                step = (args[2] as Integer).value;
+            else if (args[2] is Irrational)
+                step = (args[2] as Irrational).value;
+            else
+                return new Error(this, "argument 3 cannot be: " + args[2].GetType().Name);
+
+            var list = new Ast.List ();
+            for (Decimal i = start; i < end; i += step)
             {
-                var list = new Ast.List ();
-
-                Int64 max = ((Integer)args[0]).value;
-
-                for (Int64 i = 0; i < max; i++)
-                {
-                    list.elements.Add(new Integer(i));
-                }
-
-                return list;
+                list.elements.Add(new Irrational(i));
             }
 
-            return new Error(this, "Range only supports integers");
+            return list;
         }
 
         public override Expression Clone()
