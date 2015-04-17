@@ -231,6 +231,31 @@ namespace Ast
         }
     }
 
+    public abstract class BinaryOperation : Function
+    {
+        public BinaryOperation() : this(null, null, null, new Integer(1), new Integer(1)) { }
+        public BinaryOperation(string identifier, Expression arg1, Expression arg2) : this(identifier, arg1, arg2, new Integer(1), new Integer(1)) { }
+        public BinaryOperation(string identifier, Expression arg1, Expression arg2, Number prefix, Number exponent) : base(identifier, prefix, exponent)
+        {
+            this.args = new List<Expression>();
+            args.Add(arg1);
+            args.Add(arg2);
+        }
+    }
+
+    public abstract class TernaryOperation : Function
+    {
+        public TernaryOperation() : this(null, null, null, null, new Integer(1), new Integer(1)) { }
+        public TernaryOperation(string identifier, Expression arg1, Expression arg2, Expression arg3) : this(identifier, arg1, arg2, arg3, new Integer(1), new Integer(1)) { }
+        public TernaryOperation(string identifier, Expression arg1, Expression arg2, Expression arg3, Number prefix, Number exponent) : base(identifier, prefix, exponent)
+        {
+            this.args = new List<Expression>();
+            args.Add(arg1);
+            args.Add(arg2);
+            args.Add(arg3);
+        }
+    }
+
     public class Sin : UnaryOperation
     {
         public Sin() : this(null, null, new Integer(1), new Integer(1)) { }
@@ -521,28 +546,45 @@ namespace Ast
         }
     }
 
-    public class Range : UnaryOperation
+    public class Range : TernaryOperation
     {
-        public Range() : this(null, null) { }
-        public Range(string identifier, Expression arg) : base(identifier, arg) { }
+        public Range() : this(null, null, null, null) { }
+        public Range(string identifier, Expression arg1, Expression arg2, Expression arg3) : base(identifier, arg1, arg2, arg3) { }
 
         public override Expression Evaluate()
         {
+            Decimal start;
+            Decimal end;
+            Decimal step;
+
             if (args[0] is Integer)
+                start = (args[0] as Integer).value;
+            else if (args[0] is Irrational)
+                start = (args[0] as Irrational).value;
+            else
+                return new Error(this, "argument 1 cannot be: " + args[0].GetType().Name);
+               
+            if (args[1] is Integer)
+                end = (args[1] as Integer).value;
+            else if (args[1] is Irrational)
+                end = (args[1] as Irrational).value;
+            else
+                return new Error(this, "argument 2 cannot be: " + args[1].GetType().Name);
+
+            if (args[2] is Integer)
+                step = (args[2] as Integer).value;
+            else if (args[2] is Irrational)
+                step = (args[2] as Irrational).value;
+            else
+                return new Error(this, "argument 3 cannot be: " + args[2].GetType().Name);
+
+            var list = new Ast.List ();
+            for (Decimal i = start; i < end; i += step)
             {
-                var list = new Ast.List ();
-
-                Int64 max = ((Integer)args[0]).value;
-
-                for (Int64 i = 0; i < max; i++)
-                {
-                    list.elements.Add(new Integer(i));
-                }
-
-                return list;
+                list.elements.Add(new Irrational(i));
             }
 
-            return new Error(this, "Range only supports integers");
+            return list;
         }
 
         public override NotNumber Clone()
