@@ -162,9 +162,7 @@ namespace Desktop
                     Entry en = (Entry)w;
                     MetaType mtlmt = new MetaType();
                     mtlmt.type = en.GetType();
-                    mtlmt.metastring0 = en.Text;
-                    mtlmt.metaint0 = en.HeightRequest;
-                    mtlmt.metaint1 = en.WidthRequest;
+                    mtlmt.metastring = en.Text;
 
                     mt.Add(mtlmt);
                 }
@@ -173,9 +171,8 @@ namespace Desktop
                     TextView tv = (TextView)w;
                     MetaType mtlmt = new MetaType();
                     mtlmt.type = tv.GetType();
-                    mtlmt.metastring0 = tv.Buffer.Text;
-                    mtlmt.metaint0 = tv.HeightRequest;
-                    mtlmt.metaint1 = tv.WidthRequest;
+                    mtlmt.metastring = tv.Buffer.Text;
+
                     mt.Add(mtlmt);
                 }
             }
@@ -193,7 +190,6 @@ namespace Desktop
                 case PlatformID.WinCE:
                 case PlatformID.Win32NT: // <- if one, this is the one we really need
                     {
-                        System.IO.Stream myStream = null;
                         System.Windows.Forms.OpenFileDialog filechooser = new System.Windows.Forms.OpenFileDialog();
 
                         filechooser.InitialDirectory = "c:\\";
@@ -244,17 +240,15 @@ namespace Desktop
                 if (item.type == typeof(Entry))
                 {
                     Entry entry = new Entry();
-                    entry.Text = item.metastring0;
-                    entry.HeightRequest = item.metaint0;
-                    entry.WidthRequest = item.metaint1;
+                    entry.Text = item.metastring;
+
                     listWidget.Add(entry);
                 }
                 if (item.type == typeof(TextView))
                 {
                     TextView textView = new TextView();
-                    textView.Buffer.Text = item.metastring0;
-                    textView.HeightRequest = item.metaint0;
-                    textView.WidthRequest = item.metaint1;
+                    textView.Buffer.Text = item.metastring;
+
                     listWidget.Add(textView);
                 }
             }
@@ -290,7 +284,6 @@ namespace Desktop
                 case PlatformID.WinCE:
                 case PlatformID.Win32NT: // <- if one, this is the one we really need
                     {
-                        System.IO.Stream myStream = null;
                         System.Windows.Forms.SaveFileDialog filechooser = new System.Windows.Forms.SaveFileDialog();
 
                         filechooser.InitialDirectory = "c:\\";
@@ -442,17 +435,15 @@ namespace Desktop
                 if (item.type == typeof(Entry))
                 {
                     Entry entry = new Entry();
-                    entry.Text = item.metastring0;
-                    entry.HeightRequest = item.metaint0;
-                    entry.WidthRequest = item.metaint1;
+                    entry.Text = item.metastring;
+
                     listWidget.Add(entry);
                 }
                 if (item.type == typeof(TextView))
                 {
                     TextView textView = new TextView();
-                    textView.Buffer.Text = item.metastring0;
-                    textView.HeightRequest = item.metaint0;
-                    textView.WidthRequest = item.metaint1;
+                    textView.Buffer.Text = item.metastring;
+
                     listWidget.Add(textView);
                 }
             }
