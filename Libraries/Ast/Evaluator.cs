@@ -76,7 +76,20 @@ namespace Ast
                     return new MsgData(MsgType.Error, "Evaluator> Left expression is not a variable or function");
                 }
             }
-            else if (exp is Error)
+            else if (exp is Plot)
+            {
+                return new PlotData((exp as Plot).args[0], (exp as Plot).args[1] as Symbol);
+            }
+            else if (exp is Simplify || exp is Expand)
+            {
+                exp = exp.Evaluate();
+            }
+            else
+            {
+                exp = SimplifyExp(exp).Evaluate();
+            }
+
+            if (exp is Error)
             {
                 return new MsgData(MsgType.Error, exp.ToString());
             }
@@ -84,17 +97,9 @@ namespace Ast
             {
                 return new MsgData(MsgType.Info, exp.ToString());
             }
-            else if (exp is Plot)
-            {
-                return new PlotData((exp as Plot).args[0], (exp as Plot).args[1] as Symbol);
-            }
-            else if (exp is Simplify || exp is Expand)
-            {
-                return new MsgData(MsgType.Print, exp.Evaluate().ToString());
-            }
             else
             {
-                return new MsgData(MsgType.Print, (SimplifyExp(exp).Evaluate().ToString()));
+                return new MsgData(MsgType.Print, exp.ToString());
             }
         }
 
