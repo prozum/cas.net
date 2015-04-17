@@ -60,7 +60,7 @@ namespace Ast
                         return new Error(this, "Could not get value of: " + other.identifier);
                     }
 
-                    return ReturnValue(res);
+                    return ReturnValue(res.Clone());
                 }
             }
             else
@@ -74,7 +74,7 @@ namespace Ast
                         return new Error(this, "Could not get value of: " + other.identifier);
                     }
 
-                    return ReturnValue(res);
+                    return ReturnValue(res.Clone());
                 }
             }
 
@@ -110,7 +110,7 @@ namespace Ast
             return base.Simplify();
         }
 
-        public override NotNumber Clone()
+        public override Expression Clone()
         {
             return MakeClone<Symbol>();
         }

@@ -19,14 +19,12 @@ namespace Ast
             this.identifier = identifier;
         }
 
-        public abstract NotNumber Clone();
-
         protected virtual T MakeClone<T>() where T : NotNumber, new()
         {
             T res = new T();
             res.identifier = identifier;
-            res.prefix = prefix.Clone();
-            res.exponent = exponent.Clone();
+            res.prefix = prefix.Clone() as Number;
+            res.exponent = exponent.Clone() as Number;
             res.functionCall = functionCall;
             res.evaluator = evaluator;
 
@@ -57,10 +55,8 @@ namespace Ast
             return false;
         }
 
-        protected Expression ReturnValue(Expression definition)
+        protected Expression ReturnValue(Expression res)
         {
-            Expression res = null;
-
             if (prefix.CompareTo(new Integer(0)))
             {
                 res = new Integer(0);
@@ -75,11 +71,7 @@ namespace Ast
                 {
                     if (!exponent.CompareTo(new Integer(1)))
                     {
-                        res = new Exp(definition, exponent);
-                    }
-                    else
-                    {
-                        res = definition;
+                        res = new Exp(res, exponent);
                     }
 
                     if (!prefix.CompareTo(new Integer(1)))
@@ -92,9 +84,30 @@ namespace Ast
             return res;
         }
 
-        public override Expression Simplify()
+        public override Expression Expand()
         {
-            return Clone();
+            Expression res;
+            var symbol = Clone();
+
+            (symbol as NotNumber).prefix = new Integer(1);
+            (symbol as NotNumber).exponent = new Integer(1);
+
+            if (!(symbol as NotNumber).exponent.CompareTo(new Integer(1)))
+            {
+                res = new Exp(symbol, exponent);
+            } 
+            else
+	        {
+                res = symbol;
+	        }
+
+            if (!(symbol as NotNumber).prefix.CompareTo(new Integer(1)))
+            {
+                res = new Mul(prefix, res);
+            }
+
+            return res;
+
         }
 
         #region AddWith

@@ -5,15 +5,12 @@ namespace Ast
 {
     public class List : Expression
     {
-        const int MaxElementPrint = 10;
-
         public List<Expression> elements;
 
         public List()
         {
             elements = new List<Expression> ();
         }
-
 
         public override Expression Evaluate()
         {
@@ -26,19 +23,11 @@ namespace Ast
 
             for (int i = 0; i < elements.Count; i++) 
             {
-                if (i >= MaxElementPrint)
-                {
-                    str += "..." + (elements.Count - i).ToString() + "e";
-                    break;
-                }
-                else
-                {
-                    str += elements[i].ToString ();
+                str += elements[i].ToString ();
 
-                    if (i < elements.Count - 1) 
-                    {
-                        str += ',';
-                    }
+                if (i < elements.Count - 1) 
+                {
+                    str += ',';
                 }
             }
 
@@ -58,6 +47,18 @@ namespace Ast
             }
 
             return false;
+        }
+
+        public override Expression Clone()
+        {
+            var res = new List();
+
+            foreach (var item in elements)
+            {
+                res.elements.Add(item.Clone());
+            }
+
+            return res;
         }
     }
 }

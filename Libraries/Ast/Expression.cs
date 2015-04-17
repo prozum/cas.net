@@ -4,6 +4,11 @@ using System.Text.RegularExpressions;
 
 namespace Ast
 {
+    public interface IInvertable
+    {
+        Expression Inverted(Expression other);
+    }
+
     public abstract class Expression
     {
         public Evaluator evaluator;
@@ -25,6 +30,8 @@ namespace Ast
         {
             return this;
         }
+
+        public abstract Expression Clone();
 
         public virtual bool CompareTo(Expression other)
         {

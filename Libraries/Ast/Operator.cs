@@ -3,6 +3,11 @@ using System.Collections.Generic;
 
 namespace Ast
 {
+    public interface ISwappable
+    {
+        Expression Swap();
+    }
+
     public abstract class Operator : Expression
     {
         public string symbol;
@@ -280,6 +285,11 @@ namespace Ast
             res.parent = parent;
             return res;
         }
+
+        public override Expression Clone()
+        {
+            return new Equal(left.Clone(), right.Clone());
+        }
     }
 
     public class Assign : Operator
@@ -314,9 +324,14 @@ namespace Ast
             res.parent = parent;
             return res;
         }
+
+        public override Expression Clone()
+        {
+            return new Assign(left.Clone(), right.Clone());
+        }
     }
 
-    public class Add : Operator
+    public class Add : Operator, ISwappable, IInvertable
     {
         public Add() : base("+", 20) { }
         public Add(Expression left, Expression right) : base(left, right, "+", 20) { }
@@ -460,16 +475,31 @@ namespace Ast
 
         private Expression NotNumberOperation(NotNumber left, NotNumber right)
         {
-            NotNumber res = left.Clone();
+            var res = left.Clone();
 
-            res.prefix = (left.prefix + right.prefix) as Number;
+            (res as NotNumber).prefix = (left.prefix + right.prefix) as Number;
 
             res.parent = parent;
             return res;
         }
+
+        public override Expression Clone()
+        {
+            return new Add(left.Clone(), right.Clone());
+        }
+
+        public Expression Inverted(Expression other)
+        {
+            return new Sub(other, right);
+        }
+
+        public Expression Swap()
+        {
+            return new Add(right, left);
+        }
     }
 
-    public class Sub : Operator
+    public class Sub : Operator, ISwappable
     {
         public Sub() : base("-", 20) { }
         public Sub(Expression left, Expression right) : base(left, right, "-", 20) { }
@@ -497,9 +527,19 @@ namespace Ast
             res.parent = parent;
             return res;
         }
+
+        public override Expression Clone()
+        {
+            return new Sub(left.Clone(), right.Clone());
+        }
+
+        public Expression Swap()
+        {
+            return new Add(new Mul(new Integer(-1), right), left);
+        }
     }
 
-    public class Mul : Operator
+    public class Mul : Operator, ISwappable, IInvertable
     {
         public Mul() : base("*", 30) { }
         public Mul(Expression left, Expression right) : base(left, right, "*", 30) { }
@@ -581,7 +621,7 @@ namespace Ast
                 }
                 else if (simplifiedOperator.left is NotNumber)
                 {
-                    res = simplifiedOperator.left;
+                    res = (simplifiedOperator.left as NotNumber).Clone();
                     (res as NotNumber).prefix = ((res as NotNumber).prefix * simplifiedOperator.right) as Number;
                 }
                 else
@@ -769,14 +809,29 @@ namespace Ast
         {
             var newLeft = left.Clone();
             var newRight = right.Clone();
-            newLeft.exponent = new Integer(1);
-            newRight.exponent = new Integer(1);
+            (newLeft as NotNumber).exponent = new Integer(1);
+            (newRight as NotNumber).exponent = new Integer(1);
 
             return new Mul(left.prefix * right.prefix, new Exp(new Mul(newLeft, newRight), left.exponent));
         }
+
+        public override Expression Clone()
+        {
+            return new Mul(left.Clone(), right.Clone());
+        }
+
+        public Expression Inverted(Expression other)
+        {
+            return new Div(other, right);
+        }
+
+        public Expression Swap()
+        {
+            return new Mul(right, left);
+        }
     }
 
-    public class Div : Operator
+    public class Div : Operator, IInvertable
     {
         public Div() : base("/", 35) { }
         public Div(Expression left, Expression right) : base(left, right, "/", 35) { }
@@ -869,14 +924,14 @@ namespace Ast
             {
                 var symbol = right.Clone();
 
-                symbol.exponent = (right.exponent - left.exponent) as Number;
+                (symbol as NotNumber).exponent = (right.exponent - left.exponent) as Number;
                 res = new Div(left.prefix, symbol);
             }
             else if (((left.exponent > right.exponent) as Boolean).value)
             {
                 var symbol = right.Clone();
 
-                symbol.exponent = (left.exponent - right.exponent) as Number;
+                (symbol as NotNumber).exponent = (left.exponent - right.exponent) as Number;
                 res = new Div(symbol, right.prefix);
             }
             else
@@ -886,9 +941,19 @@ namespace Ast
 
             return res;
         }
+
+        public override Expression Clone()
+        {
+            return new Div(left.Clone(), right.Clone());
+        }
+
+        public Expression Inverted(Expression other)
+        {
+            return new Mul(other, right);
+        }
     }
 
-    public class Exp : Operator
+    public class Exp : Operator, IInvertable
     {
         public Exp() : base("^", 40) { }
         public Exp(Expression left, Expression right) : base(left, right, "^", 40) { }
@@ -935,7 +1000,15 @@ namespace Ast
             Expression evaluatedLeft, evaluatedRight, res = null;
             Operator simplifiedOperator = new Exp(Evaluator.SimplifyExp(left), Evaluator.SimplifyExp(right));
 
-            if (simplifiedOperator.left is NotNumber && simplifiedOperator.right is Number)
+            if (simplifiedOperator.left is Number && simplifiedOperator.left.CompareTo(new Integer(1)))
+            {
+                return new Integer(1);
+            }
+            else if (simplifiedOperator.right is Number && simplifiedOperator.left.CompareTo(new Integer(0)))
+            {
+                return new Integer(1);
+            }
+            else if (simplifiedOperator.left is NotNumber && simplifiedOperator.right is Number)
             {
                 res = NotNumberOperation(simplifiedOperator.left as NotNumber, simplifiedOperator.right as Number);
             }
@@ -960,9 +1033,9 @@ namespace Ast
 
         private NotNumber NotNumberOperation(NotNumber left, Number right)
         {
-            var res = left.Clone();
+            NotNumber res = left.Clone() as NotNumber;
 
-            res.exponent = (res.exponent * right) as Number;
+            res.exponent = (left.exponent * right) as Number;
 
             return res;
         }
@@ -987,6 +1060,16 @@ namespace Ast
             }
 
             return res;
+        }
+
+        public override Expression Clone()
+        {
+            return new Exp(left.Clone(), right.Clone());
+        }
+
+        public Expression Inverted(Expression other)
+        {
+            throw new NotImplementedException();
         }
     }
 }
