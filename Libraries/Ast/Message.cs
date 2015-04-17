@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Ast
 {
@@ -46,7 +47,7 @@ namespace Ast
 
     public class Error: Message
     {
-        private Error(string message) : base(message) { }
+        public Error(string message) : base(message) { }
         public Error(object obj, string message) : base(obj.GetType().Name + "> " +message)
         {
         }
@@ -54,6 +55,30 @@ namespace Ast
         public override Expression Clone()
         {
             return new Error(message);
+        }
+    }
+
+    public class ArgError: Error
+    {
+        public ArgError(string message) : base(message) { }
+        public ArgError(Function obj) : base(obj, "Valid args: ")
+        {
+            message += "(";
+            for(int i = 0; i < obj.validArgs.Count; i++)
+            {
+                message += obj.validArgs[i].ToString();
+
+                if (i < obj.validArgs.Count -1) 
+                {
+                    message += ',';
+                }
+            }
+            message += ")";
+        }
+
+        public override Expression Clone()
+        {
+            return new ArgError(message);
         }
     }
 }
