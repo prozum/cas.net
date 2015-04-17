@@ -241,29 +241,7 @@ namespace CAS.NET.Desktop
             mt = mtlmt;
             listWidget.Clear();
 
-            foreach (var item in mt)
-            {
-                if (item.type == typeof(Entry))
-                {
-                    Entry entry = new Entry();
-                    entry.Text = item.metastring;
-
-                    listWidget.Add(entry);
-                }
-                if (item.type == typeof(TextView))
-                {
-                    Byte[] byteTextView = Encoding.UTF8.GetBytes(item.metastring);
-                    TextBuffer buffer = new TextView().Buffer;
-                    TextIter textIter = buffer.StartIter;
-
-                    buffer.Deserialize(buffer, buffer.RegisterDeserializeTagset(null), ref textIter, byteTextView, (ulong)byteTextView.Length);
-
-                    TextView textView = new TextView();
-                    textView.Buffer = buffer;
-
-                    listWidget.Add(textView);
-                }
-            }
+            RecreateListWidget();
 
             foreach (Widget item in listWidget)
             {
@@ -442,30 +420,7 @@ namespace CAS.NET.Desktop
                 globalGrid.Remove(w);
             }
 
-            foreach (var item in mt)
-            {
-                if (item.type == typeof(Entry))
-                {
-                    Entry entry = new Entry();
-                    entry.Text = item.metastring;
-
-                    listWidget.Add(entry);
-                }
-                if (item.type == typeof(TextView))
-                {
-                    Byte[] byteTextView = Encoding.UTF8.GetBytes(item.metastring);
-                    TextBuffer buffer = new TextView().Buffer;
-                    TextIter textIter = buffer.StartIter;
-
-                    buffer.Deserialize(buffer, buffer.RegisterDeserializeTagset(null), ref textIter, byteTextView, (ulong)byteTextView.Length);
-
-                    TextView textView = new TextView();
-                    textView.Buffer = buffer;
-
-                    listWidget.Add(textView);
-
-                }
-            }
+            RecreateListWidget();
 
             foreach (Widget item in listWidget)
             {
@@ -541,6 +496,33 @@ namespace CAS.NET.Desktop
 
             loginWindow.Add(vbox);
             loginWindow.ShowAll();
+        }
+
+        void RecreateListWidget()
+        {
+            foreach (var item in mt)
+            {
+                if (item.type == typeof(Entry))
+                {
+                    Entry entry = new Entry();
+                    entry.Text = item.metastring;
+
+                    listWidget.Add(entry);
+                }
+                if (item.type == typeof(TextView))
+                {
+                    Byte[] byteTextView = Encoding.UTF8.GetBytes(item.metastring);
+                    TextBuffer buffer = new TextView().Buffer;
+                    TextIter textIter = buffer.StartIter;
+
+                    buffer.Deserialize(buffer, buffer.RegisterDeserializeTagset(null), ref textIter, byteTextView, (ulong)byteTextView.Length);
+
+                    TextView textView = new TextView();
+                    textView.Buffer = buffer;
+
+                    listWidget.Add(textView);
+                }
+            }
         }
 
         /*
