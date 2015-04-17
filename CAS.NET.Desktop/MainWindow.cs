@@ -4,8 +4,9 @@ using TaskGenLib;
 using System.Collections.Generic;
 using ImEx;
 using System.Net;
+using System.Text;
 
-namespace Desktop
+namespace CAS.NET.Desktop
 {
     class MainWindow : Window
     {
@@ -168,10 +169,15 @@ namespace Desktop
                 }
                 if (w.GetType() == typeof(TextView))
                 {
+
                     TextView tv = (TextView)w;
                     MetaType mtlmt = new MetaType();
+                    TextBuffer buffer = tv.Buffer;
+                    TextIter startIter, endIter;
+                    buffer.GetBounds(out startIter, out endIter);
                     mtlmt.type = tv.GetType();
-                    mtlmt.metastring = tv.Buffer.Text;
+                    byte[] byteTextView = buffer.Serialize(buffer, buffer.RegisterSerializeTagset(null), startIter, endIter);
+                    mtlmt.metastring = Encoding.UTF8.GetString(byteTextView);
 
                     mt.Add(mtlmt);
                 }
@@ -246,8 +252,14 @@ namespace Desktop
                 }
                 if (item.type == typeof(TextView))
                 {
+                    Byte[] byteTextView = Encoding.UTF8.GetBytes(item.metastring);
+                    TextBuffer buffer = new TextView().Buffer;
+                    TextIter textIter = buffer.StartIter;
+
+                    buffer.Deserialize(buffer, buffer.RegisterDeserializeTagset(null), ref textIter, byteTextView, (ulong)byteTextView.Length);
+
                     TextView textView = new TextView();
-                    textView.Buffer.Text = item.metastring;
+                    textView.Buffer = buffer;
 
                     listWidget.Add(textView);
                 }
@@ -441,10 +453,17 @@ namespace Desktop
                 }
                 if (item.type == typeof(TextView))
                 {
+                    Byte[] byteTextView = Encoding.UTF8.GetBytes(item.metastring);
+                    TextBuffer buffer = new TextView().Buffer;
+                    TextIter textIter = buffer.StartIter;
+
+                    buffer.Deserialize(buffer, buffer.RegisterDeserializeTagset(null), ref textIter, byteTextView, (ulong)byteTextView.Length);
+
                     TextView textView = new TextView();
-                    textView.Buffer.Text = item.metastring;
+                    textView.Buffer = buffer;
 
                     listWidget.Add(textView);
+
                 }
             }
 
