@@ -523,6 +523,7 @@ namespace Ast
 
     public class Range : UnaryOperation
     {
+        public Range() : this(null, null) { }
         public Range(string identifier, Expression arg) : base(identifier, arg) { }
 
         public override Expression Evaluate()
@@ -546,7 +547,7 @@ namespace Ast
 
         public override NotNumber Clone()
         {
-            throw new NotImplementedException();
+            return MakeClone<Range>();
         }
     }
 }
