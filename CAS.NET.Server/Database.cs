@@ -133,7 +133,7 @@ namespace CAS.NET.Server
                     conn.Close();
                 }
 
-                return "Successfully added assignment";
+                return "Success";
             }
             else
             {
@@ -244,8 +244,6 @@ namespace CAS.NET.Server
                     cmd.ExecuteNonQuery();
                 }
 
-                Console.WriteLine("not yet");
-
                 using (conn = new MySqlConnection(db))
                 {
                     conn.Open();
@@ -258,7 +256,7 @@ namespace CAS.NET.Server
                 }
             }
 
-			return "Successfully added feedback";
+			return "Success";
         }
 
         public string GetAssignment(string filename, string grade)
@@ -343,7 +341,7 @@ namespace CAS.NET.Server
                 cmd.ExecuteNonQuery();
             }
 
-			return "Successfully added completed assignment";
+			return "Success";
         }
 
 		public string GetFeedback(string username, string filename, string grade)
