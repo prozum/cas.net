@@ -21,37 +21,71 @@ namespace Account
 
         public string AddAssignment(string file, string filename, string grade)
         {
-			string checksum = Checksum.GetMd5Hash (file);
-			client.Headers.Add ("Command", "AddAssignment");
-			client.Headers.Add ("Checksum", checksum);
+			client.Headers.Add ("Checksum", Checksum.GetMd5Hash (file));
 			client.Headers.Add ("Grade", grade);
 			client.Headers.Add ("Filename", filename);
 			client.Headers.Add ("File", file);
 
-			string msg = client.UploadString(host, String.Empty);
-
-			for (int i = 0; i < client.Headers.; i++) {
-
-			}
+			return client.UploadString(host, "AddAssignment");
         }
 
         public string GetCompleted(string filename, string grade)
         {
-            string msg = "GetCompleted " + grade + " " + filename;
-            return client.UploadString(host, msg);
+			client.Headers.Add ("Grade", grade);
+			client.Headers.Add ("Filename", filename);
+
+			string response = client.UploadString(host, "GetCompleted");
+
+			if (response == "Success")
+			{
+				string file = client.ResponseHeaders["File"];
+				string checksum = client.ResponseHeaders["Checksum"];
+
+				if (checksum == Checksum.GetMd5Hash(file))
+				{
+					return file;
+				}
+				else
+				{
+					return this.GetCompleted(filename, grade);
+				}
+			}
+
+			return null;
         }
 
         public string[] GetAssignmentList()
         {
-            string msg = "TeacherGetAssignmentList ";
-			return client.UploadString(host, msg).Split(' ');
+			string response = client.UploadString(host, "TeacherGetAssignmentList");
+
+			if (response == "Success")
+			{
+				string[] filelist = new string[client.ResponseHeaders.Count/2];
+				string[] checksumlist = new string[client.ResponseHeaders.Count/2];
+
+				for (int i = 0; i < client.ResponseHeaders.Count/2; i++)
+				{
+					filelist[i] = client.ResponseHeaders["File" + i.ToString()];
+					checksumlist[i] = client.ResponseHeaders["Checksum" + i.ToString()];
+
+					if (Checksum.GetMd5Hash(filelist[i]) != checksumlist[i])
+					{
+						return this.GetAssignmentList();
+					}
+				}
+			}
+
+			return null;
         }
 
         public string AddFeedback(string file, string filename, string grade)
         {
-			string checksum = Checksum.GetMd5Hash (file);
-			string msg = "AddFeedback " + " " + checksum + " " + grade + " " + filename + " " + file;
-            return client.UploadString(host, msg);
+			client.Headers.Add ("Checksum", Checksum.GetMd5Hash (file));
+			client.Headers.Add ("Grade", grade);
+			client.Headers.Add ("Filename", filename);
+			client.Headers.Add ("File", file);
+	
+            return client.UploadString(host, "AddFeedback");
         }
     }
 }

@@ -56,7 +56,7 @@ namespace CAS.NET.Server
                     Console.WriteLine(msg);
 
                     // execute client message and get message for client
-                    string remsg = ExecuteCommand(identity.Name, identity.Password, msg, db);
+					string remsg = ExecuteCommand(msg, identity, request, response, db);
                     buffer = System.Text.Encoding.UTF8.GetBytes(remsg);
                     response.ContentLength64 = buffer.Length;
                     System.IO.Stream output = response.OutputStream;
@@ -66,56 +66,44 @@ namespace CAS.NET.Server
             }
         }
 
-		private string ExecuteCommand(string username, string password, string msg, HttpListenerRequest request, Database db)
+		private string ExecuteCommand(string msg, HttpListenerBasicIdentity identity, HttpListenerRequest request, HttpListenerResponse response, Database db)
         {
-            // decode command from client message and remove it from msg
-			int index = msg.IndexOf (" ");
-
-			if (index == -1)
-			{
-				return "Invalid string format";
-			}
-
-            string command = msg.Substring(0, index);
-            msg = msg.Substring(command.Length + 1);
-
 			// check user privilege level
-            int Privilege = db.CheckPrivilege(username, password);
+			int Privilege = db.CheckPrivilege(identity.Name, identity.Password);
 
-			if (command == "Login")
+			if (msg == "Login")
 			{
 				return Privilege.ToString ();
 			}
 
-            // decode the command and run serverside code for the command
+            // decode msg and execute serverside code for the command
             switch (Privilege)
             {
                 case 0:
-                    switch (command)
+                    switch (msg)
                     {
                         case "GetAssignment":
-                            return StudentGetAssignment(username, msg, db);
+                            return StudentGetAssignment(identity.Name, request, response, db);
                         case "StudentGetAssignmentList":
-                            return StudentGetAssignmentList(username, db);
+							return StudentGetAssignmentList(identity.Name, response, db);
                         case "AddCompleted":
-                            return StudentAddCompleted(username, msg, db);
+							return StudentAddCompleted(identity.Name, request, db);
                         case "GetFeedback":
-                            return StudentGetFeedback(username, msg, db);
+							return StudentGetFeedback(identity.Name, request, response, db);
                         default:
                             return "Invalid command";
                     }
                 case 1:
-                    switch (command)
+                    switch (msg)
                     {
                         case "AddAssignment":
-                            //return TeacherAddAssignment(username, msg, db);
-							return TeacherAddAssignment(request, db);
+							return TeacherAddAssignment(identity.Name, request, db);
                         case "GetCompleted":
-                            return TeacherGetCompleted(username, db);
+							return TeacherGetCompleted(request, response, db);
                         case "AddFeedback":
-                            return TeacherAddFeedback(username, db);
+							return TeacherAddFeedback(request, db);
                         case "TeacherGetAssignmentList":
-                            return TeacherGetAssignmentList(username, db);
+							return TeacherGetAssignmentList(identity.Name, response, db);
                         default:
                             return "Invalid command";
                     }
@@ -126,143 +114,176 @@ namespace CAS.NET.Server
 
         private string TeacherAddAssignment(string username, HttpListenerRequest request, Database db)
         {
-			/*
-            string[] strArr = msg.Split(' ');
-
-			if (strArr.Length < 4)
+			if (request.Headers["Checksum"] != null && request.Headers["Grade"] != null &&
+				request.Headers["Filename"] != null && request.Headers["File"] != null)
 			{
-				return "Invalid string format";
+				string checksum = request.Headers ["Checksum"];
+				string grade = request.Headers ["Grade"];
+				string filename = request.Headers ["Filename"];
+				string file = request.Headers ["File"];
+
+				// Prevents the server from saving the files if it's checksum is invalid
+				string checksumNew = Checksum.GetMd5Hash(file);
+
+				if (Checksum.VerifyMd5Hash(checksum, checksumNew) == false)
+				{
+					return "Corruption";
+				}
+
+				return db.AddAssignment(username, filename, file, grade);
 			}
 
-            string checksum = strArr[0];
-            string grade = strArr[1];
-            string filename = strArr[2];
-            string file = String.Empty;
-
-            for (int i = 3; i < strArr.Length; i++)
-            {
-                file += strArr[i];
-            }
-
-            // generate checksum for file
-            string checksumNew = Checksum.GetMd5Hash(file);
-
-            // Writes the checksums
-            Console.WriteLine(checksum + " <=> " + checksumNew);
-
-            // Prevents the server from saving the files if it's checksum is invalid
-            if (Checksum.VerifyMd5Hash(checksum, checksumNew) == false)
-            {
-                return "Failed adding assignment - Please try again.";
-            }
-            */
-
-			string checksum = request.Headers ["Checksum"];
-			string grade = request.Headers ["Grade"];
-			string filename = request.Headers ["Filename"];
-			string file = request.Headers ["File"];
-
-            return db.AddAssignment(username, filename, file, grade);  
+			return "Failed";
         }
 
-		private string TeacherGetAssignmentList(string username, Database db)
+		private string TeacherGetAssignmentList(string username, HttpListenerResponse response, Database db)
         {      
-            return string.Join(" ", db.TeacherGetAssignmentList(username));
-        }
+			string[] filelist = db.TeacherGetAssignmentList(username);
 
-		private string TeacherGetCompleted(string msg, Database db)
-        {     
-            string[] strArr = msg.Split(' ');
-
-			if (strArr.Length < 2)
+			if (filelist[0] == "Error")
 			{
-				return "Invalid string format";
+				return "Failed";
 			}
 
-            string grade = strArr[0];
-            string filename = strArr[1];
+			string[] checksumlist = new string[filelist.Length];
 
-            /* teachers can use this to get other classes completed assignments */
-            /* todo fix */
-            return db.GetCompleted(filename, grade);
+			for (int i = 0; i < filelist.Length; i++)
+			{
+				checksumlist[i] = Checksum.GetMd5Hash(filelist[i]);
+				response.Headers.Add("File" + i.ToString(), filelist[i]);
+				response.Headers.Add("Checksum" + i.ToString(), checksumlist[i]);
+			}
+
+			return "Success";
         }
 
-        private string TeacherAddFeedback(string msg, Database db)
+		private string TeacherGetCompleted(HttpListenerRequest request, HttpListenerResponse response, Database db)
+        {   
+			/* teachers can use this to get other classes completed assignments */
+			/* todo fix */
+			if (request.Headers["Grade"] != null &&	request.Headers["Filename"] != null)
+			{
+				string grade = request.Headers ["Grade"];
+				string filename = request.Headers ["Filename"];
+
+				string file = db.GetCompleted(filename, grade);
+				string checksum = Checksum.GetMd5Hash(file);
+
+				response.Headers.Add("File", file);
+				response.Headers.Add("Checksum", checksum);
+
+				return "Success";
+			}
+            
+			return "Failed";
+        }
+
+		private string TeacherAddFeedback(HttpListenerRequest request, Database db)
         {
-            string[] strArr = msg.Split(' ');
-
-			if (strArr.Length < 3)
+			if (request.Headers["Checksum"] != null && request.Headers["Grade"] != null &&
+				request.Headers["Filename"] != null && request.Headers["File"] != null)
 			{
-				return "Invalid string format";
+				string checksum = request.Headers ["Checksum"];
+				string grade = request.Headers ["Grade"];
+				string filename = request.Headers ["Filename"];
+				string file = request.Headers ["File"];
+
+				// Prevents the server from saving the files if it's checksum is invalid
+				string checksumNew = Checksum.GetMd5Hash(file);
+
+				if (Checksum.VerifyMd5Hash(checksum, checksumNew) == false)
+				{
+					return "Corruption";
+				}
+
+				return db.AddFeedback(filename, file, grade);
 			}
 
-            string grade = strArr[0];
-            string filename = strArr[1];
-            string file = String.Empty;
-
-            for (int i = 2; i < strArr.Length; i++)
-            {
-                file += strArr[i];
-            }
-
-			return db.AddFeedback(filename, file, grade);
+			return "Failed";
         }
 
-        private string StudentGetAssignmentList(string username, Database db)
+		private string StudentGetAssignmentList(string username, HttpListenerResponse response, Database db)
         {
             string grade = db.GetGrade(username);
-            return string.Join(" ", db.StudentGetAssignmentList(grade));
-        }
+            string[] filelist = db.StudentGetAssignmentList(grade);
 
-        private string StudentGetAssignment(string username, string msg, Database db)
-        {
-            string[] strArr = msg.Split(' ');
-
-			if (strArr.Length < 1)
+			if (filelist[0] == "Error")
 			{
-				return "Invalid string format";
+				return "Failed";
 			}
 
-            string filename = strArr[0];
-            string grade = db.GetGrade(username);
+			string[] checksumlist = new string[filelist.Length];
 
-            return db.GetAssignment(filename, grade);
-        }
-
-        private string StudentAddCompleted(string username, string msg, Database db)
-        {
-            string[] strArr = msg.Split(' ');         
-
-			if (strArr.Length < 2)
+			for (int i = 0; i < filelist.Length; i++)
 			{
-				return "Invalid string format";
+				checksumlist[i] = Checksum.GetMd5Hash(filelist[i]);
+				response.Headers.Add("File" + i.ToString(), filelist[i]);
+				response.Headers.Add("Checksum" + i.ToString(), checksumlist[i]);
 			}
 
-            string filename = strArr[0];
-            string grade = db.GetGrade(username);
-            string file = String.Empty;
-
-            for (int i = 1; i < strArr.Length; i++)
-            {
-                file += strArr[i];
-            }
-
-            return db.AddCompleted(username, filename, file, grade);
+			return "Success";
         }
 
-        private string StudentGetFeedback(string username, string msg, Database db)
+		private string StudentGetAssignment(string username, HttpListenerRequest request, HttpListenerResponse response, Database db)
         {
-            string[] strArr = msg.Split(' ');
-
-			if (strArr.Length < 1)
+			if (request.Headers["Grade"] != null &&	request.Headers["Filename"] != null)
 			{
-				return "Invalid string format";
+				string grade = request.Headers ["Grade"];
+				string filename = request.Headers ["Filename"];
+
+				string file = db.GetAssignment(filename, grade);
+				string checksum = Checksum.GetMd5Hash(file);
+
+				response.Headers.Add("File", file);
+				response.Headers.Add("Checksum", checksum);
+
+				return "Success";
 			}
 
-            string filename = strArr[0];
-            string grade = db.GetGrade(username);
+			return "Failed";            
+        }
 
-            return db.GetFeedback(username, filename, grade);
+		private string StudentAddCompleted(string username, HttpListenerRequest request, Database db)
+        {
+			if (request.Headers["Checksum"] != null && request.Headers["Grade"] != null &&
+				request.Headers["Filename"] != null && request.Headers["File"] != null)
+			{
+				string checksum = request.Headers ["Checksum"];
+				string grade = request.Headers ["Grade"];
+				string filename = request.Headers ["Filename"];
+				string file = request.Headers ["File"];
+
+				// Prevents the server from saving the files if it's checksum is invalid
+				string checksumNew = Checksum.GetMd5Hash(file);
+
+				if (Checksum.VerifyMd5Hash(checksum, checksumNew) == false)
+				{
+					return "Corruption";
+				}
+
+				return db.AddCompleted(username, filename, file, grade);
+			}
+
+			return "Failed";
+        }
+
+		private string StudentGetFeedback(string username, HttpListenerRequest request, HttpListenerResponse response, Database db)
+        {
+			if (request.Headers["Grade"] != null &&	request.Headers["Filename"] != null)
+			{
+				string grade = request.Headers ["Grade"];
+				string filename = request.Headers ["Filename"];
+
+				string file = db.GetFeedback(username, filename, grade);
+				string checksum = Checksum.GetMd5Hash(file);
+
+				response.Headers.Add("File", file);
+				response.Headers.Add("Checksum", checksum);
+
+				return "Success";
+			}
+
+			return "Failed";
         }
     }
 }
