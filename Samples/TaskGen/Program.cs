@@ -9,12 +9,17 @@ using Ast;
 
 namespace TaskGen
 {
-    class MainClass
+    class MainClass : taskItem
     {
-        static string makeUnitTask (int varMin, int varMax)
+        enum Units {Distance, Weight, Volume};
+        enum DistanceUnits {Metre, Centimetre, Millimetre};
+        enum WeightUnits {Kilogram, gram}
+        enum VolumeUnits {Cubicmetre, Litre}
+
+        static int makeUnitTask (int varMin, int varMax)
         {
             //1-Distance
-            int metre = 1;
+            double metre = 1;
             double centimetre = metre * 0.01;
             double millimetre = metre * 0.001;
             //2-weight
@@ -25,71 +30,83 @@ namespace TaskGen
             double litre = cubicMetre * 0.001;
 
             Random r = new Random (Guid.NewGuid ().GetHashCode ());
-            string task = "";
 
             string unit1 = "";
             string unit2 = "";
             int val;
-            int type = r.Next (1, 4);
+            Units unit = (Units)r.Next (0, 2);
+            DistanceUnits distance = (DistanceUnits)r.Next (0, 2);
+            WeightUnits weight = (WeightUnits)r.Next (0, 1);
+            VolumeUnits volume = (VolumeUnits)r.Next (0, 1);
 
-            switch (type) {
-            case 1:
-                type = r.Next (1, 4);
-                switch (type) {
-                case 1:
+            switch (unit) {
+            case Units.Distance:
+                switch (distance) {
+                case DistanceUnits.Metre:
                     unit1 = "metre";
                     break;
-                case 2:
+                case DistanceUnits.Centimetre:
                     unit1 = "centimetre";
                     break;
-                case 3:
+                case DistanceUnits.Millimetre:
                     unit1 = "millimetre";
                     break;
                 }
-                type = r.Next (1, 3);
+                distance = (DistanceUnits)r.Next(0, 3);
 
                 switch (unit1) {
                 case "metre":
-                    switch (type) {
-                    case 1:
-                        unit2 = "centimetre";
-                        break;
-                    case 2:
-                        unit2 = "millimetre";
-                        break;
+                    while (unit2 == unit1 || unit2 == "") {
+                        switch (distance) {
+                        case DistanceUnits.Centimetre:
+                            unit2 = "centimetre";
+                            break;
+                        case DistanceUnits.Millimetre:
+                            unit2 = "millimetre";
+                            break;
+                        case DistanceUnits.Metre:
+                            unit2 = "metre";
+                            break;
+                        }
                     }
                     break;
                 case "centimetre":
-                    switch (type) {
-                    case 1:
-                        unit2 = "metre";
-                        break;
-                    case 2:
-                        unit2 = "millimetre";
-                        break;
+                    while (unit2 == unit1 || unit2 == "") {
+                        switch (distance) {
+                        case DistanceUnits.Metre:
+                            unit2 = "metre";
+                            break;
+                        case DistanceUnits.Millimetre:
+                            unit2 = "millimetre";
+                            break;
+                        case DistanceUnits.Centimetre:
+                            unit2 = "millimetre";
+                            break;
+                        }
                     }
                     break;
                 case "millimetre":
-                    switch (type) {
-                    case 1:
+                    switch (distance) {
+                    case DistanceUnits.Metre:
                         unit2 = "metre";
                         break;
-                    case 2:
+                    case DistanceUnits.Centimetre:
                         unit2 = "centimetre";
+                        break;
+                    case DistanceUnits.Millimetre:
+                        unit2 = "millimetre";
                         break;
                     }
                     break;
                 }
                 break;
 
-            case 2:
-                type = r.Next (1, 3);
-
-                switch (type) {
-                case 1:
+            case Units.Weight:
+                switch (weight) {
+                case WeightUnits.Kilogram:
                     unit1 = "kilogram";
                     break;
-                case 2:
+                case WeightUnits.gram:
                     unit1 = "gram";
                     break;
                 }
@@ -102,14 +119,12 @@ namespace TaskGen
                     break;
                 }
                 break;
-            case 3:
-                type = r.Next (1, 3);
-
-                switch (type) {
-                case 1:
+            case Units.Volume:
+                switch (volume) {
+                case VolumeUnits.Cubicmetre:
                     unit1 = "cubicmetre";
                     break;
-                case 2:
+                case VolumeUnits.Litre:
                     unit1 = "litre";
                     break;
                 }
@@ -128,7 +143,9 @@ namespace TaskGen
 
             Console.WriteLine ("how many {0}(s) is {1} {2}(s)", unit1, val, unit2);
 
-            return task;
+            var task = new taskItem ();
+
+            return 0;
 
         }
 
@@ -216,8 +233,9 @@ namespace TaskGen
         }
 
         static string GetAnswer (string task)
-        {       
-            string answer = Parser.Parse (task).Evaluate ().ToString ();
+        {
+            Parser parser = new Parser (new Evaluator());
+            string answer = parser.Parse (task).Evaluate ().ToString ();
 
             return answer;
         }

@@ -37,12 +37,23 @@ namespace Ast
         public Info(string message) : base(message)
         {
         }
+
+        public override Expression Clone()
+        {
+            return new Info(message);
+        }
     }
 
     public class Error: Message
     {
+        private Error(string message) : base(message) { }
         public Error(object obj, string message) : base(obj.GetType().Name + "> " +message)
         {
+        }
+
+        public override Expression Clone()
+        {
+            return new Error(message);
         }
     }
 }

@@ -161,7 +161,7 @@ namespace Ast
                         return new Error(this, "Could not get value of: " + other.identifier);
                     }
 
-                    return ReturnValue(res);
+                    return ReturnValue(res.Clone());
                 }
                 else if (functionParemNames.Count == 0)
                 {
@@ -178,7 +178,7 @@ namespace Ast
             }
         }
 
-        public override NotNumber Clone()
+        public override Expression Clone()
         {
             return MakeClone<UserDefinedFunction>();
         }
@@ -214,9 +214,119 @@ namespace Ast
             return new Error(this, "Cannot evaluate plot");
         }
 
-        public override NotNumber Clone()
+        public override Expression Clone()
         {
             return MakeClone<Plot>();
+        }
+    }
+
+    public class Solve : Function
+    {
+        Equal equation;
+        Symbol symbol;
+
+        public Solve() : this(null, null, null, new Integer(1), new Integer(1)) { }
+        public Solve(string identifier, Equal equation, Symbol sym) : this(identifier, equation, sym, new Integer(1), new Integer(1)) { }
+        public Solve(string identifier, Equal equation, Symbol sym, Number prefix, Number exponent)
+            : base(identifier, prefix, exponent)
+        {
+            args = new List<Expression>();
+            this.equation = equation;
+            symbol = sym;
+        }
+
+        public override Expression Evaluate()
+        {
+            Expression resLeft = new Sub(equation.right, equation.left).Expand();
+            Expression resRight = new Integer(0);
+
+            while (!((resLeft is Symbol) && resLeft.CompareTo(symbol)))
+            {
+                if (resLeft is IInvertable)
+                {
+                    if (resLeft is Operator)
+                    {
+                        if (InvertOperator(ref resLeft, ref resRight))
+                        {
+                            return new Error(this, " could not solve " + symbol.ToString());
+                        }
+                    }
+                    else if (resLeft is UnaryOperation)
+                    {
+                        throw new NotImplementedException();
+                    }
+                    else
+                    {
+                        return new Error(this, " could not solve " + symbol.ToString());
+                    }
+                }
+                else if (resLeft is ISwappable)
+                {
+                    resLeft = (resLeft as ISwappable).Swap();
+                }
+                else
+                {
+                    return new Error(this, " could not solve " + symbol.ToString());
+                }
+            }
+
+            return new Equal(resLeft, Evaluator.SimplifyExp(resRight));
+        }
+
+        private bool InvertOperator(ref Expression resLeft, ref Expression resRight)
+        {
+            Operator op = resLeft as Operator;
+
+            if (op.left.ContainsNotNumber(symbol) && !op.right.ContainsNotNumber(symbol))
+            {
+                resRight = (op as IInvertable).Inverted(resRight);
+                resLeft = op.left;
+                return false;
+            }
+            else if (op.right.ContainsNotNumber(symbol) && !op.left.ContainsNotNumber(symbol))
+            {
+                if (op is ISwappable)
+                {
+                    resLeft = (op as ISwappable).Swap();
+                    return false;
+                }
+                else if (op is Div)
+                {
+                    if (!resRight.CompareTo(new Integer(0)))
+                    {
+                        resRight = new Div(op.left, resRight);
+                        resLeft = op.right;
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+                else if (op is Exp)
+                {
+                    return true;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            else if (op.right.ContainsNotNumber(symbol) && op.left.ContainsNotNumber(symbol))
+            {
+                throw new NotImplementedException();
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+
+            return true;
+        }
+
+        public override Expression Clone()
+        {
+            return MakeClone<Solve>();
         }
     }
 
@@ -228,31 +338,6 @@ namespace Ast
         {
             this.args = new List<Expression>();
             args.Add(arg);
-        }
-    }
-
-    public abstract class BinaryOperation : Function
-    {
-        public BinaryOperation() : this(null, null, null, new Integer(1), new Integer(1)) { }
-        public BinaryOperation(string identifier, Expression arg1, Expression arg2) : this(identifier, arg1, arg2, new Integer(1), new Integer(1)) { }
-        public BinaryOperation(string identifier, Expression arg1, Expression arg2, Number prefix, Number exponent) : base(identifier, prefix, exponent)
-        {
-            this.args = new List<Expression>();
-            args.Add(arg1);
-            args.Add(arg2);
-        }
-    }
-
-    public abstract class TernaryOperation : Function
-    {
-        public TernaryOperation() : this(null, null, null, null, new Integer(1), new Integer(1)) { }
-        public TernaryOperation(string identifier, Expression arg1, Expression arg2, Expression arg3) : this(identifier, arg1, arg2, arg3, new Integer(1), new Integer(1)) { }
-        public TernaryOperation(string identifier, Expression arg1, Expression arg2, Expression arg3, Number prefix, Number exponent) : base(identifier, prefix, exponent)
-        {
-            this.args = new List<Expression>();
-            args.Add(arg1);
-            args.Add(arg2);
-            args.Add(arg3);
         }
     }
 
@@ -284,7 +369,7 @@ namespace Ast
             return new Error(this, "Could not take Sin of: " + args[0]);
         }
 
-        public override NotNumber Clone()
+        public override Expression Clone()
         {
             return MakeClone<Sin>();
         }
@@ -317,7 +402,7 @@ namespace Ast
             return new Error(this, "Could not take ASin of: " + args[0]);
         }
 
-        public override NotNumber Clone()
+        public override Expression Clone()
         {
             return MakeClone<ASin>();
         }
@@ -351,7 +436,7 @@ namespace Ast
             return new Error(this, "Could not take Cos of: " + args[0]);
         }
 
-        public override NotNumber Clone()
+        public override Expression Clone()
         {
             return MakeClone<Cos>();
     }
@@ -384,7 +469,7 @@ namespace Ast
             return new Error(this, "Could not take ACos of: " + args[0]);
         }
 
-        public override NotNumber Clone()
+        public override Expression Clone()
         {
             return MakeClone<ACos>();
         }
@@ -418,7 +503,7 @@ namespace Ast
             return new Error(this, "Could not take Tan of: " + args[0]);
         }
 
-        public override NotNumber Clone()
+        public override Expression Clone()
         {
             return MakeClone<Tan>();
         }
@@ -451,7 +536,7 @@ namespace Ast
             return new Error(this, "Could not take ATan of: " + args[0]);
         }
 
-        public override NotNumber Clone()
+        public override Expression Clone()
         {
             return MakeClone<ATan>();
         }
@@ -495,7 +580,7 @@ namespace Ast
             return base.Simplify();
         }
 
-        public override NotNumber Clone()
+        public override Expression Clone()
         {
             return MakeClone<Sqrt>();
         }
@@ -503,6 +588,7 @@ namespace Ast
 
     public class Negation : UnaryOperation
     {
+        public Negation() : base(null, null) { }
         public Negation(string identifier, Expression arg) : base(identifier, arg) { }
 
         public override Expression Evaluate()
@@ -510,9 +596,9 @@ namespace Ast
             throw new NotImplementedException();
         }
 
-        public override NotNumber Clone()
+        public override Expression Clone()
         {
-            throw new NotImplementedException();
+            return MakeClone<Negation>();
         }
     }
 
@@ -525,7 +611,7 @@ namespace Ast
             return Evaluator.SimplifyExp(args[0]);
         }
 
-        public override NotNumber Clone()
+        public override Expression Clone()
         {
             throw new NotImplementedException();
         }
@@ -540,56 +626,38 @@ namespace Ast
             return Evaluator.ExpandExp(args[0]);
         }
 
-        public override NotNumber Clone()
+        public override Expression Clone()
         {
             throw new NotImplementedException();
         }
     }
 
-    public class Range : TernaryOperation
+    public class Range : UnaryOperation
     {
-        public Range() : this(null, null, null, null) { }
-        public Range(string identifier, Expression arg1, Expression arg2, Expression arg3) : base(identifier, arg1, arg2, arg3) { }
+        public Range(string identifier, Expression arg) : base(identifier, arg) { }
 
         public override Expression Evaluate()
         {
-            Decimal start;
-            Decimal end;
-            Decimal step;
-
             if (args[0] is Integer)
-                start = (args[0] as Integer).value;
-            else if (args[0] is Irrational)
-                start = (args[0] as Irrational).value;
-            else
-                return new Error(this, "argument 1 cannot be: " + args[0].GetType().Name);
-               
-            if (args[1] is Integer)
-                end = (args[1] as Integer).value;
-            else if (args[1] is Irrational)
-                end = (args[1] as Irrational).value;
-            else
-                return new Error(this, "argument 2 cannot be: " + args[1].GetType().Name);
-
-            if (args[2] is Integer)
-                step = (args[2] as Integer).value;
-            else if (args[2] is Irrational)
-                step = (args[2] as Irrational).value;
-            else
-                return new Error(this, "argument 3 cannot be: " + args[2].GetType().Name);
-
-            var list = new Ast.List ();
-            for (Decimal i = start; i < end; i += step)
             {
-                list.elements.Add(new Irrational(i));
+                var list = new Ast.List ();
+
+                Int64 max = ((Integer)args[0]).value;
+
+                for (Int64 i = 0; i < max; i++)
+                {
+                    list.elements.Add(new Integer(i));
+                }
+
+                return list;
             }
 
-            return list;
+            return new Error(this, "Range only supports integers");
         }
 
-        public override NotNumber Clone()
+        public override Expression Clone()
         {
-            return MakeClone<Range>();
+            throw new NotImplementedException();
         }
     }
 }

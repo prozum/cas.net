@@ -9,8 +9,6 @@ namespace Ast
             return this;
         }
 
-        public abstract Number Clone();
-
         public override bool ContainsNotNumber(NotNumber other)
         {
             return false;
@@ -60,7 +58,7 @@ namespace Ast
             }
         }
 
-        public override Number Clone()
+        public override Expression Clone()
         {
             return new Integer(value);
         }
@@ -285,7 +283,7 @@ namespace Ast
             }
         }
 
-        public override Number Clone()
+        public override Expression Clone()
         {
             return new Rational(numerator.Clone() as Integer, denominator.Clone() as Integer);
         }
@@ -502,7 +500,7 @@ namespace Ast
             }
         }
 
-        public override Number Clone()
+        public override Expression Clone()
         {
             return new Irrational(value);
         }
@@ -695,7 +693,7 @@ namespace Ast
             return res;
         }
 
-        public override Number Clone()
+        public override Expression Clone()
         {
             throw new NotImplementedException();
         }
@@ -720,7 +718,7 @@ namespace Ast
             return base.CompareTo(other) && value == (other as Boolean).value;
         }
 
-        public override Number Clone()
+        public override Expression Clone()
         {
             return new Boolean(value);
         }
