@@ -13,12 +13,12 @@ namespace ClientServer
 		const string host = "http://localhost:8080/";
 		const string database = @"server=localhost;userid=travis2;database=mydb";
 
-		Teacher teacher = new Teacher("teacher", "passwd0");
-		Student student1 = new Student("student1", "passwd1");
-		Student student2 = new Student("student2", "passwd2");
-		Student student3 = new Student("student3", "passwd3");
-		Student student4 = new Student("student4", "passwd4");
-		Student student5 = new Student("student5", "passwd5");
+		Teacher teacher = new Teacher("teacher", "passwd0", host);
+		Student student1 = new Student("student1", "passwd1", host);
+		Student student2 = new Student("student2", "passwd2", host);
+		Student student3 = new Student("student3", "passwd3", host);
+		Student student4 = new Student("student4", "passwd4", host);
+		Student student5 = new Student("student5", "passwd5", host);
 
 		static Database db = new Database(database);
 		Server server = new Server(host, db);
@@ -48,10 +48,9 @@ namespace ClientServer
 
 			string assignment = "2+2=4";
 			string assignmentName = "AssignmentFilename";
-			string checksum = ImEx.Checksum.GetMd5Hash (assignment);
 			string grade = "9A2016";
-			string response = teacher.AddAssignment (checksum, assignment, assignmentName, grade);
-			Assert.AreEqual (response, "Successfully added assignment");
+			string response = teacher.AddAssignment (assignment, assignmentName, grade);
+			Assert.AreEqual (response, "Success");
 
 			string getAssignment1 = student1.GetAssignment ("AssignmentFilename");
 			string getAssignment2 = student2.GetAssignment ("AssignmentFilename");
@@ -76,11 +75,11 @@ namespace ClientServer
 			string addCompleted3 = student3.AddCompleted (getAssignment3, "AssignmentFilename");
 			string addCompleted4 = student4.AddCompleted (getAssignment4, "AssignmentFilename");
 			string addCompleted5 = student5.AddCompleted (getAssignment5, "AssignmentFilename");
-			Assert.AreEqual (addCompleted1, "Successfully added completed assignment");
-			Assert.AreEqual (addCompleted2, "Successfully added completed assignment");
-			Assert.AreEqual (addCompleted3, "Successfully added completed assignment");
-			Assert.AreEqual (addCompleted4, "Successfully added completed assignment");
-			Assert.AreEqual (addCompleted5, "Successfully added completed assignment");
+			Assert.AreEqual (addCompleted1, "Success");
+			Assert.AreEqual (addCompleted2, "Success");
+			Assert.AreEqual (addCompleted3, "Success");
+			Assert.AreEqual (addCompleted4, "Success");
+			Assert.AreEqual (addCompleted5, "Success");
 
 			assignment += "_feedback";
 

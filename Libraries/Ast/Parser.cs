@@ -9,7 +9,7 @@ namespace Ast
     public class Parser
     {
         static readonly char[] opValidChars = {'=', '<', '>', '+', '-', '*', '/', '^', ':'};
-        static readonly string[] programDefinedFunctions = { "sin", "cos", "tan", "asin", "acos", "atan", "sqrt", "simplify", "expand", "range", "plot", "solve" };
+        static readonly string[] builtInFunctions = { "sin", "cos", "tan", "asin", "acos", "atan", "sqrt", "simplify", "expand", "range", "plot", "solve" };
 
         Evaluator eval;
 
@@ -270,93 +270,49 @@ namespace Ast
             Expression res;
             var args = ExtractBrackets (evaluator, parseReader, BracketType.Parenthesis);
 
-            if (programDefinedFunctions.Contains(identifier.ToLower()))
+            if (builtInFunctions.Contains(identifier.ToLower()))
             {
-                if (args.Count == 1)
+                switch (identifier.ToLower())
                 {
-                    switch (identifier.ToLower())
-                    {
-                    case "sin":
-                        res = new Sin(identifier.ToLower(), args[0]);
-                        break;
-                    case "cos":
-                        res = new Cos(identifier.ToLower(), args[0]);
-                        break;
-                    case "tan":
-                        res = new Tan(identifier.ToLower(), args[0]);
-                        break;
-                    case "asin":
-                        res = new ASin(identifier.ToLower(), args[0]);
-                        break;
-                    case "acos":
-                        res = new ACos(identifier.ToLower(), args[0]);
-                        break;
-                    case "atan":
-                        res = new ATan(identifier.ToLower(), args[0]);
-                        break;
-                    case "sqrt":
-                        res = new Sqrt(identifier.ToLower(), args[0]);
-                        break;
-                    case "simplify":
-                        res = new Simplify(identifier.ToLower(), args[0]);
-                        break;
-                    case "expand":
-                        res = new Expand(identifier.ToLower(), args[0]);
-                        break;
-                    case "range":
-                        res = new Range(identifier.ToLower(), args[0]);
-                        break;
-                    default:
-                        res = new Error(this, identifier + " have the wrong number of arguments");
-                        break;
-                    }
-                }
-                else if (args.Count == 2)
-                {
-                    switch (identifier.ToLower())
-                    {
-                    case "plot":
-                        if ((args[1] is Symbol) && args[0].ContainsNotNumber(args[1] as Symbol))
-                        {
-                            res = new Plot(identifier.ToLower(), args[0].Simplify(), args[1] as Symbol);
-                        }
-                        else
-                        {
-                            res = new Error(this, " Could not plot " + args[1].ToString() + " in " + args[0].ToString());
-                        }
-                        break;
-                    case "solve":
-                        if ((args[1] is Symbol))
-                        {
-                            if (args[0] is Equal)
-                            {
-                                if (args[0].ContainsNotNumber(args[1] as Symbol))
-                                {
-                                    res = new Solve(identifier.ToLower(), args[0] as Equal, args[1] as Symbol);
-                                }
-                                else
-                                {
-                                    res = new Error(this, " There is no " + args[1].ToString() + " to solve in " + args[0].ToString());
-                                }
-                            }
-                            else
-                            {
-                                res = new Error(this, args[0].ToString() + " is not a equation");
-                            }
-                        }
-                        else
-                        {
-                            res = new Error(this, " Can't solve none symbol: " + args[1].ToString());
-                        }
-                        break;
-                    default:
-                        res = new Error(this, identifier + " have the wrong number of arguments");
-                        break;
-                    }
-                }
-                else
-                {
-                    res = new Error(this, identifier + " have the wrong number of arguments");
+                case "sin":
+                    res = new Sin(identifier.ToLower(), args);
+                    break;
+                case "cos":
+                    res = new Cos(identifier.ToLower(), args);
+                    break;
+                case "tan":
+                    res = new Tan(identifier.ToLower(), args);
+                    break;
+                case "asin":
+                    res = new ASin(identifier.ToLower(), args);
+                    break;
+                case "acos":
+                    res = new ACos(identifier.ToLower(), args);
+                    break;
+                case "atan":
+                    res = new ATan(identifier.ToLower(), args);
+                    break;
+                case "sqrt":
+                    res = new Sqrt(identifier.ToLower(), args);
+                    break;
+                case "simplify":
+                    res = new Simplify(identifier.ToLower(), args);
+                    break;
+                case "expand":
+                    res = new Expand(identifier.ToLower(), args);
+                    break;
+                case "range":
+                    res = new Range(identifier.ToLower(), args);
+                    break;
+                case "plot":
+                    res = new Plot(identifier.ToLower(), args);
+                    break;
+                case "solve":
+                    res = new Solve(identifier.ToLower(), args);
+                    break;
+                default:
+                    res = new Error(this, identifier + " this is bad!");
+                    break;
                 }
             }
             else

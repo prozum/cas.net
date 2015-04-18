@@ -191,6 +191,9 @@ namespace CAS.NET.Server
 				// Prevents the server from saving the files if it's checksum is invalid
 				string checksumNew = Checksum.GetMd5Hash(file);
 
+				Console.WriteLine(checksum);
+				Console.WriteLine(checksumNew);
+
 				if (Checksum.VerifyMd5Hash(checksum, checksumNew) == false)
 				{
 					return "Corruption";
@@ -226,9 +229,9 @@ namespace CAS.NET.Server
 
 		private string StudentGetAssignment(string username, HttpListenerRequest request, HttpListenerResponse response, Database db)
         {
-			if (request.Headers["Grade"] != null &&	request.Headers["Filename"] != null)
+			if (request.Headers["Filename"] != null)
 			{
-				string grade = request.Headers ["Grade"];
+				string grade = db.GetGrade(username);
 				string filename = request.Headers ["Filename"];
 
 				string file = db.GetAssignment(filename, grade);
@@ -245,11 +248,11 @@ namespace CAS.NET.Server
 
 		private string StudentAddCompleted(string username, HttpListenerRequest request, Database db)
         {
-			if (request.Headers["Checksum"] != null && request.Headers["Grade"] != null &&
-				request.Headers["Filename"] != null && request.Headers["File"] != null)
+			if (request.Headers["Checksum"] != null && request.Headers["Filename"] != null &&
+															request.Headers["File"] != null)
 			{
+				string grade = db.GetGrade(username);
 				string checksum = request.Headers ["Checksum"];
-				string grade = request.Headers ["Grade"];
 				string filename = request.Headers ["Filename"];
 				string file = request.Headers ["File"];
 
@@ -269,9 +272,9 @@ namespace CAS.NET.Server
 
 		private string StudentGetFeedback(string username, HttpListenerRequest request, HttpListenerResponse response, Database db)
         {
-			if (request.Headers["Grade"] != null &&	request.Headers["Filename"] != null)
+			if (request.Headers["Filename"] != null)
 			{
-				string grade = request.Headers ["Grade"];
+				string grade = db.GetGrade(username);
 				string filename = request.Headers ["Filename"];
 
 				string file = db.GetFeedback(username, filename, grade);

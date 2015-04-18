@@ -54,16 +54,19 @@ namespace ImportExport
                 if (item.type == typeof(Person))
                 {
                     //Console.WriteLine(item.s);
+                    //lp.Add(Import.DeserializeString<Person>(item.serializedString));
                     lp.Add(Import.DeserializeString<Person>(item.metastring));
                 }
                 else if (item.type == typeof(ExtendedPerson))
                 {
                     //Console.WriteLine(item.s);
+                    //lp.Add(Import.DeserializeString<ExtendedPerson>(item.serializedString));
                     lp.Add(Import.DeserializeString<ExtendedPerson>(item.metastring));
                 }
                 else if (item.type == typeof(Idiot))
                 {
                     //Console.WriteLine(item.s);
+                    //lp.Add(Import.DeserializeString<NotNiclas>(item.serializedString));
                     lp.Add(Import.DeserializeString<Idiot>(item.metastring));
                 }
                 else

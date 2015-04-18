@@ -78,7 +78,10 @@ namespace Ast
             }
             else if (exp is Plot)
             {
-                return new PlotData((exp as Plot).args[0], (exp as Plot).args[1] as Symbol);
+                if ((exp as Plot).isArgsValid())
+                    return new PlotData((Plot) exp);
+                else
+                    exp = new ArgError((Plot)exp);
             }
             else if (exp is Simplify || exp is Expand)
             {

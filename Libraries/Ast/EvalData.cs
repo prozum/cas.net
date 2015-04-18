@@ -19,17 +19,22 @@ namespace Ast
             this.type = type;
             this.msg = msg;
         }
+
+        public override string ToString()
+        {
+            return msg;
+        }
     }
 
     public class PlotData : EvalData
     {
-        public Expression func;
+        public Expression exp;
         public Symbol sym;
 
-        public PlotData(Expression func, Symbol sym)
+        public PlotData(Plot plot)
         {
-            this.sym = sym;
-            this.func = func;
+            this.sym = plot.sym;
+            this.exp = plot.exp;
         }
     }
 }

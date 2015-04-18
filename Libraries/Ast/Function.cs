@@ -4,11 +4,59 @@ using System.Collections.Generic;
 
 namespace Ast
 {
+    public enum ArgKind
+    {
+        Expression,
+        Number,
+        Symbol,
+        Function,
+        Equation
+    }
+
     public abstract class Function : NotNumber
     {
         public List<Expression> args;
+        public List<ArgKind> validArgs;
 
-        public Function(string identifier, Number prefix, Number exponent) : base(identifier, prefix, exponent) { }
+        public Function(string identifier, List<Expression> args) : base(identifier) 
+        {
+            this.args = args;
+        }
+
+        public bool isArgsValid()
+        {
+            if (args.Count != validArgs.Count)
+                return false;
+
+            for (int i = 0; i < args.Count; i++)
+            {
+                switch (validArgs[i])
+                {
+                    case ArgKind.Expression:
+                        if (!(args[i] is Expression))
+                            return false;
+                        break;
+                    case ArgKind.Number:
+                        if (!(args[i] is Number))
+                            return false;
+                        break;
+                    case ArgKind.Symbol:
+                        if (!(args[i] is Symbol))
+                            return false;
+                        break;
+                    case ArgKind.Function:
+                        if (!(args[i] is Function))
+                            return false;
+                        break;
+                    case ArgKind.Equation:
+                        if (!(args[i] is Equal))
+                            return false;
+                        break;
+                }
+            }
+
+            return true;
+        }
 
         public override string ToString ()
         {
@@ -118,12 +166,8 @@ namespace Ast
     {
         public Dictionary<string, Expression> tempDefinitions;
 
-        public UserDefinedFunction() : this(null, null, new Integer(1), new Integer(1)) { }
-        public UserDefinedFunction(string identifier, List<Expression> args) : this(identifier, args, new Integer(1), new Integer(1)) { }
-        public UserDefinedFunction(string identifier, List<Expression> args, Number prefix, Number exponent) : base(identifier, prefix, exponent)
-        {
-            this.args = args;
-        }
+        public UserDefinedFunction() : this(null, null) { }
+        public UserDefinedFunction(string identifier, List<Expression> args) : base(identifier, args) { }
 
         public override Expression Evaluate()
         {
@@ -197,16 +241,20 @@ namespace Ast
             return GetValue();
         }
     }
-
+   
     public class Plot : Function
     {
-        public Plot() : this(null, null, null, new Integer(1), new Integer(1)) { }
-        public Plot(string identifier, Expression func, Symbol sym) : this(identifier, func, sym, new Integer(1), new Integer(1)) { }
-        public Plot(string identifier, Expression func, Symbol sym, Number prefix, Number exponent) : base(identifier, prefix, exponent)
+        public Expression exp;
+        public Symbol sym;
+
+        public Plot() : this(null, null) { }
+        public Plot(string identifier, List<Expression> args) : base(identifier, args)
         {
-            args = new List<Expression>();
-            args.Add(func);
-            args.Add(sym);
+            validArgs = new List<ArgKind>()
+            {
+                ArgKind.Expression,
+                ArgKind.Symbol
+            };
         }
 
         public override Expression Evaluate()
@@ -222,25 +270,31 @@ namespace Ast
 
     public class Solve : Function
     {
-        Equal equation;
-        Symbol symbol;
+        Equal equal;
+        Symbol sym;
 
-        public Solve() : this(null, null, null, new Integer(1), new Integer(1)) { }
-        public Solve(string identifier, Equal equation, Symbol sym) : this(identifier, equation, sym, new Integer(1), new Integer(1)) { }
-        public Solve(string identifier, Equal equation, Symbol sym, Number prefix, Number exponent)
-            : base(identifier, prefix, exponent)
+        public Solve() : this(null, null) { }
+        public Solve(string identifier, List<Expression> args) : base(identifier, args)
         {
-            args = new List<Expression>();
-            this.equation = equation;
-            symbol = sym;
+            validArgs = new List<ArgKind>()
+            {
+                ArgKind.Equation,
+                ArgKind.Symbol
+            };
         }
 
         public override Expression Evaluate()
         {
-            Expression resLeft = new Sub(equation.right, equation.left).Expand();
+            if (!isArgsValid())
+                return new ArgError(this);
+
+            equal = (Equal)args[0];
+            sym = (Symbol)args[1];
+
+            Expression resLeft = new Sub(equal.right, equal.left).Expand();
             Expression resRight = new Integer(0);
 
-            while (!((resLeft is Symbol) && resLeft.CompareTo(symbol)))
+            while (!((resLeft is Symbol) && resLeft.CompareTo(sym)))
             {
                 if (resLeft is IInvertable)
                 {
@@ -248,16 +302,16 @@ namespace Ast
                     {
                         if (InvertOperator(ref resLeft, ref resRight))
                         {
-                            return new Error(this, " could not solve " + symbol.ToString());
+                            return new Error(this, " could not solve " + sym.ToString());
                         }
                     }
-                    else if (resLeft is UnaryOperation)
+                    else if (resLeft is Function)
                     {
                         throw new NotImplementedException();
                     }
                     else
                     {
-                        return new Error(this, " could not solve " + symbol.ToString());
+                        return new Error(this, " could not solve " + sym.ToString());
                     }
                 }
                 else if (resLeft is ISwappable)
@@ -266,7 +320,7 @@ namespace Ast
                 }
                 else
                 {
-                    return new Error(this, " could not solve " + symbol.ToString());
+                    return new Error(this, " could not solve " + sym.ToString());
                 }
             }
 
@@ -277,13 +331,13 @@ namespace Ast
         {
             Operator op = resLeft as Operator;
 
-            if (op.left.ContainsNotNumber(symbol) && !op.right.ContainsNotNumber(symbol))
+            if (op.left.ContainsNotNumber(sym) && !op.right.ContainsNotNumber(sym))
             {
                 resRight = (op as IInvertable).Inverted(resRight);
                 resLeft = op.left;
                 return false;
             }
-            else if (op.right.ContainsNotNumber(symbol) && !op.left.ContainsNotNumber(symbol))
+            else if (op.right.ContainsNotNumber(sym) && !op.left.ContainsNotNumber(sym))
             {
                 if (op is ISwappable)
                 {
@@ -312,7 +366,7 @@ namespace Ast
                     return true;
                 }
             }
-            else if (op.right.ContainsNotNumber(symbol) && op.left.ContainsNotNumber(symbol))
+            else if (op.right.ContainsNotNumber(sym) && op.left.ContainsNotNumber(sym))
             {
                 throw new NotImplementedException();
             }
@@ -330,25 +384,23 @@ namespace Ast
         }
     }
 
-    public abstract class UnaryOperation : Function
-    {
-        public UnaryOperation() : this(null, null, new Integer(1), new Integer(1)) { }
-        public UnaryOperation(string identifier, Expression arg) : this(identifier, arg, new Integer(1), new Integer(1)) { }
-        public UnaryOperation(string identifier, Expression arg, Number prefix, Number exponent) : base(identifier, prefix, exponent)
-        {
-            this.args = new List<Expression>();
-            args.Add(arg);
-        }
-    }
 
-    public class Sin : UnaryOperation
+    public class Sin : Function
     {
-        public Sin() : this(null, null, new Integer(1), new Integer(1)) { }
-        public Sin(string identifier, Expression arg) : base(identifier, arg) { }
-        public Sin(string identifier, Expression arg, Number prefix, Number exponent) : base(identifier, arg, prefix, exponent) { }
+        public Sin() : this(null, null) { }
+        public Sin(string identifier, List<Expression> args) : base(identifier, args)
+        {
+            validArgs = new List<ArgKind>()
+            {
+                ArgKind.Expression
+            };
+        }
 
         public override Expression Evaluate()
         {
+            if (!isArgsValid())
+                return new ArgError(this);
+
             var res = args[0].Evaluate();
 
             if (res is Integer)
@@ -375,15 +427,24 @@ namespace Ast
         }
     }
 
-    public class ASin : UnaryOperation
+    public class ASin : Function
     {
-        public ASin() : this(null, null, new Integer(1), new Integer(1)) { }
-        public ASin(string identifier, Expression arg) : base(identifier, arg) { }
-        public ASin(string identifier, Expression arg, Number prefix, Number exponent) : base(identifier, arg, prefix, exponent) { }
+        public ASin() : this(null, null) { }
+        public ASin(string identifier, List<Expression> args) : base(identifier, args)
+        {
+            validArgs = new List<ArgKind>()
+            {
+                ArgKind.Expression
+            };
+        }
 
         public override Expression Evaluate()
         {
+            if (!isArgsValid())
+                return new ArgError(this);
+
             var res = args[0].Evaluate();
+
             if (res is Integer)
             {
                 return ReturnValue(new Irrational((decimal)(Math.Asin((res as Integer).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0)))).Evaluate();
@@ -408,14 +469,22 @@ namespace Ast
         }
     }
 
-    public class Cos : UnaryOperation
+    public class Cos : Function
     {
-        public Cos() : this(null, null, new Integer(1), new Integer(1)) { }
-        public Cos(string identifier, Expression arg) : base(identifier, arg) { }
-        public Cos(string identifier, Expression arg, Number prefix, Number exponent) : base(identifier, arg, prefix, exponent) { }
+        public Cos() : this(null, null) { }
+        public Cos(string identifier, List<Expression> args) : base(identifier, args)
+        {
+            validArgs = new List<ArgKind>()
+            {
+                ArgKind.Expression
+            };
+        }
 
         public override Expression Evaluate()
         {
+            if (!isArgsValid())
+                return new ArgError(this);
+
             var res = args[0].Evaluate();
 
             if (res is Integer)
@@ -442,15 +511,24 @@ namespace Ast
     }
     }
 
-    public class ACos : UnaryOperation
+    public class ACos : Function
     {
-        public ACos() : this(null, null, new Integer(1), new Integer(1)) { }
-        public ACos(string identifier, Expression arg) : base(identifier, arg) { }
-        public ACos(string identifier, Expression arg, Number prefix, Number exponent) : base(identifier, arg, prefix, exponent) { }
+        public ACos() : this(null, null) { }
+        public ACos(string identifier, List<Expression> args) : base(identifier, args)
+        {
+            validArgs = new List<ArgKind>()
+            {
+                ArgKind.Expression
+            };
+        }
 
         public override Expression Evaluate()
         {
+            if (!isArgsValid())
+                return new ArgError(this);
+
             var res = args[0].Evaluate();
+
             if (res is Integer)
             {
                 return ReturnValue(new Irrational((decimal)(Math.Acos((res as Integer).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0)))).Evaluate();
@@ -475,14 +553,22 @@ namespace Ast
         }
     }
 
-    public class Tan : UnaryOperation
+    public class Tan : Function
     {
-        public Tan() : this(null, null, new Integer(1), new Integer(1)) { }
-        public Tan(string identifier, Expression arg) : base(identifier, arg) { }
-        public Tan(string identifier, Expression arg, Number prefix, Number exponent) : base(identifier, arg, prefix, exponent) { }
+        public Tan() : this(null, null) { }
+        public Tan(string identifier, List<Expression> args) : base(identifier, args)
+        {
+            validArgs = new List<ArgKind>()
+            {
+                ArgKind.Expression
+            };
+        }
 
         public override Expression Evaluate()
         {
+            if (!isArgsValid())
+                return new ArgError(this);
+
             var res = args[0].Evaluate();
 
             if (res is Integer)
@@ -509,15 +595,24 @@ namespace Ast
         }
     }
 
-    public class ATan : UnaryOperation
+    public class ATan : Function
     {
-        public ATan() : this(null, null, new Integer(1), new Integer(1)) { }
-        public ATan(string identifier, Expression arg) : base(identifier, arg) { }
-        public ATan(string identifier, Expression arg, Number prefix, Number exponent) : base(identifier, arg, prefix, exponent) { }
+        public ATan() : this(null, null) { }
+        public ATan(string identifier, List<Expression> args) : base(identifier, args)
+        {
+            validArgs = new List<ArgKind>()
+            {
+                ArgKind.Expression
+            };
+        }
 
         public override Expression Evaluate()
         {
+            if (!isArgsValid())
+                return new ArgError(this);
+
             var res = args[0].Evaluate();
+
             if (res is Integer)
             {
                 return ReturnValue(new Irrational((decimal)(Math.Atan((res as Integer).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0)))).Evaluate();
@@ -542,14 +637,22 @@ namespace Ast
         }
     }
 
-    public class Sqrt : UnaryOperation
+    public class Sqrt : Function
     {
-        public Sqrt() : this(null, null, new Integer(1), new Integer(1)) { }
-        public Sqrt(string identifier, Expression arg) : base(identifier, arg) { }
-        public Sqrt(string identifier, Expression arg, Number prefix, Number exponent) : base(identifier, arg, prefix, exponent) { }
+        public Sqrt() : this(null, null) { }
+        public Sqrt(string identifier, List<Expression> args) : base(identifier, args)
+        {
+            validArgs = new List<ArgKind>()
+            {
+                ArgKind.Expression
+            };
+        }
 
         public override Expression Evaluate()
         {
+            if (!isArgsValid())
+                return new ArgError(this);
+
             var res = args[0].Evaluate();
 
             if (res is Integer)
@@ -586,10 +689,16 @@ namespace Ast
         }
     }
 
-    public class Negation : UnaryOperation
+    public class Negation : Function
     {
         public Negation() : base(null, null) { }
-        public Negation(string identifier, Expression arg) : base(identifier, arg) { }
+        public Negation(string identifier, List<Expression> args) : base(identifier, args)
+        {
+            validArgs = new List<ArgKind>()
+            {
+                ArgKind.Expression
+            };
+        }
 
         public override Expression Evaluate()
         {
@@ -602,12 +711,21 @@ namespace Ast
         }
     }
 
-    public class Simplify : UnaryOperation
+    public class Simplify : Function
     {
-        public Simplify(string identifier, Expression arg) : base(identifier, arg) { }
+        public Simplify(string identifier, List<Expression> args) : base(identifier, args)
+        {
+            validArgs = new List<ArgKind>()
+            {
+                ArgKind.Expression
+            };
+        }
 
         public override Expression Evaluate()
         {
+            if (!isArgsValid())
+                return new ArgError(this);
+
             return Evaluator.SimplifyExp(args[0]);
         }
 
@@ -617,9 +735,15 @@ namespace Ast
         }
     }
 
-    public class Expand : UnaryOperation
+    public class Expand : Function
     {
-        public Expand(string identifier, Expression arg) : base(identifier, arg) { }
+        public Expand(string identifier, List<Expression> args) : base(identifier, args) 
+        {
+            validArgs = new List<ArgKind>()
+            {
+                ArgKind.Expression
+            };
+        }
 
         public override Expression Evaluate()
         {
@@ -632,27 +756,55 @@ namespace Ast
         }
     }
 
-    public class Range : UnaryOperation
+    public class Range : Function
     {
-        public Range(string identifier, Expression arg) : base(identifier, arg) { }
+        public Range(string identifier, List<Expression> args) : base(identifier, args) 
+        {
+            validArgs = new List<ArgKind>()
+            {
+                ArgKind.Number,
+                ArgKind.Number,
+                ArgKind.Number
+            };
+        }
 
         public override Expression Evaluate()
         {
+            if (!isArgsValid())
+                return new ArgError(this);
+
+            Decimal start;
+            Decimal end;
+            Decimal step;
+
             if (args[0] is Integer)
+                start = (args[0] as Integer).value;
+            else if (args[0] is Irrational)
+                start = (args[0] as Irrational).value;
+            else
+                return new Error(this, "argument 1 cannot be: " + args[0].GetType().Name);
+
+            if (args[1] is Integer)
+                end = (args[1] as Integer).value;
+            else if (args[1] is Irrational)
+                end = (args[1] as Irrational).value;
+            else
+                return new Error(this, "argument 2 cannot be: " + args[1].GetType().Name);
+
+            if (args[2] is Integer)
+                step = (args[2] as Integer).value;
+            else if (args[2] is Irrational)
+                step = (args[2] as Irrational).value;
+            else
+                return new Error(this, "argument 3 cannot be: " + args[2].GetType().Name);
+
+            var list = new Ast.List ();
+            for (Decimal i = start; i < end; i += step)
             {
-                var list = new Ast.List ();
-
-                Int64 max = ((Integer)args[0]).value;
-
-                for (Int64 i = 0; i < max; i++)
-                {
-                    list.elements.Add(new Integer(i));
-                }
-
-                return list;
+                list.elements.Add(new Irrational(i));
             }
 
-            return new Error(this, "Range only supports integers");
+            return list;
         }
 
         public override Expression Clone()

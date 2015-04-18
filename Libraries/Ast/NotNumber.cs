@@ -11,11 +11,10 @@ namespace Ast
         public string identifier;
         public Number prefix, exponent;
 
-        public NotNumber(string identifier) : this(identifier, new Integer(1), new Integer(1)) { }
-        public NotNumber(string identifier, Number prefix, Number exponent)
+        public NotNumber(string identifier)
         {
-            this.exponent = exponent;
-            this.prefix = prefix;
+            this.exponent = new Integer(1);
+            this.prefix = new Integer(1);
             this.identifier = identifier;
         }
 
