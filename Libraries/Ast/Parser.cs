@@ -312,7 +312,7 @@ namespace Ast
                     res = new Solve(identifier.ToLower(), args);
                     break;
                 default:
-                    res = new Error(this, identifier + " this is bad!");
+                    res = new Error(this, identifier + "is not implemented");
                     break;
                 }
             }
