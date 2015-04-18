@@ -8,8 +8,6 @@ namespace FancyTextEditor
 {
     public class FancyWindow : Window
     {
-        TextIter startIter, endIter;
-
         static void Main(string[] args)
         {
             Application.Init();
@@ -26,38 +24,46 @@ namespace FancyTextEditor
             Grid grid = new Grid();
             Add(grid);
 
-            // Setup ui
             Toolbar toolbar = new Toolbar();
             grid.Attach(toolbar, 1, 1, 1, 1);
 
             TextView textview = new TextView();
             grid.Attach(textview, 1, 2, 1, 1);
 
-            TextTag textTag = new TextTag("TextTag");
+            TextTag boldTag = new TextTag("BoldTag");
+            boldTag.Weight = Weight.Bold;
+
+            TextTag italicTag = new TextTag("ItalicTag");
+            italicTag.Style = Pango.Style.Italic;
+
+            TextTag underlineTag = new TextTag("UnderlineTag");
+            underlineTag.Underline = Pango.Underline.Single;
 
             TextBuffer buffer = textview.Buffer;
-            buffer.TagTable.Add(textTag);
-
-            TextIter textIter = buffer.StartIter;
-//            buffer.InsertWithTagsByName(ref textIter, "Some text", "TextTag");
+            buffer.TagTable.Add(boldTag);
+            buffer.TagTable.Add(italicTag);
+            buffer.TagTable.Add(underlineTag);
 
             ToolButton toolButtonBold = new ToolButton(Stock.Bold);
             toolbar.Insert(toolButtonBold, 0);
             toolButtonBold.Clicked += delegate
             {
+
+                TextIter startIter, endIter;
+
                 buffer.GetSelectionBounds(out startIter, out endIter);
                 byte[] byteTextView = buffer.Serialize(buffer, buffer.RegisterSerializeTagset(null), startIter, endIter);
                 string s = Encoding.UTF8.GetString(byteTextView);
 
+                Console.WriteLine(s);
+
                 if (s.Contains("<attr name=\"weight\" type=\"gint\" value=\"700\" />"))
                 {
-                    textTag.Weight = Pango.Weight.Normal;
-                    buffer.ApplyTag(textTag, startIter, endIter);
+                    buffer.RemoveTag(boldTag, startIter, endIter);                
                 }
                 else
                 {
-                    textTag.Weight = Pango.Weight.Bold;
-                    buffer.ApplyTag(textTag, startIter, endIter);
+                    buffer.ApplyTag(boldTag, startIter, endIter);
                 }
             };
 
@@ -65,19 +71,22 @@ namespace FancyTextEditor
             toolbar.Insert(toolButtonItalic, 1);
             toolButtonItalic.Clicked += delegate(object sender, EventArgs e)
             {
+
+                TextIter startIter, endIter;
+
                 buffer.GetSelectionBounds(out startIter, out endIter);
                 byte[] byteTextView = buffer.Serialize(buffer, buffer.RegisterSerializeTagset(null), startIter, endIter);
                 string s = Encoding.UTF8.GetString(byteTextView);
 
+                Console.WriteLine(s);
+
                 if (s.Contains("<attr name=\"style\" type=\"PangoStyle\" value=\"PANGO_STYLE_ITALIC\" />"))
                 {
-                    textTag.Style = Pango.Style.Normal;
-                    buffer.ApplyTag(textTag, startIter, endIter);
+                    buffer.RemoveTag(italicTag, startIter, endIter);
                 }
                 else
                 {
-                    textTag.Style = Pango.Style.Italic;
-                    buffer.ApplyTag(textTag, startIter, endIter);
+                    buffer.ApplyTag(italicTag, startIter, endIter);
                 }
             };
 
@@ -85,19 +94,22 @@ namespace FancyTextEditor
             toolbar.Insert(toolButtonUnderline, 2);
             toolButtonUnderline.Clicked += delegate(object sender, EventArgs e)
             {
+
+                TextIter startIter, endIter;
+
                 buffer.GetSelectionBounds(out startIter, out endIter);
                 byte[] byteTextView = buffer.Serialize(buffer, buffer.RegisterSerializeTagset(null), startIter, endIter);
                 string s = Encoding.UTF8.GetString(byteTextView);
 
+                Console.WriteLine(s);
+
                 if (s.Contains("<attr name=\"underline\" type=\"PangoUnderline\" value=\"PANGO_UNDERLINE_LOW\" />"))
                 {
-                    textTag.Underline = Pango.Underline.None;
-                    buffer.ApplyTag(textTag, startIter, endIter);
+                    buffer.RemoveTag(underlineTag, startIter, endIter);
                 }
                 else
                 {
-                    textTag.Underline = Pango.Underline.Low;
-                    buffer.ApplyTag(textTag, startIter, endIter);
+                    buffer.ApplyTag(underlineTag, startIter, endIter);
                 }
             };
 
@@ -127,15 +139,6 @@ namespace FancyTextEditor
             */
 
             ShowAll();
-        }
-
-        bool NotBold(string str)
-        {
-            if (str.Contains("<attr name=\"weight\" type=\"gint\" value=\"700\" />"))
-            {
-                return false;
-            }
-            return true;
         }
     }
 
