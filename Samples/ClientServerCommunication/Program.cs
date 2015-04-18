@@ -8,15 +8,13 @@ namespace ClientServerCommunication
     {
         public static void Main(string[] args)
         {
-            Teacher teacher = new Teacher("kasp6378", args[0]);
-            Student student = new Student("kasp1234", args[0]);
+            Teacher teacher = new Teacher("kasp6378", "password", args[0]);
+            Student student = new Student("kasp1234", "password", args[0]);
 
             string file = "jsonfileextremeoverload";
             string fileName = "testfile";
 
-            string checksum = Checksum.GetMd5Hash(file);
-
-            Console.WriteLine(teacher.AddAssignment(checksum, file, fileName, "9A2016"));
+            Console.WriteLine(teacher.AddAssignment(file, fileName, "9A2016"));
             
             string[] list = student.GetAssignmentList();
 
