@@ -4,7 +4,6 @@ using Ast;
 public class MainWindow : Window
 {
     Evaluator eval;
-    Expression input;
     EvalData output;
 
     Grid grid;
@@ -29,7 +28,6 @@ public class MainWindow : Window
 
     public void EvaluateEntry()
     {
-        //input = Ast.Parser.Parse (eval, entry.Text);
         output = eval.Evaluation(entry.Text);
 
         TextIter insertIter = buffer.StartIter;
