@@ -53,7 +53,7 @@ namespace CAS.NET.Server
                         msg = Encoding.UTF8.GetString(buffer);
                     }
 
-                    Console.WriteLine(msg);
+                    Console.WriteLine(identity.Name + " requesting " + msg);
 
                     // execute client message and get message for client
 					string remsg = ExecuteCommand(msg, identity, request, response, db);
