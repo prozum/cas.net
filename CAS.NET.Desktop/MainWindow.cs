@@ -14,7 +14,7 @@ namespace CAS.NET.Desktop
         List<MetaType> mt = new List<MetaType>();
         Grid globalGrid = new Grid();
         int gridNumber = 1;
-        VBox vboxWindow = new VBox(false, 2);
+        VBox vboxWindow = new VBox(false, 3);
         string casFile = "";
         string username, password;
 
@@ -98,7 +98,48 @@ namespace CAS.NET.Desktop
 
             #endregion
 
+            Toolbar toolbar = new Toolbar();
+
+            ToolButton toolButtonNew = new ToolButton(Stock.New);
+            toolbar.Insert(toolButtonNew, 0);
+            toolButtonNew.Clicked += delegate
+            {
+                ClearWindow();
+            };
+
+            ToolButton toolButtonOpen = new ToolButton(Stock.Open);
+            toolbar.Insert(toolButtonOpen, 1);
+            toolButtonOpen.Clicked += delegate
+            {
+                OpenFile();
+            };
+
+            ToolButton toolButtonSave = new ToolButton(Stock.Save);
+            toolbar.Insert(toolButtonSave, 2);
+            toolButtonSave.Clicked += delegate
+            {
+                SaveFile();
+            };
+
+            SeparatorToolItem toolSeparater1 = new SeparatorToolItem();
+            toolbar.Insert(toolSeparater1, 3);
+
+            ToolButton toolButtonBold = new ToolButton(Stock.Bold);
+            toolbar.Insert(toolButtonBold, 4);
+
+            ToolButton toolButtonItalic = new ToolButton(Stock.Italic);
+            toolbar.Insert(toolButtonItalic, 5);
+
+            ToolButton toolButtonUnderline = new ToolButton(Stock.Underline);
+            toolbar.Insert(toolButtonUnderline, 6);
+
+//            SeparatorToolItem toolSeparator2 = new SeparatorToolItem();
+//            toolbar.Insert(toolSeparator2, 8);
+
             vboxWindow.PackStart(menuBar, false, false, 2);
+
+            vboxWindow.PackStart(toolbar, false, false, 2);
+
             vboxWindow.Add(globalGrid);
 
             Add(vboxWindow);
@@ -298,7 +339,14 @@ namespace CAS.NET.Desktop
 
                         if (filechooser.Run() == (int)ResponseType.Accept)
                         {
-                            System.IO.File.WriteAllText(filechooser.Filename, casFile);
+                            if (filechooser.Name.ToLower().EndsWith(".cas"))
+                            {
+                                System.IO.File.WriteAllText(filechooser.Filename, casFile);
+                            }
+                            else
+                            {
+                                System.IO.File.WriteAllText(filechooser.Filename + ".cas", casFile);
+                            }
                         }
 
                         filechooser.Destroy();
