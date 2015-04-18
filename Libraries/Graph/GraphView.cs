@@ -14,7 +14,7 @@ namespace Graph
 
         public GraphView (PlotData plotData)
         {
-            plotData.sym.evaluator.
+            //plotData.sym.evaluator.
             SetSizeRequest (600, 600);
             this.a = a;
             this.b = b;
