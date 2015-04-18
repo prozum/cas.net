@@ -37,4 +37,10 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ImEx\ImEx.csproj">
+      <Project>{5150E825-D811-4D68-8C0E-86A1F8573561}</Project>
+      <Name>ImEx</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>
