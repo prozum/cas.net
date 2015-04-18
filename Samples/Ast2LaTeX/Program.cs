@@ -7,7 +7,8 @@ namespace Ast2LaTeX
     {
         public static void Main (string[] args)
         {
-            Expression exp = Ast.Parser.Parse ("(x-y)*35-20");
+			var parser = new Parser ();
+            Expression exp = parser.Parse ("(x-y)*35-20");
             Console.WriteLine (AstLatex (exp));
         }
 

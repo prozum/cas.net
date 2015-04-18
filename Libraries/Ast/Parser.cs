@@ -13,6 +13,7 @@ namespace Ast
 
         Evaluator eval;
 
+        public Parser() : this(new Evaluator()) { }
         public Parser(Evaluator eval)
         {
             this.eval = eval;
