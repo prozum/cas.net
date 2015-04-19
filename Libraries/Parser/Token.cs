@@ -4,7 +4,6 @@ namespace Parser
 {
     public enum TokenKind
     {
-        EndOfString,
         Identifier,
 
         Integer,
@@ -30,6 +29,8 @@ namespace Parser
         SquareEnd,
         CurlyStart,
         CurlyEnd,
+
+        EndOfString,
         Unknown
     }
 
@@ -43,7 +44,7 @@ namespace Parser
         {
             this.kind = kind;
             this.value = value;
-            this.pos = pos;
+            this.pos = pos + 1;
         }
     }
 }
