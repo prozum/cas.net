@@ -18,7 +18,8 @@ namespace Ast
         public List<Expression> args;
         public List<ArgKind> validArgs;
 
-        public Function(string identifier, List<Expression> args) : base(identifier) 
+        public Function(string identifier, List<Expression> args, Evaluator evaluator)
+            : base(identifier, evaluator) 
         {
             this.args = args;
         }
@@ -166,8 +167,8 @@ namespace Ast
     {
         public Dictionary<string, Expression> tempDefinitions;
 
-        public UserDefinedFunction() : this(null, null) { }
-        public UserDefinedFunction(string identifier, List<Expression> args) : base(identifier, args) { }
+        public UserDefinedFunction() : this(null, null, null) { }
+        public UserDefinedFunction(string identifier, List<Expression> args, Evaluator evaluator) : base(identifier, args, evaluator) { }
 
         public override Expression Evaluate()
         {
@@ -248,7 +249,7 @@ namespace Ast
         public Symbol sym;
 
         public Plot() : this(null, null) { }
-        public Plot(string identifier, List<Expression> args) : base(identifier, args)
+        public Plot(string identifier, List<Expression> args) : base(identifier, args, null)
         {
             validArgs = new List<ArgKind>()
             {
@@ -274,7 +275,7 @@ namespace Ast
         Symbol sym;
 
         public Solve() : this(null, null) { }
-        public Solve(string identifier, List<Expression> args) : base(identifier, args)
+        public Solve(string identifier, List<Expression> args) : base(identifier, args, null)
         {
             validArgs = new List<ArgKind>()
             {
@@ -388,7 +389,8 @@ namespace Ast
     public class Sin : Function
     {
         public Sin() : this(null, null) { }
-        public Sin(string identifier, List<Expression> args) : base(identifier, args)
+        public Sin(string identifier, List<Expression> args)
+            : base(identifier, args, null)
         {
             validArgs = new List<ArgKind>()
             {
@@ -430,7 +432,8 @@ namespace Ast
     public class ASin : Function
     {
         public ASin() : this(null, null) { }
-        public ASin(string identifier, List<Expression> args) : base(identifier, args)
+        public ASin(string identifier, List<Expression> args)
+            : base(identifier, args, null)
         {
             validArgs = new List<ArgKind>()
             {
@@ -472,7 +475,8 @@ namespace Ast
     public class Cos : Function
     {
         public Cos() : this(null, null) { }
-        public Cos(string identifier, List<Expression> args) : base(identifier, args)
+        public Cos(string identifier, List<Expression> args)
+            : base(identifier, args, null)
         {
             validArgs = new List<ArgKind>()
             {
@@ -514,7 +518,8 @@ namespace Ast
     public class ACos : Function
     {
         public ACos() : this(null, null) { }
-        public ACos(string identifier, List<Expression> args) : base(identifier, args)
+        public ACos(string identifier, List<Expression> args)
+            : base(identifier, args, null)
         {
             validArgs = new List<ArgKind>()
             {
@@ -556,7 +561,8 @@ namespace Ast
     public class Tan : Function
     {
         public Tan() : this(null, null) { }
-        public Tan(string identifier, List<Expression> args) : base(identifier, args)
+        public Tan(string identifier, List<Expression> args)
+            : base(identifier, args, null)
         {
             validArgs = new List<ArgKind>()
             {
@@ -598,7 +604,8 @@ namespace Ast
     public class ATan : Function
     {
         public ATan() : this(null, null) { }
-        public ATan(string identifier, List<Expression> args) : base(identifier, args)
+        public ATan(string identifier, List<Expression> args)
+            : base(identifier, args, null)
         {
             validArgs = new List<ArgKind>()
             {
@@ -640,7 +647,8 @@ namespace Ast
     public class Sqrt : Function
     {
         public Sqrt() : this(null, null) { }
-        public Sqrt(string identifier, List<Expression> args) : base(identifier, args)
+        public Sqrt(string identifier, List<Expression> args)
+            : base(identifier, args, null)
         {
             validArgs = new List<ArgKind>()
             {
@@ -691,8 +699,9 @@ namespace Ast
 
     public class Negation : Function
     {
-        public Negation() : base(null, null) { }
-        public Negation(string identifier, List<Expression> args) : base(identifier, args)
+        public Negation() : base(null, null, null) { }
+        public Negation(string identifier, List<Expression> args)
+            : base(identifier, args, null)
         {
             validArgs = new List<ArgKind>()
             {
@@ -713,7 +722,8 @@ namespace Ast
 
     public class Simplify : Function
     {
-        public Simplify(string identifier, List<Expression> args) : base(identifier, args)
+        public Simplify(string identifier, List<Expression> args)
+            : base(identifier, args, null)
         {
             validArgs = new List<ArgKind>()
             {
@@ -737,7 +747,8 @@ namespace Ast
 
     public class Expand : Function
     {
-        public Expand(string identifier, List<Expression> args) : base(identifier, args) 
+        public Expand(string identifier, List<Expression> args)
+            : base(identifier, args, null) 
         {
             validArgs = new List<ArgKind>()
             {
@@ -758,7 +769,8 @@ namespace Ast
 
     public class Range : Function
     {
-        public Range(string identifier, List<Expression> args) : base(identifier, args) 
+        public Range(string identifier, List<Expression> args)
+            : base(identifier, args, null) 
         {
             validArgs = new List<ArgKind>()
             {

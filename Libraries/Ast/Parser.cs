@@ -318,10 +318,9 @@ namespace Ast
             }
             else
             {
-                res = new UserDefinedFunction(identifier, args);
+                res = new UserDefinedFunction(identifier, args, evaluator);
             }
 
-            res.evaluator = evaluator;
             return res;
         }
 
@@ -331,7 +330,6 @@ namespace Ast
             res = new Ast.List();
 
             res.elements = ExtractBrackets (evaluator, parseReader, BracketType.Curly);
-            res.evaluator = evaluator;
 
             return res;
         }
