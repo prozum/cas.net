@@ -4,13 +4,13 @@ using System.Net;
 
 namespace DesktopUI
 {
-	public class ServerMenuItem : MenuItem
+	public class ServerMenu : MenuItem
 	{
 		int privilege;
 		string username;
 		string password;
 
-		public ServerMenuItem (ref int privilege) : base("Server")
+		public ServerMenu (ref int privilege) : base("Server")
 		{
 			this.privilege = privilege;
 
