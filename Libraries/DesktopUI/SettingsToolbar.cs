@@ -101,15 +101,13 @@ namespace DesktopUI
 			meta = mtlmt;
 			widgets.Clear ();
 
-			//RecreateListWidget ();
+			RecreateListWidget ();
 
-			/*
 			foreach (Widget item in widgets)
 			{
-				grid.Attach (MovableWidget (item), 1, gridNumber, 1, 1);
-				gridNumber++;
+				grid.Attach (((CasTextView)item).GetMovableWidget(), 1, GridNumber, 1, 1);
+				GridNumber++;
 			}
-			*/
 
 			ShowAll ();
 		}
@@ -233,6 +231,41 @@ namespace DesktopUI
 			}
 
 			GridNumber = 1;
+		}
+
+		void RecreateListWidget()
+		{
+			foreach (var item in meta)
+			{
+				if (item.type == typeof(Entry))
+				{
+					Entry entry = new Entry();
+					entry.Text = item.metastring;
+
+					widgets.Add(entry);
+				}
+				if (item.type == typeof(TextView))
+				{
+					Byte[] byteTextView = Encoding.UTF8.GetBytes(item.metastring);
+					TextBuffer buffer = new TextView().Buffer;
+					TextIter textIter = buffer.StartIter;
+
+					buffer.Deserialize(buffer, buffer.RegisterDeserializeTagset(null), ref textIter, byteTextView, (ulong)byteTextView.Length);
+
+					TextView textView = new TextView();
+					textView.Buffer = buffer;
+
+					widgets.Add(textView);
+				}
+				if (item.type == typeof(CasTextView))
+				{
+					CasTextView ctv = new CasTextView("", true, widgets);
+					Console.WriteLine("Meta: " + item.metastring + " :End Meta");
+					ctv.DeserializeCasTextView(item.metastring);
+
+					widgets.Add(ctv);
+				}
+			}
 		}
 	}
 }
