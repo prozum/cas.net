@@ -717,6 +717,12 @@ namespace Ast
         public Number real;
         public Number imag;
 
+        public Complex(Number real, Number imag)
+        {
+            this.real = real;
+            this.imag = imag;
+        }
+
         public override string ToString()
         {
             return real.ToString () + '+' + imag.ToString() + 'i';

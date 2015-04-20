@@ -21,20 +21,16 @@ namespace CAS.NET.Desktop
 
         delegate int login(string username,string password);
 
-        [STAThread]
-        public static void Main(string[] args)
-        {
-            Application.Init();
-            new MainWindow();
-            Application.Run();
-        }
-
         public MainWindow()
             : base("CAS.NET")
         {
             DeleteEvent += (o, a) => Application.Quit();
 
             SetSizeRequest(300, 500);
+
+            ShowAll();
+
+            /*
 
             #region Menu
 
@@ -103,7 +99,22 @@ namespace CAS.NET.Desktop
 
             #endregion
 
-            Toolbar toolbar = new Toolbar();
+*/
+
+            SettingsToolbar toolbar = new SettingsToolbar(ref casFile, ref globalGrid, ref gridNumber, ref mt, ref listWidget, this);
+
+            int i = 0;
+
+            ServerMenu serverMenu = new ServerMenu(ref i);
+
+            MenuBar menubar = new MenuBar();
+            menubar.Add(serverMenu);
+
+            CasTextView textView = new CasTextView("", true, listWidget);
+            textView.WidthRequest = Window.Width;
+            Widget w = textView.GetMovableWidget();
+            globalGrid.Attach(w, 1, 1, 1, 1);
+            /*
 
             ToolButton toolButtonNew = new ToolButton(Stock.New);
             toolbar.Insert(toolButtonNew, 0);
@@ -145,13 +156,13 @@ namespace CAS.NET.Desktop
 
             vboxWindow.PackStart(toolbar, false, false, 2);
 
+
+*/
+//            vboxWindow.PackStart(menubar, false, false, 2);
+            vboxWindow.PackStart(toolbar, false, false, 2);
             vboxWindow.Add(globalGrid);
-
             Add(vboxWindow);
-
             ShowAll();
-
-
         }
 
         public void AddEntryWidget()

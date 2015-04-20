@@ -56,6 +56,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CasTextView.cs" />
     <Compile Include="SettingsToolbar.cs" />
+    <Compile Include="ServerMenu.cs" />
     <Compile Include="CasMovableWidget.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

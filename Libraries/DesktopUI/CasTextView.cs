@@ -5,31 +5,25 @@ using System.Collections.Generic;
 
 namespace DesktopUI
 {
-    public class CasTextView : Bin
+    public class CasTextView : TextView
     {
         bool teacherEditOnly = false;
-        TextView textView = new TextView();
-        Type realType;
         List<Widget> listWidget;
-        Gdk.Window window;
 
         public CasTextView(string serializedString, bool teacherCanEdit, List<Widget> listWidget)
             : base()
         {
             DeserializeCasTextView(serializedString);
             teacherEditOnly = teacherCanEdit;
-            realType = typeof(CasTextView);
             this.listWidget = listWidget;
-            this.Window = window;
-            this.Add(textView);
+            ShowAll();
         }
 
         public string SerializeCasTextView()
         {
-            TextBuffer buffer = textView.Buffer;
             TextIter startIter, endIter;
-            buffer.GetBounds(out startIter, out endIter);
-            byte[] byteTextView = buffer.Serialize(buffer, buffer.RegisterSerializeTagset("test"), startIter, endIter);
+            Buffer.GetBounds(out startIter, out endIter);
+            byte[] byteTextView = Buffer.Serialize(Buffer, Buffer.RegisterSerializeTagset("test"), startIter, endIter);
             string serializedTextView = Encoding.UTF8.GetString(byteTextView);
 
             Console.WriteLine(serializedTextView);
@@ -39,10 +33,9 @@ namespace DesktopUI
 
         public void DeserializeCasTextView(string serializedTextView)
         {
-            TextBuffer buffer = textView.Buffer;
-            TextIter textIter = buffer.StartIter;
+            TextIter textIter = Buffer.StartIter;
             byte[] byteTextView = Encoding.UTF8.GetBytes(serializedTextView);
-            buffer.Deserialize(buffer, buffer.RegisterDeserializeTagset("test"), ref textIter, byteTextView, (ulong)byteTextView.Length);
+            Buffer.Deserialize(Buffer, Buffer.RegisterDeserializeTagset("test"), ref textIter, byteTextView, (ulong)byteTextView.Length);
         }
 
         public void SetTeacherEditOnly(bool isLocked)
@@ -52,13 +45,8 @@ namespace DesktopUI
 
         public Widget GetMovableWidget()
         {
-            CasMovableWidget movableWidget = new CasMovableWidget(textView, listWidget);
+            CasMovableWidget movableWidget = new CasMovableWidget(this, listWidget);
             return movableWidget.GetMovableWidget();
-        }
-
-        public Type GetRealType()
-        {
-            return realType;
         }
     }
 }
