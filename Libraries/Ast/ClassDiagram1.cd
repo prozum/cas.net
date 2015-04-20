@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Ast.EvalData" Collapsed="true">
+    <Position X="41.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>EvalData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.MsgData" Collapsed="true">
+    <Position X="42.25" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAABAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>EvalData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.PlotData" Collapsed="true">
+    <Position X="40" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>EvalData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Evaluator" Collapsed="true">
+    <Position X="45.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAhAAAAAAAAAAAAAABAgAAAAIAAAAAIAAACAAAIAA=</HashCode>
+      <FileName>Evaluator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Expression" Collapsed="true">
+    <Position X="42.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ASCAIAAAAAAAAARgYAWQggAAAAIAAAAAYgAQIAAAFTA=</HashCode>
+      <FileName>Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Function" Collapsed="true">
+    <Position X="42" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAQMAAAQAAAAAAAAAAIAAAAAAQAIACA=</HashCode>
+      <FileName>Function.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.List" Collapsed="true">
+    <Position X="48.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAABAEAAAAAgAAAAAAAAAAAgAAAAAAABA=</HashCode>
+      <FileName>List.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Message" Collapsed="true">
+    <Position X="50.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQEAAAAAgAAAAAAAAAAAgAAAAAAACA=</HashCode>
+      <FileName>Message.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Variable" Collapsed="true">
+    <Position X="41" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ASCAIAAAAAAAAAAgQAAAgAAAAgAQAgJAQgAAIAAAEAA=</HashCode>
+      <FileName>Variable.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Number" Collapsed="true">
+    <Position X="46.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAAAgAAAACAAAAAAgAAAAAAAAA=</HashCode>
+      <FileName>Number.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Operator" Collapsed="true">
+    <Position X="44" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACCIIAAAAAQAAAQkQAAQggAAAAAIAAAAQgAAIAAAkAA=</HashCode>
+      <FileName>Operator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Parser" Collapsed="true">
+    <Position X="47" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAwAAAAAAAACgAAAABAAoACAgAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>Parser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Symbol" Collapsed="true">
+    <Position X="40" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAAAAQEAAAAAgAAAAAAAAAAAAAAAAAAADA=</HashCode>
+      <FileName>Symbol.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Ast.IInvertable" Collapsed="true">
+    <Position X="45.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Expression.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ast.ISwappable" Collapsed="true">
+    <Position X="47" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Operator.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="Ast.MsgType" Collapsed="true">
+    <Position X="47" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAEAEAAA=</HashCode>
+      <FileName>EvalData.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Ast.ArgKind" Collapsed="true">
+    <Position X="45.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAEAAAAIAEAAAAAAQAAAAAAAACAA=</HashCode>
+      <FileName>Function.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

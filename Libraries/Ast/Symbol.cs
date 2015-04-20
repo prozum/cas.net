@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class Symbol : NotNumber
+    public class Symbol : Variable
     {
         public Symbol() : this(null, null) { }
         public Symbol(Symbol symbolExp) : this(symbolExp.evaluator, symbolExp.identifier) { }
@@ -43,7 +43,7 @@ namespace Ast
         }
 
         public Expression GetValue() { return GetValue(this); }
-        public Expression GetValue(NotNumber other)
+        public Expression GetValue(Variable other)
         {
             Expression res;
 
@@ -53,7 +53,7 @@ namespace Ast
                 {
                     functionCall.tempDefinitions.TryGetValue(identifier, out res);
 
-                    if (res.ContainsNotNumber(other) && res.Evaluate() is Error)
+                    if (res.ContainsVariable(other) && res.Evaluate() is Error)
                     {
                         return new Error(this, "Could not get value of: " + other.identifier);
                     }
@@ -67,7 +67,7 @@ namespace Ast
                 {
                     evaluator.variableDefinitions.TryGetValue(identifier, out res);
 
-                    if (res.ContainsNotNumber(other))
+                    if (res.ContainsVariable(other))
                     {
                         return new Error(this, "Could not get value of: " + other.identifier);
                     }

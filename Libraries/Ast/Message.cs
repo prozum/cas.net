@@ -27,7 +27,7 @@ namespace Ast
             return false;
         }
 
-        public override bool ContainsNotNumber(NotNumber other)
+        public override bool ContainsVariable(Variable other)
         {
             return false;
         }
