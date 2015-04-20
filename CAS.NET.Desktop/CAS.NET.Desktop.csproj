@@ -76,6 +76,10 @@
       <Project>{882174F5-0B72-4DF3-997F-BD2EB16C6E6C}</Project>
       <Name>TaskGenLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Libraries\DesktopUI\DesktopUI.csproj">
+      <Project>{FF8D208B-A1BE-4418-A2C2-B7A9625EE34C}</Project>
+      <Name>DesktopUI</Name>
+    </ProjectReference>
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
