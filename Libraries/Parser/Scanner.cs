@@ -122,7 +122,10 @@ namespace Parser
 
             if (cur == 'i')
             {
-                kind = TokenKind.Imaginary;
+                if (kind == TokenKind.Integer)
+                    kind = TokenKind.ImaginaryInt;
+                else
+                    kind = TokenKind.ImaginaryDec;
                 pos++;
             }
 
