@@ -330,14 +330,18 @@ namespace Ast
         private bool InvertOperator(ref Expression resLeft, ref Expression resRight)
         {
             Operator op = resLeft as Operator;
-
-            if (op.left.ContainsNotNumber(sym) && !op.right.ContainsNotNumber(sym))
+            
+            if (op.right.ContainsNotNumber(sym) && op.left.ContainsNotNumber(sym))
+            {
+                throw new NotImplementedException();
+            }
+            else if (op.left.ContainsNotNumber(sym))
             {
                 resRight = (op as IInvertable).Inverted(resRight);
                 resLeft = op.left;
                 return false;
             }
-            else if (op.right.ContainsNotNumber(sym) && !op.left.ContainsNotNumber(sym))
+            else if (op.right.ContainsNotNumber(sym))
             {
                 if (op is ISwappable)
                 {
@@ -365,10 +369,6 @@ namespace Ast
                 {
                     return true;
                 }
-            }
-            else if (op.right.ContainsNotNumber(sym) && op.left.ContainsNotNumber(sym))
-            {
-                throw new NotImplementedException();
             }
             else
             {

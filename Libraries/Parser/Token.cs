@@ -8,7 +8,8 @@ namespace Parser
 
         Integer,
         Decimal,
-        Imaginary,
+        ImaginaryInt,
+        ImaginaryDec,
 
         Assign,
         Equal,
