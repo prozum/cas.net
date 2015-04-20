@@ -11,6 +11,7 @@ namespace Ast
 
     public abstract class Expression
     {
+
         public Evaluator evaluator;
         public Operator parent;
         public UserDefinedFunction functionCall;

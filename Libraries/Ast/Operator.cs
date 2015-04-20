@@ -351,7 +351,7 @@ namespace Ast
 
         public override Expression Simplify()
         {
-            Expression evaluatedLeft, evaluatedRight, res = null;
+            Expression evaluatedRes, res = null;
             Operator simplifiedOperator = new Add(Evaluator.SimplifyExp(left), Evaluator.SimplifyExp(right));
 
             if (simplifiedOperator.left is Number && simplifiedOperator.left.CompareTo(new Integer(0)))
@@ -378,19 +378,15 @@ namespace Ast
             {
                 res = simplifiedOperator;
             }
-            //else if ((res as Operator).left.CompareTo((res as Operator).right))
-            //{
-            //    res = new Mul(new Integer(2), (res as Operator).left);
-            //}
 
-            if (res is Add && !((evaluatedLeft = (res as Add).left.Evaluate()) is Error))
+            if (res is Operator)
             {
-                (res as Add).left = evaluatedLeft;
+                res = CurrectOperator(res as Operator);
             }
 
-            if (res is Add && !((evaluatedRight = (res as Add).right.Evaluate()) is Error))
+            if (!((evaluatedRes = res.Evaluate()) is Error))
             {
-                (res as Add).right = evaluatedRight;
+                res = evaluatedRes;
             }
 
             res.parent = parent;
@@ -480,6 +476,22 @@ namespace Ast
             (res as NotNumber).prefix = (left.prefix + right.prefix) as Number;
 
             res.parent = parent;
+            return res;
+        }
+
+        private Operator CurrectOperator(Operator res)
+        {
+            if (res.right is Number && (res.right as Number).IsNegative())
+            {
+                (res.right as Number).ToNegative();
+                return new Sub(res.left, res.right);
+            }
+            else if (res.right is NotNumber && (res.right as NotNumber).prefix.IsNegative())
+            {
+                (res.right as NotNumber).prefix.ToNegative();
+                return new Sub(res.left, res.right);
+            }
+
             return res;
         }
 
@@ -586,7 +598,7 @@ namespace Ast
 
         public override Expression Simplify()
         {
-            Expression evaluatedLeft, evaluatedRight, res = null;
+            Expression evaluatedRes, res = null;
             Operator simplifiedOperator = new Mul(Evaluator.SimplifyExp(left), Evaluator.SimplifyExp(right));
 
             if (simplifiedOperator.left is Number)
@@ -668,19 +680,10 @@ namespace Ast
             {
                 res = simplifiedOperator;
             }
-            //else if ((res as Operator).left.CompareTo((res as Operator).right))
-            //{
-            //    res = new Mul(new Integer(2), (res as Operator).left);
-            //}
 
-            if (res is Mul && !((evaluatedLeft = (res as Mul).left.Evaluate()) is Error))
+            if (!((evaluatedRes = res.Evaluate()) is Error))
             {
-                (res as Mul).left = evaluatedLeft;
-            }
-
-            if (res is Mul && !((evaluatedRight = (res as Mul).right.Evaluate()) is Error))
-            {
-                (res as Mul).right = evaluatedRight;
+                res = evaluatedRes;
             }
 
             res.parent = parent;
@@ -878,7 +881,7 @@ namespace Ast
 
         public override Expression Simplify()
         {
-            Expression evaluatedLeft, evaluatedRight, res = null;
+            Expression evaluatedRes, res = null;
             Operator simplifiedOperator = new Div(Evaluator.SimplifyExp(left), Evaluator.SimplifyExp(right));
 
             if (simplifiedOperator.left is Div)
@@ -902,14 +905,9 @@ namespace Ast
                 res = simplifiedOperator;
             }
 
-            if (res is Div && !((evaluatedLeft = (res as Div).left.Evaluate()) is Error))
+            if (!((evaluatedRes = res.Evaluate()) is Error))
             {
-                (res as Div).left = evaluatedLeft;
-            }
-
-            if (res is Div && !((evaluatedRight = (res as Div).right.Evaluate()) is Error))
-            {
-                (res as Div).right = evaluatedRight;
+                res = evaluatedRes;
             }
 
             res.parent = parent;

@@ -13,6 +13,10 @@ namespace Ast
         {
             return false;
         }
+
+        public abstract bool IsNegative();
+
+        public abstract void ToNegative();
     }
 
     public class Integer : Number
@@ -61,6 +65,21 @@ namespace Ast
         public override Expression Clone()
         {
             return new Integer(value);
+        }
+
+        public override bool IsNegative()
+        {
+            if (value.CompareTo(0) == -1)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public override void ToNegative()
+        {
+            value *= -1;
         }
 
         #region AddWith
@@ -288,6 +307,16 @@ namespace Ast
             return new Rational(numerator.Clone() as Integer, denominator.Clone() as Integer);
         }
 
+        public override bool IsNegative()
+        {
+            return value.IsNegative();
+        }
+
+        public override void ToNegative()
+        {
+            numerator.ToNegative();
+        }
+
         #region AddWith
         public override Expression AddWith(Integer other)
         {
@@ -505,6 +534,21 @@ namespace Ast
             return new Irrational(value);
         }
 
+        public override bool IsNegative()
+        {
+            if (value.CompareTo(0) == -1)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public override void ToNegative()
+        {
+            value *= -1;
+        }
+
         #region AddWith
         public override Expression AddWith(Integer other)
         {
@@ -697,6 +741,16 @@ namespace Ast
         {
             throw new NotImplementedException();
         }
+
+        public override bool IsNegative()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void ToNegative()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class Boolean : Number
@@ -721,6 +775,16 @@ namespace Ast
         public override Expression Clone()
         {
             return new Boolean(value);
+        }
+
+        public override bool IsNegative()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void ToNegative()
+        {
+            throw new NotImplementedException();
         }
     }
 }
