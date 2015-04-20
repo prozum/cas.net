@@ -9,7 +9,7 @@ using Ast;
 
 namespace TaskGen
 {
-    class MainClass : taskItem
+    class MainClass
     {
         enum Units {Distance, Weight, Volume};
         enum DistanceUnits {Metre, Centimetre, Millimetre};
@@ -143,7 +143,10 @@ namespace TaskGen
 
             Console.WriteLine ("how many {0}(s) is {1} {2}(s)", unit1, val, unit2);
 
-            var task = new taskItem ();
+            var mytask = new Task ("funfunfunfunfun", "bretty gud");
+
+            Console.WriteLine (mytask.Solution);
+            Console.WriteLine (mytask.TaskDescription);
 
             return 0;
 
@@ -219,6 +222,9 @@ namespace TaskGen
                 task += Numbers [i + 1];                  
 
             }
+
+            string answer = GetAnswer (task);
+
             return task;
 
         }

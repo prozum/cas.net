@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using ImEx;
 using System.Net;
 using System.Text;
+using DesktopUI;
 
 namespace CAS.NET.Desktop
 {
@@ -66,6 +67,9 @@ namespace CAS.NET.Desktop
             MenuItem addTextView = new MenuItem("TextView");
             addTextView.Activated += (object sender, EventArgs e) => AddTextViewWidget();
 
+            MenuItem addCasTextView = new MenuItem("CasTextView");
+            addCasTextView.Activated += (object sender, EventArgs e) => AddCasTextViewWidget();
+
 
 
             MenuItem serverItem = new MenuItem("Server");
@@ -88,6 +92,7 @@ namespace CAS.NET.Desktop
 
             addMenu.Append(addEntry);
             addMenu.Append(addTextView);
+            addMenu.Append(addCasTextView);
 
             serverMenu.Append(loginItem);
             serverMenu.Append(logoutItem);
@@ -171,7 +176,16 @@ namespace CAS.NET.Desktop
             ShowAll();
         }
 
+        public void AddCasTextViewWidget()
+        {
+            CasTextView ctv = (CasTextView)CasTextViewWidget();
+            listWidget.Add(ctv);
 
+            globalGrid.Attach(MovableWidget(ctv), 1, gridNumber, 1, 1);
+            gridNumber++;
+
+            ShowAll();
+        }
 
         public Widget TextViewWidget()
         {
@@ -191,6 +205,15 @@ namespace CAS.NET.Desktop
             entry.Buffer.Text = "";
 
             return entry;
+        }
+
+        public Widget CasTextViewWidget()
+        {
+            CasTextView ctv = new CasTextView();
+            ctv.HeightRequest = 20;
+            ctv.WidthRequest = 300;
+
+            return ctv;
         }
 
         public void UpdateWorkspace()
@@ -219,6 +242,15 @@ namespace CAS.NET.Desktop
                     mtlmt.type = tv.GetType();
                     byte[] byteTextView = buffer.Serialize(buffer, buffer.RegisterSerializeTagset(null), startIter, endIter);
                     mtlmt.metastring = Encoding.UTF8.GetString(byteTextView);
+
+                    mt.Add(mtlmt);
+                }
+                if (w.GetType() == typeof(CasTextView))
+                {
+                    CasTextView ctv = (CasTextView)w;
+                    MetaType mtlmt = new MetaType();
+                    mtlmt.type = ctv.GetType();
+                    mtlmt.metastring = ctv.SerializeCasTextView();
 
                     mt.Add(mtlmt);
                 }
@@ -569,6 +601,14 @@ namespace CAS.NET.Desktop
                     textView.Buffer = buffer;
 
                     listWidget.Add(textView);
+                }
+                if (item.type == typeof(CasTextView))
+                {
+                    CasTextView ctv = new CasTextView();
+                    Console.WriteLine("Meta: " + item.metastring + " :End Meta");
+                    ctv.DeserializeCasTextView(item.metastring);
+
+                    listWidget.Add(ctv);
                 }
             }
         }
