@@ -7,6 +7,7 @@ namespace DesktopUI
     public class CasMovableWidget
     {
         Grid grid = new Grid();
+        bool isStudentMovable = true;
 
         public CasMovableWidget(Widget widget, List<Widget> listWidget)
         {
@@ -46,6 +47,11 @@ namespace DesktopUI
         public Widget GetMovableWidget()
         {
             return grid;
+        }
+
+        public void SetStudentMovable(bool studentMovable)
+        {
+            isStudentMovable = studentMovable;
         }
     }
 }
