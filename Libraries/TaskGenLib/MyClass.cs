@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using Ast;
 
 namespace TaskGenLib
 {
     public static class TaskGen
     {
-        public static string MakeCalcTask (int varMin, int varMax, int varNum)
+        public static Task MakeCalcTask (int varMin, int varMax, int varNum)
         {
             List<string> Operators = new List<string> ();
             List<int> Numbers = new List<int> ();
 
-            string task = "";
+            string taskS = "";
 
             Random r = new Random (Guid.NewGuid().GetHashCode());
 
@@ -49,13 +50,25 @@ namespace TaskGenLib
                 }
             }
 
-            task += Numbers[0];
+            taskS += Numbers[0];
             for (int i = 0; i < varNum-1; i++) {
-                task += Operators [i];
-                task += Numbers [i + 1];                  
+                taskS += Operators [i];
+                taskS += Numbers [i + 1];                  
 
             }
+
+            var task = new Task (taskS, GetAnswer (taskS));
+
             return task;
         }
+
+        static string GetAnswer (string task)
+        {
+            Parser parser = new Parser (new Evaluator());
+            string answer = parser.Parse (task).Evaluate ().ToString ();
+
+            return answer;
+        }
+
     }
 }

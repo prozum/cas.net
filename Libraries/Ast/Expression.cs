@@ -11,16 +11,10 @@ namespace Ast
 
     public abstract class Expression
     {
-
-        public Evaluator evaluator;
         public Operator parent;
-        public UserDefinedFunction functionCall;
         public abstract Expression Evaluate();
 
-        public virtual void SetFunctionCall(UserDefinedFunction functionCall)
-        {
-            this.functionCall = functionCall;
-        }
+        public virtual void SetFunctionCall(UserDefinedFunction functionCall){ }
 
         public virtual Expression Expand()
         {

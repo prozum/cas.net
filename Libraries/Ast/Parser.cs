@@ -276,40 +276,40 @@ namespace Ast
                 switch (identifier.ToLower())
                 {
                 case "sin":
-                    res = new Sin(identifier.ToLower(), args);
+                    res = new Sin(args);
                     break;
                 case "cos":
-                    res = new Cos(identifier.ToLower(), args);
+                    res = new Cos(args);
                     break;
                 case "tan":
-                    res = new Tan(identifier.ToLower(), args);
+                    res = new Tan(args);
                     break;
                 case "asin":
-                    res = new ASin(identifier.ToLower(), args);
+                    res = new ASin(args);
                     break;
                 case "acos":
-                    res = new ACos(identifier.ToLower(), args);
+                    res = new ACos(args);
                     break;
                 case "atan":
-                    res = new ATan(identifier.ToLower(), args);
+                    res = new ATan(args);
                     break;
                 case "sqrt":
-                    res = new Sqrt(identifier.ToLower(), args);
+                    res = new Sqrt(args);
                     break;
                 case "simplify":
-                    res = new Simplify(identifier.ToLower(), args);
+                    res = new Simplify(args);
                     break;
                 case "expand":
-                    res = new Expand(identifier.ToLower(), args);
+                    res = new Expand(args);
                     break;
                 case "range":
-                    res = new Range(identifier.ToLower(), args);
+                    res = new Range(args);
                     break;
                 case "plot":
-                    res = new Plot(identifier.ToLower(), args);
+                    res = new Plot(args);
                     break;
                 case "solve":
-                    res = new Solve(identifier.ToLower(), args);
+                    res = new Solve(args);
                     break;
                 default:
                     res = new Error(this, identifier + "is not implemented");
@@ -318,10 +318,9 @@ namespace Ast
             }
             else
             {
-                res = new UserDefinedFunction(identifier, args);
+                res = new UserDefinedFunction(identifier, args, evaluator);
             }
 
-            res.evaluator = evaluator;
             return res;
         }
 
@@ -331,7 +330,6 @@ namespace Ast
             res = new Ast.List();
 
             res.elements = ExtractBrackets (evaluator, parseReader, BracketType.Curly);
-            res.evaluator = evaluator;
 
             return res;
         }

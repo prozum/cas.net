@@ -18,7 +18,8 @@ namespace Ast
         public List<Expression> args;
         public List<ArgKind> validArgs;
 
-        public Function(string identifier, List<Expression> args) : base(identifier) 
+        public Function(string identifier, List<Expression> args, Evaluator evaluator)
+            : base(identifier, evaluator) 
         {
             this.args = args;
         }
@@ -166,8 +167,8 @@ namespace Ast
     {
         public Dictionary<string, Expression> tempDefinitions;
 
-        public UserDefinedFunction() : this(null, null) { }
-        public UserDefinedFunction(string identifier, List<Expression> args) : base(identifier, args) { }
+        public UserDefinedFunction() : this(null, null, null) { }
+        public UserDefinedFunction(string identifier, List<Expression> args, Evaluator evaluator) : base(identifier, args, evaluator) { }
 
         public override Expression Evaluate()
         {
@@ -241,154 +242,12 @@ namespace Ast
             return GetValue();
         }
     }
-   
-    public class Plot : Function
+
+    public class Sin : Function, IInvertable
     {
-        public Expression exp;
-        public Symbol sym;
-
-        public Plot() : this(null, null) { }
-        public Plot(string identifier, List<Expression> args) : base(identifier, args)
-        {
-            validArgs = new List<ArgKind>()
-            {
-                ArgKind.Expression,
-                ArgKind.Symbol
-            };
-        }
-
-        public override Expression Evaluate()
-        {
-            return new Error(this, "Cannot evaluate plot");
-        }
-
-        public override Expression Clone()
-        {
-            return MakeClone<Plot>();
-        }
-    }
-
-    public class Solve : Function
-    {
-        Equal equal;
-        Symbol sym;
-
-        public Solve() : this(null, null) { }
-        public Solve(string identifier, List<Expression> args) : base(identifier, args)
-        {
-            validArgs = new List<ArgKind>()
-            {
-                ArgKind.Equation,
-                ArgKind.Symbol
-            };
-        }
-
-        public override Expression Evaluate()
-        {
-            if (!isArgsValid())
-                return new ArgError(this);
-
-            equal = (Equal)args[0];
-            sym = (Symbol)args[1];
-
-            Expression resLeft = new Sub(equal.right, equal.left).Expand();
-            Expression resRight = new Integer(0);
-
-            while (!((resLeft is Symbol) && resLeft.CompareTo(sym)))
-            {
-                if (resLeft is IInvertable)
-                {
-                    if (resLeft is Operator)
-                    {
-                        if (InvertOperator(ref resLeft, ref resRight))
-                        {
-                            return new Error(this, " could not solve " + sym.ToString());
-                        }
-                    }
-                    else if (resLeft is Function)
-                    {
-                        throw new NotImplementedException();
-                    }
-                    else
-                    {
-                        return new Error(this, " could not solve " + sym.ToString());
-                    }
-                }
-                else if (resLeft is ISwappable)
-                {
-                    resLeft = (resLeft as ISwappable).Swap();
-                }
-                else
-                {
-                    return new Error(this, " could not solve " + sym.ToString());
-                }
-            }
-
-            return new Equal(resLeft, Evaluator.SimplifyExp(resRight));
-        }
-
-        private bool InvertOperator(ref Expression resLeft, ref Expression resRight)
-        {
-            Operator op = resLeft as Operator;
-            
-            if (op.right.ContainsVariable(sym) && op.left.ContainsVariable(sym))
-            {
-                throw new NotImplementedException();
-            }
-            else if (op.left.ContainsVariable(sym))
-            {
-                resRight = (op as IInvertable).Inverted(resRight);
-                resLeft = op.left;
-                return false;
-            }
-            else if (op.right.ContainsVariable(sym))
-            {
-                if (op is ISwappable)
-                {
-                    resLeft = (op as ISwappable).Swap();
-                    return false;
-                }
-                else if (op is Div)
-                {
-                    if (!resRight.CompareTo(new Integer(0)))
-                    {
-                        resRight = new Div(op.left, resRight);
-                        resLeft = op.right;
-                        return false;
-                    }
-                    else
-                    {
-                        return true;
-                    }
-                }
-                else if (op is Exp)
-                {
-                    return true;
-                }
-                else
-                {
-                    return true;
-                }
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
-
-            //return true;
-        }
-
-        public override Expression Clone()
-        {
-            return MakeClone<Solve>();
-        }
-    }
-
-
-    public class Sin : Function
-    {
-        public Sin() : this(null, null) { }
-        public Sin(string identifier, List<Expression> args) : base(identifier, args)
+        public Sin() : this(null) { }
+        public Sin(List<Expression> args)
+            : base("sin", args, null)
         {
             validArgs = new List<ArgKind>()
             {
@@ -425,12 +284,20 @@ namespace Ast
         {
             return MakeClone<Sin>();
         }
+
+        public Expression Inverted(Expression other)
+        {
+            List<Expression> newArgs = new List<Expression>();
+            newArgs.Add(other);
+            return new ASin(newArgs);
+        }
     }
 
-    public class ASin : Function
+    public class ASin : Function, IInvertable
     {
-        public ASin() : this(null, null) { }
-        public ASin(string identifier, List<Expression> args) : base(identifier, args)
+        public ASin() : this(null) { }
+        public ASin(List<Expression> args)
+            : base("asin", args, null)
         {
             validArgs = new List<ArgKind>()
             {
@@ -467,12 +334,20 @@ namespace Ast
         {
             return MakeClone<ASin>();
         }
+
+        public Expression Inverted(Expression other)
+        {
+            List<Expression> newArgs = new List<Expression>();
+            newArgs.Add(other);
+            return new Sin(newArgs);
+        }
     }
 
-    public class Cos : Function
+    public class Cos : Function, IInvertable
     {
-        public Cos() : this(null, null) { }
-        public Cos(string identifier, List<Expression> args) : base(identifier, args)
+        public Cos() : this(null) { }
+        public Cos(List<Expression> args)
+            : base("cos", args, null)
         {
             validArgs = new List<ArgKind>()
             {
@@ -509,12 +384,20 @@ namespace Ast
         {
             return MakeClone<Cos>();
     }
+
+        public Expression Inverted(Expression other)
+        {
+            List<Expression> newArgs = new List<Expression>();
+            newArgs.Add(other);
+            return new ACos(newArgs);
+        }
     }
 
-    public class ACos : Function
+    public class ACos : Function, IInvertable
     {
-        public ACos() : this(null, null) { }
-        public ACos(string identifier, List<Expression> args) : base(identifier, args)
+        public ACos() : this(null) { }
+        public ACos(List<Expression> args)
+            : base("acos", args, null)
         {
             validArgs = new List<ArgKind>()
             {
@@ -551,12 +434,20 @@ namespace Ast
         {
             return MakeClone<ACos>();
         }
+
+        public Expression Inverted(Expression other)
+        {
+            List<Expression> newArgs = new List<Expression>();
+            newArgs.Add(other);
+            return new Cos(newArgs);
+        }
     }
 
-    public class Tan : Function
+    public class Tan : Function, IInvertable
     {
-        public Tan() : this(null, null) { }
-        public Tan(string identifier, List<Expression> args) : base(identifier, args)
+        public Tan() : this(null) { }
+        public Tan(List<Expression> args)
+            : base("tan", args, null)
         {
             validArgs = new List<ArgKind>()
             {
@@ -593,12 +484,20 @@ namespace Ast
         {
             return MakeClone<Tan>();
         }
+
+        public Expression Inverted(Expression other)
+        {
+            List<Expression> newArgs = new List<Expression>();
+            newArgs.Add(other);
+            return new ATan(newArgs);
+        }
     }
 
-    public class ATan : Function
+    public class ATan : Function, IInvertable
     {
-        public ATan() : this(null, null) { }
-        public ATan(string identifier, List<Expression> args) : base(identifier, args)
+        public ATan() : this(null) { }
+        public ATan(List<Expression> args)
+            : base("atan", args, null)
         {
             validArgs = new List<ArgKind>()
             {
@@ -635,12 +534,20 @@ namespace Ast
         {
             return MakeClone<ATan>();
         }
+
+        public Expression Inverted(Expression other)
+        {
+            List<Expression> newArgs = new List<Expression>();
+            newArgs.Add(other);
+            return new Tan(newArgs);
+        }
     }
 
-    public class Sqrt : Function
+    public class Sqrt : Function, IInvertable
     {
-        public Sqrt() : this(null, null) { }
-        public Sqrt(string identifier, List<Expression> args) : base(identifier, args)
+        public Sqrt() : this(null) { }
+        public Sqrt(List<Expression> args)
+            : base("sqrt", args, null)
         {
             validArgs = new List<ArgKind>()
             {
@@ -687,12 +594,18 @@ namespace Ast
         {
             return MakeClone<Sqrt>();
         }
+
+        public Expression Inverted(Expression other)
+        {
+            return new Exp(other, new Integer(2));
+        }
     }
 
     public class Negation : Function
     {
-        public Negation() : base(null, null) { }
-        public Negation(string identifier, List<Expression> args) : base(identifier, args)
+        public Negation() : base(null, null, null) { }
+        public Negation(List<Expression> args)
+            : base("negation", args, null)
         {
             validArgs = new List<ArgKind>()
             {
@@ -713,7 +626,8 @@ namespace Ast
 
     public class Simplify : Function
     {
-        public Simplify(string identifier, List<Expression> args) : base(identifier, args)
+        public Simplify(List<Expression> args)
+            : base("simplify", args, null)
         {
             validArgs = new List<ArgKind>()
             {
@@ -737,7 +651,8 @@ namespace Ast
 
     public class Expand : Function
     {
-        public Expand(string identifier, List<Expression> args) : base(identifier, args) 
+        public Expand(List<Expression> args)
+            : base("expand", args, null) 
         {
             validArgs = new List<ArgKind>()
             {
@@ -758,7 +673,8 @@ namespace Ast
 
     public class Range : Function
     {
-        public Range(string identifier, List<Expression> args) : base(identifier, args) 
+        public Range(List<Expression> args)
+            : base("range", args, null) 
         {
             validArgs = new List<ArgKind>()
             {
@@ -810,6 +726,168 @@ namespace Ast
         public override Expression Clone()
         {
             throw new NotImplementedException();
+        }
+    }
+
+    public class Plot : Function
+    {
+        public Expression exp;
+        public Symbol sym;
+
+        public Plot() : this(null) { }
+        public Plot(List<Expression> args)
+            : base("plot", args, null)
+        {
+            validArgs = new List<ArgKind>()
+            {
+                ArgKind.Expression,
+                ArgKind.Symbol
+            };
+        }
+
+        public override Expression Evaluate()
+        {
+            return new Error(this, "Cannot evaluate plot");
+        }
+
+        public override Expression Clone()
+        {
+            return MakeClone<Plot>();
+        }
+    }
+
+    public class Solve : Function
+    {
+        Equal equal;
+        Symbol sym;
+
+        public Solve() : this(null) { }
+        public Solve(List<Expression> args)
+            : base("solve", args, null)
+        {
+            validArgs = new List<ArgKind>()
+            {
+                ArgKind.Equation,
+                ArgKind.Symbol
+            };
+        }
+
+        public override Expression Evaluate()
+        {
+            if (!isArgsValid())
+                return new ArgError(this);
+
+            equal = (Equal)args[0];
+            sym = (Symbol)args[1];
+
+            Expression resLeft = new Sub(equal.left, equal.right).Expand();
+            Expression resRight = new Integer(0);
+
+            Console.WriteLine(equal.ToString());
+            Console.WriteLine(resLeft.ToString() + "=" + resRight.ToString());
+
+            while (!((resLeft is Symbol) && resLeft.CompareTo(sym)))
+            {
+                if (resLeft is IInvertable)
+                {
+                    if (resLeft is Operator)
+                    {
+                        if (InvertOperator(ref resLeft, ref resRight))
+                        {
+                            return new Error(this, " could not solve " + sym.ToString());
+                        }
+                    }
+                    else if (resLeft is Function)
+                    {
+                        if (InvertFunction(ref resLeft, ref resRight))
+                        {
+                            return new Error(this, " could not solve " + sym.ToString());
+                        }
+                    }
+                    else
+                    {
+                        return new Error(this, " could not solve " + sym.ToString());
+                    }
+                }
+                else
+                {
+                    return new Error(this, " could not solve " + sym.ToString());
+                }
+
+                Console.WriteLine(resLeft.ToString() + "=" + resRight.ToString());
+            }
+
+            return new Equal(resLeft, Evaluator.SimplifyExp(resRight));
+        }
+
+        private bool InvertOperator(ref Expression resLeft, ref Expression resRight)
+        {
+            Operator op = resLeft as Operator;
+
+            if (op.right.ContainsVariable(sym) && op.left.ContainsVariable(sym))
+            {
+                throw new NotImplementedException();
+            }
+            else if (op.left.ContainsVariable(sym))
+            {
+                resRight = (op as IInvertable).Inverted(resRight);
+                resLeft = op.left;
+                return false;
+            }
+            else if (op.right.ContainsVariable(sym))
+            {
+                if (op is ISwappable)
+                {
+                    resLeft = (op as ISwappable).Swap();
+                    return false;
+                }
+                else if (op is Div)
+                {
+                    if (!resRight.CompareTo(new Integer(0)))
+                    {
+                        resRight = new Div(op.left, resRight);
+                        resLeft = op.right;
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+                else if (op is Exp)
+                {
+                    return true;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        private bool InvertFunction(ref Expression resLeft, ref Expression resRight)
+        {
+            Function func = resLeft as Function;
+
+            if (func.ContainsVariable(sym))
+            {
+                resRight = (func as IInvertable).Inverted(resRight);
+                resLeft = func.args[0];
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        public override Expression Clone()
+        {
+            return MakeClone<Solve>();
         }
     }
 }

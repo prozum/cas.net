@@ -8,14 +8,18 @@ namespace Ast
 {
     public abstract class Variable : Expression
     {
+        public UserDefinedFunction functionCall;
+        public Evaluator evaluator;
         public string identifier;
         public Number prefix, exponent;
 
-        public Variable(string identifier)
+        public Variable(string identifier) : this(identifier, null) { }
+        public Variable(string identifier, Evaluator evaluator)
         {
             this.exponent = new Integer(1);
             this.prefix = new Integer(1);
             this.identifier = identifier;
+            this.evaluator = evaluator;
         }
 
         protected virtual T MakeClone<T>() where T : Variable, new()
@@ -86,21 +90,21 @@ namespace Ast
         public override Expression Expand()
         {
             Expression res;
-            var symbol = Clone();
+            var variable = Clone();
 
-            (symbol as Variable).prefix = new Integer(1);
-            (symbol as Variable).exponent = new Integer(1);
+            (variable as Variable).prefix = new Integer(1);
+            (variable as Variable).exponent = new Integer(1);
 
-            if (!(symbol as Variable).exponent.CompareTo(new Integer(1)))
+            if (!(variable as Variable).exponent.CompareTo(new Integer(1)))
             {
-                res = new Exp(symbol, exponent);
+                res = new Exp(variable, exponent);
             } 
             else
 	        {
-                res = symbol;
+                res = variable;
 	        }
 
-            if (!(symbol as Variable).prefix.CompareTo(new Integer(1)))
+            if (!(variable as Variable).prefix.CompareTo(new Integer(1)))
             {
                 res = new Mul(prefix, res);
             }
