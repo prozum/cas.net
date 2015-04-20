@@ -90,21 +90,21 @@ namespace Ast
         public override Expression Expand()
         {
             Expression res;
-            var symbol = Clone();
+            var variable = Clone();
 
-            (symbol as Variable).prefix = new Integer(1);
-            (symbol as Variable).exponent = new Integer(1);
+            (variable as Variable).prefix = new Integer(1);
+            (variable as Variable).exponent = new Integer(1);
 
-            if (!(symbol as Variable).exponent.CompareTo(new Integer(1)))
+            if (!(variable as Variable).exponent.CompareTo(new Integer(1)))
             {
-                res = new Exp(symbol, exponent);
+                res = new Exp(variable, exponent);
             } 
             else
 	        {
-                res = symbol;
+                res = variable;
 	        }
 
-            if (!(symbol as Variable).prefix.CompareTo(new Integer(1)))
+            if (!(variable as Variable).prefix.CompareTo(new Integer(1)))
             {
                 res = new Mul(prefix, res);
             }
