@@ -209,7 +209,7 @@ namespace CAS.NET.Desktop
 
         public Widget CasTextViewWidget()
         {
-            CasTextView ctv = new CasTextView();
+            CasTextView ctv = new CasTextView("", true, listWidget);
             ctv.HeightRequest = 20;
             ctv.WidthRequest = 300;
 
@@ -604,7 +604,7 @@ namespace CAS.NET.Desktop
                 }
                 if (item.type == typeof(CasTextView))
                 {
-                    CasTextView ctv = new CasTextView();
+                    CasTextView ctv = new CasTextView("", true, listWidget);
                     Console.WriteLine("Meta: " + item.metastring + " :End Meta");
                     ctv.DeserializeCasTextView(item.metastring);
 

@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 
 namespace Ast
 {
-    public abstract class NotNumber : Expression
+    public abstract class Variable : Expression
     {
         public string identifier;
         public Number prefix, exponent;
 
-        public NotNumber(string identifier)
+        public Variable(string identifier)
         {
             this.exponent = new Integer(1);
             this.prefix = new Integer(1);
             this.identifier = identifier;
         }
 
-        protected virtual T MakeClone<T>() where T : NotNumber, new()
+        protected virtual T MakeClone<T>() where T : Variable, new()
         {
             T res = new T();
             res.identifier = identifier;
@@ -30,7 +30,7 @@ namespace Ast
             return res;
         }
 
-        public override bool ContainsNotNumber(NotNumber other)
+        public override bool ContainsVariable(Variable other)
         {
             if (identifier == other.identifier && this.GetType() == other.GetType() && ((other.functionCall == null && functionCall == null) || ((other.functionCall != null && functionCall != null) && other.functionCall.CompareTo(functionCall))))
             {
@@ -40,7 +40,7 @@ namespace Ast
             {
                 foreach (var item in (this as Function).args)
 	            {
-		            if (item.ContainsNotNumber(other))
+		            if (item.ContainsVariable(other))
                     {
                         return true;
                     }
@@ -48,7 +48,7 @@ namespace Ast
             }
             else if (this is Symbol)
             {
-                return (this as Symbol).GetValue(other).ContainsNotNumber(other);
+                return (this as Symbol).GetValue(other).ContainsVariable(other);
             }
 
             return false;
@@ -88,10 +88,10 @@ namespace Ast
             Expression res;
             var symbol = Clone();
 
-            (symbol as NotNumber).prefix = new Integer(1);
-            (symbol as NotNumber).exponent = new Integer(1);
+            (symbol as Variable).prefix = new Integer(1);
+            (symbol as Variable).exponent = new Integer(1);
 
-            if (!(symbol as NotNumber).exponent.CompareTo(new Integer(1)))
+            if (!(symbol as Variable).exponent.CompareTo(new Integer(1)))
             {
                 res = new Exp(symbol, exponent);
             } 
@@ -100,7 +100,7 @@ namespace Ast
                 res = symbol;
 	        }
 
-            if (!(symbol as NotNumber).prefix.CompareTo(new Integer(1)))
+            if (!(symbol as Variable).prefix.CompareTo(new Integer(1)))
             {
                 res = new Mul(prefix, res);
             }

@@ -1,51 +1,27 @@
 ﻿using System;
 using Gtk;
 using System.Text;
+using System.Collections.Generic;
 
 namespace DesktopUI
 {
     public class CasTextView : Bin
     {
+        bool teacherEditOnly = false;
         TextView textView = new TextView();
-        TextTag boldTag = new TextTag("BoldTag");
+        Type realType;
+        List<Widget> listWidget;
+        Gdk.Window window;
 
-        Toolbar toolbar = new Toolbar();
-        ToolButton toolButtonBold = new ToolButton(Stock.Bold);
-
-        public CasTextView()
+        public CasTextView(string serializedString, bool teacherCanEdit, List<Widget> listWidget)
             : base()
         {
-            Grid grid = new Grid();
-            toolbar.Add(toolButtonBold);
-            textView.Buffer.TagTable.Add(boldTag);
-            toolButtonBold.Clicked += (object sender, EventArgs e) =>
-            {
-                TextIter startIter, endIter;
-                TextBuffer buffer = textView.Buffer;
-                buffer.GetBounds(out startIter, out endIter);
-
-                byte[] byteTextView = buffer.Serialize(buffer, buffer.RegisterSerializeTagset("test"), startIter, endIter);
-                string s = Encoding.UTF8.GetString(byteTextView);
-
-                Console.WriteLine(s);
-
-                if (s.Contains("<attr name=\"weight\" type=\"gint\" value=\"700\" />"))
-                {
-                    buffer.RemoveTag(boldTag, startIter, endIter);                
-                }
-                else
-                {
-                    buffer.ApplyTag(boldTag, startIter, endIter);
-                }
-
-                byteTextView = buffer.Serialize(buffer, buffer.RegisterSerializeTagset("test"), startIter, endIter);
-                s = Encoding.UTF8.GetString(byteTextView);
-//                Console.WriteLine(s);
-            };
-
-            grid.Attach(toolbar, 1, 1, 1, 1);
-            grid.Attach(textView, 1, 2, 1, 1);
-            this.Add(grid);
+            DeserializeCasTextView(serializedString);
+            teacherEditOnly = teacherCanEdit;
+            realType = typeof(CasTextView);
+            this.listWidget = listWidget;
+            this.Window = window;
+            this.Add(textView);
         }
 
         public string SerializeCasTextView()
@@ -65,9 +41,24 @@ namespace DesktopUI
         {
             TextBuffer buffer = textView.Buffer;
             TextIter textIter = buffer.StartIter;
-            buffer.TagTable.Add(boldTag);
             byte[] byteTextView = Encoding.UTF8.GetBytes(serializedTextView);
             buffer.Deserialize(buffer, buffer.RegisterDeserializeTagset("test"), ref textIter, byteTextView, (ulong)byteTextView.Length);
+        }
+
+        public void SetTeacherEditOnly(bool isLocked)
+        {
+            teacherEditOnly = isLocked;
+        }
+
+        public Widget GetMovableWidget()
+        {
+            CasMovableWidget movableWidget = new CasMovableWidget(textView, listWidget);
+            return movableWidget.GetMovableWidget();
+        }
+
+        public Type GetRealType()
+        {
+            return realType;
         }
     }
 }

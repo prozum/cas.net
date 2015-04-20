@@ -25,7 +25,7 @@ namespace Ast
             {
                 if ((exp as Assign).left is UserDefinedFunction)
                 {
-                    if ((exp as Assign).right.ContainsNotNumber((exp as Assign).left as UserDefinedFunction))
+                    if ((exp as Assign).right.ContainsVariable((exp as Assign).left as UserDefinedFunction))
                     {
                         return new MsgData(MsgType.Error, "Evaluator> Can't define function as it self");
                     }
@@ -57,7 +57,7 @@ namespace Ast
                 }
                 else if ((exp as Assign).left is Symbol)
                 {
-                    if ((exp as Assign).right.ContainsNotNumber((exp as Assign).left as Symbol))
+                    if ((exp as Assign).right.ContainsVariable((exp as Assign).left as Symbol))
                     {
                         return new MsgData(MsgType.Error, "Evaluator> Can't define symbol as it self");
                     }

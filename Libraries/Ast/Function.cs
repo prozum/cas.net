@@ -13,7 +13,7 @@ namespace Ast
         Equation
     }
 
-    public abstract class Function : NotNumber
+    public abstract class Function : Variable
     {
         public List<Expression> args;
         public List<ArgKind> validArgs;
@@ -175,7 +175,7 @@ namespace Ast
         }
 
         public Expression GetValue() { return GetValue(this); }
-        public Expression GetValue(NotNumber other)
+        public Expression GetValue(Variable other)
         {
             List<string> functionParemNames;
             Expression res;
@@ -200,7 +200,7 @@ namespace Ast
 
                     res.SetFunctionCall(this);
 
-                    if (res.ContainsNotNumber(other))
+                    if (res.ContainsVariable(other))
                     {
                         return new Error(this, "Could not get value of: " + other.identifier);
                     }
@@ -330,14 +330,18 @@ namespace Ast
         private bool InvertOperator(ref Expression resLeft, ref Expression resRight)
         {
             Operator op = resLeft as Operator;
-
-            if (op.left.ContainsNotNumber(sym) && !op.right.ContainsNotNumber(sym))
+            
+            if (op.right.ContainsVariable(sym) && op.left.ContainsVariable(sym))
+            {
+                throw new NotImplementedException();
+            }
+            else if (op.left.ContainsVariable(sym))
             {
                 resRight = (op as IInvertable).Inverted(resRight);
                 resLeft = op.left;
                 return false;
             }
-            else if (op.right.ContainsNotNumber(sym) && !op.left.ContainsNotNumber(sym))
+            else if (op.right.ContainsVariable(sym))
             {
                 if (op is ISwappable)
                 {
@@ -365,10 +369,6 @@ namespace Ast
                 {
                     return true;
                 }
-            }
-            else if (op.right.ContainsNotNumber(sym) && op.left.ContainsNotNumber(sym))
-            {
-                throw new NotImplementedException();
             }
             else
             {
