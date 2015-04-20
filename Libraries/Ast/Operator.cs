@@ -31,6 +31,18 @@ namespace Ast
             this.priority = priority;
         }
 
+        public void SetRight(Expression exp)
+        {
+            right = exp;
+            right.parent = this;
+        }
+
+        public void SetLeft(Expression exp)
+        {
+            left = exp;
+            left.parent = this;
+        }
+
         public override Expression Evaluate()
         {
             return new Error(this, "Cannot evaluate operator expression!");
