@@ -5,7 +5,7 @@ namespace Ast
 {
     public interface ISwappable
     {
-        Expression Swap();
+        Operator Swap();
     }
 
     public abstract class Operator : Expression
@@ -52,7 +52,6 @@ namespace Ast
         {
             left.SetFunctionCall(functionCall);
             right.SetFunctionCall(functionCall);
-            base.SetFunctionCall(functionCall);
         }
 
         public override bool CompareTo(Expression other)
@@ -64,25 +63,33 @@ namespace Ast
 
             if (thisEvaluated is Error && otherEvaluated is Error)
             {
-                if (thisSimplified is Operator && otherEvaluated is Operator)
+                if (thisSimplified is Operator && otherSimplified is Operator)
                 {
-                    return (thisSimplified as Operator).left.CompareTo((otherEvaluated as Operator).left) && (thisSimplified as Operator).right.CompareTo((otherEvaluated as Operator).right);
+                    if (thisSimplified is ISwappable)
+                    {
+                        return CompareSides(thisSimplified as Operator, otherSimplified as Operator) || CompareSides((thisSimplified as ISwappable).Swap(), otherSimplified as Operator);
+                    }
+                    else
+                    {
+                        return CompareSides(thisSimplified as Operator, otherSimplified as Operator);
+                    }
                 }
                 else
                 {
                     return false;
                 }
             }
-            else if (thisEvaluated is Error)
-            {
-                return false;
-            }
-            else if (otherEvaluated is Error)
+            else if (thisEvaluated is Error || otherEvaluated is Error)
             {
                 return false;
             }
 
             return thisEvaluated.CompareTo(otherEvaluated);
+        }
+
+        private bool CompareSides(Operator exp1, Operator exp2)
+        {
+            return exp1.left.CompareTo(exp2.left) && exp1.right.CompareTo(exp2.right);
         }
 
         public override bool ContainsVariable(Variable other)
@@ -505,7 +512,7 @@ namespace Ast
             return new Sub(other, right);
         }
 
-        public Expression Swap()
+        public Operator Swap()
         {
             return new Add(right, left);
         }
@@ -545,9 +552,9 @@ namespace Ast
             return new Sub(left.Clone(), right.Clone());
         }
 
-        public Expression Swap()
+        public Operator Swap()
         {
-            return new Add(new Mul(new Integer(-1), right), left);
+            return new Add(new Mul(new Integer(-1), right).Simplify(), left);
         }
     }
 
@@ -828,7 +835,7 @@ namespace Ast
             return new Div(other, right);
         }
 
-        public Expression Swap()
+        public Operator Swap()
         {
             return new Mul(right, left);
         }

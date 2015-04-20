@@ -8,14 +8,18 @@ namespace Ast
 {
     public abstract class Variable : Expression
     {
+        public UserDefinedFunction functionCall;
+        public Evaluator evaluator;
         public string identifier;
         public Number prefix, exponent;
 
-        public Variable(string identifier)
+        public Variable(string identifier) : this(identifier, null) { }
+        public Variable(string identifier, Evaluator evaluator)
         {
             this.exponent = new Integer(1);
             this.prefix = new Integer(1);
             this.identifier = identifier;
+            this.evaluator = evaluator;
         }
 
         protected virtual T MakeClone<T>() where T : Variable, new()

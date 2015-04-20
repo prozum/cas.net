@@ -108,6 +108,11 @@ namespace Ast
             return base.Simplify();
         }
 
+        public override void SetFunctionCall(UserDefinedFunction functionCall)
+        {
+            this.functionCall = functionCall;
+        }
+
         public override Expression Clone()
         {
             return MakeClone<Symbol>();
