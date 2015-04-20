@@ -32,21 +32,21 @@ namespace Parser
         {
         }
 
-        public List<Token> Tokenize(string tokenString)
+        public Queue<Token> Tokenize(string tokenString)
         {
             this.tokenString = tokenString;
             this.chars = tokenString.ToCharArray();
 
-            var list = new List<Token> ();
+            var tokens = new Queue<Token> ();
 
             var tok = ScanNext();
             while (tok.kind != TokenKind.EndOfString)
             {
-                list.Add(tok);
+                tokens.Enqueue(tok);
                 tok = ScanNext ();
             }
 
-            return list;
+            return tokens;
         }
 
         private Token ScanNext()
@@ -90,6 +90,10 @@ namespace Parser
                     return new Token(TokenKind.CurlyStart, cur.ToString(), pos);
                 case '}':
                     return new Token(TokenKind.CurlyEnd, cur.ToString(), pos);
+                case ',':
+                    return new Token(TokenKind.Comma, cur.ToString(), pos);
+                case ';':
+                    return new Token(TokenKind.Semicolon, cur.ToString(), pos);
                 default:
                     if (char.IsLetter(cur))
                         return ScanIdentifier();

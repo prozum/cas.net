@@ -31,6 +31,9 @@ namespace Parser
         CurlyStart,
         CurlyEnd,
 
+        Comma,
+        Semicolon,
+
         EndOfString,
         Unknown
     }
