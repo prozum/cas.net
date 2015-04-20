@@ -4,18 +4,18 @@ using System.Net;
 
 namespace DesktopUI
 {
-	public class ServerMenu : Menu
+	public class ServerMenuItem : MenuItem
 	{
 		int privilege;
 		string username;
 		string password;
 
-		public ServerMenu (ref int privilege)
+		public ServerMenuItem (ref int privilege) : base("Server")
 		{
 			this.privilege = privilege;
 
-			MenuItem serverItem = new MenuItem("Server");
-			serverItem.Submenu = this;
+			Menu ServerMenu = new Menu ();
+			this.Submenu = ServerMenu;
 
 			MenuItem loginItem = new MenuItem("Login");
 			loginItem.Activated += (object sender, EventArgs e) => LoginScreen();
@@ -27,8 +27,8 @@ namespace DesktopUI
 				password = null;
 			};
 
-			this.Append (loginItem);
-			this.Append (logoutItem);
+			ServerMenu.Append (loginItem);
+			ServerMenu.Append (logoutItem);
 		}
 
 		void LoginScreen()
