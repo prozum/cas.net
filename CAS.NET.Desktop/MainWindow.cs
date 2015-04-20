@@ -28,6 +28,10 @@ namespace CAS.NET.Desktop
 
             SetSizeRequest(300, 500);
 
+            ShowAll();
+
+            /*
+
             #region Menu
 
             MenuBar menuBar = new MenuBar();
@@ -95,12 +99,21 @@ namespace CAS.NET.Desktop
 
             #endregion
 
+*/
+
             SettingsToolbar toolbar = new SettingsToolbar(ref casFile, ref globalGrid, ref gridNumber, ref mt, ref listWidget, this);
 
-//            Toolbar toolbar = new Toolbar();
+            int i = 0;
 
+            ServerMenu serverMenu = new ServerMenu(ref i);
 
+            MenuBar menubar = new MenuBar();
+            menubar.Add(serverMenu);
 
+            CasTextView textView = new CasTextView("", true, listWidget);
+            textView.WidthRequest = Window.Width;
+            Widget w = textView.GetMovableWidget();
+            globalGrid.Attach(w, 1, 1, 1, 1);
             /*
 
             ToolButton toolButtonNew = new ToolButton(Stock.New);
@@ -145,15 +158,11 @@ namespace CAS.NET.Desktop
 
 
 */
-            vboxWindow.Add(toolbar);
-
+//            vboxWindow.PackStart(menubar, false, false, 2);
+            vboxWindow.PackStart(toolbar, false, false, 2);
             vboxWindow.Add(globalGrid);
-
             Add(vboxWindow);
-
             ShowAll();
-
-
         }
 
         public void AddEntryWidget()

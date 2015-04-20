@@ -8,7 +8,6 @@ namespace DesktopUI
     public class CasTextView : TextView
     {
         bool teacherEditOnly = false;
-        Type realType;
         List<Widget> listWidget;
 
         public CasTextView(string serializedString, bool teacherCanEdit, List<Widget> listWidget)
@@ -16,8 +15,8 @@ namespace DesktopUI
         {
             DeserializeCasTextView(serializedString);
             teacherEditOnly = teacherCanEdit;
-            realType = typeof(CasTextView);
             this.listWidget = listWidget;
+            ShowAll();
         }
 
         public string SerializeCasTextView()
@@ -48,11 +47,6 @@ namespace DesktopUI
         {
             CasMovableWidget movableWidget = new CasMovableWidget(this, listWidget);
             return movableWidget.GetMovableWidget();
-        }
-
-        public Type GetRealType()
-        {
-            return realType;
         }
     }
 }

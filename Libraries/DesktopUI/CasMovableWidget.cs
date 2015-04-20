@@ -4,12 +4,13 @@ using System.Collections.Generic;
 
 namespace DesktopUI
 {
-    public class CasMovableWidget
+    public class CasMovableWidget : Widget
     {
         Grid grid = new Grid();
         bool isStudentMovable = true;
 
         public CasMovableWidget(Widget widget, List<Widget> listWidget)
+            : base()
         {
             Button buttonMoveUp = new Button("↑");
             buttonMoveUp.HeightRequest = 10;
@@ -42,6 +43,8 @@ namespace DesktopUI
             grid.Attach(widget, 1, 1, 1, 2);
             grid.Attach(buttonMoveUp, 2, 1, 1, 1);
             grid.Attach(buttonMoveDown, 2, 2, 1, 1);
+
+            ShowAll();
         }
 
         public Widget GetMovableWidget()
