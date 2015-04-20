@@ -46,11 +46,11 @@ namespace Ast
             return str;
         }
 
-        public override bool ContainsNotNumber(NotNumber other)
+        public override bool ContainsVariable(Variable other)
         {
             foreach (var item in elements)
             {
-                if (item.ContainsNotNumber(other))
+                if (item.ContainsVariable(other))
                 {
                     return true;
                 }

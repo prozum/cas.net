@@ -46,7 +46,7 @@ namespace Ast
             }
         }
 
-        public abstract bool ContainsNotNumber(NotNumber other);
+        public abstract bool ContainsVariable(Variable other);
 
         //public abstract string ToString ();
 
@@ -76,7 +76,7 @@ namespace Ast
             return new Error(this, "Don't support adding " + other.GetType().Name);
         }
 
-        public virtual Expression AddWith(NotNumber other)
+        public virtual Expression AddWith(Variable other)
         {
             return this + other.Evaluate();
         }
@@ -124,7 +124,7 @@ namespace Ast
             return new Error(this, "Don't support subbing " + other.GetType().Name);
         }
 
-        public virtual Expression SubWith(NotNumber other)
+        public virtual Expression SubWith(Variable other)
         {
             return this - other.Evaluate();
         }
@@ -172,7 +172,7 @@ namespace Ast
             return new Error(this, "Don't support multipying " + other.GetType().Name);
         }
 
-        public virtual Expression MulWith(NotNumber other)
+        public virtual Expression MulWith(Variable other)
         {
             return this * other.Evaluate();
         }
@@ -220,7 +220,7 @@ namespace Ast
             return new Error(this, "Don't support diving " + other.GetType().Name);
         }
 
-        public virtual Expression DivWith(NotNumber other)
+        public virtual Expression DivWith(Variable other)
         {
             return this / other.Evaluate();
         }
@@ -268,7 +268,7 @@ namespace Ast
             return new Error(this, "Don't support powering " + other.GetType().Name);
         }
 
-        public virtual Expression ExpWith(NotNumber other)
+        public virtual Expression ExpWith(Variable other)
         {
             return this / other.Evaluate();
         }
@@ -316,7 +316,7 @@ namespace Ast
             return new Error(this, "Don't support greater than " + other.GetType().Name);
         }
 
-        public virtual Expression GreaterThan(NotNumber other)
+        public virtual Expression GreaterThan(Variable other)
         {
             return this > other.Evaluate();
         }
@@ -364,7 +364,7 @@ namespace Ast
             return new Error(this, "Don't support lesser than " + other.GetType().Name);
         }
 
-        public virtual Expression LesserThan(NotNumber other)
+        public virtual Expression LesserThan(Variable other)
         {
             return this < other.Evaluate();
         }
@@ -412,7 +412,7 @@ namespace Ast
             return new Error(this, "Don't support greater than or equal to " + other.GetType().Name);
         }
 
-        public virtual Expression GreaterThanOrEqualTo(NotNumber other)
+        public virtual Expression GreaterThanOrEqualTo(Variable other)
         {
             return this >= other.Evaluate();
         }
@@ -460,7 +460,7 @@ namespace Ast
             return new Error(this, "Don't support lesser than or equal " + other.GetType().Name);
         }
 
-        public virtual Expression LesserThanOrEqualTo(NotNumber other)
+        public virtual Expression LesserThanOrEqualTo(Variable other)
         {
             return this <= other.Evaluate();
         }
