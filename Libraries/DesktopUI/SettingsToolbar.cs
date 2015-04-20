@@ -8,27 +8,39 @@ namespace DesktopUI
 {
 	public class SettingsToolbar : Toolbar
 	{
+		string file;
+		Grid grid;
+		int GridNumber;
+		List<MetaType> meta;
+		List<Widget> widgets;
+
 		public SettingsToolbar (ref string file, ref Grid grid, ref int GridNumber, ref List<MetaType> meta, ref List<Widget> widgets)
 		{
+			this.file = file;
+			this.grid = grid;
+			this.GridNumber = GridNumber;
+			this.meta = meta;
+			this.widgets = widgets;
+
 			ToolButton toolButtonNew = new ToolButton(Stock.New);
 			Insert (toolButtonNew, 0);
 			toolButtonNew.Clicked += delegate
 			{
-				ClearWindow(ref grid, ref GridNumber, ref widgets);
+				ClearWindow();
 			};
 
 			ToolButton toolButtonOpen = new ToolButton(Stock.Open);
 			Insert (toolButtonOpen, 1);
 			toolButtonOpen.Clicked += delegate
 			{
-				OpenFile(ref file, ref meta, ref widgets);
+				OpenFile();
 			};
 
 			ToolButton toolButtonSave = new ToolButton(Stock.Save);
 			Insert(toolButtonSave, 2);
 			toolButtonSave.Clicked += delegate
 			{
-				SaveFile(ref file, ref meta, ref widgets);
+				SaveFile();
 			};
 
 			toolButtonNew.Show ();
@@ -36,7 +48,7 @@ namespace DesktopUI
 			toolButtonSave.Show ();
 		}
 
-		void OpenFile(ref string file, ref List<MetaType> meta, ref List<Widget> widgets)
+		void OpenFile()
 		{
 			OperatingSystem os = Environment.OSVersion;
 			PlatformID pid = os.Platform;
@@ -63,7 +75,7 @@ namespace DesktopUI
 			case PlatformID.Unix:
 			case PlatformID.MacOSX:
 				{
-					var filechooser = new FileChooserDialog ("Open file...", this, FileChooserAction.Open, "Cancel", ResponseType.Cancel, "Open", ResponseType.Accept);
+					FileChooserDialog filechooser = new FileChooserDialog ("Open file...", this, FileChooserAction.Open, "Cancel", ResponseType.Cancel, "Open", ResponseType.Accept);
 
 					filechooser.Filter = new FileFilter ();
 					filechooser.Filter.AddPattern ("*.cas");
@@ -102,7 +114,7 @@ namespace DesktopUI
 			}
 		}
 
-		void SaveFile(ref string file, ref List<MetaType> meta, ref List<Widget> widgets)
+		void SaveFile()
 		{
 			OperatingSystem os = Environment.OSVersion;
 			PlatformID pid = os.Platform;
@@ -141,7 +153,7 @@ namespace DesktopUI
 			case PlatformID.Unix:
 			case PlatformID.MacOSX:
 				{
-					var filechooser = new FileChooserDialog("Save File...", this, FileChooserAction.Save, "Cancel", ResponseType.Cancel, "Save", ResponseType.Accept);
+					FileChooserDialog filechooser = new FileChooserDialog("Save File...", this, FileChooserAction.Save, "Cancel", ResponseType.Cancel, "Save", ResponseType.Accept);
 
 					filechooser.Filter = new FileFilter();
 					filechooser.Filter.AddPattern("*.cas");
@@ -169,7 +181,7 @@ namespace DesktopUI
 			}
 		}
 
-		void UpdateWorkspace(ref List<MetaType> meta, ref List<Widget> widgets)
+		void UpdateWorkspace()
 		{
 			meta.Clear();
 
@@ -210,7 +222,7 @@ namespace DesktopUI
 			}
 		}
 
-		void ClearWindow(ref Grid grid, ref int GridNumber, ref List<Widget> widgets)
+		void ClearWindow()
 		{
 			widgets.Clear();
 
