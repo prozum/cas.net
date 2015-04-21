@@ -3,21 +3,20 @@ using Gtk;
 using System.Collections.Generic;
 using ImEx;
 using System.Text;
+using FileOperation;
 
 namespace DesktopUI
 {
     public class SettingsToolbar : Toolbar
     {
-        string file;
         Grid grid;
         int GridNumber;
         List<MetaType> meta;
         List<Widget> widgets;
         Window window;
 
-        public SettingsToolbar(ref string file, ref Grid grid, ref int GridNumber, ref List<MetaType> meta, ref List<Widget> widgets, Window window)
+        public SettingsToolbar(ref Grid grid, ref int GridNumber, ref List<MetaType> meta, ref List<Widget> widgets, Window window)
         {
-            this.file = file;
             this.grid = grid;
             this.GridNumber = GridNumber;
             this.meta = meta;
@@ -55,48 +54,8 @@ namespace DesktopUI
             OperatingSystem os = Environment.OSVersion;
             PlatformID pid = os.Platform;
 
-            switch (pid)
-            {
-                case PlatformID.Win32S:
-                case PlatformID.Win32Windows:
-                case PlatformID.WinCE:
-                case PlatformID.Win32NT: // <- if one, this is the one we really need
-                    {
-                        var filechooser = new System.Windows.Forms.OpenFileDialog();
-
-                        filechooser.InitialDirectory = "c:\\";
-                        filechooser.Filter = "cas files (*.cas)|*.cas";
-                        filechooser.FilterIndex = 2;
-                        filechooser.RestoreDirectory = true;
-
-                        if (filechooser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                        {
-                            file = System.IO.File.ReadAllText(filechooser.FileName);
-                        }
-
-                        break;
-                    }
-                case PlatformID.Unix:
-                case PlatformID.MacOSX:
-                    {
-                        Object[] parameters = { "Cancel", ResponseType.Cancel, "Open", ResponseType.Accept };
-                        FileChooserDialog filechooser = new FileChooserDialog("Open file...", window, FileChooserAction.Open, parameters);
-
-                        filechooser.Filter = new FileFilter();
-                        filechooser.Filter.AddPattern("*.cas");
-
-                        if (filechooser.Run() == (int)ResponseType.Accept)
-                        {
-                            file = System.IO.File.ReadAllText(filechooser.Filename);
-                        }
-
-                        Console.WriteLine("Line loaded::: " + file);
-
-                        filechooser.Destroy();
-
-                        break;
-                    }
-            }
+			File fileop = new File();
+			string file = fileop.Open(pid, window);
 
             ClearWindow();
 
@@ -143,65 +102,14 @@ namespace DesktopUI
 
             Console.WriteLine(meta.Count);
 
-            file = Export.Serialize(meta);
+            string file = Export.Serialize(meta);
             Console.WriteLine("CAS FILE:::\n" + file);
 
-            switch (pid)
-            {
-
-                case PlatformID.Win32S:
-                case PlatformID.Win32Windows:
-                case PlatformID.WinCE:
-                case PlatformID.Win32NT: // <- if one, this is the one we really need
-                    {
-                        var filechooser = new System.Windows.Forms.SaveFileDialog();
-
-                        filechooser.InitialDirectory = "c:\\";
-                        filechooser.Filter = "cas files (*.cas)|*.cas";
-                        filechooser.FilterIndex = 2;
-                        filechooser.RestoreDirectory = true;
-
-                        if (filechooser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                        {
-                            System.IO.File.WriteAllText(filechooser.FileName, file);
-                        }
-
-                        break;
-                    }
-                case PlatformID.Unix:
-                case PlatformID.MacOSX:
-                    {
-                        Object[] parameters = { "Cancel", ResponseType.Cancel, "Save", ResponseType.Accept };
-                        FileChooserDialog filechooser = new FileChooserDialog("Save File...", window, FileChooserAction.Save, parameters);
-
-                        filechooser.Filter = new FileFilter();
-                        filechooser.Filter.AddPattern("*.cas");
-
-                        if (filechooser.Run() == (int)ResponseType.Accept)
-                        {
-                            Console.WriteLine(filechooser.Name);
-                            if (filechooser.Filename.ToLower().EndsWith(".cas"))
-                            {
-                                System.IO.File.WriteAllText(filechooser.Filename, file);
-                            }
-                            else
-                            {
-                                System.IO.File.WriteAllText(filechooser.Filename + ".cas", file);
-                            }
-                        }
-
-                        filechooser.Destroy();
-
-                        break;
-                    }
-                default:
-                    {
-                        break;
-                    }
-            }
+			File fileop = new File();
+			fileop.Save(pid, window, file);
         }
 
-        void UpdateWorkspace()
+        public void UpdateWorkspace()
         {
             Console.WriteLine("Updating workspace");
 
@@ -248,7 +156,7 @@ namespace DesktopUI
             }
         }
 
-        void ClearWindow()
+        public void ClearWindow()
         {
             widgets.Clear();
 
@@ -260,7 +168,7 @@ namespace DesktopUI
             GridNumber = 1;
         }
 
-        void RecreateListWidget()
+		public void RecreateListWidget()
         {
             Console.WriteLine("Recreating listWidget: " + meta.Count);
             foreach (var item in meta)

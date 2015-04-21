@@ -59,7 +59,7 @@ namespace FileOperation
 			}
 		}
 
-		public string Save(PlatformID pid, Window window, string file)
+		public void Save(PlatformID pid, Window window, string file)
 		{
 			switch (pid)
 			{
@@ -80,7 +80,7 @@ namespace FileOperation
 							System.IO.File.WriteAllText(filechooser.FileName, file);
 						}
 
-						return "Success";
+						break;
 					}
 				case PlatformID.Unix:
 				case PlatformID.MacOSX:
@@ -106,11 +106,11 @@ namespace FileOperation
 
 						filechooser.Destroy();
 
-						return "Success";
+						break;
 					}
 				default:
 					{
-						return null;
+						break;
 					}
 			}
 		}

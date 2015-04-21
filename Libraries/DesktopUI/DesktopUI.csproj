@@ -58,6 +58,7 @@
     <Compile Include="SettingsToolbar.cs" />
     <Compile Include="ServerMenu.cs" />
     <Compile Include="CasMovableWidget.cs" />
+    <Compile Include="CasCalcView.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\GtkSharp.3.1.2\build\net45\GtkSharp.targets" Condition="Exists('..\..\packages\GtkSharp.3.1.2\build\net45\GtkSharp.targets')" />
@@ -68,6 +69,10 @@
     <ProjectReference Include="..\ImEx\ImEx.csproj">
       <Project>{5150E825-D811-4D68-8C0E-86A1F8573561}</Project>
       <Name>ImEx</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FileOperation\FileOperation.csproj">
+      <Project>{E53A7020-0343-4C86-936B-5076B167E2AD}</Project>
+      <Name>FileOperation</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>
