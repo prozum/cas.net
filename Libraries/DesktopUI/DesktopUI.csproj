@@ -59,6 +59,8 @@
     <Compile Include="ServerMenu.cs" />
     <Compile Include="CasMovableWidget.cs" />
     <Compile Include="CasCalcView.cs" />
+    <Compile Include="Open.cs" />
+    <Compile Include="Save.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\GtkSharp.3.1.2\build\net45\GtkSharp.targets" Condition="Exists('..\..\packages\GtkSharp.3.1.2\build\net45\GtkSharp.targets')" />
@@ -73,6 +75,10 @@
     <ProjectReference Include="..\FileOperation\FileOperation.csproj">
       <Project>{E53A7020-0343-4C86-936B-5076B167E2AD}</Project>
       <Name>FileOperation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ast\Ast.csproj">
+      <Project>{82C03E10-075F-411C-A1F1-D5506C62BE1C}</Project>
+      <Name>Ast</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>
