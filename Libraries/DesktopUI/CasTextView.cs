@@ -29,7 +29,6 @@ namespace DesktopUI
             Console.WriteLine(serializedTextView);
 
             return byteTextView;
-            ;
         }
 
         public void DeserializeCasTextView(string serializedTextView)
