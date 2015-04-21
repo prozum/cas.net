@@ -4,7 +4,7 @@ using System.IO;
 using System.Globalization;
 using System.Collections.Generic;
 
-namespace Parser
+namespace Ast
 {
     public class Scanner
     {

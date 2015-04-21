@@ -1,280 +1,284 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
 using System.Collections.Generic;
-using System.Globalization;
 
 namespace Ast
 {
     public class Parser
     {
-        static readonly char[] opValidChars = {'=', '<', '>', '+', '-', '*', '/', '^', ':'};
-        static readonly string[] builtInFunctions = { "sin", "cos", "tan", "asin", "acos", "atan", "sqrt", "simplify", "expand", "range", "plot", "solve" };
-
+        Scanner scanner;
         Evaluator eval;
 
         public Parser() : this(new Evaluator()) { }
-        public Parser(Evaluator eval)
+        public Parser (Evaluator eval)
         {
+            this.scanner = new Scanner();
             this.eval = eval;
         }
 
         public Expression Parse(string parseString)
         {
-            return Parse(new Evaluator (), parseString);
+            return Parse(scanner.Tokenize(parseString));
         }
 
-        public Expression Parse(Evaluator evaluator, string parseString)
+        public Expression Parse(Queue<Token> tokens)
         {
-            var exs = new Stack<Expression> ();
-            var ops = new Stack<Operator> ();
+            var exs = new Queue<Expression> ();
+            var ops = new Queue<Operator> ();
+            bool first = true;
 
-            var parseReader = new StringReader (parseString);
-
-            List<Expression> parExp;
-
-            Expression curExp;
-            int curChar;
-
-            while ((curChar = parseReader.Peek()) != -1) 
+            while (tokens.Count > 0)
             {
-                // Skip whitespace
-                while (char.IsWhiteSpace ((char)curChar)) 
+                var tok = tokens.Dequeue();
+                switch (tok.kind)
                 {
-                    curChar = parseReader.Read();
+                    case TokenKind.Integer:
+                    case TokenKind.Decimal:
+                    case TokenKind.ImaginaryInt:
+                    case TokenKind.ImaginaryDec:
+                        exs.Enqueue(ParseNumber(tok));
+                        break;
+
+                    case TokenKind.Identifier:
+                        if (tokens.Count > 0 && tokens.Peek().kind == TokenKind.ParenthesesStart)
+                            exs.Enqueue(ParseFunction(tok, tokens));
+                        else
+                            exs.Enqueue(new Symbol(eval, tok.value));
+                        break;
+
+                    case TokenKind.Assign:
+                        ops.Enqueue(new Assign());
+                        break;
+                    case TokenKind.Equal:
+                        ops.Enqueue(new Equal());
+                        break;
+                    case TokenKind.BooleanEqual:
+                        ops.Enqueue(new BooleanEqual());
+                        break;
+                    case TokenKind.LesserOrEqual:
+                        ops.Enqueue(new LesserOrEqual());
+                        break;
+                    case TokenKind.GreaterOrEqual:
+                        ops.Enqueue(new GreaterOrEqual());
+                        break;
+                    case TokenKind.Lesser:
+                        ops.Enqueue(new Lesser());
+                        break;
+                    case TokenKind.Greater:
+                        ops.Enqueue(new Greater());
+                        break;
+                    case TokenKind.Add:
+                        ops.Enqueue(new Add());
+                        break;
+                    case TokenKind.Sub:
+                        if (first)
+                            exs.Enqueue(ParseNumber(tokens.Dequeue(),true));
+                        else
+                            ops.Enqueue(new Sub());
+                        break;
+                    case TokenKind.Mul:
+                        ops.Enqueue(new Mul());
+                        break;
+                    case TokenKind.Div:
+                        ops.Enqueue(new Div());
+                        break;
+                    case TokenKind.Exp:
+                        ops.Enqueue(new Exp());
+                        break;
+                    
+                    case TokenKind.ParenthesesStart:
+                        exs.Enqueue(ExtractBrackets(tokens, TokenKind.None)[0]);
+                        break;
+                    case TokenKind.SquareStart:
+                    case TokenKind.CurlyStart:
+                        var list = new List();
+                        list.elements = ExtractBrackets(tokens, TokenKind.Comma);
+                        exs.Enqueue(list);
+                        break;
                 }
+                first = false;
+            }
 
-                // Functions & Variables
-                if (char.IsLetter((char)curChar)) 
-                {
-                    curExp = ParseIdentifier(evaluator, parseReader);
-                    exs.Push(curExp);
-                } 
-                // Numbers
-                else if (char.IsDigit((char)curChar))
-                {
-                    curExp = ParseNumber(parseReader);
-                    exs.Push(curExp);
+            return CreateAst(exs, ops);
+        }
 
-                } 
-                // Parenthesis
-                else if (curChar.Equals('('))
-                {
-                    parExp = ExtractBrackets(evaluator, parseReader, BracketType.Parenthesis); 
+        public Expression CreateAst(Queue<Expression> exs, Queue<Operator> ops)
+        {
+            Expression left,right;
+            Operator curOp, nextOp,top;
 
-                    switch (parExp.Count())
+            if (exs.Count == 0)
+                return new Error(this, "No expressions");
+            if (exs.Count == 1)
+                return exs.Dequeue();
+                
+
+            top = ops.Peek();
+            left = exs.Dequeue();
+
+            while (ops.Count > 0)
+            {
+                curOp = ops.Dequeue();
+                curOp.Left = left;
+
+                if (ops.Count > 0)
+                {
+                    nextOp = ops.Peek();
+
+                    if (curOp.priority >= nextOp.priority)
                     {
-                        case 0:
-                            curExp = new Error(this, "Empty parenthesis");
-                            break;
-                        case 1:
-                            curExp = parExp[0];
-                            exs.Push(curExp);
-                            break;
-                        default:
-                            curExp = new Error(this, "Invalid ',' in parenthesis");
-                            break;
-                    }
+                        right = exs.Dequeue();
+                        curOp.Right =right;
 
-                } 
-                // Lists
-                else if (curChar.Equals('{'))
-                {
-                    curExp = ParseList(evaluator, parseReader);
-                    exs.Push(curExp);
-                }
-                // Operators
-                else if (opValidChars.Contains ((char)curChar)) 
-                {
-                    curExp = ParseOperator (parseReader);
-                    if (curExp is Operator)
+                        if (top.priority > nextOp.priority)
+                        {
+                            left = top;
+                            top = nextOp;
+                        }
+                        else
+                        {
+                            left = curOp;
+                            top.Right = nextOp;
+                        }
+                    }
+                    else
                     {
-                        ops.Push ((Operator)curExp);
-                    }
-                } 
-                else 
-                {
-                    curExp = new Error(this, "Error in: " + parseReader.ToString());
-                }
+                        left = exs.Dequeue();
 
-                if (curExp is Error) 
+                        right = nextOp;
+                        curOp.Right = right;
+                    }
+                }
+                else
                 {
-                    return curExp;
+                    right = exs.Dequeue();
+                    curOp.Right = right;
                 }
             }
 
-            return CreateAst (exs, ops);
+            return top;
         }
 
-        enum BracketType { Parenthesis, Curly };
-
-        private List<Expression> ExtractBrackets(Evaluator evaluator, StringReader parseReader, BracketType type)
+        public List<Expression> ExtractBrackets(Queue<Token> tokens, TokenKind seperator)
         {
             List<Expression> exs = new List<Expression> ();
 
-            char Start, End, Sep;
+            TokenKind startBracket = tokens.Dequeue().kind;
+            TokenKind endBracket;
+            Token tok;
 
-            char curChar;
-            string substring = "";
+            int start = 1;
+            int end = 0;
 
-            int parentEnd = 0;
-            int parentStart = 0;
-
-            switch (type)
+            switch (startBracket)
             {
-                case BracketType.Parenthesis:
-                    Start = '(';
-                    End = ')';
-                    Sep = ',';
+                case TokenKind.ParenthesesStart:
+                    endBracket = TokenKind.ParenthesesEnd;
                     break;
-                case BracketType.Curly:
-                    Start = '{';
-                    End = '}';
-                    Sep = ',';
+                case TokenKind.SquareStart:
+                    endBracket = TokenKind.SquareEnd;
+                    break;
+                case TokenKind.CurlyStart:
+                    endBracket = TokenKind.CurlyEnd;
                     break;
                 default:
-                    exs.Add (new Error(this, "Invalid> BracketType"));
+                    // This can never happen...
                     return exs;
             }
 
-            if (((char)parseReader.Peek()).Equals(Start))
+            var subTokens = new Queue<Token>();
+
+            while (tokens.Count > 0)
             {
-                parseReader.Read();
-
-                while (!((char)parseReader.Peek()).Equals(End) || (parentStart != parentEnd))
+                tok = tokens.Dequeue();
+                if (tok.kind == startBracket)
                 {
-                    curChar = (char)parseReader.Peek();
-                    
-                    if (curChar.Equals(Start))
-                    {
-                        substring += curChar;
-                        parentStart++;
-                    } 
-                    else if (curChar.Equals(End))
-                    {
-                        substring += curChar;
-                        parentEnd++;
-                    }
-                    else if (curChar.Equals(Sep))
-                    {
-                        exs.Add (Parse(evaluator, substring));
-                        substring = "";
-                    }
-                    else if (curChar.Equals('\uffff'))
-                    {
-                        exs.Add (new Error(this, "No end char"));
-                        return exs;
-                    }
-                    else
-                    {
-                        substring += curChar;
-                    }
-
-                    parseReader.Read();
+                    start++;
+                    subTokens.Enqueue(tok);
                 }
-                parseReader.Read();
+                else if (tok.kind == endBracket)
+                {
+                    end++;
+                    if (end != start)
+                        subTokens.Enqueue(tok);
+                    else
+                        break;
+                }
+                else if (tok.kind == seperator)
+                {
+                    exs.Add(Parse(subTokens));
+                }
+                else
+                {
+                    subTokens.Enqueue(tok);
+                }
             }
 
-            exs.Add (Parse(evaluator, substring));
-            
+            exs.Add(Parse(subTokens));
+
             return exs;
         }
 
-        private Expression CreateAst(Stack<Expression> exs, Stack<Operator> ops)
+        public Expression ParseNumber(Token tok, bool negative = false)
         {
-            Expression left,right;
-            Operator curOp = null, nextOp;
+            Int64 intRes;
+            decimal decRes;
 
-            if (exs.Count == 1) 
+            switch (tok.kind)
             {
-                return exs.Pop ();
-            }
-            else if (exs.Count == 0)
-            {
-                return new Error(this, "No expressions found");
-            }
-
-            right = exs.Pop ();
-
-            while (ops.Count > 0 ) 
-            {
-                curOp = ops.Pop ();
-                curOp.Right = right;
-                right.parent = curOp;
-
-                if (ops.Count > 0) 
-                {
-                    nextOp = ops.Peek ();
-
-                    if (curOp.priority >= nextOp.priority) 
+                case TokenKind.Integer:
+                    if (Int64.TryParse(tok.value, out intRes))
                     {
-                        curOp.Left = exs.Pop ();
-
-                        if (curOp.parent == null) 
-                        {
-                            curOp.parent = nextOp;
-                            right = curOp;
-                        } 
-                        else 
-                        {
-                            curOp.parent.parent = nextOp;
-                            right = curOp.parent;
-                        }
-                    } 
-                    else
-                    {
-                        curOp.Left = nextOp;
-                        nextOp.parent = curOp;
-                        right = exs.Pop ();
+                        if (negative)
+                            return new Integer(-intRes);
+                        else
+                            return new Integer(intRes);
                     }
-                } 
-                else 
-                {
-                    left = exs.Pop ();
-                    left.parent = curOp;
-                    curOp.Left = left;
-                }
-
+                    else
+                        return new Error(this, "Int overflow");
+                case TokenKind.Decimal:
+                    if (decimal.TryParse(tok.value, out decRes))
+                    {
+                        if (negative)
+                            return new Irrational(-decRes);
+                        else
+                            return new Irrational(decRes);
+                    }
+                    else
+                        return new Error(this, "Decimal overflow");
+                case TokenKind.ImaginaryInt:
+                    if (Int64.TryParse(tok.value, out intRes))
+                    {
+                        if (negative)
+                            return new Complex(new Integer(0), new Integer(-intRes));
+                        else
+                            return new Complex(new Integer(0), new Integer(intRes));
+                    }
+                    else
+                        return new Error(this, "Imaginary int overflow");
+                case TokenKind.ImaginaryDec:
+                    if (decimal.TryParse(tok.value, out decRes))
+                    {
+                        if (negative)
+                            return new Complex(new Integer(0), new Irrational(-decRes));
+                        else
+                            return new Complex(new Integer(0), new Irrational(decRes));
+                    }
+                    else
+                        return new Error(this, "Imaginary decimal overflow");
+                default:
+                    return new Error(this, "this should never happen");
             }
 
-            while (curOp.parent != null) 
-            {
-                curOp = (Operator)curOp.parent;
-            }
-
-            return curOp;
         }
 
-        private Expression ParseIdentifier(Evaluator evaluator, StringReader parseReader)
-        {
-            string identifier = "";
-            int curChar;
-
-            while ((curChar = parseReader.Peek()) != -1 && char.IsLetterOrDigit ((char)curChar))
-            {
-                identifier += (char)curChar;
-                parseReader.Read ();
-            }
-
-            if ((char)curChar == '(')
-            {
-                return ParseFunction(evaluator, identifier, parseReader);
-            } 
-            else 
-            {
-                return new Symbol(evaluator, identifier);
-            }
-        }
-
-        private Expression ParseFunction(Evaluator evaluator, string identifier, StringReader parseReader)
+        public Expression ParseFunction(Token tok, Queue<Token> tokens)
         {
             Expression res;
-            var args = ExtractBrackets (evaluator, parseReader, BracketType.Parenthesis);
 
-            if (builtInFunctions.Contains(identifier.ToLower()))
+            var args = ExtractBrackets (tokens, TokenKind.Comma);
+
+            switch (tok.value.ToLower())
             {
-                switch (identifier.ToLower())
-                {
                 case "sin":
                     res = new Sin(args);
                     break;
@@ -312,127 +316,12 @@ namespace Ast
                     res = new Solve(args);
                     break;
                 default:
-                    res = new Error(this, identifier + " is not implemented");
+                    res = new UserDefinedFunction(tok.value.ToLower(), args, eval);
                     break;
-                }
-            }
-            else
-            {
-                res = new UserDefinedFunction(identifier, args, evaluator);
             }
 
             return res;
-        }
 
-        private Expression ParseList(Evaluator evaluator, StringReader parseReader)
-        {
-            Ast.List res;
-            res = new Ast.List();
-
-            res.elements = ExtractBrackets (evaluator, parseReader, BracketType.Curly);
-
-            return res;
-        }
-
-        enum NumberType { Integer, Rational, Irrational, Complex };
-
-        public Expression ParseNumber(StringReader parseReader)
-        {
-            NumberType resultType = NumberType.Integer;
-            string number = "";
-
-            do
-            {
-                if (char.IsDigit((char)parseReader.Peek()))
-                {
-                    number += (char)parseReader.Read();
-                }
-                else if ((char)parseReader.Peek() == NumberFormatInfo.CurrentInfo.CurrencyDecimalSeparator[0])
-                {
-                    //More than one dot. Error!
-                    if (resultType == NumberType.Irrational )
-                    {
-                        return new Error(this, "unexpected extra decimal seperator in: " + parseReader.ToString());
-                    }
-
-                    number += (char)parseReader.Read();
-                    resultType = NumberType.Irrational;
-                }
-                else if ((char)parseReader.Peek() == 'i')
-                {
-                    resultType = NumberType.Complex;
-                    break;
-                }
-                else
-                {
-                    break;
-                }
-            } while (parseReader.Peek() != -1);
-
-            switch (resultType)
-            {
-                case NumberType.Integer:
-                    Int64 intRes;
-                    if (Int64.TryParse(number, out intRes))
-                        return new Integer(intRes);
-                    else
-                        return new Error(this, "Integer overflow");
-                case NumberType.Irrational:
-                    decimal decRes;
-                    if (decimal.TryParse(number, out decRes))
-                        return new Irrational(decRes);
-                    else
-                        return new Error(this, "Decimal overflow");
-                case NumberType.Complex:
-                    return new Error(this, "Complex numbers not supported yet");
-                    //return new Complex();
-                default:
-                    return new Error(this, "unknown error in:" + parseReader.ToString());
-            }
-        }
-
-
-        enum OperatorType { Equal, LesserThan, GreaterThan, Plus, Minus, Mul, Div };
-
-        private Expression ParseOperator(StringReader parseReader)
-        {
-            string op = ((char)parseReader.Read()).ToString();
-
-            if (opValidChars.Contains((char)parseReader.Peek())) {
-
-                op += (char)parseReader.Read();
-            }
-                
-            switch (op)
-            {
-            case ":=":
-                return new Assign();
-            case "=":
-//                return new Assign();
-                return new Equal ();
-            case "==":
-                return new BooleanEqual();
-            case "<=":
-                return new LesserOrEqual();
-            case ">=":
-                return new GreaterOrEqual();
-            case "<":
-                return new Lesser ();
-            case ">":
-                return new Greater ();
-            case "+":
-                return new Add ();
-            case "-":
-                return new Sub ();
-            case "*":
-                return new Mul ();
-            case "/":
-                return new Div ();
-            case "^":
-                return new Exp ();
-            default:
-                return new Error(this, "operator not supported: " + op);
-            }
         }
     }
 }

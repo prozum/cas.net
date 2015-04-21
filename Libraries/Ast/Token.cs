@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Parser
+namespace Ast
 {
     public enum TokenKind
     {

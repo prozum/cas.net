@@ -47,6 +47,8 @@
     <Compile Include="List.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="EvalData.cs" />
+    <Compile Include="Scanner.cs" />
+    <Compile Include="Token.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />
