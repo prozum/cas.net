@@ -396,7 +396,6 @@ namespace Ast
                 res = evaluatedRes;
             }
 
-            res.parent = parent;
             return res;
         }
 
@@ -518,7 +517,7 @@ namespace Ast
         }
     }
 
-    public class Sub : Operator, ISwappable
+    public class Sub : Operator, ISwappable, IInvertable
     {
         public Sub() : base("-", 20) { }
         public Sub(Expression left, Expression right) : base(left, right, "-", 20) { }
@@ -543,13 +542,17 @@ namespace Ast
             right = Evaluator.SimplifyExp(new Mul(new Integer(-1), right));
             res = new Add(left, right).Simplify();
 
-            res.parent = parent;
             return res;
         }
 
         public override Expression Clone()
         {
             return new Sub(left.Clone(), right.Clone());
+        }
+
+        public Expression Inverted(Expression other)
+        {
+            return new Add(other, right);
         }
 
         public Operator Swap()
@@ -693,7 +696,6 @@ namespace Ast
                 res = evaluatedRes;
             }
 
-            res.parent = parent;
             return res;
         }
 
@@ -917,7 +919,6 @@ namespace Ast
                 res = evaluatedRes;
             }
 
-            res.parent = parent;
             return res;
         }
 
@@ -1032,7 +1033,6 @@ namespace Ast
                 (res as Exp).right = evaluatedRight;
             }
 
-            res.parent = parent;
             return res;
         }
 

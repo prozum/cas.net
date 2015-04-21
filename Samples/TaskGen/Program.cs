@@ -1,5 +1,5 @@
 ﻿// TODO 
-//Omkreds, enhedskonvertering, procentregning
+//Omkreds, procentregning
 //afrunding, vinkler
 //(brøker?)
 
@@ -172,7 +172,7 @@ namespace TaskGen
             return task;
         }
 
-        static string MakeCalcTask (int varMin, int varMax, int varNum)
+        static TaskGen.Task MakeCalcTask (int varMin, int varMax, int varNum)
         {
             List<string> Operators = new List<string> ();
             List<int> Numbers = new List<int> ();
@@ -225,7 +225,9 @@ namespace TaskGen
 
             string answer = GetAnswer (task);
 
-            return task;
+            var myTask = new Task (task, answer);
+
+            return myTask;
 
         }
 
@@ -248,7 +250,8 @@ namespace TaskGen
 
         public static void Main ()
         {
-            string task;
+            var task = new Task ("", "");
+            string taskstring = "";
             string input = "";
             int varMin = 1;
             int varMax = 10;
@@ -269,7 +272,6 @@ namespace TaskGen
                     task = MakeCalcTask (varMin, varMax, varNum);
                     Console.Clear ();
                     Console.WriteLine (task);
-                    Console.WriteLine (GetAnswer (task));
                 } else if (In.Key == ConsoleKey.D2) {
                     Console.Clear ();
                     Console.Write ("enter new value: ");
@@ -286,7 +288,7 @@ namespace TaskGen
                     input = Console.ReadLine ();
                     int.TryParse (input, out varNum);
                 } else if (In.Key == ConsoleKey.A) {
-                    task = makeAreaTask (varMin, varMax);
+                    taskstring = makeAreaTask (varMin, varMax);
                     Console.Clear ();
                     Console.WriteLine (task);
                 }

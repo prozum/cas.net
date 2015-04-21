@@ -15,20 +15,23 @@
       <Method Name="Operator" Hidden="true" />
       <Method Name="SubWith" Hidden="true" />
     </Members>
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
       <HashCode>ACGIIAAAAAQAAAQkQAAQggAAAAAIAAAAQgAAIAAAkAA=</HashCode>
       <FileName>Operator.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Interface Name="Ast.IInvertable" Collapsed="true">
-    <Position X="83.25" Y="1.75" Width="1.5" />
+  <Interface Name="Ast.IInvertable">
+    <Position X="18.25" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Expression.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="Ast.ISwappable" Collapsed="true">
-    <Position X="85" Y="1.75" Width="1.5" />
+  <Interface Name="Ast.ISwappable">
+    <Position X="18.25" Y="3" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Operator.cs</FileName>
