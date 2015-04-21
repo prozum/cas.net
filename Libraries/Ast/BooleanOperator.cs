@@ -13,12 +13,12 @@ namespace Ast
 
         public override Expression Evaluate()
         {
-            return new Boolean(left.CompareTo(right));
+            return new Boolean(Left.CompareTo(Right));
         }
 
         public override Expression Clone()
         {
-            return new BooleanEqual(left.Clone(), right.Clone());
+            return new BooleanEqual(Left.Clone(), Right.Clone());
         }
     }
 
@@ -29,12 +29,12 @@ namespace Ast
 
         public override Expression Evaluate()
         {
-            return left < right;
+            return Left < Right;
         }
 
         public override Expression Clone()
         {
-            return new Lesser(left.Clone(), right.Clone());
+            return new Lesser(Left.Clone(), Right.Clone());
         }
     }
 
@@ -45,12 +45,12 @@ namespace Ast
 
         public override Expression Evaluate()
         {
-            return left <= right;
+            return Left <= Right;
         }
 
         public override Expression Clone()
         {
-            return new LesserOrEqual(left.Clone(), right.Clone());
+            return new LesserOrEqual(Left.Clone(), Right.Clone());
         }
     }
 
@@ -61,12 +61,12 @@ namespace Ast
 
         public override Expression Evaluate()
         {
-            return left > right;
+            return Left > Right;
         }
 
         public override Expression Clone()
         {
-            return new Greater(left.Clone(), right.Clone());
+            return new Greater(Left.Clone(), Right.Clone());
         }
     }
 
@@ -77,12 +77,12 @@ namespace Ast
 
         public override Expression Evaluate()
         {
-            return left >= right;
+            return Left >= Right;
         }
 
         public override Expression Clone()
         {
-            return new GreaterOrEqual(left.Clone(), right.Clone());
+            return new GreaterOrEqual(Left.Clone(), Right.Clone());
         }
     }
 }
