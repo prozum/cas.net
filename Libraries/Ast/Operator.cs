@@ -20,7 +20,8 @@ namespace Ast
             }
             set
             {
-                value.parent = this;
+                if (value != null)
+                    value.parent = this;
                 _left = value;
             }
         }
@@ -33,7 +34,8 @@ namespace Ast
             }
             set
             {
-                value.parent = this;
+                if (value != null)
+                    value.parent = this;
                 _right = value;
             }
         }
