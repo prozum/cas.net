@@ -127,9 +127,9 @@ namespace Ast
                     if (curOp.priority >= nextOp.priority)
                     {
                         right = exs.Dequeue();
-                        curOp.Right =right;
+                        curOp.Right = right;
 
-                        if (top.priority > nextOp.priority)
+                        if (top.priority >= nextOp.priority)
                         {
                             left = top;
                             top = nextOp;
