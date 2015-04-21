@@ -4,23 +4,29 @@ using Gtk;
 
 namespace DesktopUI
 {
-	public class TextViewList : Widget
+	public class TextViewList : Grid
 	{
-		Grid grid = new Grid();
-		List<TextView> castextviews = new List<TextView>();
+		List<MovableCasTextView> castextviews = new List<MovableCasTextView>();
 
 		public TextViewList() : base()
 		{
+			
 		}
 
-		public Widget GetMovableWidget()
+		public void Insert(string serializedString, bool teacherCanEdit)
 		{
-			throw new NotImplementedException();
+			Attach(new MovableCasTextView(serializedString, teacherCanEdit), 1, Children.Length, 1, 1);
+			ShowAll();
 		}
 
 		public void Clear()
 		{
-			throw new NotImplementedException();
+			foreach (Widget widget in this)
+			{
+				Remove(widget);
+			}
+
+			ShowAll();
 		}
 	}
 }

@@ -11,9 +11,9 @@ namespace DesktopUI
 		Button ButtonMoveDown = new Button("↓");
 		/* insert arror moving thingy here */
 
-		public MovableCasTextView(string serializedString, bool teacherCanEdit, List<Widget> listWidget)
+		public MovableCasTextView(string serializedString, bool teacherCanEdit)
 		{
-			textview = new CasTextView(serializedString, teacherCanEdit, listWidget);
+			textview = new CasTextView(serializedString, teacherCanEdit);
 
 			Attach(textview, 1, 1, 1, 2);
 			Attach(ButtonMoveUp, 2, 1, 1, 1);

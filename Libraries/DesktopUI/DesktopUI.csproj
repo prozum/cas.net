@@ -55,8 +55,6 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CasTextView.cs" />
-    <Compile Include="SettingsToolbar.cs" />
-    <Compile Include="CasMovableWidget.cs" />
     <Compile Include="CasCalcView.cs" />
     <Compile Include="OpenToolButton.cs" />
     <Compile Include="SaveToolButton.cs" />
@@ -81,10 +79,6 @@
     <ProjectReference Include="..\FileOperation\FileOperation.csproj">
       <Project>{E53A7020-0343-4C86-936B-5076B167E2AD}</Project>
       <Name>FileOperation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Ast\Ast.csproj">
-      <Project>{82C03E10-075F-411C-A1F1-D5506C62BE1C}</Project>
-      <Name>Ast</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>
