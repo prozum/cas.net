@@ -783,8 +783,8 @@ namespace Ast
             Expression resLeft = Evaluator.SimplifyExp(new Sub(equal.Left, equal.Right)).Expand();
             Expression resRight = new Integer(0);
 
-            Console.WriteLine(equal.ToString());
-            Console.WriteLine(resLeft.ToString() + "=" + resRight.ToString());
+            System.Diagnostics.Debug.WriteLine(equal.ToString());
+            System.Diagnostics.Debug.WriteLine(resLeft.ToString() + "=" + resRight.ToString());
 
             while (!((resLeft is Symbol) && resLeft.CompareTo(sym)))
             {
@@ -814,7 +814,7 @@ namespace Ast
                     return new Error(this, " could not solve " + sym.ToString());
                 }
 
-                Console.WriteLine(resLeft.ToString() + "=" + resRight.ToString());
+                System.Diagnostics.Debug.WriteLine(resLeft.ToString() + "=" + resRight.ToString());
             }
 
             return new Equal(resLeft, Evaluator.SimplifyExp(resRight));

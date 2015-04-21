@@ -28,14 +28,11 @@ namespace Parser
             }
         }
 
-        public Scanner ()
-        {
-        }
-
         public Queue<Token> Tokenize(string tokenString)
         {
             this.tokenString = tokenString;
             this.chars = tokenString.ToCharArray();
+            this.pos = 0;
 
             var tokens = new Queue<Token> ();
 
@@ -79,26 +76,26 @@ namespace Parser
                 case ':':
                     return ScanOperator();
                 case '(':
-                    return new Token(TokenKind.ParenthesesStart, cur.ToString(), pos);
+                    return new Token(TokenKind.ParenthesesStart, cur.ToString(), pos++);
                 case ')':
-                    return new Token(TokenKind.ParenthesesEnd, cur.ToString(), pos);
+                    return new Token(TokenKind.ParenthesesEnd, cur.ToString(), pos++);
                 case '[':
-                    return new Token(TokenKind.SquareStart, cur.ToString(), pos);
+                    return new Token(TokenKind.SquareStart, cur.ToString(), pos++);
                 case ']':
-                    return new Token(TokenKind.SquareEnd, cur.ToString(), pos);
+                    return new Token(TokenKind.SquareEnd, cur.ToString(), pos++);
                 case '{':
-                    return new Token(TokenKind.CurlyStart, cur.ToString(), pos);
+                    return new Token(TokenKind.CurlyStart, cur.ToString(), pos++);
                 case '}':
-                    return new Token(TokenKind.CurlyEnd, cur.ToString(), pos);
+                    return new Token(TokenKind.CurlyEnd, cur.ToString(), pos++);
                 case ',':
-                    return new Token(TokenKind.Comma, cur.ToString(), pos);
+                    return new Token(TokenKind.Comma, cur.ToString(), pos++);
                 case ';':
-                    return new Token(TokenKind.Semicolon, cur.ToString(), pos);
+                    return new Token(TokenKind.Semicolon, cur.ToString(), pos++);
                 default:
                     if (char.IsLetter(cur))
                         return ScanIdentifier();
                     else
-                        return new Token(TokenKind.Unknown, cur.ToString(), pos);
+                        return new Token(TokenKind.Unknown, cur.ToString(), pos++);
             }
         }
 

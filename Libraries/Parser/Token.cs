@@ -35,6 +35,7 @@ namespace Parser
         Semicolon,
 
         EndOfString,
+        None,
         Unknown
     }
 
