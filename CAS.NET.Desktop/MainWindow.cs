@@ -112,6 +112,9 @@ namespace CAS.NET.Desktop
 
             CasTextView textView = new CasTextView("", true, listWidget);
             textView.WidthRequest = Window.Width;
+
+            listWidget.Add(textView);
+
             Widget w = textView.GetMovableWidget();
             globalGrid.Attach(w, 1, 1, 1, 1);
             /*
@@ -261,7 +264,8 @@ namespace CAS.NET.Desktop
                     CasTextView ctv = (CasTextView)w;
                     MetaType mtlmt = new MetaType();
                     mtlmt.type = ctv.GetType();
-                    mtlmt.metastring = ctv.SerializeCasTextView();
+                    byte[] byteTextView = ctv.SerializeCasTextView();
+                    mtlmt.metastring = Encoding.Default.GetString(byteTextView);
 
                     mt.Add(mtlmt);
                 }

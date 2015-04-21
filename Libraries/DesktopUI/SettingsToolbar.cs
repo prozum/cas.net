@@ -90,6 +90,8 @@ namespace DesktopUI
                             file = System.IO.File.ReadAllText(filechooser.Filename);
                         }
 
+                        Console.WriteLine("Line loaded::: " + file);
+
                         filechooser.Destroy();
 
                         break;
@@ -101,18 +103,33 @@ namespace DesktopUI
             meta.Clear();
             List<MetaType> mtlmt = new List<MetaType>();
             mtlmt = Import.DeserializeString<List<MetaType>>(file);
+
+            Console.WriteLine("Writing elements importet");
+
+            foreach (var item in mtlmt)
+            {
+                Console.WriteLine("type: " + item.type);// + " --- ::: --- " + item.metastring);
+                Console.WriteLine("metastring" + item.metastring);
+            }
+
             meta = mtlmt;
             widgets.Clear();
 
+            Console.WriteLine("Recreating listWidget in OpenFile");
+
             RecreateListWidget();
+
+            Console.WriteLine("Elements in listWidget" + widgets.Count);
 
             foreach (Widget item in widgets)
             {
                 grid.Attach(((CasTextView)item).GetMovableWidget(), 1, GridNumber, 1, 1);
                 GridNumber++;
+
+                Console.WriteLine("Added widget::: " + item);
             }
 
-            ShowAll();
+            window.ShowAll();
         }
 
         void SaveFile()
@@ -162,7 +179,8 @@ namespace DesktopUI
 
                         if (filechooser.Run() == (int)ResponseType.Accept)
                         {
-                            if (filechooser.Name.ToLower().EndsWith(".cas"))
+                            Console.WriteLine(filechooser.Name);
+                            if (filechooser.Filename.ToLower().EndsWith(".cas"))
                             {
                                 System.IO.File.WriteAllText(filechooser.Filename, file);
                             }
@@ -185,6 +203,8 @@ namespace DesktopUI
 
         void UpdateWorkspace()
         {
+            Console.WriteLine("Updating workspace");
+
             meta.Clear();
 
             foreach (Widget w in widgets)
@@ -208,7 +228,7 @@ namespace DesktopUI
                     buffer.GetBounds(out startIter, out endIter);
                     mtlmt.type = tv.GetType();
                     byte[] byteTextView = buffer.Serialize(buffer, buffer.RegisterSerializeTagset(null), startIter, endIter);
-                    mtlmt.metastring = Encoding.UTF8.GetString(byteTextView);
+                    mtlmt.metastring = Convert.ToBase64String(byteTextView);
 
                     meta.Add(mtlmt);
                 }
@@ -217,10 +237,14 @@ namespace DesktopUI
                     CasTextView ctv = (CasTextView)w;
                     MetaType mtlmt = new MetaType();
                     mtlmt.type = ctv.GetType();
-                    mtlmt.metastring = ctv.SerializeCasTextView();
+                    byte[] byteTextView = ctv.SerializeCasTextView();
+                    mtlmt.metastring = Convert.ToBase64String(byteTextView);
+                    Console.WriteLine("Metastring: " + mtlmt.metastring);
 
                     meta.Add(mtlmt);
                 }
+
+                Console.WriteLine(w.GetType().ToString());
             }
         }
 
@@ -238,6 +262,7 @@ namespace DesktopUI
 
         void RecreateListWidget()
         {
+            Console.WriteLine("Recreating listWidget: " + meta.Count);
             foreach (var item in meta)
             {
                 if (item.type == typeof(Entry))
@@ -249,18 +274,17 @@ namespace DesktopUI
                 }
                 if (item.type == typeof(TextView))
                 {
-                    Byte[] byteTextView = Encoding.UTF8.GetBytes(item.metastring);
-                    TextBuffer buffer = new TextView().Buffer;
+                    byte[] byteTextView = Convert.FromBase64String(item.metastring);
+
+                    TextView textView = new TextView();
+                    TextBuffer buffer = textView.Buffer;
                     TextIter textIter = buffer.StartIter;
 
                     buffer.Deserialize(buffer, buffer.RegisterDeserializeTagset(null), ref textIter, byteTextView, (ulong)byteTextView.Length);
 
-                    TextView textView = new TextView();
-                    textView.Buffer = buffer;
-
                     widgets.Add(textView);
                 }
-                if (item.type == typeof(CasTextView))
+                if (item.type == typeof(DesktopUI.CasTextView))
                 {
                     CasTextView ctv = new CasTextView("", true, widgets);
                     Console.WriteLine("Meta: " + item.metastring + " :End Meta");
@@ -268,6 +292,7 @@ namespace DesktopUI
 
                     widgets.Add(ctv);
                 }
+                Console.WriteLine("Type: " + item.type);
             }
         }
     }
