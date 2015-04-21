@@ -59,8 +59,8 @@
     <Compile Include="ServerMenu.cs" />
     <Compile Include="CasMovableWidget.cs" />
     <Compile Include="CasCalcView.cs" />
-    <Compile Include="Open.cs" />
-    <Compile Include="Save.cs" />
+    <Compile Include="OpenToolButton.cs" />
+    <Compile Include="SaveToolButton.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\GtkSharp.3.1.2\build\net45\GtkSharp.targets" Condition="Exists('..\..\packages\GtkSharp.3.1.2\build\net45\GtkSharp.targets')" />

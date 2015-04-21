@@ -1,8 +1,9 @@
 ﻿using System;
+using Gtk;
 
 namespace DesktopUI
 {
-	public class Save
+	public class Save : ToolButton
 	{
 		public Save()
 		{
