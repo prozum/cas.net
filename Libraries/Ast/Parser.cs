@@ -199,7 +199,7 @@ namespace Ast
             while (ops.Count > 0 ) 
             {
                 curOp = ops.Pop ();
-                curOp.right = right;
+                curOp.Right = right;
                 right.parent = curOp;
 
                 if (ops.Count > 0) 
@@ -208,7 +208,7 @@ namespace Ast
 
                     if (curOp.priority >= nextOp.priority) 
                     {
-                        curOp.left = exs.Pop ();
+                        curOp.Left = exs.Pop ();
 
                         if (curOp.parent == null) 
                         {
@@ -223,7 +223,7 @@ namespace Ast
                     } 
                     else
                     {
-                        curOp.left = nextOp;
+                        curOp.Left = nextOp;
                         nextOp.parent = curOp;
                         right = exs.Pop ();
                     }
@@ -232,7 +232,7 @@ namespace Ast
                 {
                     left = exs.Pop ();
                     left.parent = curOp;
-                    curOp.left = left;
+                    curOp.Left = left;
                 }
 
             }
@@ -312,7 +312,7 @@ namespace Ast
                     res = new Solve(args);
                     break;
                 default:
-                    res = new Error(this, identifier + "is not implemented");
+                    res = new Error(this, identifier + " is not implemented");
                     break;
                 }
             }

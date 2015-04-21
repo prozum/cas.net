@@ -23,22 +23,22 @@ namespace Ast
 
             if (exp is Assign)
             {
-                if ((exp as Assign).left is UserDefinedFunction)
+                if ((exp as Assign).Left is UserDefinedFunction)
                 {
-                    if ((exp as Assign).right.ContainsVariable((exp as Assign).left as UserDefinedFunction))
+                    if ((exp as Assign).Right.ContainsVariable((exp as Assign).Left as UserDefinedFunction))
                     {
                         return new MsgData(MsgType.Error, "Evaluator> Can't define function as it self");
                     }
 
                     var paramNames = new List<string>();
 
-                    if (functionDefinitions.ContainsKey(((exp as Assign).left as UserDefinedFunction).identifier))
+                    if (functionDefinitions.ContainsKey(((exp as Assign).Left as UserDefinedFunction).identifier))
                     {
-                        functionDefinitions.Remove(((exp as Assign).left as UserDefinedFunction).identifier);
-                        functionParams.Remove(((exp as Assign).left as UserDefinedFunction).identifier);
+                        functionDefinitions.Remove(((exp as Assign).Left as UserDefinedFunction).identifier);
+                        functionParams.Remove(((exp as Assign).Left as UserDefinedFunction).identifier);
                     }
 
-                    foreach (var item in ((exp as Assign).left as Function).args)
+                    foreach (var item in ((exp as Assign).Left as Function).args)
                     {   
                         if (item is Symbol)
                         {
@@ -50,24 +50,24 @@ namespace Ast
                         }
                     }
 
-                    functionParams.Add(((exp as Assign).left as UserDefinedFunction).identifier, paramNames);
-                    functionDefinitions.Add(((exp as Assign).left as UserDefinedFunction).identifier, (exp as Assign).right);
+                    functionParams.Add(((exp as Assign).Left as UserDefinedFunction).identifier, paramNames);
+                    functionDefinitions.Add(((exp as Assign).Left as UserDefinedFunction).identifier, (exp as Assign).Right);
 
                     return new MsgData(MsgType.Info, "Evaluator> Function defined");
                 }
-                else if ((exp as Assign).left is Symbol)
+                else if ((exp as Assign).Left is Symbol)
                 {
-                    if ((exp as Assign).right.ContainsVariable((exp as Assign).left as Symbol))
+                    if ((exp as Assign).Right.ContainsVariable((exp as Assign).Left as Symbol))
                     {
                         return new MsgData(MsgType.Error, "Evaluator> Can't define symbol as it self");
                     }
 
-                    if (variableDefinitions.ContainsKey(((exp as Assign).left as Symbol).identifier))
+                    if (variableDefinitions.ContainsKey(((exp as Assign).Left as Symbol).identifier))
                     {
-                        variableDefinitions.Remove(((exp as Assign).left as Symbol).identifier);
+                        variableDefinitions.Remove(((exp as Assign).Left as Symbol).identifier);
                     }
 
-                    variableDefinitions.Add(((exp as Assign).left as Symbol).identifier, (exp as Assign).right);
+                    variableDefinitions.Add(((exp as Assign).Left as Symbol).identifier, (exp as Assign).Right);
 
                     return new MsgData(MsgType.Info, "Evaluator> Variable defined");
                 }

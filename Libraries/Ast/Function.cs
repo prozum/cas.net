@@ -780,7 +780,7 @@ namespace Ast
             equal = (Equal)args[0];
             sym = (Symbol)args[1];
 
-            Expression resLeft = new Sub(equal.left, equal.right).Expand();
+            Expression resLeft = Evaluator.SimplifyExp(new Sub(equal.Left, equal.Right)).Expand();
             Expression resRight = new Integer(0);
 
             Console.WriteLine(equal.ToString());
@@ -824,17 +824,17 @@ namespace Ast
         {
             Operator op = resLeft as Operator;
 
-            if (op.right.ContainsVariable(sym) && op.left.ContainsVariable(sym))
+            if (op.Right.ContainsVariable(sym) && op.Left.ContainsVariable(sym))
             {
                 throw new NotImplementedException();
             }
-            else if (op.left.ContainsVariable(sym))
+            else if (op.Left.ContainsVariable(sym))
             {
                 resRight = (op as IInvertable).Inverted(resRight);
-                resLeft = op.left;
+                resLeft = op.Left;
                 return false;
             }
-            else if (op.right.ContainsVariable(sym))
+            else if (op.Right.ContainsVariable(sym))
             {
                 if (op is ISwappable)
                 {
@@ -845,8 +845,8 @@ namespace Ast
                 {
                     if (!resRight.CompareTo(new Integer(0)))
                     {
-                        resRight = new Div(op.left, resRight);
-                        resLeft = op.right;
+                        resRight = new Div(op.Left, resRight);
+                        resLeft = op.Right;
                         return false;
                     }
                     else
