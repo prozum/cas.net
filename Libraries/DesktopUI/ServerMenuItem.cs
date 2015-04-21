@@ -1,10 +1,11 @@
 ﻿using System;
+using Gtk;
 
 namespace DesktopUI
 {
-	public class ServerMenuItem
+	public class ServerMenuItem : MenuItem
 	{
-		public ServerMenuItem()
+		public ServerMenuItem() : base("Server")
 		{
 		}
 	}

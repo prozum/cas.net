@@ -3,10 +3,19 @@ using Gtk;
 
 namespace DesktopUI
 {
-	public class Save : ToolButton
+	public class SaveToolButton : ToolButton
 	{
-		public Save()
+		public SaveToolButton() : base(Stock.Save)
 		{
+			this.Clicked += delegate
+			{
+				SaveFile();
+			};
+		}
+
+		void SaveFile()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }
