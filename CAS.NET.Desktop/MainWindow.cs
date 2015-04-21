@@ -16,8 +16,7 @@ namespace CAS.NET.Desktop
         Grid globalGrid = new Grid();
         int gridNumber = 1;
         VBox vboxWindow = new VBox(false, 3);
-        string casFile = "";
-        string username, password;
+        int UserPrivilege;
 
         delegate int login(string username,string password);
 
@@ -30,13 +29,10 @@ namespace CAS.NET.Desktop
 
             ShowAll();
 
-            SettingsToolbar toolbar = new SettingsToolbar(ref casFile, ref globalGrid, ref gridNumber, ref mt, ref listWidget, this);
-
-            int i = 0;
-
-            ServerMenu serverMenu = new ServerMenu(ref i);
-
+            SettingsToolbar toolbar = new SettingsToolbar(ref globalGrid, ref gridNumber, ref mt, ref listWidget, this);
             MenuBar menubar = new MenuBar();
+
+            ServerMenu serverMenu = new ServerMenu(ref UserPrivilege);
             menubar.Add(serverMenu);
 
             CasTextView textView = new CasTextView("", true, listWidget);
@@ -220,108 +216,6 @@ namespace CAS.NET.Desktop
             }
 
             ShowAll();
-        }
-
-        void LoginScreen()
-        {
-            Window loginWindow = new Window("Login to CAS.NET");
-            loginWindow.SetDefaultSize(200, 200);
-
-            VBox vbox = new VBox(false, 2);
-            HBox hbox = new HBox(false, 2);
-
-            Label labUsername = new Label("Username");
-            Label labPassword = new Label("Password");
-
-            Table table = new Table(2, 3, false);
-
-            table.Attach(labUsername, 0, 1, 0, 1, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
-            table.Attach(labPassword, 0, 1, 1, 2, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
-
-            Entry entryUsername = new Entry();
-            entryUsername.HeightRequest = 20;
-            entryUsername.WidthRequest = 100;
-            entryUsername.Buffer.Text = "";
-
-            Entry entryPassword = new Entry();
-            entryPassword.HeightRequest = 20;
-            entryPassword.WidthRequest = 100;
-            entryPassword.Buffer.Text = "";
-
-            table.Attach(entryUsername, 1, 2, 0, 1, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
-            table.Attach(entryPassword, 1, 2, 1, 2, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
-
-            Button buttonLogin = new Button("Login");
-
-            int privilege;
-
-            buttonLogin.Clicked += delegate(object sender, EventArgs e)
-            {
-                username = entryUsername.Text;
-                password = entryPassword.Text;
-
-                const string host = "http://localhost:8080/";
-                const string command = "Login ";
-
-                var client = new WebClient();
-                client.Encoding = System.Text.Encoding.UTF8;
-                client.Credentials = new NetworkCredential(username, password);
-
-                login LoginHandler = (x, y) => int.Parse(client.UploadString(x, y), System.Globalization.NumberStyles.AllowLeadingSign);
-                privilege = LoginHandler(host, command);
-
-                loginWindow.Destroy();
-
-            };
-
-
-
-            Button buttonCancel = new Button("Cancel");
-            buttonCancel.Clicked += (object sender, EventArgs e) => loginWindow.Destroy();
-
-            hbox.Add(buttonCancel);
-            hbox.Add(buttonLogin);
-
-            vbox.Add(table);
-            vbox.Add(hbox);
-
-            loginWindow.Add(vbox);
-            loginWindow.ShowAll();
-        }
-
-        void RecreateListWidget()
-        {
-            foreach (var item in mt)
-            {
-                if (item.type == typeof(Entry))
-                {
-                    Entry entry = new Entry();
-                    entry.Text = item.metastring;
-
-                    listWidget.Add(entry);
-                }
-                if (item.type == typeof(TextView))
-                {
-                    Byte[] byteTextView = Encoding.UTF8.GetBytes(item.metastring);
-                    TextBuffer buffer = new TextView().Buffer;
-                    TextIter textIter = buffer.StartIter;
-
-                    buffer.Deserialize(buffer, buffer.RegisterDeserializeTagset(null), ref textIter, byteTextView, (ulong)byteTextView.Length);
-
-                    TextView textView = new TextView();
-                    textView.Buffer = buffer;
-
-                    listWidget.Add(textView);
-                }
-                if (item.type == typeof(CasTextView))
-                {
-                    CasTextView ctv = new CasTextView("", true, listWidget);
-                    Console.WriteLine("Meta: " + item.metastring + " :End Meta");
-                    ctv.DeserializeCasTextView(item.metastring);
-
-                    listWidget.Add(ctv);
-                }
-            }
         }
 
         /*
