@@ -5,7 +5,7 @@ namespace DesktopUI
 {
 	public class SaveToolButton : ToolButton
 	{
-		public SaveToolButton() : base(Stock.Save)
+		public SaveToolButton(TextViewList textviews) : base(Stock.Save)
 		{
 			this.Clicked += delegate
 			{

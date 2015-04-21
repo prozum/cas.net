@@ -5,7 +5,7 @@ namespace DesktopUI
 {
 	public class OpenToolButton : ToolButton
 	{
-		public OpenToolButton() : base(Stock.Open)
+		public OpenToolButton(TextViewList textviews) : base(Stock.Open)
 		{
 			this.Clicked += delegate
 			{

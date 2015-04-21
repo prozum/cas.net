@@ -7,6 +7,7 @@ namespace DesktopUI
 	{
 		public ServerMenuItem() : base("Server")
 		{
+
 		}
 	}
 }

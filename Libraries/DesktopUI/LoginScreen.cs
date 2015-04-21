@@ -6,10 +6,9 @@ namespace DesktopUI
 {
 	public class LoginScreen : Window
 	{
-		public LoginScreen(ref privilege) : base("Login")
+		public LoginScreen(ref int privilege, Menu menu) : base("Login to CAS.NET")
 		{
-			Window loginWindow = new Window("Login to CAS.NET");
-			loginWindow.SetDefaultSize(200, 200);
+			SetDefaultSize(200, 200);
 
 			VBox vbox = new VBox(false, 2);
 			HBox hbox = new HBox(false, 2);
@@ -64,7 +63,7 @@ namespace DesktopUI
 						MenuItem menuItemStudentGetFeedback = new MenuItem("Get Feedback");
 
 
-						serverMenu.Append(menuItemStudentAddCompleted);
+						menu.Append(menuItemStudentAddCompleted);
 					}
 					else if (privilege == 1)
 					{
@@ -76,15 +75,16 @@ namespace DesktopUI
 
 						MenuItem menuItemTeacherGetCompleted = new MenuItem("Get Completed Assignments");
 					}
-					serverMenu.QueueDraw();
-					loginWindow.Destroy();
+
+					menu.QueueDraw();
+					Destroy();
 
 				};
 
 
 
 			Button buttonCancel = new Button("Cancel");
-			buttonCancel.Clicked += (object sender, EventArgs e) => loginWindow.Destroy();
+			buttonCancel.Clicked += (object sender, EventArgs e) => Destroy();
 
 			hbox.Add(buttonCancel);
 			hbox.Add(buttonLogin);
@@ -92,8 +92,8 @@ namespace DesktopUI
 			vbox.Add(table);
 			vbox.Add(hbox);
 
-			loginWindow.Add(vbox);
-			loginWindow.ShowAll();
+			Add(vbox);
+			ShowAll();
 		}
 	}
 }
