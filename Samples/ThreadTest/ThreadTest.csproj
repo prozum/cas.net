@@ -33,6 +33,7 @@
   <Import Project="..\..\packages\GtkSharp.3.1.2\build\net45\GtkSharp.targets" Condition="Exists('..\..\packages\GtkSharp.3.1.2\build\net45\GtkSharp.targets')" />
   <ItemGroup>
     <Compile Include="MainWindow.cs" />
+    <Compile Include="SomeCounter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="atk-sharp">

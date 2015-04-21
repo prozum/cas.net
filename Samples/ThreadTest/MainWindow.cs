@@ -7,6 +7,7 @@ namespace ThreadTest
     public class MyClass : Window
     {
         static Label l;
+        static TextView tv;
         static int numClick = 0;
 
         public static void Main()
@@ -21,6 +22,8 @@ namespace ThreadTest
 
         static void ThreadRoutine()
         {
+            // As long as this is running, DrawRequests will be updated 
+            // without the need to update the entire workspace
             while (Application.EventsPending())
             {
                 Gtk.Application.RunIteration();
@@ -43,8 +46,22 @@ namespace ThreadTest
             {
                 numClick++;
                 l.Text = numClick.ToString();
-                l.QueueDraw();
+                l.QueueDraw(); // <- Adds the label to the quoue.
             };
+
+            tv = new TextView();
+            grid.Attach(tv, 1, 3, 1, 1);
+
+            Button b2 = new Button("ClickMe2!");
+            grid.Attach(b2, 1, 4, 1, 1);
+            b2.Clicked += delegate
+            {
+                tv.Buffer.Text += numClick + "\n";
+                tv.QueueDraw();
+            };
+
+            SomeCounter sc = new SomeCounter();
+            grid.Attach(sc, 1, 5, 1, 1);
 
             Add(grid);
 
