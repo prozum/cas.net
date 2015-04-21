@@ -1,21 +1,18 @@
 ﻿using System;
-using Gtk;
-using System.Text;
 using System.Collections.Generic;
+using System.Text;
+using Gtk;
 
 namespace DesktopUI
 {
     public class CasTextView : TextView
     {
-        bool teacherEditOnly = false;
-        List<Widget> listWidget;
+        public bool teacherEditOnly = false;
 
-        public CasTextView(string serializedString, bool teacherCanEdit, List<Widget> listWidget)
-            : base()
+        public CasTextView(string SerializedString, bool TeacherCanEdit) : base()
         {
-            DeserializeCasTextView(serializedString);
-            teacherEditOnly = teacherCanEdit;
-            this.listWidget = listWidget;
+            DeserializeCasTextView(SerializedString);
+            teacherEditOnly = TeacherCanEdit;
             ShowAll();
         }
 
@@ -41,16 +38,13 @@ namespace DesktopUI
             Buffer.Deserialize(Buffer, Buffer.RegisterDeserializeTagset(null), ref textIter, byteTextView, (ulong)byteTextView.Length);
         }
 
-        public void SetTeacherEditOnly(bool isLocked)
-        {
-            teacherEditOnly = isLocked;
-        }
-
+		/*
         public Widget GetMovableWidget()
         {
             CasMovableWidget movableWidget = new CasMovableWidget(this, listWidget);
             return movableWidget.GetMovableWidget();
         }
+        */
     }
 }
 

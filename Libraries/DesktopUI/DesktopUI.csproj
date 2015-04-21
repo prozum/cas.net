@@ -65,6 +65,8 @@
     <Compile Include="LoginMenuItem.cs" />
     <Compile Include="LogoutMenuItem.cs" />
     <Compile Include="LoginScreen.cs" />
+    <Compile Include="NewToolButton.cs" />
+    <Compile Include="MovableCasTextView.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\GtkSharp.3.1.2\build\net45\GtkSharp.targets" Condition="Exists('..\..\packages\GtkSharp.3.1.2\build\net45\GtkSharp.targets')" />
