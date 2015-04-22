@@ -16,11 +16,11 @@ namespace Ast
         {
             string res = "";
             
-             if (prefix.CompareTo(new Integer(-1)))
+            if (prefix.CompareTo(Constant.MinusOne))
             {
                 res = "-" + identifier;
             }
-            else if (!prefix.CompareTo(new Integer(1)))
+            else if (!prefix.CompareTo(Constant.One))
             {
                 res = prefix.ToString() + identifier;
             }
@@ -29,7 +29,7 @@ namespace Ast
                 res = identifier;
             }
 
-            if (!exponent.CompareTo(new Integer(1)))
+            if (!exponent.CompareTo(Constant.One))
             {
                 res += "^" + exponent.ToString();
             }
@@ -96,11 +96,11 @@ namespace Ast
 
         public override Expression Simplify()
         {
-            if (prefix.CompareTo(new Integer(0)))
+            if (prefix.CompareTo(Constant.Zero))
             {
                 return new Integer(0);
             }
-            if (exponent.CompareTo(new Integer(0)))
+            if (exponent.CompareTo(Constant.Zero))
             {
                 return prefix;
             }
