@@ -4,32 +4,29 @@ using Gtk;
 
 namespace DesktopUI
 {
-	public class CasCalcView : CasTextView
+	public class CasCalcView : Grid
 	{
-		public CasCalcView(TextViewList parent, string serializedString, bool teacherCanEdit) :
-		base(serializedString, teacherCanEdit)
-		{
+		Entry input = new Entry();
+		public Label output = new Label();
 
+		public CasCalcView()
+		{
+			input.Activated += delegate
+				{
+					output.Text = Evaluate();
+					ShowAll();
+				};
+
+			Attach(input, 1, 1, 1, 1);
+			Attach(output, 1, 2, 1, 1);
+			ShowAll();
 		}
 
-		public void Evaluate()
+		string Evaluate()
 		{
-			string expression = String.Empty;
-			string buffer = Buffer.ToString();
-			int i = 0;
-
-			while (buffer[i] != '\n')
-			{
-				expression += buffer[i];
-			}
-
 			Evaluator Eval = new Evaluator();
-			EvalData Data = Eval.Evaluation(expression);
 
-			Buffer.Clear();
-			TextIter textIter = Buffer.StartIter;
-			byte[] EvaluationBytes = Convert.FromBase64String(expression += '\n' + Data.ToString());
-			Buffer.Deserialize(Buffer, Buffer.RegisterDeserializeTagset(null), ref textIter, EvaluationBytes, (ulong)EvaluationBytes.Length);
+			return Eval.Evaluation(input.Text).ToString();
 		}
 	}
 }

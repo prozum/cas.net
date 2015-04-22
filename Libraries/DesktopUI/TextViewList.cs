@@ -7,21 +7,36 @@ namespace DesktopUI
 	public class TextViewList : Grid
 	{
 		List<MovableCasTextView> castextviews = new List<MovableCasTextView>();
-		Button AddNewMovableTextView = new Button("+");
+		Button AddNewMovableTextView = new Button("New Textbox");
+		Button AddNewMovableCalcView = new Button("New Calcbox");
 
 		public TextViewList() : base()
 		{
 			AddNewMovableTextView.Clicked += delegate
 				{
-					Insert("", false);
+					InsertTextView("", false);
+				};
+
+			AddNewMovableCalcView.Clicked += delegate
+				{
+					InsertCalcView();
 				};
 
 			Attach(AddNewMovableTextView, 1, 1, 1, 1);
 		}
 
-		public void Insert(string serializedString, bool teacherCanEdit)
+		public void InsertTextView(string serializedString, bool teacherCanEdit)
 		{
 			castextviews.Add(new MovableCasTextView(this, serializedString, teacherCanEdit));
+
+			Clear();
+			Redraw();
+			ShowAll();
+		}
+
+		public void InsertCalcView()
+		{
+			castextviews.Add(new MovableCasCalcView(this));
 
 			Clear();
 			Redraw();

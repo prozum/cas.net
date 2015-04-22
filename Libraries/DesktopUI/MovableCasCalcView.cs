@@ -4,10 +4,10 @@ namespace DesktopUI
 {
 	public class MovableCasCalcView : MovableCasTextView
 	{
-		public MovableCasCalcView(TextViewList parent, string serializedString, bool teacherCanEdit) :
-		base(parent, serializedString, teacherCanEdit)
+		public MovableCasCalcView(TextViewList parent) :
+		base(parent, "", false)
 		{
-			textview = new CasCalcView(serializedString, teacherCanEdit);
+			textview = (CasCalcView)new CasCalcView();
 			textview.WidthRequest = 400;
 			textview.HeightRequest = 200;
 
