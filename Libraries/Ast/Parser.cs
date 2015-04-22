@@ -99,6 +99,14 @@ namespace Ast
                         list.elements = ExtractBrackets(tok.kind, tokens, TokenKind.Comma);
                         exs.Enqueue(list);
                         break;
+                    case TokenKind.ParenthesesEnd:
+                    case TokenKind.SquareEnd:
+                    case TokenKind.CurlyEnd:
+                        ErrorHandler("Unexpected end bracker");
+                        break;
+                    case TokenKind.Unknown:
+                        ErrorHandler("Unknown token");
+                        break;
                 }
                 first = false;
 
@@ -164,6 +172,9 @@ namespace Ast
                     curOp.Right = right;
                 }
             }
+
+            if (exs.Count != 0)
+                return ErrorHandler("The operators cannot use all the operands");
 
             return top;
         }
