@@ -6,13 +6,13 @@ namespace Ast
     public class Parser
     {
         Scanner scanner;
-        Evaluator eval;
+        Evaluator evaluator;
 
         public Parser() : this(new Evaluator()) { }
         public Parser (Evaluator eval)
         {
             this.scanner = new Scanner();
-            this.eval = eval;
+            this.evaluator = eval;
         }
 
         public Expression Parse(string parseString)
@@ -42,7 +42,7 @@ namespace Ast
                         if (tokens.Count > 0 && tokens.Peek().kind == TokenKind.ParenthesesStart)
                             exs.Enqueue(ParseFunction(tok, tokens));
                         else
-                            exs.Enqueue(new Symbol(eval, tok.value));
+                            exs.Enqueue(new Symbol(evaluator, tok.value));
                         break;
 
                     case TokenKind.Assign:
@@ -278,43 +278,43 @@ namespace Ast
             switch (tok.value.ToLower())
             {
                 case "sin":
-                    res = new Sin(args);
+                    res = new Sin(args, evaluator);
                     break;
                 case "cos":
-                    res = new Cos(args);
+                    res = new Cos(args, evaluator);
                     break;
                 case "tan":
-                    res = new Tan(args);
+                    res = new Tan(args, evaluator);
                     break;
                 case "asin":
-                    res = new ASin(args);
+                    res = new ASin(args, evaluator);
                     break;
                 case "acos":
-                    res = new ACos(args);
+                    res = new ACos(args, evaluator);
                     break;
                 case "atan":
-                    res = new ATan(args);
+                    res = new ATan(args, evaluator);
                     break;
                 case "sqrt":
-                    res = new Sqrt(args);
+                    res = new Sqrt(args, evaluator);
                     break;
                 case "simplify":
-                    res = new Simplify(args);
+                    res = new Simplify(args, evaluator);
                     break;
                 case "expand":
-                    res = new Expand(args);
+                    res = new Expand(args, evaluator);
                     break;
                 case "range":
-                    res = new Range(args);
+                    res = new Range(args, evaluator);
                     break;
                 case "plot":
-                    res = new Plot(args);
+                    res = new Plot(args, evaluator);
                     break;
                 case "solve":
-                    res = new Solve(args);
+                    res = new Solve(args, evaluator);
                     break;
                 default:
-                    res = new UserDefinedFunction(tok.value.ToLower(), args, eval);
+                    res = new UserDefinedFunction(tok.value.ToLower(), args, evaluator);
                     break;
             }
 
