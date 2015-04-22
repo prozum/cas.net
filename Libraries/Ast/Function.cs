@@ -245,9 +245,9 @@ namespace Ast
 
     public class Sin : Function, IInvertable
     {
-        public Sin() : this(null) { }
-        public Sin(List<Expression> args)
-            : base("sin", args, null)
+        public Sin() : this(null, null) { }
+        public Sin(List<Expression> args, Evaluator eval)
+            : base("sin", args, eval)
         {
             validArgs = new List<ArgKind>()
             {
@@ -289,15 +289,15 @@ namespace Ast
         {
             List<Expression> newArgs = new List<Expression>();
             newArgs.Add(other);
-            return new ASin(newArgs);
+            return new ASin(newArgs, evaluator);
         }
     }
 
     public class ASin : Function, IInvertable
     {
-        public ASin() : this(null) { }
-        public ASin(List<Expression> args)
-            : base("asin", args, null)
+        public ASin() : this(null, null) { }
+        public ASin(List<Expression> args, Evaluator eval)
+            : base("asin", args, eval)
         {
             validArgs = new List<ArgKind>()
             {
@@ -339,15 +339,15 @@ namespace Ast
         {
             List<Expression> newArgs = new List<Expression>();
             newArgs.Add(other);
-            return new Sin(newArgs);
+            return new Sin(newArgs, evaluator);
         }
     }
 
     public class Cos : Function, IInvertable
     {
-        public Cos() : this(null) { }
-        public Cos(List<Expression> args)
-            : base("cos", args, null)
+        public Cos() : this(null, null) { }
+        public Cos(List<Expression> args, Evaluator eval)
+            : base("cos", args, eval)
         {
             validArgs = new List<ArgKind>()
             {
@@ -389,15 +389,15 @@ namespace Ast
         {
             List<Expression> newArgs = new List<Expression>();
             newArgs.Add(other);
-            return new ACos(newArgs);
+            return new ACos(newArgs, evaluator);
         }
     }
 
     public class ACos : Function, IInvertable
     {
-        public ACos() : this(null) { }
-        public ACos(List<Expression> args)
-            : base("acos", args, null)
+        public ACos() : this(null, null) { }
+        public ACos(List<Expression> args, Evaluator eval)
+            : base("acos", args, eval)
         {
             validArgs = new List<ArgKind>()
             {
@@ -439,15 +439,15 @@ namespace Ast
         {
             List<Expression> newArgs = new List<Expression>();
             newArgs.Add(other);
-            return new Cos(newArgs);
+            return new Cos(newArgs, evaluator);
         }
     }
 
     public class Tan : Function, IInvertable
     {
-        public Tan() : this(null) { }
-        public Tan(List<Expression> args)
-            : base("tan", args, null)
+        public Tan() : this(null, null) { }
+        public Tan(List<Expression> args, Evaluator eval)
+            : base("tan", args, eval)
         {
             validArgs = new List<ArgKind>()
             {
@@ -489,15 +489,15 @@ namespace Ast
         {
             List<Expression> newArgs = new List<Expression>();
             newArgs.Add(other);
-            return new ATan(newArgs);
+            return new ATan(newArgs, evaluator);
         }
     }
 
     public class ATan : Function, IInvertable
     {
-        public ATan() : this(null) { }
-        public ATan(List<Expression> args)
-            : base("atan", args, null)
+        public ATan() : this(null, null) { }
+        public ATan(List<Expression> args, Evaluator eval)
+            : base("atan", args, eval)
         {
             validArgs = new List<ArgKind>()
             {
@@ -539,15 +539,15 @@ namespace Ast
         {
             List<Expression> newArgs = new List<Expression>();
             newArgs.Add(other);
-            return new Tan(newArgs);
+            return new Tan(newArgs, evaluator);
         }
     }
 
     public class Sqrt : Function, IInvertable
     {
-        public Sqrt() : this(null) { }
-        public Sqrt(List<Expression> args)
-            : base("sqrt", args, null)
+        public Sqrt() : this(null, null) { }
+        public Sqrt(List<Expression> args, Evaluator eval)
+            : base("sqrt", args, eval)
         {
             validArgs = new List<ArgKind>()
             {
@@ -603,9 +603,9 @@ namespace Ast
 
     public class Negation : Function
     {
-        public Negation() : base(null, null, null) { }
-        public Negation(List<Expression> args)
-            : base("negation", args, null)
+        public Negation() : this(null, null) { }
+        public Negation(List<Expression> args, Evaluator eval)
+            : base("negation", args, eval)
         {
             validArgs = new List<ArgKind>()
             {
@@ -626,8 +626,8 @@ namespace Ast
 
     public class Simplify : Function
     {
-        public Simplify(List<Expression> args)
-            : base("simplify", args, null)
+        public Simplify(List<Expression> args, Evaluator eval)
+            : base("simplify", args, eval)
         {
             validArgs = new List<ArgKind>()
             {
@@ -651,8 +651,8 @@ namespace Ast
 
     public class Expand : Function
     {
-        public Expand(List<Expression> args)
-            : base("expand", args, null) 
+        public Expand(List<Expression> args, Evaluator eval)
+            : base("expand", args, eval)
         {
             validArgs = new List<ArgKind>()
             {
@@ -673,8 +673,8 @@ namespace Ast
 
     public class Range : Function
     {
-        public Range(List<Expression> args)
-            : base("range", args, null) 
+        public Range(List<Expression> args, Evaluator eval)
+            : base("range", args, eval)
         {
             validArgs = new List<ArgKind>()
             {
@@ -734,9 +734,8 @@ namespace Ast
         public Expression exp;
         public Symbol sym;
 
-        public Plot() : this(null) { }
-        public Plot(List<Expression> args)
-            : base("plot", args, null)
+        public Plot(List<Expression> args, Evaluator eval)
+            : base("plot", args, eval)
         {
             validArgs = new List<ArgKind>()
             {
@@ -749,11 +748,6 @@ namespace Ast
         {
             return new Error(this, "Cannot evaluate plot");
         }
-
-        public override Expression Clone()
-        {
-            return MakeClone<Plot>();
-        }
     }
 
     public class Solve : Function
@@ -761,9 +755,8 @@ namespace Ast
         Equal equal;
         Symbol sym;
 
-        public Solve() : this(null) { }
-        public Solve(List<Expression> args)
-            : base("solve", args, null)
+        public Solve(List<Expression> args, Evaluator eval)
+            : base("solve", args, eval)
         {
             validArgs = new List<ArgKind>()
             {
@@ -883,11 +876,6 @@ namespace Ast
             {
                 return true;
             }
-        }
-
-        public override Expression Clone()
-        {
-            return MakeClone<Solve>();
         }
     }
 }

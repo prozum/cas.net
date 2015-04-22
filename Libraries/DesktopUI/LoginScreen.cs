@@ -4,105 +4,134 @@ using System.Net;
 
 namespace DesktopUI
 {
-	public class LoginScreen : Window
-	{
-		int privilege;
-		Menu menu;
-		Entry entryUsername = new Entry();
-		Entry entryPassword = new Entry();
+    public class LoginScreen : Window
+    {
+        int privilege;
+        Menu menu;
+        Entry entryUsername = new Entry();
+        Entry entryPassword = new Entry();
 
-		public LoginScreen(ref int privilege, Menu menu) : base("Login to CAS.NET")
-		{
-			this.privilege = privilege;
-			this.menu = menu;
+        public LoginScreen(ref int privilege, Menu menu)
+            : base("Login to CAS.NET")
+        {
+            this.privilege = privilege;
+            this.menu = menu;
 
-			SetDefaultSize(200, 200);
+            SetDefaultSize(200, 200);
 
-			VBox vbox = new VBox(false, 2);
-			HBox hbox = new HBox(false, 2);
+            VBox vbox = new VBox(false, 2);
+            HBox hbox = new HBox(false, 2);
 
-			Label labUsername = new Label("Username");
-			Label labPassword = new Label("Password");
+            Label labUsername = new Label("Username");
+            Label labPassword = new Label("Password");
 
-			Table table = new Table(2, 3, false);
+            Table table = new Table(2, 3, false);
 
-			table.Attach(labUsername, 0, 1, 0, 1, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
-			table.Attach(labPassword, 0, 1, 1, 2, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
+            table.Attach(labUsername, 0, 1, 0, 1, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
+            table.Attach(labPassword, 0, 1, 1, 2, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
 
-			entryUsername.HeightRequest = 20;
-			entryUsername.WidthRequest = 100;
-			entryUsername.Buffer.Text = "";
+            entryUsername.HeightRequest = 20;
+            entryUsername.WidthRequest = 100;
+            entryUsername.Buffer.Text = "";
 
-			entryPassword.HeightRequest = 20;
-			entryPassword.WidthRequest = 100;
-			entryPassword.Buffer.Text = "";
+            entryPassword.HeightRequest = 20;
+            entryPassword.WidthRequest = 100;
+            entryPassword.Buffer.Text = "";
 
-			table.Attach(entryUsername, 1, 2, 0, 1, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
-			table.Attach(entryPassword, 1, 2, 1, 2, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
+            table.Attach(entryUsername, 1, 2, 0, 1, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
+            table.Attach(entryPassword, 1, 2, 1, 2, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
 
-			Button buttonLogin = new Button("Login");
+            Button buttonLogin = new Button("Login");
 
-			buttonLogin.Clicked += delegate(object sender, EventArgs e)
-				{
-					ButtonLoginWrapper();
-				};
+            buttonLogin.Clicked += delegate(object sender, EventArgs e)
+            {
+                ButtonLoginWrapper();
+            };
 
-			Button buttonCancel = new Button("Cancel");
-			buttonCancel.Clicked += (object sender, EventArgs e) => Destroy();
+            Button buttonCancel = new Button("Cancel");
+            buttonCancel.Clicked += (object sender, EventArgs e) => Destroy();
 
-			hbox.Add(buttonCancel);
-			hbox.Add(buttonLogin);
+            hbox.Add(buttonCancel);
+            hbox.Add(buttonLogin);
 
-			vbox.Add(table);
-			vbox.Add(hbox);
+            vbox.Add(table);
+            vbox.Add(hbox);
 
-			Add(vbox);
-			ShowAll();
-		}
+            Add(vbox);
 
-		void ButtonLoginWrapper()
-		{
-			string username = entryUsername.Text;
-			string password = entryPassword.Text;
+            ShowAll();
+        }
 
-			const string host = "http://localhost:8080/";
-			const string command = "Login";
+        void ButtonLoginWrapper()
+        {
+            string username = entryUsername.Text;
+            string password = entryPassword.Text;
 
-			var client = new WebClient();
-			client.Encoding = System.Text.Encoding.UTF8;
-			client.Credentials = new NetworkCredential(username, password);
+            const string host = "http://localhost:8080/";
+            const string command = "Login";
 
-			privilege = int.Parse(client.UploadString(host, command), System.Globalization.NumberStyles.AllowLeadingSign);
+            var client = new WebClient();
+            client.Encoding = System.Text.Encoding.UTF8;
+            client.Credentials = new NetworkCredential(username, password);
 
-			Console.WriteLine("Your privilgee is: " + privilege);
+            privilege = int.Parse(client.UploadString(host, command), System.Globalization.NumberStyles.AllowLeadingSign);
 
-			if (privilege == 0)
-			{
-				MenuItem menuItemStudentAddCompleted = new MenuItem("Upload Completed Task");
+            foreach (Widget w in menu)
+            {
+                Console.WriteLine(w);
 
-				MenuItem menuItemStudentGetAssignment = new MenuItem("Get Assignment");
+                if (privilege == 1 || privilege == 0)
+                {
+                    if (w.GetType() == typeof(LoginMenuItem))
+                    {
+                        w.Hide();
+                    }
+                    if (w.GetType() == typeof(LogoutMenuItem))
+                        w.Show();
+                }
 
-				MenuItem menuItemStudentGetAssignmentList = new MenuItem("Get List Of Assignments");
+                if (privilege == 0)
+                {
+                    if (w.GetType() == typeof(StudentGetAssignmentMenuItem))
+                    {
+                        w.Show();
+                    }
+                    else if (w.GetType() == typeof(StudentGetAssignmentListMenuItem))
+                    {
+                        w.Show();
+                    }
+                    else if (w.GetType() == typeof(StudentGetFeedbackMenuItem))
+                    {
+                        w.Show();
+                    }
+                    else if (w.GetType() == typeof(StudentAddCompletedMenuItem))
+                    {
+                        w.Show();
+                    }
+                }
+                else if (privilege == 1)
+                {
+                    if (w.GetType() == typeof(TeacherAddAssignmentMenuItem))
+                    {
+                        w.Show();
+                    }
+                    else if (w.GetType() == typeof(TeacherAddFeedbackMenuItem))
+                    {
+                        w.Show();
+                    }
+                    else if (w.GetType() == typeof(TeacherGetAssignmentListMenuItem))
+                    {
+                        w.Show();
+                    }
+                    else if (w.GetType() == typeof(TeacherGetCompletedMenuItem))
+                    {
+                        w.Show();
+                    }
+                }
+            }
 
-				MenuItem menuItemStudentGetFeedback = new MenuItem("Get Feedback");
-
-
-				menu.Append(menuItemStudentAddCompleted);
-			}
-			else if (privilege == 1)
-			{
-				MenuItem menuItemTeacherAddAssignment = new MenuItem("Add New Assignment");
-
-				MenuItem menuItemTeacherAddFeedback = new MenuItem("Add Feedback");
-
-				MenuItem menuItemTeacherGetAssignmentList = new MenuItem("Get List Of Assignments");
-
-				MenuItem menuItemTeacherGetCompleted = new MenuItem("Get Completed Assignments");
-			}
-
-			menu.QueueDraw();
-			Destroy();
-		}
-	}
+            Destroy();
+        }
+    }
 }
 

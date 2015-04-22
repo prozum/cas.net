@@ -1,10 +1,12 @@
 ﻿using System;
+using Gtk;
 
 namespace DesktopUI
 {
-    public class TeacherAddFeedbackMenuItem
+    public class TeacherAddFeedbackMenuItem : MenuItem
     {
         public TeacherAddFeedbackMenuItem()
+            : base("Add Feedback")
         {
         }
     }
