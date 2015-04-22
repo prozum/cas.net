@@ -49,6 +49,7 @@
     <Compile Include="EvalData.cs" />
     <Compile Include="Scanner.cs" />
     <Compile Include="Token.cs" />
+    <Compile Include="Constant.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />

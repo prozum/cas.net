@@ -132,11 +132,11 @@ namespace Ast
 
         public override Expression Simplify()
         {
-            if (prefix.CompareTo(new Integer(0)))
+            if (prefix.CompareTo(Constant.Zero))
             {
                 return new Integer(0);
             }
-            if (exponent.CompareTo(new Integer(0)))
+            if (exponent.CompareTo(Constant.Zero))
             {
                 return new Integer(1);
             }
@@ -230,11 +230,11 @@ namespace Ast
 
         public override Expression Simplify()
         {
-            if (prefix.CompareTo(new Integer(0)))
+            if (prefix.CompareTo(Constant.Zero))
             {
                 return new Integer(0);
             }
-            if (exponent.CompareTo(new Integer(0)))
+            if (exponent.CompareTo(Constant.Zero))
             {
                 return new Integer(1);
             }
@@ -582,7 +582,7 @@ namespace Ast
 
         public override Expression Simplify()
         {
-            if (exponent.CompareTo(new Integer(2)))
+            if (exponent.CompareTo(Constant.Two))
             {
                 return args[0];
             }
@@ -843,7 +843,7 @@ namespace Ast
                 }
                 else if (op is Div)
                 {
-                    if (!resRight.CompareTo(new Integer(0)))
+                    if (!resRight.CompareTo(Constant.Zero))
                     {
                         resRight = new Div(op.Left, resRight);
                         resLeft = op.Right;

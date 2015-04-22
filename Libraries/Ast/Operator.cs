@@ -381,11 +381,11 @@ namespace Ast
             Expression evaluatedRes, res = null;
             Operator simplifiedOperator = new Add(Evaluator.SimplifyExp(Left), Evaluator.SimplifyExp(Right));
 
-            if (simplifiedOperator.Left is Number && simplifiedOperator.Left.CompareTo(new Integer(0)))
+            if (simplifiedOperator.Left is Number && simplifiedOperator.Left.CompareTo(Constant.Zero))
             {
                 res = simplifiedOperator.Right;
             }
-            else if (simplifiedOperator.Right is Number && simplifiedOperator.Right.CompareTo(new Integer(0)))
+            else if (simplifiedOperator.Right is Number && simplifiedOperator.Right.CompareTo(Constant.Zero))
             {
                 res = simplifiedOperator.Left;
             }
@@ -629,11 +629,11 @@ namespace Ast
 
             if (simplifiedOperator.Left is Number)
             {
-                if (simplifiedOperator.Left.CompareTo(new Integer(0)))
+                if (simplifiedOperator.Left.CompareTo(Constant.Zero))
                 {
                     res = new Integer(0);
                 }
-                else if (simplifiedOperator.Left.CompareTo(new Integer(1)))
+                else if (simplifiedOperator.Left.CompareTo(Constant.One))
                 {
                     res = simplifiedOperator.Right;
                 }
@@ -649,11 +649,11 @@ namespace Ast
             }
             else if (simplifiedOperator.Right is Number)
             {
-                if (simplifiedOperator.Right.CompareTo(new Integer(0)))
+                if (simplifiedOperator.Right.CompareTo(Constant.Zero))
                 {
                     res = new Integer(0);
                 }
-                else if (simplifiedOperator.Right.CompareTo(new Integer(1)))
+                else if (simplifiedOperator.Right.CompareTo(Constant.One))
                 {
                     res = simplifiedOperator.Left;
                 }
@@ -693,7 +693,7 @@ namespace Ast
                 {
                     res = SameNotNumbersOperation(simplifiedOperator.Left as Variable, simplifiedOperator.Right as Variable);
                 }
-                else if (!(simplifiedOperator.Left as Variable).exponent.CompareTo(new Integer(1)) && (simplifiedOperator.Left as Variable).exponent.CompareTo((simplifiedOperator.Right as Variable).exponent))
+                else if (!(simplifiedOperator.Left as Variable).exponent.CompareTo(Constant.One) && (simplifiedOperator.Left as Variable).exponent.CompareTo((simplifiedOperator.Right as Variable).exponent))
                 {
                     res = DifferentNotNumbersOperation(simplifiedOperator.Left as Variable, simplifiedOperator.Right as Variable);
                 }
@@ -721,11 +721,11 @@ namespace Ast
 
             if (other is Number)
             {
-                if (other.CompareTo(new Integer(0)))
+                if (other.CompareTo(Constant.Zero))
                 {
                     res = new Integer(0);
                 }
-                else if (other.CompareTo(new Integer(1)))
+                else if (other.CompareTo(Constant.One))
                 {
                     res = this;
                 }
@@ -756,11 +756,11 @@ namespace Ast
                 {
                     res = new Mul(Left, SameNotNumbersOperation(Right as Variable, other as Variable));
                 }
-                if (Left is Variable && (!(Left as Variable).exponent.CompareTo(new Integer(1)) && (Left as Variable).exponent.CompareTo((other as Variable).exponent)))
+                if (Left is Variable && (!(Left as Variable).exponent.CompareTo(Constant.One) && (Left as Variable).exponent.CompareTo((other as Variable).exponent)))
                 {
                     res = new Mul(DifferentNotNumbersOperation(Left as Variable, other as Variable), Right);
                 }
-                else if (Right is Variable && (!(Right as Variable).exponent.CompareTo(new Integer(1)) && (Right as Variable).exponent.CompareTo((other as Variable).exponent)))
+                else if (Right is Variable && (!(Right as Variable).exponent.CompareTo(Constant.One) && (Right as Variable).exponent.CompareTo((other as Variable).exponent)))
                 {
                     res = new Mul(Left, DifferentNotNumbersOperation(Right as Variable, other as Variable));
                 }
@@ -1019,11 +1019,11 @@ namespace Ast
             Expression evaluatedLeft, evaluatedRight, res = null;
             Operator simplifiedOperator = new Exp(Evaluator.SimplifyExp(Left), Evaluator.SimplifyExp(Right));
 
-            if (simplifiedOperator.Left is Number && simplifiedOperator.Left.CompareTo(new Integer(1)))
+            if (simplifiedOperator.Left is Number && simplifiedOperator.Left.CompareTo(Constant.One))
             {
                 return new Integer(1);
             }
-            else if (simplifiedOperator.Right is Number && simplifiedOperator.Left.CompareTo(new Integer(0)))
+            else if (simplifiedOperator.Right is Number && simplifiedOperator.Left.CompareTo(Constant.Zero))
             {
                 return new Integer(1);
             }
