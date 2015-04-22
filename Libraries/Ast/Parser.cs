@@ -7,6 +7,7 @@ namespace Ast
     {
         Scanner scanner;
         Evaluator evaluator;
+        Error error;
 
         public Parser() : this(new Evaluator()) { }
         public Parser (Evaluator eval)
@@ -25,6 +26,7 @@ namespace Ast
             var exs = new Queue<Expression> ();
             var ops = new Queue<Operator> ();
             bool first = true;
+            error = null;
 
             while (tokens.Count > 0)
             {
@@ -96,6 +98,9 @@ namespace Ast
                         break;
                 }
                 first = false;
+
+                if (error != null)
+                    return error;
             }
 
             return CreateAst(exs, ops);
@@ -107,12 +112,14 @@ namespace Ast
             Operator curOp, nextOp,top;
 
             if (exs.Count == 0)
-                return new Error(this, "No expressions");
+                return ErrorHandler("No expressions");
             if (exs.Count == 1)
                 return exs.Dequeue();
                 
-
-            top = ops.Peek();
+            if (ops.Count > 0)
+                top = ops.Peek();
+            else
+                return ErrorHandler("Missing operator");
             left = exs.Dequeue();
 
             while (ops.Count > 0)
@@ -210,6 +217,12 @@ namespace Ast
                     subTokens.Enqueue(tok);
                 }
             }
+            if (start != end)
+            {
+                exs.Clear();
+                exs.Add(ErrorHandler("Missing end bracket"));
+                return exs;
+            }
 
             exs.Add(Parse(subTokens));
 
@@ -232,7 +245,7 @@ namespace Ast
                             return new Integer(intRes);
                     }
                     else
-                        return new Error(this, "Int overflow");
+                        return ErrorHandler("Int overflow");
                 case TokenKind.Decimal:
                     if (decimal.TryParse(tok.value, out decRes))
                     {
@@ -242,7 +255,7 @@ namespace Ast
                             return new Irrational(decRes);
                     }
                     else
-                        return new Error(this, "Decimal overflow");
+                        return ErrorHandler("Decimal overflow");
                 case TokenKind.ImaginaryInt:
                     if (Int64.TryParse(tok.value, out intRes))
                     {
@@ -252,7 +265,7 @@ namespace Ast
                             return new Complex(new Integer(0), new Integer(intRes));
                     }
                     else
-                        return new Error(this, "Imaginary int overflow");
+                        return ErrorHandler("Imaginary int overflow");
                 case TokenKind.ImaginaryDec:
                     if (decimal.TryParse(tok.value, out decRes))
                     {
@@ -262,7 +275,7 @@ namespace Ast
                             return new Complex(new Integer(0), new Irrational(decRes));
                     }
                     else
-                        return new Error(this, "Imaginary decimal overflow");
+                        return ErrorHandler("Imaginary decimal overflow");
                 default:
                     throw new Exception("Wrong number token");
             }
@@ -320,6 +333,12 @@ namespace Ast
 
             return res;
 
+        }
+        public Error ErrorHandler(string message)
+        {
+            error = new Error(this, message);
+
+            return error;
         }
     }
 }
