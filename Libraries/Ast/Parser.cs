@@ -86,12 +86,12 @@ namespace Ast
                         break;
                     
                     case TokenKind.ParenthesesStart:
-                        exs.Enqueue(ExtractBrackets(tokens, TokenKind.None)[0]);
+                        exs.Enqueue(ExtractBrackets(tok.kind, tokens, TokenKind.None)[0]);
                         break;
                     case TokenKind.SquareStart:
                     case TokenKind.CurlyStart:
                         var list = new List();
-                        list.elements = ExtractBrackets(tokens, TokenKind.Comma);
+                        list.elements = ExtractBrackets(tok.kind, tokens, TokenKind.Comma);
                         exs.Enqueue(list);
                         break;
                 }
@@ -158,17 +158,16 @@ namespace Ast
             return top;
         }
 
-        public List<Expression> ExtractBrackets(Queue<Token> tokens, TokenKind seperator)
+        public List<Expression> ExtractBrackets(TokenKind startBracket, Queue<Token> tokens, TokenKind seperator)
         {
             List<Expression> exs = new List<Expression> ();
 
-            TokenKind startBracket = tokens.Dequeue().kind;
-            TokenKind endBracket;
             Token tok;
 
             int start = 1;
             int end = 0;
 
+            TokenKind endBracket;
             switch (startBracket)
             {
                 case TokenKind.ParenthesesStart:
@@ -181,8 +180,7 @@ namespace Ast
                     endBracket = TokenKind.CurlyEnd;
                     break;
                 default:
-                    // This can never happen...
-                    return exs;
+                    throw new Exception("Wrong bracket token");
             }
 
             var subTokens = new Queue<Token>();
@@ -266,7 +264,7 @@ namespace Ast
                     else
                         return new Error(this, "Imaginary decimal overflow");
                 default:
-                    return new Error(this, "this should never happen");
+                    throw new Exception("Wrong number token");
             }
 
         }
@@ -275,7 +273,7 @@ namespace Ast
         {
             Expression res;
 
-            var args = ExtractBrackets (tokens, TokenKind.Comma);
+            var args = ExtractBrackets (TokenKind.ParenthesesStart, tokens, TokenKind.Comma);
 
             switch (tok.value.ToLower())
             {
