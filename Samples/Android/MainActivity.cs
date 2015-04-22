@@ -6,13 +6,13 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
+using Ast;
 
 namespace Android
 {
 	[Activity (Label = "Android", MainLauncher = true, Icon = "@drawable/icon")]
 	public class MainActivity : Activity
 	{
-		int count = 1;
 
 		protected override void OnCreate (Bundle bundle)
 		{
@@ -29,7 +29,9 @@ namespace Android
 			button1.Click += (object sender, EventArgs e) =>
 			{
 				var Dialog = new AlertDialog.Builder(this);
+
 				Dialog.SetMessage(field.Text);
+
 				Dialog.Show();
 			};
 		}
