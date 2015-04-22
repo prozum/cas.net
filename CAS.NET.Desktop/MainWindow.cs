@@ -1,5 +1,6 @@
 ﻿using System;
 using Gtk;
+
 //using TaskGenLib;
 //using System.Collections.Generic;
 //using ImEx;
@@ -11,7 +12,8 @@ namespace CAS.NET.Desktop
 {
     class MainWindow : Window
     {
-        int privilege;
+
+        int privilege = -1;
 
         TextViewList textviews = new TextViewList();
 
@@ -20,21 +22,49 @@ namespace CAS.NET.Desktop
         ServerMenuItem server;
         LoginMenuItem login;
         LogoutMenuItem logout;
+        StudentAddCompletedMenuItem stdAddCom;
+        StudentGetAssignmentMenuItem stdGetAsm;
+        StudentGetAssignmentListMenuItem stdGetAsmList;
+        StudentGetFeedbackMenuItem stdGetFee;
+        TeacherAddAssignmentMenuItem teaAddAsm;
+        TeacherAddFeedbackMenuItem teaAddFee;
+        TeacherGetAssignmentListMenuItem teaGetAsmList;
+        TeacherGetCompletedMenuItem teaGetCom;
+        StudentGetAssignmentMenuItem studentGetAssignmentMenuItem;
 
         Toolbar toolbar = new Toolbar();
         OpenToolButton open;
         SaveToolButton save;
         NewToolButton neo;
 
-        public MainWindow() : base("CAS.NET")
+        public MainWindow()
+            : base("CAS.NET")
         {
+            DeleteEvent += (o, a) => Application.Quit();
+
             server = new ServerMenuItem();
             login = new LoginMenuItem(ref privilege, menu);
-            logout = new LogoutMenuItem();
+            logout = new LogoutMenuItem(ref menu);
+            stdAddCom = new StudentAddCompletedMenuItem();
+            stdGetAsm = new StudentGetAssignmentMenuItem();
+            stdGetAsmList = new StudentGetAssignmentListMenuItem();
+            stdGetFee = new StudentGetFeedbackMenuItem();
+            teaAddAsm = new TeacherAddAssignmentMenuItem();
+            teaAddFee = new TeacherAddFeedbackMenuItem();
+            teaGetAsmList = new TeacherGetAssignmentListMenuItem();
+            teaGetCom = new TeacherGetCompletedMenuItem();
 
             server.Submenu = menu;
             menu.Append(login);
             menu.Append(logout);
+            menu.Append(stdAddCom);
+            menu.Append(stdGetAsm);
+            menu.Append(stdGetAsmList);
+            menu.Append(stdGetFee);
+            menu.Append(teaAddAsm);
+            menu.Append(teaAddFee);
+            menu.Append(teaGetAsmList);
+            menu.Append(teaGetCom);
 
             menubar.Append(server);
 
@@ -55,6 +85,27 @@ namespace CAS.NET.Desktop
             Add(vbox);
 
             ShowAll();
+
+            foreach (Widget w in menu)
+            {
+                if (w.GetType() == typeof(StudentAddCompletedMenuItem)
+                    || w.GetType() == typeof(StudentGetAssignmentListMenuItem)
+                    || w.GetType() == typeof(StudentGetAssignmentMenuItem)
+                    || w.GetType() == typeof(StudentGetFeedbackMenuItem)
+                    || w.GetType() == typeof(TeacherAddAssignmentMenuItem)
+                    || w.GetType() == typeof(TeacherAddFeedbackMenuItem)
+                    || w.GetType() == typeof(TeacherGetAssignmentListMenuItem)
+                    || w.GetType() == typeof(TeacherGetCompletedMenuItem)
+                    || w.GetType() == typeof(LogoutMenuItem))
+                {
+                    w.Hide();
+                }
+                else if (w.GetType() == typeof(LoginMenuItem))
+                {
+                    w.Show();
+                }
+            }
+
         }
 
         /*
