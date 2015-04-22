@@ -7,7 +7,7 @@ namespace DesktopUI
 	public class CasCalcView : CasTextView
 	{
 		public CasCalcView(TextViewList parent, string serializedString, bool teacherCanEdit) :
-		base(parent, serializedString, teacherCanEdit)
+		base(serializedString, teacherCanEdit)
 		{
 
 		}

@@ -7,7 +7,7 @@ namespace DesktopUI
     public class MovableCasTextView : Grid
     {
         TextViewList parent;
-        CasTextView textview;
+        protected CasTextView textview;
         Button ButtonMoveUp = new Button("↑");
         Button ButtonMoveDown = new Button("↓");
         /* insert arror moving thingy here */
