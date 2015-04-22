@@ -15,6 +15,9 @@ namespace DesktopUI
 		{
 			textview = new CasTextView(serializedString, teacherCanEdit);
 
+			textview.WidthRequest = 400;
+			textview.HeightRequest = 200;
+
 			Attach(textview, 1, 1, 1, 2);
 			Attach(ButtonMoveUp, 2, 1, 1, 1);
 			Attach(ButtonMoveDown, 2, 2, 1, 1);

@@ -37,14 +37,6 @@ namespace DesktopUI
             Console.WriteLine("Length: " + byteTextView.Length);
             Buffer.Deserialize(Buffer, Buffer.RegisterDeserializeTagset(null), ref textIter, byteTextView, (ulong)byteTextView.Length);
         }
-
-		/*
-        public Widget GetMovableWidget()
-        {
-            CasMovableWidget movableWidget = new CasMovableWidget(this, listWidget);
-            return movableWidget.GetMovableWidget();
-        }
-        */
     }
 }
 

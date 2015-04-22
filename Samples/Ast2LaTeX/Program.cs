@@ -16,7 +16,7 @@ namespace Ast2LaTeX
         {
             if (ex is Operator) {
                 Operator op = (Operator)ex;
-                return AstLatex (op.left) + op.symbol + AstLatex (op.right);
+                return AstLatex (op.Left) + op.symbol + AstLatex (op.Right);
             } else if (ex is Symbol) {
                 return (ex as Symbol).identifier;
             } else if (ex is Number) {
