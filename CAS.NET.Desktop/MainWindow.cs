@@ -1,16 +1,67 @@
 ﻿using System;
 using Gtk;
-using TaskGenLib;
-using System.Collections.Generic;
-using ImEx;
-using System.Net;
-using System.Text;
+//using TaskGenLib;
+//using System.Collections.Generic;
+//using ImEx;
+//using System.Net;
+//using System.Text;
 using DesktopUI;
 
 namespace CAS.NET.Desktop
 {
     class MainWindow : Window
     {
+        int privilege;
+
+        TextViewList textviews = new TextViewList();
+
+        MenuBar menubar = new MenuBar();
+        Menu menu = new Menu();
+        ServerMenuItem server;
+        LoginMenuItem login;
+        LogoutMenuItem logout;
+
+        Toolbar toolbar = new Toolbar();
+        OpenToolButton open;
+        SaveToolButton save;
+        NewToolButton neo;
+
+        public MainWindow() : base("CAS.NET")
+        {
+            server = new ServerMenuItem();
+            login = new LoginMenuItem(ref privilege, menu);
+            logout = new LogoutMenuItem();
+
+            server.Submenu = menu;
+            menu.Append(login);
+            menu.Append(logout);
+
+            menubar.Append(server);
+
+            open = new OpenToolButton(textviews);
+            save = new SaveToolButton(textviews);
+            neo = new NewToolButton(textviews);
+
+            toolbar.Add(open);
+            toolbar.Add(save);
+            toolbar.Add(neo);
+
+            VBox vbox = new VBox();
+
+            vbox.Add(menubar);
+            vbox.Add(toolbar);
+            vbox.Add(textviews);
+
+            Add(vbox);
+
+            //Add(server);
+            //Add(toolbar);
+            //Add(textviews);
+
+            ShowAll();
+        }
+
+        /*
         List<Widget> listWidget = new List<Widget>();
         List<MetaType> mt = new List<MetaType>();
         Grid globalGrid = new Grid();
@@ -217,6 +268,7 @@ namespace CAS.NET.Desktop
 
             ShowAll();
         }
+        */
 
         /*
 

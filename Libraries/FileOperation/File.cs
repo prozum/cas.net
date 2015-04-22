@@ -11,7 +11,7 @@ namespace FileOperation
 
 		public string Open(PlatformID pid, Window window)
 		{
-			string file;
+			string file = String.Empty;
 
 			switch (pid)
 			{
@@ -32,7 +32,7 @@ namespace FileOperation
 							file = System.IO.File.ReadAllText(filechooser.FileName);
 						}
 
-						file;
+						return file;
 					}
 				case PlatformID.Unix:
 				case PlatformID.MacOSX:
@@ -52,7 +52,7 @@ namespace FileOperation
 
 						filechooser.Destroy();
 
-						file;
+						return file;
 					}
 				default:
 					return null;
