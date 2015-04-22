@@ -6,13 +6,14 @@ namespace Ast
     public class Parser
     {
         Scanner scanner;
-        Evaluator eval;
+        Evaluator evaluator;
+        Error error;
 
         public Parser() : this(new Evaluator()) { }
         public Parser (Evaluator eval)
         {
             this.scanner = new Scanner();
-            this.eval = eval;
+            this.evaluator = eval;
         }
 
         public Expression Parse(string parseString)
@@ -25,6 +26,7 @@ namespace Ast
             var exs = new Queue<Expression> ();
             var ops = new Queue<Operator> ();
             bool first = true;
+            error = null;
 
             while (tokens.Count > 0)
             {
@@ -40,9 +42,12 @@ namespace Ast
 
                     case TokenKind.Identifier:
                         if (tokens.Count > 0 && tokens.Peek().kind == TokenKind.ParenthesesStart)
+                        {
+                            tokens.Dequeue(); // Eat start parentheses
                             exs.Enqueue(ParseFunction(tok, tokens));
+                        }
                         else
-                            exs.Enqueue(new Symbol(eval, tok.value));
+                            exs.Enqueue(new Symbol(evaluator, tok.value));
                         break;
 
                     case TokenKind.Assign:
@@ -94,8 +99,19 @@ namespace Ast
                         list.elements = ExtractBrackets(tok.kind, tokens, TokenKind.Comma);
                         exs.Enqueue(list);
                         break;
+                    case TokenKind.ParenthesesEnd:
+                    case TokenKind.SquareEnd:
+                    case TokenKind.CurlyEnd:
+                        ErrorHandler("Unexpected end bracker");
+                        break;
+                    case TokenKind.Unknown:
+                        ErrorHandler("Unknown token");
+                        break;
                 }
                 first = false;
+
+                if (error != null)
+                    return error;
             }
 
             return CreateAst(exs, ops);
@@ -107,12 +123,14 @@ namespace Ast
             Operator curOp, nextOp,top;
 
             if (exs.Count == 0)
-                return new Error(this, "No expressions");
+                return ErrorHandler("No expressions");
             if (exs.Count == 1)
                 return exs.Dequeue();
                 
-
-            top = ops.Peek();
+            if (ops.Count > 0)
+                top = ops.Peek();
+            else
+                return ErrorHandler("Missing operator");
             left = exs.Dequeue();
 
             while (ops.Count > 0)
@@ -154,6 +172,9 @@ namespace Ast
                     curOp.Right = right;
                 }
             }
+
+            if (exs.Count != 0)
+                return ErrorHandler("The operators cannot use all the operands");
 
             return top;
         }
@@ -210,6 +231,12 @@ namespace Ast
                     subTokens.Enqueue(tok);
                 }
             }
+            if (start != end)
+            {
+                exs.Clear();
+                exs.Add(ErrorHandler("Missing end bracket"));
+                return exs;
+            }
 
             exs.Add(Parse(subTokens));
 
@@ -232,7 +259,7 @@ namespace Ast
                             return new Integer(intRes);
                     }
                     else
-                        return new Error(this, "Int overflow");
+                        return ErrorHandler("Int overflow");
                 case TokenKind.Decimal:
                     if (decimal.TryParse(tok.value, out decRes))
                     {
@@ -242,7 +269,7 @@ namespace Ast
                             return new Irrational(decRes);
                     }
                     else
-                        return new Error(this, "Decimal overflow");
+                        return ErrorHandler("Decimal overflow");
                 case TokenKind.ImaginaryInt:
                     if (Int64.TryParse(tok.value, out intRes))
                     {
@@ -252,7 +279,7 @@ namespace Ast
                             return new Complex(new Integer(0), new Integer(intRes));
                     }
                     else
-                        return new Error(this, "Imaginary int overflow");
+                        return ErrorHandler("Imaginary int overflow");
                 case TokenKind.ImaginaryDec:
                     if (decimal.TryParse(tok.value, out decRes))
                     {
@@ -262,7 +289,7 @@ namespace Ast
                             return new Complex(new Integer(0), new Irrational(decRes));
                     }
                     else
-                        return new Error(this, "Imaginary decimal overflow");
+                        return ErrorHandler("Imaginary decimal overflow");
                 default:
                     throw new Exception("Wrong number token");
             }
@@ -278,48 +305,54 @@ namespace Ast
             switch (tok.value.ToLower())
             {
                 case "sin":
-                    res = new Sin(args);
+                    res = new Sin(args, evaluator);
                     break;
                 case "cos":
-                    res = new Cos(args);
+                    res = new Cos(args, evaluator);
                     break;
                 case "tan":
-                    res = new Tan(args);
+                    res = new Tan(args, evaluator);
                     break;
                 case "asin":
-                    res = new ASin(args);
+                    res = new ASin(args, evaluator);
                     break;
                 case "acos":
-                    res = new ACos(args);
+                    res = new ACos(args, evaluator);
                     break;
                 case "atan":
-                    res = new ATan(args);
+                    res = new ATan(args, evaluator);
                     break;
                 case "sqrt":
-                    res = new Sqrt(args);
+                    res = new Sqrt(args, evaluator);
                     break;
                 case "simplify":
-                    res = new Simplify(args);
+                    res = new Simplify(args, evaluator);
                     break;
                 case "expand":
-                    res = new Expand(args);
+                    res = new Expand(args, evaluator);
                     break;
                 case "range":
-                    res = new Range(args);
+                    res = new Range(args, evaluator);
                     break;
                 case "plot":
-                    res = new Plot(args);
+                    res = new Plot(args, evaluator);
                     break;
                 case "solve":
-                    res = new Solve(args);
+                    res = new Solve(args, evaluator);
                     break;
                 default:
-                    res = new UserDefinedFunction(tok.value.ToLower(), args, eval);
+                    res = new UserDefinedFunction(tok.value.ToLower(), args, evaluator);
                     break;
             }
 
             return res;
 
+        }
+        public Error ErrorHandler(string message)
+        {
+            error = new Error(this, message);
+
+            return error;
         }
     }
 }

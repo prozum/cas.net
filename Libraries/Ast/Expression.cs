@@ -26,7 +26,10 @@ namespace Ast
             return this;
         }
 
-        public abstract Expression Clone();
+        public virtual Expression Clone()
+        {
+            return new Error(this, "Cannot clone");
+        }
 
         public virtual bool CompareTo(Expression other)
         {
@@ -41,8 +44,6 @@ namespace Ast
         }
 
         public abstract bool ContainsVariable(Variable other);
-
-        //public abstract string ToString ();
 
         #region AddWith
         public virtual Expression AddWith(Integer other)
