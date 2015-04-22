@@ -513,7 +513,7 @@ namespace Ast
             else if (right is Message)
                 return right;
 
-            if (right.CompareTo(new Integer(0)))
+            if (right.CompareTo(Constant.Zero))
             {
                 return new Error(left, "Cannot be divided by 0");
             }
