@@ -42,7 +42,10 @@ namespace Ast
 
                     case TokenKind.Identifier:
                         if (tokens.Count > 0 && tokens.Peek().kind == TokenKind.ParenthesesStart)
+                        {
+                            tokens.Dequeue(); // Eat start parentheses
                             exs.Enqueue(ParseFunction(tok, tokens));
+                        }
                         else
                             exs.Enqueue(new Symbol(evaluator, tok.value));
                         break;
