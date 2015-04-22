@@ -4,14 +4,14 @@ namespace DesktopUI
 {
 	public class MovableCasCalcView : MovableCasTextView
 	{
+		CasCalcView calcview = new CasCalcView();
+
 		public MovableCasCalcView(TextViewList parent) :
 		base(parent, "", false)
 		{
-			textview = (CasCalcView)new CasCalcView();
-			textview.WidthRequest = 400;
-			textview.HeightRequest = 200;
-
-			Attach(textview, 1, 1, 1, 2);
+			Remove(textview);
+			textview = null;
+			Attach(calcview, 1, 1, 1, 2);
 		}
 	}
 }

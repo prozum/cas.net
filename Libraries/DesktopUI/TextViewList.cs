@@ -7,6 +7,7 @@ namespace DesktopUI
 	public class TextViewList : Grid
 	{
 		List<MovableCasTextView> castextviews = new List<MovableCasTextView>();
+		Grid ButtonGrid = new Grid();
 		Button AddNewMovableTextView = new Button("New Textbox");
 		Button AddNewMovableCalcView = new Button("New Calcbox");
 
@@ -22,7 +23,12 @@ namespace DesktopUI
 					InsertCalcView();
 				};
 
-			Attach(AddNewMovableTextView, 1, 1, 1, 1);
+			ButtonGrid.Attach(AddNewMovableTextView, 1, 1, 1, 1);
+			ButtonGrid.Attach(AddNewMovableCalcView, 2, 1, 1, 1);
+
+			Attach(ButtonGrid, 1, 1, 1, 1);
+
+			ShowAll();
 		}
 
 		public void InsertTextView(string serializedString, bool teacherCanEdit)
@@ -84,7 +90,7 @@ namespace DesktopUI
 				Attach(widget, 1, Children.Length, 1, 1);
 			}
 
-			Attach(AddNewMovableTextView, 1, Children.Length, 1, 1);
+			Attach(ButtonGrid, 1, Children.Length, 1, 1);
 		}
 	}
 }
