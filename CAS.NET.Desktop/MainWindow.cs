@@ -48,8 +48,6 @@ namespace CAS.NET.Desktop
 
             VBox vbox = new VBox();
 
-            textviews.Insert("                                       ", false);
-
             vbox.Add(menubar);
             vbox.Add(toolbar);
             vbox.Add(textviews);
