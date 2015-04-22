@@ -25,51 +25,11 @@ namespace Ast
             {
                 if ((exp as Assign).Left is UserDefinedFunction)
                 {
-                    if ((exp as Assign).Right.ContainsVariable((exp as Assign).Left as UserDefinedFunction))
-                    {
-                        return new MsgData(MsgType.Error, "Evaluator> Can't define function as it self");
-                    }
-
-                    var paramNames = new List<string>();
-
-                    if (functionDefinitions.ContainsKey(((exp as Assign).Left as UserDefinedFunction).identifier))
-                    {
-                        functionDefinitions.Remove(((exp as Assign).Left as UserDefinedFunction).identifier);
-                        functionParams.Remove(((exp as Assign).Left as UserDefinedFunction).identifier);
-                    }
-
-                    foreach (var item in ((exp as Assign).Left as Function).args)
-                    {   
-                        if (item is Symbol)
-                        {
-                            paramNames.Add((item as Symbol).identifier);
-                        }
-                        else
-                        {
-                            return new MsgData(MsgType.Error, "Evaluator> One arg in the function is not a symbol");
-                        }
-                    }
-
-                    functionParams.Add(((exp as Assign).Left as UserDefinedFunction).identifier, paramNames);
-                    functionDefinitions.Add(((exp as Assign).Left as UserDefinedFunction).identifier, (exp as Assign).Right);
-
-                    return new MsgData(MsgType.Info, "Evaluator> Function defined");
+                    return AssignFunction((exp as Assign).Left as UserDefinedFunction, (exp as Assign).Right);
                 }
                 else if ((exp as Assign).Left is Symbol)
                 {
-                    if ((exp as Assign).Right.ContainsVariable((exp as Assign).Left as Symbol))
-                    {
-                        return new MsgData(MsgType.Error, "Evaluator> Can't define symbol as it self");
-                    }
-
-                    if (variableDefinitions.ContainsKey(((exp as Assign).Left as Symbol).identifier))
-                    {
-                        variableDefinitions.Remove(((exp as Assign).Left as Symbol).identifier);
-                    }
-
-                    variableDefinitions.Add(((exp as Assign).Left as Symbol).identifier, (exp as Assign).Right);
-
-                    return new MsgData(MsgType.Info, "Evaluator> Variable defined");
+                    return AssignSymbol((exp as Assign).Left as Symbol, (exp as Assign).Right);
                 }
                 else
                 {
@@ -105,6 +65,58 @@ namespace Ast
                 return new MsgData(MsgType.Print, exp.ToString());
             }
         }
+
+        public EvalData AssignFunction(UserDefinedFunction func, Expression exp)
+        {
+            if (exp.ContainsVariable(func))
+            {
+                return new MsgData(MsgType.Error, "Evaluator> Can't define function as it self");
+            }
+
+            var paramNames = new List<string>();
+
+            if (functionDefinitions.ContainsKey(func.identifier))
+            {
+                functionDefinitions.Remove(func.identifier);
+                functionParams.Remove(func.identifier);
+            }
+
+            foreach (var item in func.args)
+            {   
+                if (item is Symbol)
+                {
+                    paramNames.Add((item as Symbol).identifier);
+                }
+                else
+                {
+                    return new MsgData(MsgType.Error, "Evaluator> One arg in the function is not a symbol");
+                }
+            }
+
+            functionParams.Add(func.identifier, paramNames);
+            functionDefinitions.Add(func.identifier, exp);
+
+            return new MsgData(MsgType.Info, "Evaluator> Function defined");
+        }
+
+        public EvalData AssignSymbol(Symbol sym, Expression exp)
+        {
+            if (exp.ContainsVariable(sym))
+            {
+                return new MsgData(MsgType.Error, "Evaluator> Can't define symbol as it self");
+            }
+
+            if (variableDefinitions.ContainsKey(sym.identifier))
+            {
+                variableDefinitions.Remove(sym.identifier);
+            }
+
+            variableDefinitions.Add(sym.identifier, exp);
+
+            return new MsgData(MsgType.Info, "Evaluator> Variable defined");
+        }
+
+        
 
         public static Expression SimplifyExp(Expression exp)
         {
