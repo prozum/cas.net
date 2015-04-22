@@ -1,10 +1,12 @@
 ﻿using System;
+using Gtk;
 
 namespace DesktopUI
 {
-    public class TeacherGetCompletedMenuItem
+    public class TeacherGetCompletedMenuItem : MenuItem
     {
         public TeacherGetCompletedMenuItem()
+            : base("Get Completed")
         {
         }
     }
