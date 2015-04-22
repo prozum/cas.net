@@ -8,9 +8,9 @@ namespace DesktopUI
 		public OpenToolButton(TextViewList textviews) : base(Stock.Open)
 		{
 			this.Clicked += delegate
-			{
-				OpenFile();
-			};
+				{
+					OpenFile();
+				};
 		}
 
 		void OpenFile()
