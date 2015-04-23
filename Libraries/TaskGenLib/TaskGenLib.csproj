@@ -42,5 +42,9 @@
       <Project>{82C03E10-075F-411C-A1F1-D5506C62BE1C}</Project>
       <Name>Ast</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Samples\TaskGen\TaskGen.csproj">
+      <Project>{0B05C9EA-1DD4-4526-80C6-EF7F98B9F27F}</Project>
+      <Name>TaskGen</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

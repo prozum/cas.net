@@ -7,7 +7,7 @@ namespace DesktopUI
 {
 	public class TextViewList : Grid
 	{
-		List<MovableCasTextView> castextviews = new List<MovableCasTextView>();
+		public List<MovableCasTextView> castextviews = new List<MovableCasTextView>();
 		Grid ButtonGrid = new Grid();
 		Evaluator Eval = new Evaluator ();
 		Button AddNewMovableTextView = new Button("New Textbox");

@@ -8,9 +8,9 @@ namespace Geomet
         {
             return (u_kurs/100)*money;
         }
-        public static double otherToDanish(double radius)
+		public static double otherToDanish(double u_kurs, double money)
         {
-            return 4 / 3 * Math.PI * radius * radius * radius;
+			return (money*u_kurs)/100;
         }
     }
 }
