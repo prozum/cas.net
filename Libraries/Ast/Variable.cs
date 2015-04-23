@@ -79,7 +79,7 @@ namespace Ast
             (variable as Variable).prefix = new Integer(1);
             (variable as Variable).exponent = new Integer(1);
 
-            if (!(variable as Variable).exponent.CompareTo(Constant.One))
+            if (!exponent.CompareTo(Constant.One))
             {
                 res = new Exp(variable, exponent);
             } 
@@ -88,7 +88,7 @@ namespace Ast
                 res = variable;
 	        }
 
-            if (!(variable as Variable).prefix.CompareTo(Constant.One))
+            if (!prefix.CompareTo(Constant.One))
             {
                 res = new Mul(prefix, res);
             }

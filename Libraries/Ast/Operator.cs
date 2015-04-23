@@ -6,6 +6,7 @@ namespace Ast
     public interface ISwappable
     {
         Operator Swap();
+        Operator Transform();
     }
 
     public abstract class Operator : Expression
@@ -86,11 +87,15 @@ namespace Ast
 
             if (thisEvaluated is Error && otherEvaluated is Error)
             {
-                if (thisSimplified is Operator && otherSimplified is Operator)
+                if (!(thisSimplified is Operator))
+                {
+                    return thisSimplified.CompareTo(otherSimplified);
+                }
+                else if (thisSimplified is Operator && otherSimplified is Operator)
                 {
                     if (thisSimplified is ISwappable)
                     {
-                        return CompareSides(thisSimplified as Operator, otherSimplified as Operator) || CompareSides((thisSimplified as ISwappable).Swap().Simplify() as Operator, otherSimplified as Operator);
+                        return CompareSwappables(thisSimplified as ISwappable, otherSimplified as Operator);
                     }
                     else
                     {
@@ -108,6 +113,56 @@ namespace Ast
             }
 
             return thisEvaluated.CompareTo(otherEvaluated);
+        }
+
+        private bool CompareSwappables(ISwappable exp1, Operator exp2)
+        {
+            if (CompareSides(exp1 as Operator, exp2) || CompareSides(exp1.Swap().Simplify() as Operator, exp2))
+            {
+                return true;
+            }
+            else if ((exp1 as Operator).Left is ISwappable || (exp1 as Operator).Right is ISwappable)
+            {
+                return SwappableCompareAlorithem(exp1, exp2);
+            }
+
+            return false;
+        }
+
+        private bool SwappableCompareAlorithem(ISwappable exp1, Operator exp2)
+        {
+            Operator modified = (exp1 as Operator).Clone() as Operator;
+
+            do
+            {
+                modified = (modified as ISwappable).Transform();
+
+                if (modified.CompareTo(exp2))
+                {
+                    return true;
+                }
+
+                if (modified.Left is ISwappable)
+                {
+                    modified.Left = (modified.Left as ISwappable).Swap();
+
+                    if (modified.CompareTo(exp2))
+                    {
+                        return true;
+                    }
+                }
+                else if (modified.Right is ISwappable)
+                {
+                    modified.Right = (modified.Right as ISwappable).Swap();
+
+                    if (modified.CompareTo(exp2))
+                    {
+                        return true;
+                    }
+                }
+            } while (!modified.CompareTo(exp1 as Operator));
+
+            return false;
         }
 
         private bool CompareSides(Operator exp1, Operator exp2)
@@ -353,6 +408,10 @@ namespace Ast
             {
                 res = simplifiedOperator.Left;
             }
+            else if (simplifiedOperator.Left is Number && simplifiedOperator.Right is Number)
+            {
+                res = simplifiedOperator.Left + simplifiedOperator.Right;
+            }
             else if (simplifiedOperator.Left is Add)
             {
                 res = (simplifiedOperator.Left as Add).SimplifyMultiAdd(simplifiedOperator.Right);
@@ -373,11 +432,6 @@ namespace Ast
             if (res is Operator)
             {
                 res = CurrectOperator(res as Operator);
-            }
-
-            if (!((evaluatedRes = res.Evaluate()) is Error))
-            {
-                res = evaluatedRes;
             }
 
             return res;
@@ -504,6 +558,30 @@ namespace Ast
         {
             return new Add(Right, Left);
         }
+
+        public Operator Transform()
+        {
+            if (Left is Add)
+            {
+                return new Add((Left as Add).Left, new Add((Left as Add).Right, Right));
+            }
+            else if (Right is Add)
+            {
+                return new Add(new Add(Left, (Right as Add).Left), (Right as Add).Right);
+            }
+            else if (Left is Sub)
+            {
+                return new Sub((Left as Sub).Left, new Add((Left as Sub).Right, Right));
+            }
+            else if (Right is Sub)
+            {
+                return new Sub(new Add(Left, (Right as Sub).Left), (Right as Sub).Right);
+            }
+            else
+            {
+                return this;
+            }
+        }
     }
 
     public class Sub : Operator, ISwappable, IInvertable
@@ -540,6 +618,30 @@ namespace Ast
         public Operator Swap()
         {
             return new Add(new Mul(new Integer(-1), Right), Left);
+        }
+
+        public Operator Transform()
+        {
+            if (Left is Add)
+            {
+                return new Add((Left as Add).Left, new Sub((Left as Add).Right, Right));
+            }
+            else if (Right is Add)
+            {
+                return new Add(new Sub(Left, (Right as Add).Left), (Right as Add).Right);
+            }
+            else if (Left is Sub)
+            {
+                return new Sub((Left as Sub).Left, new Sub((Left as Sub).Right, Right));
+            }
+            else if (Right is Sub)
+            {
+                return new Sub(new Sub(Left, (Right as Sub).Left), (Right as Sub).Right);
+            }
+            else
+            {
+                return this;
+            }
         }
     }
 
@@ -636,6 +738,10 @@ namespace Ast
                     res = simplifiedOperator;
                 }
             }
+            else if (simplifiedOperator.Left is Number && simplifiedOperator.Right is Number)
+            {
+                res = simplifiedOperator.Left * simplifiedOperator.Right;
+            }
             else if (simplifiedOperator.Left is Mul)
             {
                 res = (simplifiedOperator.Left as Mul).SimplifyMultiMul(simplifiedOperator.Right);
@@ -674,11 +780,6 @@ namespace Ast
             else
             {
                 res = simplifiedOperator;
-            }
-
-            if (!((evaluatedRes = res.Evaluate()) is Error))
-            {
-                res = evaluatedRes;
             }
 
             return res;
@@ -816,6 +917,22 @@ namespace Ast
         {
             return new Mul(Right, Left);
         }
+
+        public Operator Transform()
+        {
+            if (Left is Mul)
+            {
+                return new Mul((Left as Mul).Left, new Mul((Left as Mul).Right, Right));
+            }
+            else if (Right is Mul)
+            {
+                return new Mul(new Mul(Left, (Right as Mul).Left), (Right as Mul).Right);
+            }
+            else
+            {
+                return this;
+            }
+        }
     }
 
     public class Div : Operator, IInvertable
@@ -871,7 +988,11 @@ namespace Ast
             Expression evaluatedRes, res = null;
             Operator simplifiedOperator = new Div(Evaluator.SimplifyExp(Left), Evaluator.SimplifyExp(Right));
 
-            if (simplifiedOperator.Left is Div)
+            if (simplifiedOperator.Left is Number && simplifiedOperator.Right is Number)
+            {
+                res = simplifiedOperator.Left / simplifiedOperator.Right;
+            }
+            else if (simplifiedOperator.Left is Div)
             {
                 res = new Div((simplifiedOperator.Left as Div).Left, new Mul((simplifiedOperator.Left as Div).Right, simplifiedOperator.Right));
             }
@@ -890,11 +1011,6 @@ namespace Ast
             else
             {
                 res = simplifiedOperator;
-            }
-
-            if (!((evaluatedRes = res.Evaluate()) is Error))
-            {
-                res = evaluatedRes;
             }
 
             return res;
@@ -985,7 +1101,7 @@ namespace Ast
 
         public override Expression Simplify()
         {
-            Expression evaluatedRes, res = null;
+            Expression res = null;
             Operator simplifiedOperator = new Exp(Evaluator.SimplifyExp(Left), Evaluator.SimplifyExp(Right));
 
             if (simplifiedOperator.Left is Number && simplifiedOperator.Left.CompareTo(Constant.One))
@@ -996,18 +1112,17 @@ namespace Ast
             {
                 return new Integer(1);
             }
+            else if (simplifiedOperator.Left is Number && simplifiedOperator.Right is Number)
+            {
+                return simplifiedOperator.Left ^ simplifiedOperator.Right;
+            }
             else if (simplifiedOperator.Left is Variable && simplifiedOperator.Right is Number)
             {
-                res = VariableOperation(simplifiedOperator.Left as Variable, simplifiedOperator.Right as Number);
+                res = VariableOperation(simplifiedOperator.Left as Variable, simplifiedOperator.Right as Number).Simplify();
             }
             else
             {
                 res = simplifiedOperator;
-            }
-
-            if (!((evaluatedRes = res.Evaluate()) is Error))
-            {
-                res = evaluatedRes;
             }
 
             return res;
@@ -1018,28 +1133,6 @@ namespace Ast
             Variable res = left.Clone() as Variable;
 
             res.exponent = (left.exponent * right) as Number;
-
-            return res;
-        }
-
-        public override bool CompareTo(Expression other)
-        {
-            var res = base.CompareTo(other);
-
-            if (res)
-            {
-                if (Evaluate() is Error || other.Evaluate() is Error) 
-                {
-                    if (Left.CompareTo((other as Exp).Left) && Right.CompareTo((other as Exp).Right)) 
-                    {
-                        res = true;
-                    }
-                }
-                else if (Evaluate().CompareTo(other.Evaluate()))
-                {
-                    res = true;
-                }
-            }
 
             return res;
         }

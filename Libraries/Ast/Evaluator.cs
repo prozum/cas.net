@@ -121,11 +121,11 @@ namespace Ast
         public static Expression SimplifyExp(Expression exp)
         {
             var prevExp = "";
-            
+
             do
             {
                 prevExp = exp.ToString();
-
+                    
                 exp = exp.Simplify();
             } while (exp.ToString() != prevExp);
 
