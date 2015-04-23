@@ -407,7 +407,7 @@ namespace Ast
 
         public override Expression Simplify()
         {
-            Expression evaluatedRes, res = null;
+            Expression res = null;
             Operator simplifiedOperator = new Add(Evaluator.SimplifyExp(Left), Evaluator.SimplifyExp(Right));
 
             if (simplifiedOperator.Left is Number && simplifiedOperator.Left.CompareTo(Constant.Zero))
@@ -541,13 +541,14 @@ namespace Ast
         {
             if (Right is Number && (Right as Number).IsNegative())
             {
-                (Right as Number).ToNegative();
-                return new Sub(Left.CurrectOperator(), Right);
+                return new Sub(Left.CurrectOperator(), (Right as Number).ToNegative());
             }
             else if (Right is Variable && (Right as Variable).prefix.IsNegative())
             {
-                (Right as Variable).prefix.ToNegative();
-                return new Sub(Left.CurrectOperator(), Right);
+                var newRight = Right.Clone();
+                (newRight as Symbol).prefix = (newRight as Symbol).prefix.ToNegative();
+
+                return new Sub(Left.CurrectOperator(), newRight);
             }
 
             return new Add(Left.CurrectOperator(), Right.CurrectOperator());
@@ -610,8 +611,8 @@ namespace Ast
 
         public override Expression Simplify()
         {
-            Right = Evaluator.SimplifyExp(new Mul(new Integer(-1), Right));
-            return new Add(Left, Right).Simplify();
+            var newRight = Evaluator.SimplifyExp(new Mul(new Integer(-1), Right));
+            return new Add(Left, newRight).Simplify();
         }
 
         public override Expression Clone()
@@ -657,13 +658,14 @@ namespace Ast
         {
             if (Right is Number && (Right as Number).IsNegative())
             {
-                (Right as Number).ToNegative();
-                return new Add(Left.CurrectOperator(), Right);
+                return new Add(Left.CurrectOperator(), (Right as Number).ToNegative());
             }
             else if (Right is Variable && (Right as Variable).prefix.IsNegative())
             {
-                (Right as Variable).prefix.ToNegative();
-                return new Add(Left.CurrectOperator(), Right);
+                var newRight = Right.Clone();
+                (newRight as Symbol).prefix = (newRight as Symbol).prefix.ToNegative();
+
+                return new Add(Left.CurrectOperator(), newRight);
             }
 
             return new Sub(Left.CurrectOperator(), Right.CurrectOperator());

@@ -855,6 +855,7 @@ namespace Ast
             }
             else if (op.Right.ContainsVariable(sym))
             {
+
                 if (op is ISwappable)
                 {
                     resLeft = (op as ISwappable).Swap();
@@ -872,10 +873,6 @@ namespace Ast
                     {
                         return true;
                     }
-                }
-                else if (op is Exp)
-                {
-                    return true;
                 }
                 else
                 {
