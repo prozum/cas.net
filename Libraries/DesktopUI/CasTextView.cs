@@ -12,7 +12,7 @@ namespace DesktopUI
         public CasTextView(string SerializedString, bool TeacherCanEdit)
             : base()
         {
-            WrapMode = WrapMode.Word;
+            WrapMode = WrapMode.WordChar;
             DeserializeCasTextView(SerializedString);
             teacherEditOnly = TeacherCanEdit;
             ShowAll();
