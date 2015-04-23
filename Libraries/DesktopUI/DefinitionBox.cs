@@ -1,12 +1,13 @@
 ﻿using System;
+using Ast;
 
 namespace DesktopUI
 {
 	public class DefinitionBox
 	{
-		public DefinitionBox ()
+		public DefinitionBox (Expression )
 		{
+
 		}
 	}
 }
-
