@@ -94,6 +94,17 @@ namespace DesktopUI
 
 			Attach(ButtonGrid, 1, Children.Length, 1, 1);
 		}
+
+		public void Reevaluate()
+		{
+			foreach (Widget widget in castextviews)
+			{
+				if (widget.GetType == MovableCasCalcView)
+				{
+					(widget as MovableCasCalcView).calcview.Evaluate ();
+				}
+			}
+		}
 	}
 }
 
