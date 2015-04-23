@@ -8,16 +8,10 @@ namespace DesktopUI
     {
         public Entry input = new Entry();
         public Label output = new Label();
-        Evaluator Eval;
+        public Evaluator Eval;
 
         public CasCalcView(Evaluator Eval)
         {
-            input.Activated += delegate
-            {
-                Evaluate();
-                ShowAll();
-            };
-
             this.Eval = Eval;
 
             Attach(input, 1, 1, 1, 1);
