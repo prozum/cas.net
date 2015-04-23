@@ -1,32 +1,32 @@
 ﻿using System;
-using System.Text;
+using Ast;
 using Gtk;
-using System.Collections.Generic;
 
 namespace DesktopUI
 {
-	public class CasCalcView : CasTextView
+	public class CasCalcView : Grid
 	{
-		string calculation;
-		//Evaluator evaluator;
+		Entry input = new Entry();
+		public Label output = new Label();
 
-		public CasCalcView(/*Evaluator evaluator, */string SerializedString, bool TeacherCanEdit, List<Widget> widgets) :
-		base(SerializedString, TeacherCanEdit)
+		public CasCalcView()
 		{
-			//this.evaluator = evaluator;
+			input.Activated += delegate
+				{
+					output.Text = Evaluate();
+					ShowAll();
+				};
+
+			Attach(input, 1, 1, 1, 1);
+			Attach(output, 1, 2, 1, 1);
+			ShowAll();
 		}
 
-		void Calculate()
+		string Evaluate()
 		{
-			/*
-			calculation = Buffer.ToString();
-			EvalData result = evaluator.Evaluation(calculation);
+			Evaluator Eval = new Evaluator();
 
-			calculation += "\n" + result.ToString();
-			Buffer.Clear();
-			Buffer.Text.Insert();
-			*/
+			return Eval.Evaluation(input.Text).ToString();
 		}
 	}
 }
-

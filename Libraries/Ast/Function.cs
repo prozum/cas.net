@@ -742,6 +742,12 @@ namespace Ast
                 ArgKind.Expression,
                 ArgKind.Symbol
             };
+
+            if (isArgsValid())
+            {
+                exp = args[0];
+                sym = (Symbol)args[1];
+            }
         }
 
         public override Expression Evaluate()
