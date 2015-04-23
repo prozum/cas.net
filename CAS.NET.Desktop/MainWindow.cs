@@ -80,9 +80,8 @@ namespace CAS.NET.Desktop
 
             VBox vbox = new VBox();
 
-            menubar.HeightRequest = 30;
-            vbox.Add(menubar);
-            vbox.Add(toolbar);
+            vbox.PackStart(menubar, false, false, 2);
+            vbox.PackStart(toolbar, false, false, 2);
             scrolledWindow.Add(textviews);
             vbox.Add(scrolledWindow);
 
