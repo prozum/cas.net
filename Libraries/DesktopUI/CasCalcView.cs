@@ -14,7 +14,7 @@ namespace DesktopUI
         {
             input.Activated += delegate
             {
-                output.Text = Evaluate();
+                Evaluate();
                 ShowAll();
             };
 
@@ -25,9 +25,9 @@ namespace DesktopUI
             ShowAll();
         }
 
-        string Evaluate()
+        public void Evaluate()
         {
-            return Eval.Evaluation(input.Text).ToString();
+			output.Text = Eval.Evaluation(input.Text).ToString();
         }
     }
 }
