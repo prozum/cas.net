@@ -12,7 +12,9 @@ namespace CAS.NET.Desktop
 {
     class MainWindow : Window
     {
+
         int privilege = -1;
+        // <- You are not worthy
 
         TextViewList textviews = new TextViewList();
 
@@ -21,16 +23,15 @@ namespace CAS.NET.Desktop
         ServerMenuItem server;
         LoginMenuItem login;
         LogoutMenuItem logout;
-
         StudentAddCompletedMenuItem stdAddCom;
         StudentGetAssignmentMenuItem stdGetAsm;
         StudentGetAssignmentListMenuItem stdGetAsmList;
         StudentGetFeedbackMenuItem stdGetFee;
-
         TeacherAddAssignmentMenuItem teaAddAsm;
         TeacherAddFeedbackMenuItem teaAddFee;
         TeacherGetAssignmentListMenuItem teaGetAsmList;
         TeacherGetCompletedMenuItem teaGetCom;
+        StudentGetAssignmentMenuItem studentGetAssignmentMenuItem;
 
         Toolbar toolbar = new Toolbar();
         OpenToolButton open;

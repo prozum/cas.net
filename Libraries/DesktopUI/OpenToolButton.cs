@@ -84,6 +84,8 @@ namespace DesktopUI
                 Console.WriteLine("Item: " + item);
             }
 
+            textviews.castextviews.Clear();
+
             foreach (var item in metaTypeList)
             {
                 if (item.type == typeof(MovableCasCalcView))
@@ -92,16 +94,25 @@ namespace DesktopUI
                     Evaluator Eval = new Evaluator();
                     MovableCasCalcView movableCasCalcView = new MovableCasCalcView(Eval, textviews);
                     movableCasCalcView.calcview.input.Text = item.metastring;
-                    textviews.Add(movableCasCalcView);
+                    textviews.castextviews.Add(movableCasCalcView);
                 }
                 else if (item.type == typeof(MovableCasTextView))
                 {
                     Console.WriteLine("Is movavle cas text view");
                     MovableCasTextView movableCasTextView = new MovableCasTextView(textviews, item.metastring, true);
-                    textviews.Add(movableCasTextView);
+                    textviews.castextviews.Add(movableCasTextView);
                 }
-
             }
+
+            Console.WriteLine("Content loaded...");
+
+            foreach (var item in textviews.castextviews)
+            {
+                Console.WriteLine(item);
+            }
+            textviews.Clear();
+            textviews.Redraw();
+            textviews.ShowAll();
         }
     }
 }
