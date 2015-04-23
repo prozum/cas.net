@@ -37,6 +37,8 @@ namespace CAS.NET.Desktop
         SaveToolButton save;
         NewToolButton neo;
 
+        ScrolledWindow scrolledWindow = new ScrolledWindow();
+
         public MainWindow()
             : base("CAS.NET")
         {
@@ -78,9 +80,11 @@ namespace CAS.NET.Desktop
 
             VBox vbox = new VBox();
 
+            menubar.HeightRequest = 30;
             vbox.Add(menubar);
             vbox.Add(toolbar);
-            vbox.Add(textviews);
+            scrolledWindow.Add(textviews);
+            vbox.Add(scrolledWindow);
 
             Add(vbox);
 
@@ -105,7 +109,6 @@ namespace CAS.NET.Desktop
                     w.Show();
                 }
             }
-
         }
 
         /*
