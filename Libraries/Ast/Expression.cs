@@ -46,6 +46,11 @@ namespace Ast
 
         public abstract Expression Evaluate();
 
+        public virtual Expression CurrectOperator()
+        {
+            return this;
+        }
+
         #region AddWith
         public virtual Expression AddWith(Integer other)
         {

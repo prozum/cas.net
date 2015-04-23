@@ -82,7 +82,7 @@ namespace Ast
 
         public override bool CompareTo(Expression other)
         {
-            var otherSimplified = Evaluator.SimplifyExp(other);
+            var otherSimplified = Evaluator.SimplifyExp(other).CurrectOperator();
 
             if (otherSimplified is Symbol)
             {

@@ -116,8 +116,6 @@ namespace Ast
             return new MsgData(MsgType.Info, "Evaluator> Variable defined");
         }
 
-        
-
         public static Expression SimplifyExp(Expression exp)
         {
             var prevExp = "";
@@ -127,6 +125,7 @@ namespace Ast
                 prevExp = exp.ToString();
                     
                 exp = exp.Simplify();
+
             } while (exp.ToString() != prevExp);
 
             return exp;

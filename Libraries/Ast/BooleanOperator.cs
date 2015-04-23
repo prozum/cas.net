@@ -20,6 +20,11 @@ namespace Ast
         {
             return new BooleanEqual(Left.Clone(), Right.Clone());
         }
+
+        public override Expression CurrectOperator()
+        {
+            return new BooleanEqual(Left.CurrectOperator(), Right.CurrectOperator());
+        }
     }
 
     public class Lesser : Operator
@@ -35,6 +40,11 @@ namespace Ast
         public override Expression Clone()
         {
             return new Lesser(Left.Clone(), Right.Clone());
+        }
+
+        public override Expression CurrectOperator()
+        {
+            return new Lesser(Left.CurrectOperator(), Right.CurrectOperator());
         }
     }
 
@@ -52,6 +62,11 @@ namespace Ast
         {
             return new LesserOrEqual(Left.Clone(), Right.Clone());
         }
+
+        public override Expression CurrectOperator()
+        {
+            return new LesserOrEqual(Left.CurrectOperator(), Right.CurrectOperator());
+        }
     }
 
     public class Greater : Operator
@@ -68,6 +83,11 @@ namespace Ast
         {
             return new Greater(Left.Clone(), Right.Clone());
         }
+
+        public override Expression CurrectOperator()
+        {
+            return new Greater(Left.CurrectOperator(), Right.CurrectOperator());
+        }
     }
 
     public class GreaterOrEqual : Operator
@@ -83,6 +103,11 @@ namespace Ast
         public override Expression Clone()
         {
             return new GreaterOrEqual(Left.Clone(), Right.Clone());
+        }
+
+        public override Expression CurrectOperator()
+        {
+            return new GreaterOrEqual(Left.CurrectOperator(), Right.CurrectOperator());
         }
     }
 }
