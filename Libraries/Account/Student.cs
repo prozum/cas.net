@@ -34,6 +34,8 @@ namespace Account
             return response;
         }
 
+        string[] filelist;
+
         public string[] GetAssignmentList()
         {
             string response = client.UploadString(host, "StudentGetAssignmentList");
@@ -42,12 +44,14 @@ namespace Account
 
             if (response == "Success")
             {
-                string[] filelist = new string[client.ResponseHeaders.Count / 2];
+                filelist = new string[client.ResponseHeaders.Count / 2];
                 string[] checksumlist = new string[client.ResponseHeaders.Count / 2];
-
-                for (int i = 0; i < client.ResponseHeaders.Count / 2; i++)
+            
+                for (int i = 0; i < client.ResponseHeaders.Count / 2 - 2; i++) // <- Subtract two, otherwise it doesn't work. Subtracting fewer results in stupid nullexception.
                 {
+            
                     filelist[i] = client.ResponseHeaders["File" + i.ToString()];
+
                     checksumlist[i] = client.ResponseHeaders["Checksum" + i.ToString()];
 
                     if (Checksum.GetMd5Hash(filelist[i]) != checksumlist[i])
@@ -57,7 +61,13 @@ namespace Account
                 }
             }
 
-            return null;
+
+            foreach (var item in filelist)
+            {
+                Console.WriteLine(item);
+            }
+
+            return filelist;
         }
 
         public string GetAssignment(string filename)
