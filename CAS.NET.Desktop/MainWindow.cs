@@ -12,10 +12,6 @@ namespace CAS.NET.Desktop
 {
     class MainWindow : Window
     {
-
-        int privilege = -1;
-        // <- You are not worthy
-
         TextViewList textviews = new TextViewList();
         MenuBar menubar = new MenuBar();
         Menu menu = new Menu();
@@ -32,6 +28,8 @@ namespace CAS.NET.Desktop
         TeacherGetCompletedMenuItem teaGetCom;
         StudentGetAssignmentMenuItem studentGetAssignmentMenuItem;
 
+        User user = new User();
+
         Toolbar toolbar = new Toolbar();
         OpenToolButton open;
         SaveToolButton save;
@@ -46,11 +44,11 @@ namespace CAS.NET.Desktop
 
             // Initiating menu elements
             server = new ServerMenuItem();
-            login = new LoginMenuItem(ref privilege, menu);
-            logout = new LogoutMenuItem(ref menu);
+            login = new LoginMenuItem(ref user, menu);
+            logout = new LogoutMenuItem(ref user, ref menu);
             stdAddCom = new StudentAddCompletedMenuItem();
             stdGetAsm = new StudentGetAssignmentMenuItem();
-            stdGetAsmList = new StudentGetAssignmentListMenuItem();
+            stdGetAsmList = new StudentGetAssignmentListMenuItem(ref user);
             stdGetFee = new StudentGetFeedbackMenuItem();
             teaAddAsm = new TeacherAddAssignmentMenuItem();
             teaAddFee = new TeacherAddFeedbackMenuItem();
