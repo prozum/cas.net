@@ -344,6 +344,34 @@ namespace Ast.Tests
                 Assert.Fail();
             }
         }
+
+        #region Solve Test Cases
+        [TestCase("x=0", "x=0")]
+        [TestCase("x=0", "0=x")]
+        [TestCase("x=-3", "3+x=0")]
+        [TestCase("x=-3", "x+3=0")]
+        [TestCase("x=3", "3-x=0")]
+        [TestCase("x=3", "x-3=0")]
+        [TestCase("x=2", "3*x=6")]
+        [TestCase("x=2", "x*3=6")]
+        [TestCase("x=2", "6/x=3")]
+        [TestCase("x=6", "x/3=2")]
+        [TestCase("x=2", "x^2=4")]
+        [TestCase("x=2", "x^3=8")]
+        [TestCase("x=4", "x+x=8")]
+        [TestCase("x=2", "x*x^2=8")]
+        #endregion
+        public void Solve(string expected, string inputString)
+        {
+            var args = new List<Expression>();
+
+            args.Add(parser.Parse(inputString));
+            args.Add(parser.Parse("x"));
+
+            var solve = new Solve(args, eval).Evaluate().ToString();
+
+            Assert.AreEqual(expected, solve);
+        }
     }
 }
 

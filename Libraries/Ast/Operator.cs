@@ -720,7 +720,7 @@ namespace Ast
 
         public override Expression Simplify()
         {
-            Expression evaluatedRes, res = null;
+            Expression res = null;
             Operator simplifiedOperator = new Mul(Evaluator.SimplifyExp(Left), Evaluator.SimplifyExp(Right));
 
             if (simplifiedOperator.Left is Number)
@@ -737,6 +737,10 @@ namespace Ast
                 {
                     res = simplifiedOperator.Right;
                     (res as Variable).prefix = ((res as Variable).prefix * simplifiedOperator.Left) as Number;
+                }
+                else if (simplifiedOperator.Right is Number)
+                {
+                    res = simplifiedOperator.Left * simplifiedOperator.Right;
                 }
                 else
                 {
@@ -758,14 +762,14 @@ namespace Ast
                     res = (simplifiedOperator.Left as Variable).Clone();
                     (res as Variable).prefix = ((res as Variable).prefix * simplifiedOperator.Right) as Number;
                 }
+                else if (simplifiedOperator.Left is Number)
+                {
+                    res = simplifiedOperator.Left * simplifiedOperator.Right;
+                }
                 else
                 {
                     res = simplifiedOperator;
                 }
-            }
-            else if (simplifiedOperator.Left is Number && simplifiedOperator.Right is Number)
-            {
-                res = simplifiedOperator.Left * simplifiedOperator.Right;
             }
             else if (simplifiedOperator.Left is Mul)
             {
