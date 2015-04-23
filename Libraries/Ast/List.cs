@@ -36,7 +36,7 @@ namespace Ast
 
                     if (i < elements.Count - 1) 
                     {
-                        str += ',';
+                        str += ';';
                     }
                 }
             }

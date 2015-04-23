@@ -10,53 +10,18 @@ namespace Ast
         Number,
         Symbol,
         Function,
-        Equation
+        Equation,
+        List
     }
 
-    public abstract class Function : Variable
+    public abstract class Func : Variable
     {
         public List<Expression> args;
-        public List<ArgKind> validArgs;
 
-        public Function(string identifier, List<Expression> args, Evaluator evaluator)
-            : base(identifier, evaluator) 
+        public Func(string identifier, List<Expression> args, Scope scope)
+            : base(identifier, scope) 
         {
             this.args = args;
-        }
-
-        public bool isArgsValid()
-        {
-            if (args.Count != validArgs.Count)
-                return false;
-
-            for (int i = 0; i < args.Count; i++)
-            {
-                switch (validArgs[i])
-                {
-                    case ArgKind.Expression:
-                        if (!(args[i] is Expression))
-                            return false;
-                        break;
-                    case ArgKind.Number:
-                        if (!(args[i] is Number))
-                            return false;
-                        break;
-                    case ArgKind.Symbol:
-                        if (!(args[i] is Symbol))
-                            return false;
-                        break;
-                    case ArgKind.Function:
-                        if (!(args[i] is Function))
-                            return false;
-                        break;
-                    case ArgKind.Equation:
-                        if (!(args[i] is Equal))
-                            return false;
-                        break;
-                }
-            }
-
-            return true;
         }
 
         public override string ToString ()
@@ -94,28 +59,28 @@ namespace Ast
 
         public override bool CompareTo(Expression other)
         {
-            if (other is Function)
+            if (other is Func)
             {
-                return identifier == (other as Function).identifier && prefix.CompareTo((other as Function).prefix) && exponent.CompareTo((other as Function).exponent) && CompareArgsTo(other as Function);
+                return identifier == (other as Func).identifier && prefix.CompareTo((other as Func).prefix) && exponent.CompareTo((other as Func).exponent) && CompareArgsTo(other as Func);
             }
 
-            if (this is UserDefinedFunction)
+            if (this is UsrFunc)
             {
-                return (this as UserDefinedFunction).GetValue().CompareTo(other);
+                return (this as UsrFunc).GetValue().CompareTo(other);
             }
 
             return false;
         }
 
-        public bool CompareArgsTo(Function other)
+        public bool CompareArgsTo(Func other)
         {
             bool res = true;
 
-            if (args.Count == (other as Function).args.Count)
+            if (args.Count == (other as Func).args.Count)
             {
                 for (int i = 0; i < args.Count; i++)
                 {
-                    if (!args[i].CompareTo((other as Function).args[i]))
+                    if (!args[i].CompareTo((other as Func).args[i]))
                     {
                         res = false;
                         break;
@@ -147,85 +112,113 @@ namespace Ast
         protected override T MakeClone<T>()
         {
             T res = base.MakeClone<T>();
-            (res as Function).args = new List<Expression>(args);
+            (res as Func).args = new List<Expression>(args);
 
             return res;
         }
+    }
+        
+    public abstract class SysFunc : Func
+    {
+        public List<ArgKind> argKinds;
 
-        public override void SetFunctionCall(UserDefinedFunction functionCall)
+        public SysFunc(string identifier, List<Expression> args, Scope scope)
+            : base(identifier, args, scope) { }
+
+        public bool isArgsValid()
         {
-            foreach (var item in args)
+            if (args.Count != argKinds.Count)
+                return false;
+
+            for (int i = 0; i < args.Count; i++)
             {
-                item.SetFunctionCall(functionCall);
+                switch (argKinds[i])
+                {
+                    case ArgKind.Expression:
+                        if (!(args[i] is Expression))
+                            return false;
+                        break;
+                    case ArgKind.Number:
+                        if (!(args[i] is Number))
+                            return false;
+                        break;
+                    case ArgKind.Symbol:
+                        if (!(args[i] is Symbol))
+                            return false;
+                        break;
+                    case ArgKind.Function:
+                        if (!(args[i] is Func))
+                            return false;
+                        break;
+                    case ArgKind.Equation:
+                        if (!(args[i] is Equal))
+                            return false;
+                        break;
+                    case ArgKind.List:
+                        if (!(args[i] is List))
+                            return false;
+                        break;
+                }
             }
 
-            base.SetFunctionCall(functionCall);
+            return true;
         }
     }
 
-    public class UserDefinedFunction : Function
+    public class UsrFunc : Func
     {
-        public Dictionary<string, Expression> tempDefinitions;
+        //public List<string> argNames;
+        public Expression expr;
 
-        public UserDefinedFunction() : this(null, null, null) { }
-        public UserDefinedFunction(string identifier, List<Expression> args, Evaluator evaluator) : base(identifier, args, evaluator) { }
+        public UsrFunc() : this(null, null, null) { }
+        public UsrFunc(string identifier, List<Expression> args, Scope scope) : base(identifier, args, scope) { }
 
         public override Expression Evaluate()
         {
             return Evaluator.SimplifyExp(GetValue()).Evaluate();
         }
-
-        public Expression GetValue() { return GetValue(this); }
-        public Expression GetValue(Variable other)
+            
+        public Expression GetValue()
         {
-            List<string> functionParemNames;
-            Expression res;
+            Expression @var;
 
-            tempDefinitions = new Dictionary<string, Expression>(evaluator.variableDefinitions);
+            // TODO 
+            //if (scope != null)
+            @var = scope.GetVar(identifier);
+            //else
+            //    @var = evaluator.scope.GetVar(identifier);
 
-            if (evaluator.functionParams.TryGetValue(identifier, out functionParemNames))
-            {
-                if (functionParemNames.Count == args.Count)
-                {
-                    for (int i = 0; i < functionParemNames.Count; i++)
-                    {
-                        if (tempDefinitions.ContainsKey(functionParemNames[i]))
-                        {
-                            tempDefinitions.Remove(functionParemNames[i]);
-                        }
-
-                        tempDefinitions.Add(functionParemNames[i], args[i]);
-                    }
-
-                    evaluator.functionDefinitions.TryGetValue(identifier, out res);
-
-                    res.SetFunctionCall(this);
-
-                    if (res.ContainsVariable(other))
-                    {
-                        return new Error(this, "Could not get value of: " + other.identifier);
-                    }
-
-                    return ReturnValue(res.Clone());
-                }
-                else if (functionParemNames.Count == 0)
-                {
-                    return new Error(this, "Can't call function with 0 parameters");
-                }
-                else
-                {
-                    return new Error(this, "Function has the wrong number for parameters");
-                }
-            }
-            else
+            if (@var == null)
             {
                 return new Error(this, "Function has no definition");
             }
+                
+            var def = (UsrFunc)@var;
+
+            if (def.args.Count != args.Count)
+            {
+                return new Error(this, "Function takes " + def.args.Count.ToString() + " arguments. Not " + args.Count.ToString() + ".");
+            }
+
+            for (int i = 0; i < def.args.Count; i++)
+            {
+                var arg = (Symbol)def.args[i];
+
+                scope.SetVar(arg.identifier, args[i]);
+            }
+
+            if (def.ContainsVariable(this))
+            {
+                return new Error(this, "Could not get value of: " + this.identifier);
+            }
+
+            //return ReturnValue(res.Clone());
+            return ReturnValue(def.expr);
         }
 
         public override Expression Clone()
         {
-            return MakeClone<UserDefinedFunction>();
+            return MakeClone<UsrFunc>();
         }
 
         public override Expression Simplify()
@@ -241,15 +234,31 @@ namespace Ast
 
             return GetValue();
         }
+
+        public override string ToString()
+        {
+            string str = identifier + "(";
+
+            for (int i = 0; i < args.Count; i++)
+            {
+                str += args[i];
+
+                if (i < args.Count - 1)
+                    str += ",";
+            }
+            str += ")";
+
+            return str;
+        }
     }
 
-    public class Sin : Function, IInvertable
+    public class Sin : SysFunc, IInvertable
     {
         public Sin() : this(null, null) { }
-        public Sin(List<Expression> args, Evaluator eval)
-            : base("sin", args, eval)
+        public Sin(List<Expression> args, Scope scope)
+            : base("sin", args, scope)
         {
-            validArgs = new List<ArgKind>()
+            argKinds = new List<ArgKind>()
             {
                 ArgKind.Expression
             };
@@ -262,19 +271,23 @@ namespace Ast
 
             var res = args[0].Evaluate();
 
+            var degrees = (Boolean)scope.GetVar("degrees");
+            if (degrees == null)
+                degrees = new Boolean(false);
+                
             if (res is Integer)
             {
-                return ReturnValue(new Irrational((decimal)Math.Sin((res as Integer).value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0)))).Evaluate();
+                return ReturnValue(new Irrational((decimal)Math.Sin((res as Integer).value * Math.Pow((Math.PI / 180), (degrees.value) ? 1 : 0)))).Evaluate();
             }
             
             if (res is Rational)
             {
-                return ReturnValue(new Irrational((decimal)Math.Sin((double)(res as Rational).value.value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0)))).Evaluate();
+                return ReturnValue(new Irrational((decimal)Math.Sin((double)(res as Rational).value.value * Math.Pow((Math.PI / 180), (degrees.value) ? 1 : 0)))).Evaluate();
             }
             
             if (res is Irrational)
             {
-                return ReturnValue(new Irrational((decimal)Math.Sin((double)(res as Irrational).value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0)))).Evaluate();
+                return ReturnValue(new Irrational((decimal)Math.Sin((double)(res as Irrational).value * Math.Pow((Math.PI / 180), (degrees.value) ? 1 : 0)))).Evaluate();
             }
 
             return new Error(this, "Could not take Sin of: " + args[0]);
@@ -289,17 +302,17 @@ namespace Ast
         {
             List<Expression> newArgs = new List<Expression>();
             newArgs.Add(other);
-            return new ASin(newArgs, evaluator);
+            return new ASin(newArgs, scope);
         }
     }
 
-    public class ASin : Function, IInvertable
+    public class ASin : SysFunc, IInvertable
     {
         public ASin() : this(null, null) { }
-        public ASin(List<Expression> args, Evaluator eval)
-            : base("asin", args, eval)
+        public ASin(List<Expression> args, Scope scope)
+            : base("asin", args, scope)
         {
-            validArgs = new List<ArgKind>()
+            argKinds = new List<ArgKind>()
             {
                 ArgKind.Expression
             };
@@ -312,19 +325,23 @@ namespace Ast
 
             var res = args[0].Evaluate();
 
+            var degrees = (Boolean)scope.GetVar("degrees");
+            if (degrees == null)
+                degrees = new Boolean(false);
+
             if (res is Integer)
             {
-                return ReturnValue(new Irrational((decimal)(Math.Asin((res as Integer).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0)))).Evaluate();
+                return ReturnValue(new Irrational((decimal)(Math.Asin((res as Integer).value) * Math.Pow((180 / Math.PI), (degrees.value) ? 1 : 0)))).Evaluate();
             }
 
             if (res is Rational)
             {
-                return ReturnValue(new Irrational((decimal)(Math.Asin((double)(res as Rational).value.value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0)))).Evaluate();
+                return ReturnValue(new Irrational((decimal)(Math.Asin((double)(res as Rational).value.value) * Math.Pow((180 / Math.PI), (degrees.value) ? 1 : 0)))).Evaluate();
             }
 
             if (res is Irrational)
             {
-                return ReturnValue(new Irrational((decimal)(Math.Asin((double)(res as Irrational).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0)))).Evaluate();
+                return ReturnValue(new Irrational((decimal)(Math.Asin((double)(res as Irrational).value) * Math.Pow((180 / Math.PI), (degrees.value) ? 1 : 0)))).Evaluate();
             }
 
             return new Error(this, "Could not take ASin of: " + args[0]);
@@ -339,17 +356,17 @@ namespace Ast
         {
             List<Expression> newArgs = new List<Expression>();
             newArgs.Add(other);
-            return new Sin(newArgs, evaluator);
+            return new Sin(newArgs, scope);
         }
     }
 
-    public class Cos : Function, IInvertable
+    public class Cos : SysFunc, IInvertable
     {
         public Cos() : this(null, null) { }
-        public Cos(List<Expression> args, Evaluator eval)
-            : base("cos", args, eval)
+        public Cos(List<Expression> args, Scope scope)
+            : base("cos", args, scope)
         {
-            validArgs = new List<ArgKind>()
+            argKinds = new List<ArgKind>()
             {
                 ArgKind.Expression
             };
@@ -362,19 +379,23 @@ namespace Ast
 
             var res = args[0].Evaluate();
 
+            var degrees = (Boolean)scope.GetVar("degrees");
+            if (degrees == null)
+                degrees = new Boolean(false);
+
             if (res is Integer)
             {
-                return ReturnValue(new Irrational((decimal)Math.Cos((res as Integer).value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0)))).Evaluate();
+                return ReturnValue(new Irrational((decimal)Math.Cos((res as Integer).value * Math.Pow((Math.PI / 180), (degrees.value) ? 1 : 0)))).Evaluate();
             }
 
             if (res is Rational)
             {
-                return ReturnValue(new Irrational((decimal)Math.Cos((double)(res as Rational).value.value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0)))).Evaluate();
+                return ReturnValue(new Irrational((decimal)Math.Cos((double)(res as Rational).value.value * Math.Pow((Math.PI / 180), (degrees.value) ? 1 : 0)))).Evaluate();
             }
 
             if (res is Irrational)
             {
-                return ReturnValue(new Irrational((decimal)Math.Cos((double)(res as Irrational).value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0)))).Evaluate();
+                return ReturnValue(new Irrational((decimal)Math.Cos((double)(res as Irrational).value * Math.Pow((Math.PI / 180), (degrees.value) ? 1 : 0)))).Evaluate();
             }
 
             return new Error(this, "Could not take Cos of: " + args[0]);
@@ -389,17 +410,17 @@ namespace Ast
         {
             List<Expression> newArgs = new List<Expression>();
             newArgs.Add(other);
-            return new ACos(newArgs, evaluator);
+            return new ACos(newArgs, scope);
         }
     }
 
-    public class ACos : Function, IInvertable
+    public class ACos : SysFunc, IInvertable
     {
         public ACos() : this(null, null) { }
-        public ACos(List<Expression> args, Evaluator eval)
-            : base("acos", args, eval)
+        public ACos(List<Expression> args, Scope scope)
+            : base("acos", args, scope)
         {
-            validArgs = new List<ArgKind>()
+            argKinds = new List<ArgKind>()
             {
                 ArgKind.Expression
             };
@@ -412,19 +433,23 @@ namespace Ast
 
             var res = args[0].Evaluate();
 
+            var degrees = (Boolean)scope.GetVar("degrees");
+            if (degrees == null)
+                degrees = new Boolean(false);
+
             if (res is Integer)
             {
-                return ReturnValue(new Irrational((decimal)(Math.Acos((res as Integer).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0)))).Evaluate();
+                return ReturnValue(new Irrational((decimal)(Math.Acos((res as Integer).value) * Math.Pow((180 / Math.PI), (degrees.value) ? 1 : 0)))).Evaluate();
             }
 
             if (res is Rational)
             {
-                return ReturnValue(new Irrational((decimal)(Math.Acos((double)(res as Rational).value.value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0)))).Evaluate();
+                return ReturnValue(new Irrational((decimal)(Math.Acos((double)(res as Rational).value.value) * Math.Pow((180 / Math.PI), (degrees.value) ? 1 : 0)))).Evaluate();
             }
 
             if (res is Irrational)
             {
-                return ReturnValue(new Irrational((decimal)(Math.Acos((double)(res as Irrational).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0)))).Evaluate();
+                return ReturnValue(new Irrational((decimal)(Math.Acos((double)(res as Irrational).value) * Math.Pow((180 / Math.PI), (degrees.value) ? 1 : 0)))).Evaluate();
             }
 
             return new Error(this, "Could not take ACos of: " + args[0]);
@@ -439,17 +464,17 @@ namespace Ast
         {
             List<Expression> newArgs = new List<Expression>();
             newArgs.Add(other);
-            return new Cos(newArgs, evaluator);
+            return new Cos(newArgs, scope);
         }
     }
 
-    public class Tan : Function, IInvertable
+    public class Tan : SysFunc, IInvertable
     {
         public Tan() : this(null, null) { }
-        public Tan(List<Expression> args, Evaluator eval)
-            : base("tan", args, eval)
+        public Tan(List<Expression> args, Scope scope)
+            : base("tan", args, scope)
         {
-            validArgs = new List<ArgKind>()
+            argKinds = new List<ArgKind>()
             {
                 ArgKind.Expression
             };
@@ -462,19 +487,23 @@ namespace Ast
 
             var res = args[0].Evaluate();
 
+            var degrees = (Boolean)scope.GetVar("degrees");
+            if (degrees == null)
+                degrees = new Boolean(false);
+
             if (res is Integer)
             {
-                return ReturnValue(new Irrational((decimal)Math.Tan((res as Integer).value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0)))).Evaluate();
+                return ReturnValue(new Irrational((decimal)Math.Tan((res as Integer).value * Math.Pow((Math.PI / 180), (degrees.value) ? 1 : 0)))).Evaluate();
             }
 
             if (res is Rational)
             {
-                return ReturnValue(new Irrational((decimal)Math.Tan((double)(res as Rational).value.value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0)))).Evaluate();
+                return ReturnValue(new Irrational((decimal)Math.Tan((double)(res as Rational).value.value * Math.Pow((Math.PI / 180), (degrees.value) ? 1 : 0)))).Evaluate();
             }
 
             if (res is Irrational)
             {
-                return ReturnValue(new Irrational((decimal)Math.Tan((double)(res as Irrational).value * Math.Pow((Math.PI / 180), (evaluator.degrees) ? 1 : 0)))).Evaluate();
+                return ReturnValue(new Irrational((decimal)Math.Tan((double)(res as Irrational).value * Math.Pow((Math.PI / 180), (degrees.value) ? 1 : 0)))).Evaluate();
             }
 
             return new Error(this, "Could not take Tan of: " + args[0]);
@@ -489,17 +518,17 @@ namespace Ast
         {
             List<Expression> newArgs = new List<Expression>();
             newArgs.Add(other);
-            return new ATan(newArgs, evaluator);
+            return new ATan(newArgs, scope);
         }
     }
 
-    public class ATan : Function, IInvertable
+    public class ATan : SysFunc, IInvertable
     {
         public ATan() : this(null, null) { }
-        public ATan(List<Expression> args, Evaluator eval)
-            : base("atan", args, eval)
+        public ATan(List<Expression> args, Scope scope)
+            : base("atan", args, scope)
         {
-            validArgs = new List<ArgKind>()
+            argKinds = new List<ArgKind>()
             {
                 ArgKind.Expression
             };
@@ -512,19 +541,23 @@ namespace Ast
 
             var res = args[0].Evaluate();
 
+            var degrees = (Boolean)scope.GetVar("degrees");
+            if (degrees == null)
+                degrees = new Boolean(false);
+
             if (res is Integer)
             {
-                return ReturnValue(new Irrational((decimal)(Math.Atan((res as Integer).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0)))).Evaluate();
+                return ReturnValue(new Irrational((decimal)(Math.Atan((res as Integer).value) * Math.Pow((180 / Math.PI), (degrees.value) ? 1 : 0)))).Evaluate();
             }
 
             if (res is Rational)
             {
-                return ReturnValue(new Irrational((decimal)(Math.Atan((double)(res as Rational).value.value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0)))).Evaluate();
+                return ReturnValue(new Irrational((decimal)(Math.Atan((double)(res as Rational).value.value) * Math.Pow((180 / Math.PI), (degrees.value) ? 1 : 0)))).Evaluate();
             }
 
             if (res is Irrational)
             {
-                return ReturnValue(new Irrational((decimal)(Math.Atan((double)(res as Irrational).value) * Math.Pow((180 / Math.PI), (evaluator.degrees) ? 1 : 0)))).Evaluate();
+                return ReturnValue(new Irrational((decimal)(Math.Atan((double)(res as Irrational).value) * Math.Pow((180 / Math.PI), (degrees.value) ? 1 : 0)))).Evaluate();
             }
 
             return new Error(this, "Could not take ATan of: " + args[0]);
@@ -539,17 +572,17 @@ namespace Ast
         {
             List<Expression> newArgs = new List<Expression>();
             newArgs.Add(other);
-            return new Tan(newArgs, evaluator);
+            return new Tan(newArgs, scope);
         }
     }
 
-    public class Sqrt : Function, IInvertable
+    public class Sqrt : SysFunc, IInvertable
     {
         public Sqrt() : this(null, null) { }
-        public Sqrt(List<Expression> args, Evaluator eval)
-            : base("sqrt", args, eval)
+        public Sqrt(List<Expression> args, Scope scope)
+            : base("sqrt", args, scope)
         {
-            validArgs = new List<ArgKind>()
+            argKinds = new List<ArgKind>()
             {
                 ArgKind.Expression
             };
@@ -601,13 +634,13 @@ namespace Ast
         }
     }
 
-    public class Negation : Function
+    public class Negation : SysFunc
     {
         public Negation() : this(null, null) { }
-        public Negation(List<Expression> args, Evaluator eval)
-            : base("negation", args, eval)
+        public Negation(List<Expression> args, Scope scope)
+            : base("negation", args, scope)
         {
-            validArgs = new List<ArgKind>()
+            argKinds = new List<ArgKind>()
             {
                 ArgKind.Expression
             };
@@ -624,12 +657,12 @@ namespace Ast
         }
     }
 
-    public class Simplify : Function
+    public class Simplify : SysFunc
     {
-        public Simplify(List<Expression> args, Evaluator eval)
-            : base("simplify", args, eval)
+        public Simplify(List<Expression> args, Scope scope)
+            : base("simplify", args, scope)
         {
-            validArgs = new List<ArgKind>()
+            argKinds = new List<ArgKind>()
             {
                 ArgKind.Expression
             };
@@ -649,12 +682,12 @@ namespace Ast
         }
     }
 
-    public class Expand : Function
+    public class Expand : SysFunc
     {
-        public Expand(List<Expression> args, Evaluator eval)
-            : base("expand", args, eval)
+        public Expand(List<Expression> args, Scope scope)
+            : base("expand", args, scope)
         {
-            validArgs = new List<ArgKind>()
+            argKinds = new List<ArgKind>()
             {
                 ArgKind.Expression
             };
@@ -671,12 +704,12 @@ namespace Ast
         }
     }
 
-    public class Range : Function
+    public class Range : SysFunc
     {
-        public Range(List<Expression> args, Evaluator eval)
-            : base("range", args, eval)
+        public Range(List<Expression> args, Scope scope)
+            : base("range", args, scope)
         {
-            validArgs = new List<ArgKind>()
+            argKinds = new List<ArgKind>()
             {
                 ArgKind.Number,
                 ArgKind.Number,
@@ -729,15 +762,72 @@ namespace Ast
         }
     }
 
-    public class Plot : Function
+    public class Map : SysFunc
+    {
+        public Func func;
+        public List list;
+
+        public Map(List<Expression> args, Scope scope)
+            : base("map", args, scope)
+        {
+            argKinds = new List<ArgKind>()
+            {
+                ArgKind.Symbol,
+                ArgKind.List
+            };
+        }
+
+        public override Expression Evaluate()
+        {
+            if (!isArgsValid())
+                return new ArgError(this);
+
+
+            var sym = (Symbol)args[0];
+            func = (Func)sym.GetValue();
+            list = (List)args[1];
+
+            //Expression exp;
+            //List<string> argNames;
+            //evaluator.funcDefs.TryGetValue(sym.identifier, out exp);
+            //evaluator.funcParams.TryGetValue(sym.identifier, out argNames);
+            //parser.
+            //list = (List)args[1];
+
+            //if (func.argKinds.Count > 1)
+            //    return new Error(this, "only supports unary functions");
+            //string arg = argNames[0];
+
+            //var locals = new Dictionary<string, Expression>(func.locals);
+
+            var res = new List();
+            foreach (var element in list.elements)
+            {
+                //locals.Remove(func.argNames[0]);
+                //locals.Add(func.argNames[0], element);
+                func.args[0] = element;
+
+                res.elements.Add(func.Evaluate());
+            }
+
+            return res;
+        }
+
+        public override Expression Clone()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class Plot : SysFunc
     {
         public Expression exp;
         public Symbol sym;
 
-        public Plot(List<Expression> args, Evaluator eval)
-            : base("plot", args, eval)
+        public Plot(List<Expression> args, Scope scope)
+            : base("plot", args, scope)
         {
-            validArgs = new List<ArgKind>()
+            argKinds = new List<ArgKind>()
             {
                 ArgKind.Expression,
                 ArgKind.Symbol
@@ -756,15 +846,15 @@ namespace Ast
         }
     }
 
-    public class Solve : Function
+    public class Solve : SysFunc
     {
         Equal equal;
         Symbol sym;
 
-        public Solve(List<Expression> args, Evaluator eval)
-            : base("solve", args, eval)
+        public Solve(List<Expression> args, Scope scope)
+            : base("solve", args, scope)
         {
-            validArgs = new List<ArgKind>()
+            argKinds = new List<ArgKind>()
             {
                 ArgKind.Equation,
                 ArgKind.Symbol
@@ -796,7 +886,7 @@ namespace Ast
                             return new Error(this, " could not solve " + sym.ToString());
                         }
                     }
-                    else if (resLeft is Function)
+                    else if (resLeft is Func)
                     {
                         if (InvertFunction(ref resLeft, ref resRight))
                         {
@@ -870,7 +960,7 @@ namespace Ast
 
         private bool InvertFunction(ref Expression resLeft, ref Expression resRight)
         {
-            Function func = resLeft as Function;
+            Func func = resLeft as Func;
 
             if (func.ContainsVariable(sym))
             {

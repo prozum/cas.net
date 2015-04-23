@@ -6,18 +6,18 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class Scanner
+    public static class Scanner
     {
         const char EOS = (char)0;
-        readonly char sep = NumberFormatInfo.CurrentInfo.CurrencyDecimalSeparator[0];
-        readonly char[] opChars = {'=', '<', '>', '+', '-', '*', '/', '^', ':'};
+        static readonly char sep = NumberFormatInfo.CurrentInfo.CurrencyDecimalSeparator[0];
+        static readonly char[] opChars = {'=', '<', '>', '+', '-', '*', '/', '^', ':'};
 
-        private bool Errors = false; 
+        static bool Errors = false; 
 
-        private string tokenString;
-        private char[] chars;
-        private int pos;
-        private char cur
+        static string tokenString;
+        static char[] chars;
+        static int pos;
+        static char cur
         {
             get
             {
@@ -28,11 +28,11 @@ namespace Ast
             }
         }
 
-        public Queue<Token> Tokenize(string tokenString)
+        public static Queue<Token> Tokenize(string str)
         {
-            this.tokenString = tokenString;
-            this.chars = tokenString.ToCharArray();
-            this.pos = 0;
+            tokenString = str;
+            chars = tokenString.ToCharArray();
+            pos = 0;
 
             var tokens = new Queue<Token> ();
 
@@ -46,7 +46,7 @@ namespace Ast
             return tokens;
         }
 
-        private Token ScanNext()
+        private static Token ScanNext()
         {
             SkipWhitespace();
 
@@ -99,7 +99,7 @@ namespace Ast
             }
         }
 
-        private Token ScanNumber()
+        private static Token ScanNumber()
         {
             TokenKind kind = TokenKind.Integer;
             string number = "";
@@ -133,7 +133,7 @@ namespace Ast
             return new Token(kind, number, startPos);
         }
 
-        private Token ScanIdentifier()
+        private static Token ScanIdentifier()
         {
             string identifier = "";
             int startPos = pos;
@@ -147,7 +147,7 @@ namespace Ast
             return new Token(TokenKind.Identifier, identifier, startPos);
         }
 
-        private Token ScanOperator()
+        private static Token ScanOperator()
         {
             string op = cur.ToString();
             int startPos = pos;
@@ -191,7 +191,7 @@ namespace Ast
             }
         }
 
-        private void SkipWhitespace()
+        private static void SkipWhitespace()
         {
             while (char.IsWhiteSpace (cur)) 
             {

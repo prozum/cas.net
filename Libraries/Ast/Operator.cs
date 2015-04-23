@@ -73,11 +73,11 @@ namespace Ast
             }
         }
 
-        public override void SetFunctionCall(UserDefinedFunction functionCall)
-        {
-            Left.SetFunctionCall(functionCall);
-            Right.SetFunctionCall(functionCall);
-        }
+//        public override void SetFunctionCall(UserDefinedFunction functionCall)
+//        {
+//            Left.SetFunctionCall(functionCall);
+//            Right.SetFunctionCall(functionCall);
+//        }
 
         public override bool CompareTo(Expression other)
         {

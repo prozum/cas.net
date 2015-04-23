@@ -6,11 +6,8 @@ namespace Ast
     public class Symbol : Variable
     {
         public Symbol() : this(null, null) { }
-        public Symbol(Symbol symbolExp) : this(symbolExp.evaluator, symbolExp.identifier) { }
-        public Symbol(Evaluator evaluator, string sym) : base(sym)
-        {
-            this.evaluator = evaluator;
-        }
+        //public Symbol(Symbol symbolExp) : this(symbolExp.evaluator, symbolExp.identifier) { }
+        public Symbol(string sym, Scope scope) : base(sym, scope) { }
 
         public override string ToString()
         {
@@ -41,42 +38,44 @@ namespace Ast
         {
             return Evaluator.SimplifyExp(GetValue()).Evaluate();
         }
-
-        public Expression GetValue() { return GetValue(this); }
-        public Expression GetValue(Variable other)
+            
+        public Expression GetValue()
         {
-            Expression res;
+            var value = scope.GetVar(identifier);
 
-            if (this.functionCall is UserDefinedFunction)
-            {
-                if (functionCall.tempDefinitions.ContainsKey(identifier))
-                {
-                    functionCall.tempDefinitions.TryGetValue(identifier, out res);
+            if (value == null)
+                return new Error(this, "Could not get value");
 
-                    if (res.ContainsVariable(other) && res.Evaluate() is Error)
-                    {
-                        return new Error(this, "Could not get value of: " + other.identifier);
-                    }
-
-                    return ReturnValue(res.Clone());
-                }
-            }
-            else
-            {
-                if (evaluator.variableDefinitions.ContainsKey(identifier))
-                {
-                    evaluator.variableDefinitions.TryGetValue(identifier, out res);
-
-                    if (res.ContainsVariable(other))
-                    {
-                        return new Error(this, "Could not get value of: " + other.identifier);
-                    }
-
-                    return ReturnValue(res.Clone());
-                }
-            }
-
-            return new Error(this, "Could not get Symbol value");
+            return value;
+//
+//            if (this.functionCall is UserDefinedFunction)
+//            {
+//                if (functionCall.locals.ContainsKey(identifier))
+//                {
+//                    functionCall.locals.TryGetValue(identifier, out res);
+//
+//                    if (res.ContainsVariable(other) && res.Evaluate() is Error)
+//                    {
+//                        return new Error(this, "Could not get value of: " + other.identifier);
+//                    }
+//
+//                    return ReturnValue(res.Clone());
+//                }
+//            }
+//            else
+//            {
+//                if (evaluator.globals.ContainsKey(identifier))
+//                {
+//                    evaluator.globals.TryGetValue(identifier, out res);
+//
+//                    if (res.ContainsVariable(other))
+//                    {
+//                        return new Error(this, "Could not get value of: " + other.identifier);
+//                    }
+//
+//                    return ReturnValue(res.Clone());
+//                }
+//            }
         }
 
         public override bool CompareTo(Expression other)
@@ -108,10 +107,10 @@ namespace Ast
             return base.Simplify();
         }
 
-        public override void SetFunctionCall(UserDefinedFunction functionCall)
-        {
-            this.functionCall = functionCall;
-        }
+//        public override void SetFunctionCall(UserDefinedFunction functionCall)
+//        {
+//            this.functionCall = functionCall;
+//        }
 
         public override Expression Clone()
         {

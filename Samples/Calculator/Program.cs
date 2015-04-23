@@ -72,26 +72,28 @@ public class MainWindow : Window
     {
         defStore.Clear();
 
-        foreach (var def  in eval.variableDefinitions)
+        foreach (var def in eval.scope.locals)
         {
-            defStore.AppendValues(def.Key, def.Value.ToString());
-        }
-
-        foreach (var def  in eval.functionDefinitions)
-        {
-            string str = def.Key + "(";
-            List<string> args;
-            eval.functionParams.TryGetValue(def.Key, out args);
-            for (int i = 0; i < args.Count; i++)
+            if (def.Value is UsrFunc)
             {
-                str += args[i];
+//                string str = def.Key + "(";
+//                List<string> args = (def.Value as UserDefinedFunction).argNames;
+//                //eval.funcParams.TryGetValue(def.Key, out args);
+//                for (int i = 0; i < args.Count; i++)
+//                {
+//                    str += args[i];
+//
+//                    if (i < args.Count - 1)
+//                        str += ",";
+//                }
+//                str += ")";
 
-                if (i < args.Count - 1)
-                    str += ",";
+                defStore.AppendValues(def.Value.ToString(), (def.Value as UsrFunc).GetValue().ToString());
             }
-            str += ")";
-
-            defStore.AppendValues(str, def.Value.ToString());
+            else
+            {
+                defStore.AppendValues(def.Key, def.Value.ToString());
+            }
         }
     }
 

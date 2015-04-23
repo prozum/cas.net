@@ -42,9 +42,6 @@
     <Compile Include="Expression.cs" />
     <Compile Include="Number.cs" />
     <Compile Include="Parser.cs" />
-    <Compile Include="Function.cs">
-      <DependentUpon>Variable.cs</DependentUpon>
-    </Compile>
     <Compile Include="Symbol.cs">
       <DependentUpon>Variable.cs</DependentUpon>
     </Compile>
@@ -64,10 +61,13 @@
     <Compile Include="Constant.cs">
       <DependentUpon>Number.cs</DependentUpon>
     </Compile>
+    <Compile Include="Scope.cs" />
+    <Compile Include="Func.cs">
+      <DependentUpon>Variable.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />
-    <None Include="ClassDiagram2.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ProjectExtensions>

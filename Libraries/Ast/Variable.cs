@@ -8,18 +8,20 @@ namespace Ast
 {
     public abstract class Variable : Expression
     {
-        public UserDefinedFunction functionCall;
-        public Evaluator evaluator;
+        //public UserDefinedFunction functionCall;
+        public Scope scope;
+        //public Evaluator evaluator;
         public string identifier;
         public Number prefix, exponent;
 
         public Variable(string identifier) : this(identifier, null) { }
-        public Variable(string identifier, Evaluator evaluator)
+        public Variable(string identifier, Scope scope)
         {
+            this.identifier = identifier;
+            this.scope = scope;
+
             this.exponent = new Integer(1);
             this.prefix = new Integer(1);
-            this.identifier = identifier;
-            this.evaluator = evaluator;
         }
 
         protected virtual T MakeClone<T>() where T : Variable, new()
@@ -28,32 +30,32 @@ namespace Ast
             res.identifier = identifier;
             res.prefix = prefix.Clone() as Number;
             res.exponent = exponent.Clone() as Number;
-            res.functionCall = functionCall;
-            res.evaluator = evaluator;
+            //res.functionCall = functionCall;
+            res.scope = scope;
 
             return res;
         }
 
         public override bool ContainsVariable(Variable other)
         {
-            if (identifier == other.identifier && this.GetType() == other.GetType() && ((other.functionCall == null && functionCall == null) || ((other.functionCall != null && functionCall != null) && other.functionCall.CompareTo(functionCall))))
-            {
-                return true;
-            }
-            else if (this is Function)
-            {
-                foreach (var item in (this as Function).args)
-	            {
-		            if (item.ContainsVariable(other))
-                    {
-                        return true;
-                    }
-	            }
-            }
-            else if (this is Symbol)
-            {
-                return (this as Symbol).GetValue(other).ContainsVariable(other);
-            }
+//            if (identifier == other.identifier && this.GetType() == other.GetType() && ((other.functionCall == null && functionCall == null) || ((other.functionCall != null && functionCall != null) && other.functionCall.CompareTo(functionCall))))
+//            {
+//                return true;
+//            }
+//            else if (this is Function)
+//            {
+//                foreach (var item in (this as Function).args)
+//                {
+//                    if (item.ContainsVariable(other))
+//                    {
+//                        return true;
+//                    }
+//                }
+//            }
+//            else if (this is Symbol)
+//            {
+//                return (this as Symbol).GetValue(other).ContainsVariable(other);
+//            }
 
             return false;
         }

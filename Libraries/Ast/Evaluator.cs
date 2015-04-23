@@ -5,43 +5,42 @@ namespace Ast
 {
     public class Evaluator
     {
-        public Dictionary<string, Expression> variableDefinitions = new Dictionary<string, Expression>();
-        public Dictionary<string, Expression> functionDefinitions = new Dictionary<string, Expression>();
-        public Dictionary<string, List<string>> functionParams = new Dictionary<string, List<string>>();
+        public Scope scope;
+        //public Parser parser;
+        //public Dictionary<string,Expression> globals = new Dictionary<string,Expression>();
+        //public Dictionary<string, Expression> funcDefs = new Dictionary<string, Expression>();
+        //public Dictionary<string,List<string>> funcParams = new Dictionary<string, List<string>>();
         public bool degrees = true;
-
-        public Parser parser;
 
         public Evaluator ()
         {
-            parser = new Parser (this);
+            scope = new Scope();
         }
 
         public EvalData Evaluation(string inputString)
         {
-            var exp = parser.Parse(inputString);
+            var exp = Parser.Parse(inputString, scope);
 
             if (exp is Assign)
             {
-                if ((exp as Assign).Left is UserDefinedFunction)
+                if ((exp as Assign).Left is UsrFunc)
                 {
-                    return AssignFunction((exp as Assign).Left as UserDefinedFunction, (exp as Assign).Right);
+                    return AssignFunction((exp as Assign).Left as UsrFunc, (exp as Assign).Right);
                 }
-                else if ((exp as Assign).Left is Symbol)
+                if ((exp as Assign).Left is Symbol)
                 {
                     return AssignSymbol((exp as Assign).Left as Symbol, (exp as Assign).Right);
                 }
-                else
-                {
-                    return new MsgData(MsgType.Error, "Evaluator> Left expression is not a variable or function");
-                }
+
+                return new MsgData(MsgType.Error, "Evaluator> Left expression is not a variable or function");
             }
-            else if (exp is Plot)
+
+            if (exp is Plot)
             {
                 if ((exp as Plot).isArgsValid())
                     return new PlotData((Plot) exp);
-                else
-                    exp = new ArgError((Plot)exp);
+
+                exp = new ArgError((Plot)exp);
             }
             else if (exp is Simplify || exp is Expand)
             {
@@ -56,36 +55,33 @@ namespace Ast
             {
                 return new MsgData(MsgType.Error, exp.ToString());
             }
-            else if (exp is Info)
+
+            if (exp is Info)
             {
                 return new MsgData(MsgType.Info, exp.ToString());
             }
-            else
-            {
-                return new MsgData(MsgType.Print, exp.ToString());
-            }
+
+            return new MsgData(MsgType.Print, exp.ToString());
         }
 
-        public EvalData AssignFunction(UserDefinedFunction func, Expression exp)
+        public EvalData AssignFunction(UsrFunc func, Expression expr)
         {
-            if (exp.ContainsVariable(func))
+            if (expr.ContainsVariable(func))
             {
                 return new MsgData(MsgType.Error, "Evaluator> Can't define function as it self");
             }
 
-            var paramNames = new List<string>();
+            func.expr = expr;
+            func.scope = new Scope(scope);
+            scope.SetVar(func.identifier, func);
 
-            if (functionDefinitions.ContainsKey(func.identifier))
+            foreach (var exp in func.args)
             {
-                functionDefinitions.Remove(func.identifier);
-                functionParams.Remove(func.identifier);
-            }
-
-            foreach (var item in func.args)
-            {   
-                if (item is Symbol)
+                if (exp is Symbol)
                 {
-                    paramNames.Add((item as Symbol).identifier);
+                    var sym = (Symbol)exp;
+                    sym.scope = func.scope;
+                    func.scope.SetVar(sym.identifier, sym);
                 }
                 else
                 {
@@ -93,10 +89,7 @@ namespace Ast
                 }
             }
 
-            functionParams.Add(func.identifier, paramNames);
-            functionDefinitions.Add(func.identifier, exp);
-
-            return new MsgData(MsgType.Info, "Evaluator> Function defined");
+            return new MsgData(MsgType.Info, "Evaluator> Function '" + func.ToString() + "' defined");
         }
 
         public EvalData AssignSymbol(Symbol sym, Expression exp)
@@ -106,14 +99,9 @@ namespace Ast
                 return new MsgData(MsgType.Error, "Evaluator> Can't define symbol as it self");
             }
 
-            if (variableDefinitions.ContainsKey(sym.identifier))
-            {
-                variableDefinitions.Remove(sym.identifier);
-            }
+            scope.SetVar(sym.identifier, exp);
 
-            variableDefinitions.Add(sym.identifier, exp);
-
-            return new MsgData(MsgType.Info, "Evaluator> Variable defined");
+            return new MsgData(MsgType.Info, "Evaluator> Variable '" + sym.ToString() + "' defined");
         }
 
         

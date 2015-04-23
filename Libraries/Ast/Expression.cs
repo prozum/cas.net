@@ -12,9 +12,27 @@ namespace Ast
     public abstract class Expression
     {
         public Operator parent;
+
+        private Scope _scope;
+        public Scope scope
+        {
+            get
+            {
+                if (parent != null)
+                {
+                    return parent.scope;
+                }
+                return _scope;
+            }
+            set
+            {
+                _scope = value;
+            }
+        }
+
         public abstract Expression Evaluate();
 
-        public virtual void SetFunctionCall(UserDefinedFunction functionCall){ }
+        //public virtual void SetFunctionCall(UserDefinedFunction functionCall){ }
 
         public virtual Expression Expand()
         {

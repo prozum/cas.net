@@ -61,14 +61,14 @@ namespace Ast
     public class ArgError: Error
     {
         public ArgError(string message) : base(message) { }
-        public ArgError(Function obj) : base(obj, "Valid args: ")
+        public ArgError(SysFunc obj) : base(obj, "Valid args: ")
         {
             message += "(";
-            for(int i = 0; i < obj.validArgs.Count; i++)
+            for(int i = 0; i < obj.argKinds.Count; i++)
             {
-                message += obj.validArgs[i].ToString();
+                message += obj.argKinds[i].ToString();
 
-                if (i < obj.validArgs.Count -1) 
+                if (i < obj.argKinds.Count -1) 
                 {
                     message += ',';
                 }
