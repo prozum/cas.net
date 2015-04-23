@@ -63,8 +63,6 @@ namespace DesktopUI
                             file = System.IO.File.ReadAllText(filechooser.Filename);
                         }
 
-                        Console.WriteLine("Line loaded::: " + file);
-
                         filechooser.Destroy();
 
                         break;
@@ -73,16 +71,9 @@ namespace DesktopUI
                     break;
             }
 
-            Console.WriteLine(file);
-
             List<MetaType> metaTypeList = new List<MetaType>();
 
             metaTypeList = ImEx.Import.DeserializeString<List<MetaType>>(file);
-
-            foreach (var item in metaTypeList)
-            {
-                Console.WriteLine("Item: " + item);
-            }
 
             textviews.castextviews.Clear();
 
@@ -90,7 +81,6 @@ namespace DesktopUI
             {
                 if (item.type == typeof(MovableCasCalcView))
                 {
-                    Console.WriteLine("Is movable cas calc view");
                     Evaluator Eval = new Evaluator();
                     MovableCasCalcView movableCasCalcView = new MovableCasCalcView(Eval, textviews);
                     movableCasCalcView.calcview.input.Text = item.metastring;
@@ -98,18 +88,11 @@ namespace DesktopUI
                 }
                 else if (item.type == typeof(MovableCasTextView))
                 {
-                    Console.WriteLine("Is movavle cas text view");
                     MovableCasTextView movableCasTextView = new MovableCasTextView(textviews, item.metastring, true);
                     textviews.castextviews.Add(movableCasTextView);
                 }
             }
 
-            Console.WriteLine("Content loaded...");
-
-            foreach (var item in textviews.castextviews)
-            {
-                Console.WriteLine(item);
-            }
             textviews.Clear();
             textviews.Redraw();
             textviews.ShowAll();
