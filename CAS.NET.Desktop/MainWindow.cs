@@ -48,7 +48,7 @@ namespace CAS.NET.Desktop
             logout = new LogoutMenuItem(ref user, ref menu);
             stdAddCom = new StudentAddCompletedMenuItem();
             stdGetAsm = new StudentGetAssignmentMenuItem();
-            stdGetAsmList = new StudentGetAssignmentListMenuItem(ref user);
+            stdGetAsmList = new StudentGetAssignmentListMenuItem(ref user, ref textviews);
             stdGetFee = new StudentGetFeedbackMenuItem();
             teaAddAsm = new TeacherAddAssignmentMenuItem(ref user, ref textviews);
             teaAddFee = new TeacherAddFeedbackMenuItem();
