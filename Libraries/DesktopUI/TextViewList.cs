@@ -1,4 +1,5 @@
 ﻿using System;
+using Ast;
 using System.Collections.Generic;
 using Gtk;
 
@@ -8,6 +9,7 @@ namespace DesktopUI
 	{
 		List<MovableCasTextView> castextviews = new List<MovableCasTextView>();
 		Grid ButtonGrid = new Grid();
+		Evaluator Eval = new Evaluator ();
 		Button AddNewMovableTextView = new Button("New Textbox");
 		Button AddNewMovableCalcView = new Button("New Calcbox");
 
@@ -42,7 +44,7 @@ namespace DesktopUI
 
 		public void InsertCalcView()
 		{
-			castextviews.Add(new MovableCasCalcView(this));
+			castextviews.Add(new MovableCasCalcView(Eval, this));
 
 			Clear();
 			Redraw();

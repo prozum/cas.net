@@ -8,14 +8,17 @@ namespace DesktopUI
 	{
 		Entry input = new Entry();
 		public Label output = new Label();
+		Evaluator Eval;
 
-		public CasCalcView()
+		public CasCalcView(Evaluator Eval)
 		{
 			input.Activated += delegate
 				{
 					output.Text = Evaluate();
 					ShowAll();
 				};
+
+			this.Eval = Eval;
 
 			Attach(input, 1, 1, 1, 1);
 			Attach(output, 1, 2, 1, 1);
@@ -24,8 +27,6 @@ namespace DesktopUI
 
 		string Evaluate()
 		{
-			Evaluator Eval = new Evaluator();
-
 			return Eval.Evaluation(input.Text).ToString();
 		}
 	}
