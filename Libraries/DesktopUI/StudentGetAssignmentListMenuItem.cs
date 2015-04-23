@@ -19,7 +19,19 @@ namespace DesktopUI
 
         void Onclicked()
         {
+            throw new NotImplementedException();
+
             Window window = new Window("Get Assignment List");
+
+            string[] assignmentList = user.student.GetAssignmentList();
+
+            if (assignmentList != null)
+            {
+                foreach (var item in assignmentList)
+                {
+                    Console.WriteLine(item);
+                }
+            }
 
             window.SetDefaultSize(300, 200);
 

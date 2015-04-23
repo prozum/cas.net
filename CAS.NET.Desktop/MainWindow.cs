@@ -50,7 +50,7 @@ namespace CAS.NET.Desktop
             stdGetAsm = new StudentGetAssignmentMenuItem();
             stdGetAsmList = new StudentGetAssignmentListMenuItem(ref user);
             stdGetFee = new StudentGetFeedbackMenuItem();
-            teaAddAsm = new TeacherAddAssignmentMenuItem();
+            teaAddAsm = new TeacherAddAssignmentMenuItem(ref user, ref textviews);
             teaAddFee = new TeacherAddFeedbackMenuItem();
             teaGetAsmList = new TeacherGetAssignmentListMenuItem();
             teaGetCom = new TeacherGetCompletedMenuItem();
