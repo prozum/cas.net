@@ -42,8 +42,6 @@ namespace Ast
 
         public abstract bool ContainsVariable(Variable other);
 
-        public abstract Expression Clone();
-
         public abstract Expression Evaluate();
 
         #region AddWith
