@@ -33,7 +33,7 @@ namespace Ast
                 }
                 else
                 {
-                    return new MsgData(MsgType.Error, "Evaluator> Left expression is not a variable or function");
+                    return new MsgData(MsgType.Error, "Evaluator> Left expression is not a symbol or function");
                 }
             }
             else if (exp is Plot)
