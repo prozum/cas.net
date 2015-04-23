@@ -17,7 +17,6 @@ namespace CAS.NET.Desktop
         // <- You are not worthy
 
         TextViewList textviews = new TextViewList();
-
         MenuBar menubar = new MenuBar();
         Menu menu = new Menu();
         ServerMenuItem server;
@@ -45,6 +44,7 @@ namespace CAS.NET.Desktop
         {
             DeleteEvent += (o, a) => Application.Quit();
 
+            // Initiating menu elements
             server = new ServerMenuItem();
             login = new LoginMenuItem(ref privilege, menu);
             logout = new LogoutMenuItem(ref menu);
@@ -57,6 +57,7 @@ namespace CAS.NET.Desktop
             teaGetAsmList = new TeacherGetAssignmentListMenuItem();
             teaGetCom = new TeacherGetCompletedMenuItem();
 
+            // Adding elements to menu
             server.Submenu = menu;
             menu.Append(login);
             menu.Append(logout);
@@ -92,6 +93,8 @@ namespace CAS.NET.Desktop
 
             ShowAll();
 
+            // Rehiding elements not ment to be shown at boot, as the
+            // user is currently not logged in.
             foreach (Widget w in menu)
             {
                 if (w.GetType() == typeof(StudentAddCompletedMenuItem)

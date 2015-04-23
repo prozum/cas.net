@@ -5,9 +5,9 @@ namespace DesktopUI
 {
 	public class DefinitionBox
 	{
-		public DefinitionBox (Expression )
-		{
-
-		}
+//		public DefinitionBox (Expression )
+//		{
+//
+//		}
 	}
 }
