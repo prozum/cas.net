@@ -6,15 +6,15 @@ namespace DesktopUI
 {
     public class LoginScreen : Window
     {
-        int privilege;
+        User user;
         Menu menu;
         Entry entryUsername = new Entry();
         Entry entryPassword = new Entry();
 
-        public LoginScreen(ref int privilege, Menu menu)
+        public LoginScreen(ref User user, Menu menu)
             : base("Login to CAS.NET")
         {
-            this.privilege = privilege;
+            this.user = user;
             this.menu = menu;
 
             SetDefaultSize(200, 200);
@@ -37,6 +37,7 @@ namespace DesktopUI
             entryPassword.HeightRequest = 20;
             entryPassword.WidthRequest = 100;
             entryPassword.Buffer.Text = "";
+            entryPassword.Visibility = false;
 
             table.Attach(entryUsername, 1, 2, 0, 1, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
             table.Attach(entryPassword, 1, 2, 1, 2, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
@@ -74,60 +75,12 @@ namespace DesktopUI
             client.Encoding = System.Text.Encoding.UTF8;
             client.Credentials = new NetworkCredential(username, password);
 
-            privilege = int.Parse(client.UploadString(host, command), System.Globalization.NumberStyles.AllowLeadingSign);
+            user.privilege = int.Parse(client.UploadString(host, command), System.Globalization.NumberStyles.AllowLeadingSign);
 
-            foreach (Widget w in menu)
+            if (user.privilege >= 0)
             {
-                Console.WriteLine(w);
-
-                if (privilege == 1 || privilege == 0)
-                {
-                    if (w.GetType() == typeof(LoginMenuItem))
-                    {
-                        w.Hide();
-                    }
-                    if (w.GetType() == typeof(LogoutMenuItem))
-                        w.Show();
-                }
-
-                if (privilege == 0)
-                {
-                    if (w.GetType() == typeof(StudentGetAssignmentMenuItem))
-                    {
-                        w.Show();
-                    }
-                    else if (w.GetType() == typeof(StudentGetAssignmentListMenuItem))
-                    {
-                        w.Show();
-                    }
-                    else if (w.GetType() == typeof(StudentGetFeedbackMenuItem))
-                    {
-                        w.Show();
-                    }
-                    else if (w.GetType() == typeof(StudentAddCompletedMenuItem))
-                    {
-                        w.Show();
-                    }
-                }
-                else if (privilege == 1)
-                {
-                    if (w.GetType() == typeof(TeacherAddAssignmentMenuItem))
-                    {
-                        w.Show();
-                    }
-                    else if (w.GetType() == typeof(TeacherAddFeedbackMenuItem))
-                    {
-                        w.Show();
-                    }
-                    else if (w.GetType() == typeof(TeacherGetAssignmentListMenuItem))
-                    {
-                        w.Show();
-                    }
-                    else if (w.GetType() == typeof(TeacherGetCompletedMenuItem))
-                    {
-                        w.Show();
-                    }
-                }
+                user.Login(username, password, host);
+                user.ShowMenuItems(ref menu);
             }
 
             Destroy();

@@ -6,11 +6,13 @@ namespace DesktopUI
     public class LogoutMenuItem : MenuItem
     {
         Menu menu;
+        User user;
 
-        public LogoutMenuItem(ref Menu menu)
+        public LogoutMenuItem(ref User user, ref Menu menu)
             : base("Logout")
         {
             this.menu = menu;
+            this.user = user;
 
             this.Activated += delegate
             {
@@ -20,6 +22,8 @@ namespace DesktopUI
 
         void LogoutWrapper()
         {
+            user.Logout();
+
             foreach (Widget w in menu)
             {
                 if (w.GetType() == typeof(StudentAddCompletedMenuItem)

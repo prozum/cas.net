@@ -5,13 +5,13 @@ namespace DesktopUI
 {
     public class LoginMenuItem : MenuItem
     {
-        int privilege;
+        User user;
         Menu menu;
 
-        public LoginMenuItem(ref int privilege, Menu menu)
+        public LoginMenuItem(ref User user, Menu menu)
             : base("Login")
         {
-            this.privilege = privilege;
+            this.user = user;
             this.menu = menu;
 
             this.Activated += delegate(object sender, EventArgs e)
@@ -22,7 +22,7 @@ namespace DesktopUI
 
         void LoginScreenWrapper()
         {
-            LoginScreen screen = new LoginScreen(ref privilege, menu);
+            LoginScreen screen = new LoginScreen(ref user, menu);
         }
     }
 }
