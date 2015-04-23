@@ -105,10 +105,13 @@ namespace DesktopUI
 
 		public void Reevaluate()
 		{
+			Evaluator NewEval = new Evaluator();
+
 			foreach (Widget widget in castextviews)
 			{
 				if (widget.GetType() == typeof(MovableCasCalcView))
 				{
+					(widget as MovableCasCalcView).calcview.Eval = NewEval;
 					(widget as MovableCasCalcView).calcview.Evaluate ();
 				}
 			}
