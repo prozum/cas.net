@@ -40,6 +40,8 @@ namespace Ast
             return new Error(this, "Cannot clone");
         }
 
+        public virtual void SetFunctionCall(UserDefinedFunction functionCall) { }
+
         public abstract bool ContainsVariable(Variable other);
 
         public abstract Expression Evaluate();

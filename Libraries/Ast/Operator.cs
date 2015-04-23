@@ -615,6 +615,7 @@ namespace Ast
                 {
                     res = simplifiedOperator;
                 }
+            }
             else if (simplifiedOperator.Right is Number)
             {
                 if (simplifiedOperator.Right.CompareTo(Constant.Zero))
