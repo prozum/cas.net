@@ -47,7 +47,8 @@
     <Compile Include="EvalData.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
+    <None Include="ClassesFromExpression - Copy.cd" />
+    <None Include="ClassesFromExpression.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

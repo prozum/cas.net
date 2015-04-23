@@ -17,6 +17,28 @@ namespace Ast
         public abstract bool IsNegative();
 
         public abstract void ToNegative();
+
+        public Expression MulSimplifyWith(Expression other)
+        {
+            if (CompareTo(new Integer(0)))
+            {
+                return new Integer(0);
+            }
+            else if (CompareTo(new Integer(1)))
+            {
+                return other;
+            }
+            else if (other is Variable)
+            {
+                var res = other;
+                (res as Variable).prefix = ((res as Variable).prefix * this) as Number;
+                return res;
+            }
+            else
+            {
+                return parent;
+            }
+        }
     }
 
     public class Integer : Number

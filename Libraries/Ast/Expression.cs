@@ -12,21 +12,6 @@ namespace Ast
     public abstract class Expression
     {
         public Operator parent;
-        public abstract Expression Evaluate();
-
-        public virtual void SetFunctionCall(UserDefinedFunction functionCall){ }
-
-        public virtual Expression Expand()
-        {
-            return this;
-        }
-
-        public virtual Expression Simplify()
-        {
-            return this;
-        }
-
-        public abstract Expression Clone();
 
         public virtual bool CompareTo(Expression other)
         {
@@ -40,9 +25,23 @@ namespace Ast
             }
         }
 
+        public virtual Expression Expand()
+        {
+            return this;
+        }
+
+        public virtual Expression Simplify()
+        {
+            return this;
+        }
+
+        public virtual void SetFunctionCall(UserDefinedFunction functionCall) { }
+
         public abstract bool ContainsVariable(Variable other);
 
-        //public abstract string ToString ();
+        public abstract Expression Clone();
+
+        public abstract Expression Evaluate();
 
         #region AddWith
         public virtual Expression AddWith(Integer other)
