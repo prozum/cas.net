@@ -516,9 +516,7 @@ namespace Ast
                 return right;
 
             if (right.CompareTo(Constant.Zero))
-            {
                 return new Error(left, "Cannot be divided by 0");
-            }
 
             return left.DivWith(right);
         }

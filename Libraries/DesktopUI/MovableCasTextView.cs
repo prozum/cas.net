@@ -7,7 +7,7 @@ namespace DesktopUI
     public class MovableCasTextView : Grid
     {
         TextViewList parent;
-        protected TextView textview;
+        public CasTextView textview;
         Button ButtonMoveUp = new Button("↑");
         Button ButtonMoveDown = new Button("↓");
         /* insert arror moving thingy here */
@@ -21,18 +21,18 @@ namespace DesktopUI
             this.parent = parent;
 
             textview = new CasTextView(serializedString, teacherCanEdit);
-            textview.WidthRequest = 400;
+            textview.WidthRequest = 300;
             textview.HeightRequest = 200;
 
             ButtonMoveUp.Clicked += delegate
-                {
-                    MoveUp();
-                };
+            {
+                MoveUp();
+            };
 
             ButtonMoveDown.Clicked += delegate
-                {
-                    MoveDown();
-                };
+            {
+                MoveDown();
+            };
 
             Attach(textview, 1, 1, 1, 2);
             Attach(ButtonMoveUp, 2, 1, 1, 1);

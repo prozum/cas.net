@@ -17,28 +17,6 @@ namespace Ast
         public abstract bool IsNegative();
 
         public abstract void ToNegative();
-
-        public Expression MulSimplifyWith(Expression other)
-        {
-            if (CompareTo(new Integer(0)))
-            {
-                return new Integer(0);
-            }
-            else if (CompareTo(new Integer(1)))
-            {
-                return other;
-            }
-            else if (other is Variable)
-            {
-                var res = other;
-                (res as Variable).prefix = ((res as Variable).prefix * this) as Number;
-                return res;
-            }
-            else
-            {
-                return parent;
-            }
-        }
     }
 
     public class Integer : Number
@@ -112,7 +90,7 @@ namespace Ast
 
         public override Expression AddWith(Rational other)
         {
-            return new Rational(this, new Integer(1)) - other;
+            return new Rational(this, new Integer(1)) + other;
         }
 
         public override Expression AddWith(Irrational other)
@@ -347,10 +325,10 @@ namespace Ast
 
         public override Expression AddWith(Rational other)
         {
-            var leftNumerator = numerator * other.denominator;
-            var rightNumerator = denominator * other.numerator;
+            var newNumerator = numerator * other.denominator;
+            var otherNewNumerator = denominator * other.numerator;
 
-            return new Rational((leftNumerator + rightNumerator) as Integer, (denominator * other.denominator) as Integer);
+            return new Rational((newNumerator + otherNewNumerator) as Integer, (denominator * other.denominator) as Integer);
         }
 
         public override Expression AddWith(Irrational other)
@@ -407,7 +385,7 @@ namespace Ast
 
         public override Expression DivWith(Rational other)
         {
-            return new Rational(denominator, numerator) * other;
+            return this * new Rational(other.denominator, other.numerator);
         }
 
         public override Expression DivWith(Irrational other)

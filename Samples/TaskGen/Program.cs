@@ -13,8 +13,8 @@ namespace TaskGen
     {
         enum Units {Distance, Weight, Volume};
         enum DistanceUnits {Metre, Centimetre, Millimetre};
-        enum WeightUnits {Kilogram, gram}
-        enum VolumeUnits {Cubicmetre, Litre}
+        enum WeightUnits {Kilogram, gram};
+        enum VolumeUnits {Cubicmetre, Litre};
 
         static int makeUnitTask (int varMin, int varMax)
         {
@@ -29,6 +29,8 @@ namespace TaskGen
             double cubicMetre = 1;
             double litre = cubicMetre * 0.001;
 
+
+              
             Random r = new Random (Guid.NewGuid ().GetHashCode ());
 
             string unit1 = "";

@@ -82,17 +82,19 @@ namespace Ast
 
         public override bool CompareTo(Expression other)
         {
-            if (other is Symbol)
+            var otherSimplified = Evaluator.SimplifyExp(other);
+
+            if (otherSimplified is Symbol)
             {
-                if (identifier == (other as Symbol).identifier && prefix.CompareTo((other as Symbol).prefix) && exponent.CompareTo((other as Symbol).exponent))
+                if (identifier == (otherSimplified as Symbol).identifier && prefix.CompareTo((otherSimplified as Symbol).prefix) && exponent.CompareTo((otherSimplified as Symbol).exponent))
                 {
                     return true;
                 }
 
-                return GetValue().CompareTo((other as Symbol).GetValue());
+                return GetValue().CompareTo((otherSimplified as Symbol).GetValue());
             }
 
-            return other.CompareTo(this.GetValue());
+            return otherSimplified.CompareTo(this.GetValue());
         }
 
         public override Expression Simplify()
