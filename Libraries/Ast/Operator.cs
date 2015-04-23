@@ -80,8 +80,8 @@ namespace Ast
 
         public override bool CompareTo(Expression other)
         {
-            Expression thisSimplified = Evaluator.SimplifyExp(this);
-            Expression otherSimplified = Evaluator.SimplifyExp(other);
+            Expression thisSimplified = Evaluator.SimplifyExp(this).CurrectOperator();
+            Expression otherSimplified = Evaluator.SimplifyExp(other).CurrectOperator();
             Expression thisEvaluated = thisSimplified.Evaluate();
             Expression otherEvaluated = otherSimplified.Evaluate();
 
@@ -357,6 +357,11 @@ namespace Ast
         {
             return new Equal(Left.Clone(), Right.Clone());
         }
+
+        public override Expression CurrectOperator()
+        {
+            return new Equal(Left.CurrectOperator(), Right.CurrectOperator());
+        }
     }
 
     public class Assign : Operator
@@ -377,6 +382,11 @@ namespace Ast
         public override Expression Clone()
         {
             return new Assign(Left.Clone(), Right.Clone());
+        }
+
+        public override Expression CurrectOperator()
+        {
+            return new Assign(Left.CurrectOperator(), Right.CurrectOperator());
         }
     }
 
@@ -424,14 +434,13 @@ namespace Ast
             {
                 res = VariableOperation(simplifiedOperator.Left as Variable, simplifiedOperator.Right as Variable);
             }
+            else if (simplifiedOperator.Left.CompareTo(Right))
+            {
+                res = new Mul(new Integer(2), simplifiedOperator.Left);
+            }
             else
             {
                 res = simplifiedOperator;
-            }
-
-            if (res is Operator)
-            {
-                res = CurrectOperator(res as Operator);
             }
 
             return res;
@@ -528,20 +537,20 @@ namespace Ast
             return res;
         }
 
-        private Operator CurrectOperator(Operator res)
+        public override Expression CurrectOperator()
         {
-            if (res.Right is Number && (res.Right as Number).IsNegative())
+            if (Right is Number && (Right as Number).IsNegative())
             {
-                (res.Right as Number).ToNegative();
-                return new Sub(res.Left, res.Right);
+                (Right as Number).ToNegative();
+                return new Sub(Left.CurrectOperator(), Right);
             }
-            else if (res.Right is Variable && (res.Right as Variable).prefix.IsNegative())
+            else if (Right is Variable && (Right as Variable).prefix.IsNegative())
             {
-                (res.Right as Variable).prefix.ToNegative();
-                return new Sub(res.Left, res.Right);
+                (Right as Variable).prefix.ToNegative();
+                return new Sub(Left.CurrectOperator(), Right);
             }
 
-            return res;
+            return new Add(Left.CurrectOperator(), Right.CurrectOperator());
         }
 
         public override Expression Clone()
@@ -642,6 +651,22 @@ namespace Ast
             {
                 return this;
             }
+        }
+
+        public override Expression CurrectOperator()
+        {
+            if (Right is Number && (Right as Number).IsNegative())
+            {
+                (Right as Number).ToNegative();
+                return new Add(Left.CurrectOperator(), Right);
+            }
+            else if (Right is Variable && (Right as Variable).prefix.IsNegative())
+            {
+                (Right as Variable).prefix.ToNegative();
+                return new Add(Left.CurrectOperator(), Right);
+            }
+
+            return new Sub(Left.CurrectOperator(), Right.CurrectOperator());
         }
     }
 
@@ -813,7 +838,7 @@ namespace Ast
             }
         }
 
-        private Expression SImplifyMultiMul(Number other)
+        private Expression SimplifyMultiMul(Number other)
             {
                 if (other.CompareTo(Constant.Zero))
                 {
@@ -837,7 +862,7 @@ namespace Ast
             }
                 }
 
-        private Expression SImplifyMultiMul(Variable other)
+        private Expression SimplifyMultiMul(Variable other)
             {
             if (Left is Variable && CompareVariables(Left as Variable, other))
                 {
@@ -911,6 +936,11 @@ namespace Ast
         public Expression Inverted(Expression other)
         {
             return new Div(other, Right);
+        }
+
+        public override Expression CurrectOperator()
+        {
+            return new Mul(Left.CurrectOperator(), Right.CurrectOperator());
         }
 
         public Operator Swap()
@@ -988,7 +1018,11 @@ namespace Ast
             Expression evaluatedRes, res = null;
             Operator simplifiedOperator = new Div(Evaluator.SimplifyExp(Left), Evaluator.SimplifyExp(Right));
 
-            if (simplifiedOperator.Left is Number && simplifiedOperator.Right is Number)
+            if (simplifiedOperator.Right is Number && simplifiedOperator.Right.CompareTo(Constant.One))
+            {
+                return simplifiedOperator.Left;
+            }
+            else if (simplifiedOperator.Left is Number && simplifiedOperator.Right is Number)
             {
                 res = simplifiedOperator.Left / simplifiedOperator.Right;
             }
@@ -1055,6 +1089,11 @@ namespace Ast
         public Expression Inverted(Expression other)
         {
             return new Mul(other, Right);
+        }
+
+        public override Expression CurrectOperator()
+        {
+            return new Div(Left.CurrectOperator(), Right.CurrectOperator());
         }
     }
 
@@ -1145,6 +1184,11 @@ namespace Ast
         public Expression Inverted(Expression other)
         {
             throw new NotImplementedException();
+        }
+
+        public override Expression CurrectOperator()
+        {
+            return new Exp(Left.CurrectOperator(), Right.CurrectOperator());
         }
     }
 }

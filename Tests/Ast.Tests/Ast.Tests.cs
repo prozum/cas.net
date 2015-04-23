@@ -39,9 +39,7 @@ namespace Ast.Tests
         }
 
         #region Simplify Test Cases
-
         #region Symbols
-
         [TestCase("2x", "x+x")]
         [TestCase("3x", "x+x+x")]
         [TestCase("3x", "2*x+x")]
@@ -65,7 +63,7 @@ namespace Ast.Tests
         [TestCase("2x+2y", "x+y+x+y")]
         [TestCase("2x+2y", "x+x+y+y")]
         [TestCase("2y+2x", "y+x+x+y")]
-        [TestCase("2*x*y", "y*x+x*y")]
+        [TestCase("2*y*x", "y*x+x*y")]
         [TestCase("2*x*y", "x*y+x*y")]
         [TestCase("x+y+z", "x+y+z")]
         [TestCase("2x+y+z", "x+x+y+z")]
@@ -101,14 +99,14 @@ namespace Ast.Tests
         #endregion
         public void Simplify(string expected, string inputString)
         {
-            var res = Evaluator.SimplifyExp(parser.Parse(inputString));
+            var res = Evaluator.SimplifyExp(parser.Parse(inputString)).CurrectOperator();
             Assert.AreEqual(expected, res.ToString());
         }
 
         #region Parse Test Cases
 
         #region Numbers
-
+        #region Positive
         [TestCase("1", "1")]
         [TestCase("1", "(1)")]
         [TestCase("1+1", "1+1")]
@@ -126,7 +124,18 @@ namespace Ast.Tests
         [TestCase("1/1", "(1/1)")]
         #endregion
 
+        #region Negative
+        [TestCase("-1", "-1")]
+        [TestCase("-1+-1", "-1+-1")]
+        [TestCase("-1--1", "-1--1")]
+        [TestCase("-1*-1", "-1*-1")]
+        [TestCase("-1/-1", "-1/-1")]
+        [TestCase("-1^-1", "-1^-1")]
+        #endregion
+        #endregion
+
         #region Symbols
+        #region Positive
         [TestCase("x", "x")]
         [TestCase("x", "(x)")]
         [TestCase("x+x", "x+x")]
@@ -144,7 +153,18 @@ namespace Ast.Tests
         [TestCase("x/x", "(x/x)")]
         #endregion
 
+        #region Negative
+        [TestCase("-x", "-x")]
+        [TestCase("-x+-x", "-x+-x")]
+        [TestCase("-x--x", "-x--x")]
+        [TestCase("-x*-x", "-x*-x")]
+        [TestCase("-x/-x", "-x/-x")]
+        [TestCase("-x^-x", "-x^-x")]
+        #endregion
+        #endregion
+
         #region Functions
+        #region Positive
         [TestCase("f(x)", "f(x)")]
         [TestCase("f(x)", "(f(x))")]
         [TestCase("f(x)+f(x)", "f(x)+f(x)")]
@@ -161,6 +181,16 @@ namespace Ast.Tests
         [TestCase("f(x)/f(x)", "f(x)/(f(x))")]
         [TestCase("f(x)/f(x)", "(f(x)/f(x))")]
         #endregion
+
+        #region Negative
+        [TestCase("-f(x)", "-f(x)")]
+        [TestCase("-f(x)+-f(x)", "-f(x)+-f(x)")]
+        [TestCase("-f(x)--f(x)", "-f(x)--f(x)")]
+        [TestCase("-f(x)*-f(x)", "-f(x)*-f(x)")]
+        [TestCase("-f(x)/-f(x)", "-f(x)/-f(x)")]
+        [TestCase("-f(x)^-f(x)", "-f(x)^-f(x)")]
+        #endregion
+        #endregion
         #endregion
         public void Parse(string expected, string inputString)
         {
@@ -172,7 +202,6 @@ namespace Ast.Tests
         #region Operators
 
         #region Integers
-
         [TestCase(10, "10")] //value = value
         [TestCase(20, "10+10")] //add
         [TestCase(0, "10-10")] //sub

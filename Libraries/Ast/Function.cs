@@ -660,7 +660,7 @@ namespace Ast
             if (!isArgsValid())
                 return new ArgError(this);
 
-            return Evaluator.SimplifyExp(args[0]);
+            return Evaluator.SimplifyExp(args[0]).CurrectOperator();
         }
 
         public override Expression Clone()
@@ -682,7 +682,7 @@ namespace Ast
 
         public override Expression Evaluate()
         {
-            return Evaluator.ExpandExp(args[0]);
+            return Evaluator.ExpandExp(args[0]).CurrectOperator();
         }
 
         public override Expression Clone()
@@ -836,7 +836,7 @@ namespace Ast
                 System.Diagnostics.Debug.WriteLine(resLeft.ToString() + "=" + resRight.ToString());
             }
 
-            return new Equal(resLeft, Evaluator.SimplifyExp(resRight));
+            return new Equal(resLeft, Evaluator.SimplifyExp(resRight)).CurrectOperator();
         }
 
         private bool InvertOperator(ref Expression resLeft, ref Expression resRight)
