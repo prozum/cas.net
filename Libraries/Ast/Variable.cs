@@ -35,9 +35,9 @@ namespace Ast
         public override bool ContainsVariable(Variable other)
         {
             if (identifier == other.identifier && GetType() == other.GetType())
-                    {
-                        return true;
-                    }
+            {
+                return true;
+            }
 
             return false;
         }
