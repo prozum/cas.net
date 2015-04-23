@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Ast;
 using System.Collections.Generic;
 using Gtk;
@@ -12,7 +13,7 @@ namespace DesktopUI
 		Evaluator Eval = new Evaluator ();
 		Button AddNewMovableTextView = new Button("New Textbox");
 		Button AddNewMovableCalcView = new Button("New Calcbox");
-
+		
 		public TextViewList() : base()
 		{
 			AddNewMovableTextView.Clicked += delegate
@@ -27,7 +28,6 @@ namespace DesktopUI
 
 			ButtonGrid.Attach(AddNewMovableTextView, 1, 1, 1, 1);
 			ButtonGrid.Attach(AddNewMovableCalcView, 2, 1, 1, 1);
-
 			Attach(ButtonGrid, 1, 1, 1, 1);
 
 			ShowAll();
@@ -44,19 +44,18 @@ namespace DesktopUI
 
 		public void InsertCalcView()
 		{
-			castextviews.Add(new MovableCasCalcView(Eval, this));
+			MovableCasCalcView MovCasCalcView =  new MovableCasCalcView(Eval, this);
+			MovCasCalcView.calcview.input.Activated += delegate
+			{
+				Reevaluate();
+				MovCasCalcView.ShowAll();
+			};
+
+			castextviews.Add(MovCasCalcView);
 
 			Clear();
 			Redraw();
 			ShowAll();
-		}
-
-		public void Clear()
-		{
-			foreach (Widget widget in this)
-			{
-				Remove(widget);
-			}
 		}
 
 		public void Move(int ID, int UpOrDown)
@@ -84,6 +83,14 @@ namespace DesktopUI
 			Clear();
 			Reevaluate ();
 			Redraw();
+		}
+
+		public void Clear()
+		{
+			foreach (Widget widget in this)
+			{
+				Remove(widget);
+			}
 		}
 
 		public void Redraw()

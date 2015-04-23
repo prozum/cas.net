@@ -12,11 +12,13 @@ namespace DesktopUI
 
         public CasCalcView(Evaluator Eval)
         {
+			/*
             input.Activated += delegate
             {
                 Evaluate();
                 ShowAll();
             };
+            */
 
             this.Eval = Eval;
 
