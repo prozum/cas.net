@@ -35,7 +35,10 @@ namespace Ast
             return this;
         }
 
-        public virtual void SetFunctionCall(UserDefinedFunction functionCall) { }
+        public virtual Expression Clone()
+        {
+            return new Error(this, "Cannot clone");
+        }
 
         public abstract bool ContainsVariable(Variable other);
 
@@ -477,22 +480,42 @@ namespace Ast
 
         public static Expression operator +(Expression left, dynamic right)
         {
+            if (left is Message)
+                return left;
+            else if (right is Message)
+                return right;
+
             return left.AddWith(right);
         }
 
         public static Expression operator -(Expression left, dynamic right)
         {
+            if (left is Message)
+                return left;
+            else if (right is Message)
+                return right;
+
             return left.SubWith(right);
         }
 
         public static Expression operator *(Expression left, dynamic right)
         {
+            if (left is Message)
+                return left;
+            else if (right is Message)
+                return right;
+
             return left.MulWith(right);
         }
 
         public static Expression operator /(Expression left, dynamic right)
         {
-            if (right.CompareTo(new Integer(0)))
+            if (left is Message)
+                return left;
+            else if (right is Message)
+                return right;
+
+            if (right.CompareTo(Constant.Zero))
             {
                 return new Error(left, "Cannot be divided by 0");
             }
@@ -502,26 +525,51 @@ namespace Ast
 
         public static Expression operator ^(Expression left, dynamic right)
         {
+            if (left is Message)
+                return left;
+            else if (right is Message)
+                return right;
+
             return left.ExpWith(right);
         }
 
         public static Expression operator >(Expression left, dynamic right)
         {
+            if (left is Message)
+                return left;
+            else if (right is Message)
+                return right;
+
             return left.GreaterThan(right);
         }
 
         public static Expression operator <(Expression left, dynamic right)
         {
+            if (left is Message)
+                return left;
+            else if (right is Message)
+                return right;
+
             return left.LesserThan(right);
         }
 
         public static Expression operator >=(Expression left, dynamic right)
         {
+            if (left is Message)
+                return left;
+            else if (right is Message)
+                return right;
+
             return left.GreaterThanOrEqualTo(right);
         }
 
         public static Expression operator <=(Expression left, dynamic right)
         {
+            if (left is Message)
+                return left;
+            else if (right is Message)
+                return right;
+
             return left.LesserThanOrEqualTo(right);
         }
     }

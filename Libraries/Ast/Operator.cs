@@ -23,7 +23,7 @@ namespace Ast
             set
             {
                 if (value != null)
-                    value.parent = this;
+                value.parent = this;
 
                 left = value;
             }
@@ -39,7 +39,7 @@ namespace Ast
             set
             {
                 if (value != null)
-                    value.parent = this;
+                value.parent = this;
 
                 right = value;
             }
@@ -296,7 +296,7 @@ namespace Ast
         public override Expression Simplify()
         {
             return new Equal(Evaluator.SimplifyExp(Left), Evaluator.SimplifyExp(Right));
-        }
+            }
 
         public override Expression Clone()
         {
@@ -317,7 +317,7 @@ namespace Ast
         public override Expression Simplify()
         {
             return new Assign(Evaluator.SimplifyExp(Left), Evaluator.SimplifyExp(Right));
-        }
+            }
 
         public override Expression Clone()
         {
@@ -345,11 +345,11 @@ namespace Ast
             Expression evaluatedRes, res = null;
             Operator simplifiedOperator = new Add(Evaluator.SimplifyExp(Left), Evaluator.SimplifyExp(Right));
 
-            if (simplifiedOperator.Left is Number && simplifiedOperator.Left.CompareTo(new Integer(0)))
+            if (simplifiedOperator.Left is Number && simplifiedOperator.Left.CompareTo(Constant.Zero))
             {
                 res = simplifiedOperator.Right;
             }
-            else if (simplifiedOperator.Right is Number && simplifiedOperator.Right.CompareTo(new Integer(0)))
+            else if (simplifiedOperator.Right is Number && simplifiedOperator.Right.CompareTo(Constant.Zero))
             {
                 res = simplifiedOperator.Left;
             }
@@ -412,55 +412,55 @@ namespace Ast
         }
 
         private Expression SimplifyMultiAdd(Number other)
-        {
-            if (Left is Number)
             {
+                if (Left is Number)
+                {
                 return new Add(Left + other, Right);
-            }
-            else if (Right is Number)
-            {
+                }
+                else if (Right is Number)
+                {
                 return new Add(Left, Right + other);
-            }
-            else
-            {
+                }
+                else
+                {
                 return new Add(this, other);
             }
-        }
+                }
 
         private Expression SimplifyMultiAdd(Variable other)
-        {
+            {
             if (Left is Variable && CompareVariables(Left as Variable, other))
-            {
+                {
                 return new Add(VariableOperation(Left as Variable, other), Right);
-            }
+                }
             else if (Right is Variable && CompareVariables(Right as Variable, other))
-            {
+                {
                 return new Add(Left, VariableOperation(Right as Variable, other));
-            }
-            else if (Left is Add)
-            {
+                }
+                else if (Left is Add)
+                {
                 var res = new Add((Left as Add).SimplifyMultiAdd(other), Right);
 
-                if (res.ToString() == new Add(new Add(Left, other), Right).ToString())
-                {
-                    res = new Add(this, other);
-                }
+                    if (res.ToString() == new Add(new Add(Left, other), Right).ToString())
+                    {
+                        res = new Add(this, other);
+                    }
 
                 return res;
-            }
-            else if (Right is Add)
-            {
+                }
+                else if (Right is Add)
+                {
                 var res = new Add(Left, (Right as Add).SimplifyMultiAdd(other));
 
-                if (res.ToString() == new Add(Left, new Add(Right, other)).ToString())
-                {
-                    res = new Add(this, other);
+                    if (res.ToString() == new Add(Left, new Add(Right, other)).ToString())
+                    {
+                        res = new Add(this, other);
                 }
 
                 return res;
-            }
-            else
-            {
+                }
+                else
+                {
                 return new Add(this, other);
             }
         }
@@ -598,11 +598,42 @@ namespace Ast
 
             if (simplifiedOperator.Left is Number)
             {
-                res = (simplifiedOperator.Left as Number).MulSimplifyWith(simplifiedOperator.Right);
-            }
+                if (simplifiedOperator.Left.CompareTo(Constant.Zero))
+                {
+                    res = new Integer(0);
+                }
+                else if (simplifiedOperator.Left.CompareTo(Constant.One))
+                {
+                    res = simplifiedOperator.Right;
+                }
+                else if (simplifiedOperator.Right is Variable)
+                {
+                    res = simplifiedOperator.Right;
+                    (res as Variable).prefix = ((res as Variable).prefix * simplifiedOperator.Left) as Number;
+                }
+                else
+                {
+                    res = simplifiedOperator;
+                }
             else if (simplifiedOperator.Right is Number)
             {
-                res = (simplifiedOperator.Right as Number).MulSimplifyWith(simplifiedOperator.Left);
+                if (simplifiedOperator.Right.CompareTo(Constant.Zero))
+                {
+                    res = new Integer(0);
+                }
+                else if (simplifiedOperator.Right.CompareTo(Constant.One))
+                {
+                    res = simplifiedOperator.Left;
+                }
+                else if (simplifiedOperator.Left is Variable)
+                {
+                    res = (simplifiedOperator.Left as Variable).Clone();
+                    (res as Variable).prefix = ((res as Variable).prefix * simplifiedOperator.Right) as Number;
+                }
+                else
+                {
+                    res = simplifiedOperator;
+                }
             }
             else if (simplifiedOperator.Left is Mul)
             {
@@ -630,7 +661,7 @@ namespace Ast
                 {
                     res = SameVariableOperation(simplifiedOperator.Left as Variable, simplifiedOperator.Right as Variable);
                 }
-                else if (!(simplifiedOperator.Left as Variable).exponent.CompareTo(new Integer(1)) && (simplifiedOperator.Left as Variable).exponent.CompareTo((simplifiedOperator.Right as Variable).exponent))
+                else if (!(simplifiedOperator.Left as Variable).exponent.CompareTo(Constant.One) && (simplifiedOperator.Left as Variable).exponent.CompareTo((simplifiedOperator.Right as Variable).exponent))
                 {
                     res = DifferentVariableOperation(simplifiedOperator.Left as Variable, simplifiedOperator.Right as Variable);
                 }
@@ -681,74 +712,74 @@ namespace Ast
         }
 
         private Expression SImplifyMultiMul(Number other)
-        {
-            if (other.CompareTo(new Integer(0)))
             {
+                if (other.CompareTo(Constant.Zero))
+                {
                 return new Integer(0);
-            }
-            else if (other.CompareTo(new Integer(1)))
-            {
+                }
+                else if (other.CompareTo(Constant.One))
+                {
                 return this;
-            }
-            else if (Left is Number)
-            {
+                }
+                else if (Left is Number)
+                {
                 return new Mul(Left * other, Right);
-            }
-            else if (Right is Number)
-            {
+                }
+                else if (Right is Number)
+                {
                 return new Mul(Left, Right * other);
-            }
-            else
-            {
+                }
+                else
+                {
                 return new Mul(this, other);
             }
-        }
+                }
 
         private Expression SImplifyMultiMul(Variable other)
-        {
+            {
             if (Left is Variable && CompareVariables(Left as Variable, other))
-            {
+                {
                 return new Mul(SameVariableOperation(Left as Variable, other), Right);
-            }
+                }
             else if (Right is Variable && CompareVariables(Right as Variable, other))
-            {
+                {
                 return new Mul(Left, SameVariableOperation(Right as Variable, other));
-            }
-            if (Left is Variable && (!(Left as Variable).exponent.CompareTo(new Integer(1)) && (Left as Variable).exponent.CompareTo(other.exponent)))
-            {
+                }
+                if (Left is Variable && (!(Left as Variable).exponent.CompareTo(Constant.One) && (Left as Variable).exponent.CompareTo((other as Variable).exponent)))
+                {
                 return new Mul(DifferentVariableOperation(Left as Variable, other as Variable), Right);
-            }
-            else if (Right is Variable && (!(Right as Variable).exponent.CompareTo(new Integer(1)) && (Right as Variable).exponent.CompareTo(other.exponent)))
-            {
+                }
+                else if (Right is Variable && (!(Right as Variable).exponent.CompareTo(Constant.One) && (Right as Variable).exponent.CompareTo((other as Variable).exponent)))
+                {
                 return new Mul(Left, DifferentVariableOperation(Right as Variable, other as Variable));
-            }
-            else if (Left is Mul)
-            {
+                }
+                else if (Left is Mul)
+                {
                 var res = new Mul((Left as Mul).SimplifyMultiMul(other), Right);
 
-                if (res.ToString() == new Mul(new Mul(Left, other), Right).ToString())
-                {
-                    res = new Mul(this, other);
-                }
+                    if (res.ToString() == new Mul(new Mul(Left, other), Right).ToString())
+                    {
+                        res = new Mul(this, other);
+                    }
 
                 return res;
-            }
-            else if (Right is Mul)
-            {
+                }
+                else if (Right is Mul)
+                {
                 var res = new Mul(Left, (Right as Mul).SimplifyMultiMul(other));
 
-                if (res.ToString() == new Mul(Left, new Mul(Right, other)).ToString())
-                {
-                    res = new Mul(this, other);
-                }
+                    if (res.ToString() == new Mul(Left, new Mul(Right, other)).ToString())
+                    {
+                        res = new Mul(this, other);
+                    }
 
                 return res;
-            }
-            else
-            {
+                }
+                else
+                {
                 return new Mul(this, other);
+                }
             }
-        }
 
         private Expression SameVariableOperation(Variable left, Variable right)
         {
@@ -956,11 +987,11 @@ namespace Ast
             Expression evaluatedRes, res = null;
             Operator simplifiedOperator = new Exp(Evaluator.SimplifyExp(Left), Evaluator.SimplifyExp(Right));
 
-            if (simplifiedOperator.Left is Number && simplifiedOperator.Left.CompareTo(new Integer(1)))
+            if (simplifiedOperator.Left is Number && simplifiedOperator.Left.CompareTo(Constant.One))
             {
                 return new Integer(1);
             }
-            else if (simplifiedOperator.Right is Number && simplifiedOperator.Left.CompareTo(new Integer(0)))
+            else if (simplifiedOperator.Right is Number && simplifiedOperator.Left.CompareTo(Constant.Zero))
             {
                 return new Integer(1);
             }

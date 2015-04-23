@@ -35,33 +35,33 @@ namespace Ast
         public override bool ContainsVariable(Variable other)
         {
             if (identifier == other.identifier && GetType() == other.GetType())
-            {
-                return true;
-            }
+                    {
+                        return true;
+                    }
 
             return false;
         }
 
         protected Expression ReturnValue(Expression res)
         {
-            if (prefix.CompareTo(new Integer(0)))
+            if (prefix.CompareTo(Constant.Zero))
             {
                 res = new Integer(0);
             }
             else
             {
-                if (exponent.CompareTo(new Integer(0)))
+                if (exponent.CompareTo(Constant.Zero))
                 {
                     res = prefix.Clone();
                 }
                 else
                 {
-                    if (!exponent.CompareTo(new Integer(1)))
+                    if (!exponent.CompareTo(Constant.One))
                     {
                         res = new Exp(res, exponent);
                     }
 
-                    if (!prefix.CompareTo(new Integer(1)))
+                    if (!prefix.CompareTo(Constant.One))
                     {
                         return new Mul(prefix, res);
                     }
@@ -79,7 +79,7 @@ namespace Ast
             (variable as Variable).prefix = new Integer(1);
             (variable as Variable).exponent = new Integer(1);
 
-            if (!exponent.CompareTo(new Integer(1)))
+            if (!(variable as Variable).exponent.CompareTo(Constant.One))
             {
                 res = new Exp(variable, exponent);
             } 
@@ -88,7 +88,7 @@ namespace Ast
                 res = variable;
 	        }
 
-            if (!prefix.CompareTo(new Integer(1)))
+            if (!(variable as Variable).prefix.CompareTo(Constant.One))
             {
                 res = new Mul(prefix, res);
             }

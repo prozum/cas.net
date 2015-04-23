@@ -1,625 +1,112 @@
 ﻿using System;
 using Gtk;
-using TaskGenLib;
-using System.Collections.Generic;
-using ImEx;
-using System.Net;
-using System.Text;
+
+//using TaskGenLib;
+//using System.Collections.Generic;
+//using ImEx;
+//using System.Net;
+//using System.Text;
 using DesktopUI;
 
 namespace CAS.NET.Desktop
 {
     class MainWindow : Window
     {
-        List<Widget> listWidget = new List<Widget>();
-        List<MetaType> mt = new List<MetaType>();
-        Grid globalGrid = new Grid();
-        int gridNumber = 1;
-        VBox vboxWindow = new VBox(false, 3);
-        string casFile = "";
-        string username, password;
 
-        delegate int login(string username,string password);
+        int privilege = -1;
+
+        TextViewList textviews = new TextViewList();
+
+        MenuBar menubar = new MenuBar();
+        Menu menu = new Menu();
+        ServerMenuItem server;
+        LoginMenuItem login;
+        LogoutMenuItem logout;
+        StudentAddCompletedMenuItem stdAddCom;
+        StudentGetAssignmentMenuItem stdGetAsm;
+        StudentGetAssignmentListMenuItem stdGetAsmList;
+        StudentGetFeedbackMenuItem stdGetFee;
+        TeacherAddAssignmentMenuItem teaAddAsm;
+        TeacherAddFeedbackMenuItem teaAddFee;
+        TeacherGetAssignmentListMenuItem teaGetAsmList;
+        TeacherGetCompletedMenuItem teaGetCom;
+        StudentGetAssignmentMenuItem studentGetAssignmentMenuItem;
+
+        Toolbar toolbar = new Toolbar();
+        OpenToolButton open;
+        SaveToolButton save;
+        NewToolButton neo;
+
+        ScrolledWindow scrolledWindow = new ScrolledWindow();
 
         public MainWindow()
             : base("CAS.NET")
         {
             DeleteEvent += (o, a) => Application.Quit();
 
-            SetSizeRequest(300, 500);
+            server = new ServerMenuItem();
+            login = new LoginMenuItem(ref privilege, menu);
+            logout = new LogoutMenuItem(ref menu);
+            stdAddCom = new StudentAddCompletedMenuItem();
+            stdGetAsm = new StudentGetAssignmentMenuItem();
+            stdGetAsmList = new StudentGetAssignmentListMenuItem();
+            stdGetFee = new StudentGetFeedbackMenuItem();
+            teaAddAsm = new TeacherAddAssignmentMenuItem();
+            teaAddFee = new TeacherAddFeedbackMenuItem();
+            teaGetAsmList = new TeacherGetAssignmentListMenuItem();
+            teaGetCom = new TeacherGetCompletedMenuItem();
+
+            server.Submenu = menu;
+            menu.Append(login);
+            menu.Append(logout);
+            menu.Append(stdAddCom);
+            menu.Append(stdGetAsm);
+            menu.Append(stdGetAsmList);
+            menu.Append(stdGetFee);
+            menu.Append(teaAddAsm);
+            menu.Append(teaAddFee);
+            menu.Append(teaGetAsmList);
+            menu.Append(teaGetCom);
+
+            menubar.Append(server);
+
+            open = new OpenToolButton(textviews);
+            save = new SaveToolButton(textviews);
+            neo = new NewToolButton(textviews);
+
+            toolbar.Add(open);
+            toolbar.Add(save);
+            toolbar.Add(neo);
+
+            VBox vbox = new VBox();
+
+            menubar.HeightRequest = 30;
+            vbox.Add(menubar);
+            vbox.Add(toolbar);
+            scrolledWindow.Add(textviews);
+            vbox.Add(scrolledWindow);
+
+            Add(vbox);
 
             ShowAll();
 
-            /*
-
-            #region Menu
-
-            MenuBar menuBar = new MenuBar();
-            Menu fileMenu = new Menu();
-            Menu addMenu = new Menu();
-            Menu serverMenu = new Menu();
-
-
-            MenuItem file = new MenuItem("File");
-            file.Submenu = fileMenu;
-
-            MenuItem newFile = new MenuItem("New File");
-            newFile.Activated += (o, a) => ClearWindow();
-
-            MenuItem openFile = new MenuItem("Open File");
-            openFile.Activated += (o, a) => OpenFile();
-
-            MenuItem saveFile = new MenuItem("Save File");
-            saveFile.Activated += (o, a) => SaveFile();
-
-
-
-            MenuItem addItem = new MenuItem("Add");
-            addItem.Submenu = addMenu;
-
-            MenuItem addEntry = new MenuItem("Entry");
-            addEntry.Activated += (object sender, EventArgs e) => AddEntryWidget();
-
-            MenuItem addTextView = new MenuItem("TextView");
-            addTextView.Activated += (object sender, EventArgs e) => AddTextViewWidget();
-
-            MenuItem addCasTextView = new MenuItem("CasTextView");
-            addCasTextView.Activated += (object sender, EventArgs e) => AddCasTextViewWidget();
-
-
-
-            MenuItem serverItem = new MenuItem("Server");
-            serverItem.Submenu = serverMenu;
-
-            MenuItem loginItem = new MenuItem("Login");
-            loginItem.Activated += (object sender, EventArgs e) => LoginScreen();
-
-            MenuItem logoutItem = new MenuItem("Logout");
-            logoutItem.Activated += delegate(object sender, EventArgs e)
+            foreach (Widget w in menu)
             {
-                username = null;
-                password = null;
-            };
-
-
-            fileMenu.Append(newFile);
-            fileMenu.Append(openFile);
-            fileMenu.Append(saveFile);
-
-            addMenu.Append(addEntry);
-            addMenu.Append(addTextView);
-            addMenu.Append(addCasTextView);
-
-            serverMenu.Append(loginItem);
-            serverMenu.Append(logoutItem);
-
-            menuBar.Append(file);
-            menuBar.Append(addItem);
-            menuBar.Append(serverItem);
-
-            #endregion
-
-*/
-
-            SettingsToolbar toolbar = new SettingsToolbar(ref casFile, ref globalGrid, ref gridNumber, ref mt, ref listWidget, this);
-
-            int i = 0;
-
-            ServerMenu serverMenu = new ServerMenu(ref i);
-
-            MenuBar menubar = new MenuBar();
-            menubar.Add(serverMenu);
-
-            CasTextView textView = new CasTextView("", true, listWidget);
-            textView.WidthRequest = Window.Width;
-            Widget w = textView.GetMovableWidget();
-            globalGrid.Attach(w, 1, 1, 1, 1);
-            /*
-
-            ToolButton toolButtonNew = new ToolButton(Stock.New);
-            toolbar.Insert(toolButtonNew, 0);
-            toolButtonNew.Clicked += delegate
-            {
-                ClearWindow();
-            };
-
-            ToolButton toolButtonOpen = new ToolButton(Stock.Open);
-            toolbar.Insert(toolButtonOpen, 1);
-            toolButtonOpen.Clicked += delegate
-            {
-                OpenFile();
-            };
-
-            ToolButton toolButtonSave = new ToolButton(Stock.Save);
-            toolbar.Insert(toolButtonSave, 2);
-            toolButtonSave.Clicked += delegate
-            {
-                SaveFile();
-            };
-
-            SeparatorToolItem toolSeparater1 = new SeparatorToolItem();
-            toolbar.Insert(toolSeparater1, 3);
-
-            ToolButton toolButtonBold = new ToolButton(Stock.Bold);
-            toolbar.Insert(toolButtonBold, 4);
-
-            ToolButton toolButtonItalic = new ToolButton(Stock.Italic);
-            toolbar.Insert(toolButtonItalic, 5);
-
-            ToolButton toolButtonUnderline = new ToolButton(Stock.Underline);
-            toolbar.Insert(toolButtonUnderline, 6);
-
-//            SeparatorToolItem toolSeparator2 = new SeparatorToolItem();
-//            toolbar.Insert(toolSeparator2, 8);
-
-            vboxWindow.PackStart(menuBar, false, false, 2);
-
-            vboxWindow.PackStart(toolbar, false, false, 2);
-
-
-*/
-//            vboxWindow.PackStart(menubar, false, false, 2);
-            vboxWindow.PackStart(toolbar, false, false, 2);
-            vboxWindow.Add(globalGrid);
-            Add(vboxWindow);
-            ShowAll();
-        }
-
-        public void AddEntryWidget()
-        {
-            Entry entry = (Entry)EntryWidget();
-            listWidget.Add(entry);
-
-            globalGrid.Attach(MovableWidget(entry), 1, gridNumber, 1, 1);
-            gridNumber++;
-
-            ShowAll();
-        }
-
-        public void AddTextViewWidget()
-        {
-            TextView textView = (TextView)TextViewWidget();
-            listWidget.Add(textView);
-
-            globalGrid.Attach(MovableWidget(textView), 1, gridNumber, 1, 1);
-            gridNumber++;
-
-            ShowAll();
-        }
-
-        public void AddCasTextViewWidget()
-        {
-            CasTextView ctv = (CasTextView)CasTextViewWidget();
-            listWidget.Add(ctv);
-
-            globalGrid.Attach(MovableWidget(ctv), 1, gridNumber, 1, 1);
-            gridNumber++;
-
-            ShowAll();
-        }
-
-        public Widget TextViewWidget()
-        {
-            TextView textView = new TextView();
-            textView.HeightRequest = 100;
-            textView.WidthRequest = 300;
-            textView.Visible = true;
-
-            return textView;
-        }
-
-        public Widget EntryWidget()
-        {
-            Entry entry = new Entry();
-            entry.HeightRequest = 20;
-            entry.WidthRequest = 300;
-            entry.Buffer.Text = "";
-
-            return entry;
-        }
-
-        public Widget CasTextViewWidget()
-        {
-            CasTextView ctv = new CasTextView("", true, listWidget);
-            ctv.HeightRequest = 20;
-            ctv.WidthRequest = 300;
-
-            return ctv;
-        }
-
-        public void UpdateWorkspace()
-        {
-            mt.Clear();
-
-            foreach (Widget w in listWidget)
-            {
-                if (w.GetType() == typeof(Entry))
+                if (w.GetType() == typeof(StudentAddCompletedMenuItem)
+                    || w.GetType() == typeof(StudentGetAssignmentListMenuItem)
+                    || w.GetType() == typeof(StudentGetAssignmentMenuItem)
+                    || w.GetType() == typeof(StudentGetFeedbackMenuItem)
+                    || w.GetType() == typeof(TeacherAddAssignmentMenuItem)
+                    || w.GetType() == typeof(TeacherAddFeedbackMenuItem)
+                    || w.GetType() == typeof(TeacherGetAssignmentListMenuItem)
+                    || w.GetType() == typeof(TeacherGetCompletedMenuItem)
+                    || w.GetType() == typeof(LogoutMenuItem))
                 {
-                    Entry en = (Entry)w;
-                    MetaType mtlmt = new MetaType();
-                    mtlmt.type = en.GetType();
-                    mtlmt.metastring = en.Text;
-
-                    mt.Add(mtlmt);
+                    w.Hide();
                 }
-                if (w.GetType() == typeof(TextView))
+                else if (w.GetType() == typeof(LoginMenuItem))
                 {
-
-                    TextView tv = (TextView)w;
-                    MetaType mtlmt = new MetaType();
-                    TextBuffer buffer = tv.Buffer;
-                    TextIter startIter, endIter;
-                    buffer.GetBounds(out startIter, out endIter);
-                    mtlmt.type = tv.GetType();
-                    byte[] byteTextView = buffer.Serialize(buffer, buffer.RegisterSerializeTagset(null), startIter, endIter);
-                    mtlmt.metastring = Encoding.UTF8.GetString(byteTextView);
-
-                    mt.Add(mtlmt);
-                }
-                if (w.GetType() == typeof(CasTextView))
-                {
-                    CasTextView ctv = (CasTextView)w;
-                    MetaType mtlmt = new MetaType();
-                    mtlmt.type = ctv.GetType();
-                    mtlmt.metastring = ctv.SerializeCasTextView();
-
-                    mt.Add(mtlmt);
-                }
-            }
-        }
-
-        void OpenFile()
-        {
-            OperatingSystem os = Environment.OSVersion;
-            PlatformID pid = os.Platform;
-
-            switch (pid)
-            {
-                case PlatformID.Win32S:
-                case PlatformID.Win32Windows:
-                case PlatformID.WinCE:
-                case PlatformID.Win32NT: // <- if one, this is the one we really need
-                    {
-                        System.Windows.Forms.OpenFileDialog filechooser = new System.Windows.Forms.OpenFileDialog();
-
-                        filechooser.InitialDirectory = "c:\\";
-                        filechooser.Filter = "cas files (*.cas)|*.cas";
-                        filechooser.FilterIndex = 2;
-                        filechooser.RestoreDirectory = true;
-
-                        if (filechooser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                        {
-                            casFile = System.IO.File.ReadAllText(filechooser.FileName);
-                        }
-
-                        break;
-                    }
-                case PlatformID.Unix:
-                case PlatformID.MacOSX:
-                    {
-                        FileChooserDialog filechooser = new FileChooserDialog("Open file...", this, FileChooserAction.Open, "Cancel", ResponseType.Cancel, "Open", ResponseType.Accept);
-
-                        filechooser.Filter = new FileFilter();
-                        filechooser.Filter.AddPattern("*.cas");
-
-                        if (filechooser.Run() == (int)ResponseType.Accept)
-                        {
-                            casFile = System.IO.File.ReadAllText(filechooser.Filename);
-                        }
-
-                        filechooser.Destroy();
-
-                        break;
-                    }
-                default:
-                    {
-                        break;
-                    }
-            }
-
-            ClearWindow();
-
-            mt.Clear();
-            List<MetaType> mtlmt = new List<MetaType>();
-            mtlmt = Import.DeserializeString<List<MetaType>>(casFile);
-            mt = mtlmt;
-            listWidget.Clear();
-
-            RecreateListWidget();
-
-            foreach (Widget item in listWidget)
-            {
-                globalGrid.Attach(MovableWidget(item), 1, gridNumber, 1, 1);
-                gridNumber++;
-            }
-
-            ShowAll();
-        }
-
-        void SaveFile()
-        {
-            OperatingSystem os = Environment.OSVersion;
-            PlatformID pid = os.Platform;
-
-            Console.WriteLine(mt.Count);
-
-            UpdateWorkspace();
-
-            Console.WriteLine(mt.Count);
-
-            casFile = ImEx.Export.Serialize(mt);
-            Console.WriteLine("CAS FILE:::\n" + casFile);
-
-            switch (pid)
-            {
-
-                case PlatformID.Win32S:
-                case PlatformID.Win32Windows:
-                case PlatformID.WinCE:
-                case PlatformID.Win32NT: // <- if one, this is the one we really need
-                    {
-                        System.Windows.Forms.SaveFileDialog filechooser = new System.Windows.Forms.SaveFileDialog();
-
-                        filechooser.InitialDirectory = "c:\\";
-                        filechooser.Filter = "cas files (*.cas)|*.cas";
-                        filechooser.FilterIndex = 2;
-                        filechooser.RestoreDirectory = true;
-
-                        if (filechooser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                        {
-                            System.IO.File.WriteAllText(filechooser.FileName, casFile);
-                        }
-
-                        break;
-                    }
-                case PlatformID.Unix:
-                case PlatformID.MacOSX:
-                    {
-                        FileChooserDialog filechooser = new FileChooserDialog("Save File...", this, FileChooserAction.Save, "Cancel", ResponseType.Cancel, "Save", ResponseType.Accept);
-
-                        filechooser.Filter = new FileFilter();
-                        filechooser.Filter.AddPattern("*.cas");
-
-                        if (filechooser.Run() == (int)ResponseType.Accept)
-                        {
-                            if (filechooser.Name.ToLower().EndsWith(".cas"))
-                            {
-                                System.IO.File.WriteAllText(filechooser.Filename, casFile);
-                            }
-                            else
-                            {
-                                System.IO.File.WriteAllText(filechooser.Filename + ".cas", casFile);
-                            }
-                        }
-
-                        filechooser.Destroy();
-
-                        break;
-                    }
-                default:
-                    {
-                        break;
-                    }
-            }
-        }
-
-        void ClearWindow()
-        {
-            listWidget.Clear();
-
-            foreach (Widget item in globalGrid)
-            {
-                globalGrid.Remove(item);
-            }
-
-            gridNumber = 1;
-        }
-
-        public Widget MovableWidget(Widget widget)
-        {
-            Grid grid = new Grid();
-
-            Button buttonMoveUp = new Button("↑");
-            buttonMoveUp.HeightRequest = 10;
-            buttonMoveUp.WidthRequest = 10;
-            buttonMoveUp.Clicked += delegate(object sender, EventArgs e)
-            {
-
-                Console.WriteLine(listWidget.Count);
-
-                foreach (Widget item in listWidget)
-                {
-                    Console.WriteLine("Item in lw: " + item.ToString());
-                }
-
-                int ID = listWidget.IndexOf(widget);
-                Console.WriteLine("ID: " + ID);
-                if (ID >= 1)
-                {
-                    Console.WriteLine("Inside deligate");
-                    Console.WriteLine("Moving ID: " + listWidget.IndexOf(widget));
-                    Widget w = listWidget[ID];
-                    Console.WriteLine("Got widget");
-                    listWidget.RemoveAt(ID);
-                    Console.WriteLine("Removed Widget\nInserting widget @ " + ID);
-                    listWidget.Insert(ID - 1, w);
-                    Console.WriteLine("Inserted Widget");
-                    Redraw();
-                }
-
-                foreach (Widget item in listWidget)
-                {
-                    Console.WriteLine("Item in lw: " + item.ToString());
-                }
-
-
-                Console.WriteLine(listWidget.Count);
-            };
-
-            Button buttonMoveDown = new Button("↓");
-            buttonMoveDown.HeightRequest = 10;
-            buttonMoveDown.WidthRequest = 10;
-            buttonMoveDown.Clicked += delegate(object sender, EventArgs e)
-            {
-
-                Console.WriteLine(listWidget.Count);
-
-                foreach (Widget item in listWidget)
-                {
-                    Console.WriteLine("Item in lw: " + item.ToString());
-                }
-
-                int ID = listWidget.IndexOf(widget);
-                Console.WriteLine("ID: " + ID);
-                if (ID <= listWidget.Count - 2)
-                {
-                    Console.WriteLine("Inside deligate");
-                    Console.WriteLine("Moving ID: " + listWidget.IndexOf(widget));
-                    Widget w = listWidget[ID];
-                    Console.WriteLine("Got widget");
-                    listWidget.RemoveAt(ID);
-                    Console.WriteLine("Removed Widget\nInserting widget @ " + ID);
-                    listWidget.Insert(ID + 1, w);
-                    Console.WriteLine("Inserted Widget");
-                    Redraw();
-                }
-
-                foreach (Widget item in listWidget)
-                {
-                    Console.WriteLine("Item in lw: " + item.ToString());
-                }
-
-
-                Console.WriteLine(listWidget.Count);
-            };
-
-            grid.Attach(widget, 1, 1, 1, 2);
-            grid.Attach(buttonMoveUp, 2, 1, 1, 1);
-            grid.Attach(buttonMoveDown, 2, 2, 1, 1);
-
-            return grid;
-        }
-
-        void Redraw()
-        {
-            UpdateWorkspace();
-
-            listWidget.Clear();
-
-            foreach (Widget w in globalGrid)
-            {
-                globalGrid.Remove(w);
-            }
-
-            RecreateListWidget();
-
-            foreach (Widget item in listWidget)
-            {
-                globalGrid.Attach(MovableWidget(item), 1, gridNumber, 1, 1);
-                gridNumber++;
-            }
-
-            ShowAll();
-        }
-
-        void LoginScreen()
-        {
-            Window loginWindow = new Window("Login to CAS.NET");
-            loginWindow.SetDefaultSize(200, 200);
-
-            VBox vbox = new VBox(false, 2);
-            HBox hbox = new HBox(false, 2);
-
-            Label labUsername = new Label("Username");
-            Label labPassword = new Label("Password");
-
-            Table table = new Table(2, 3, false);
-
-            table.Attach(labUsername, 0, 1, 0, 1, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
-            table.Attach(labPassword, 0, 1, 1, 2, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
-
-            Entry entryUsername = new Entry();
-            entryUsername.HeightRequest = 20;
-            entryUsername.WidthRequest = 100;
-            entryUsername.Buffer.Text = "";
-
-            Entry entryPassword = new Entry();
-            entryPassword.HeightRequest = 20;
-            entryPassword.WidthRequest = 100;
-            entryPassword.Buffer.Text = "";
-
-            table.Attach(entryUsername, 1, 2, 0, 1, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
-            table.Attach(entryPassword, 1, 2, 1, 2, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
-
-            Button buttonLogin = new Button("Login");
-
-            int privilege;
-
-            buttonLogin.Clicked += delegate(object sender, EventArgs e)
-            {
-                username = entryUsername.Text;
-                password = entryPassword.Text;
-
-                const string host = "http://localhost:8080/";
-                const string command = "Login ";
-
-                var client = new WebClient();
-                client.Encoding = System.Text.Encoding.UTF8;
-                client.Credentials = new NetworkCredential(username, password);
-
-                login LoginHandler = (x, y) => int.Parse(client.UploadString(x, y), System.Globalization.NumberStyles.AllowLeadingSign);
-                privilege = LoginHandler(host, command);
-
-                loginWindow.Destroy();
-
-            };
-
-
-
-            Button buttonCancel = new Button("Cancel");
-            buttonCancel.Clicked += (object sender, EventArgs e) => loginWindow.Destroy();
-
-            hbox.Add(buttonCancel);
-            hbox.Add(buttonLogin);
-
-            vbox.Add(table);
-            vbox.Add(hbox);
-
-            loginWindow.Add(vbox);
-            loginWindow.ShowAll();
-        }
-
-        void RecreateListWidget()
-        {
-            foreach (var item in mt)
-            {
-                if (item.type == typeof(Entry))
-                {
-                    Entry entry = new Entry();
-                    entry.Text = item.metastring;
-
-                    listWidget.Add(entry);
-                }
-                if (item.type == typeof(TextView))
-                {
-                    Byte[] byteTextView = Encoding.UTF8.GetBytes(item.metastring);
-                    TextBuffer buffer = new TextView().Buffer;
-                    TextIter textIter = buffer.StartIter;
-
-                    buffer.Deserialize(buffer, buffer.RegisterDeserializeTagset(null), ref textIter, byteTextView, (ulong)byteTextView.Length);
-
-                    TextView textView = new TextView();
-                    textView.Buffer = buffer;
-
-                    listWidget.Add(textView);
-                }
-                if (item.type == typeof(CasTextView))
-                {
-                    CasTextView ctv = new CasTextView("", true, listWidget);
-                    Console.WriteLine("Meta: " + item.metastring + " :End Meta");
-                    ctv.DeserializeCasTextView(item.metastring);
-
-                    listWidget.Add(ctv);
+                    w.Show();
                 }
             }
         }

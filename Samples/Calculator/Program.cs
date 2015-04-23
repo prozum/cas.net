@@ -1,5 +1,6 @@
 ﻿using Gtk;
 using Ast;
+using System.Collections.Generic;
 
 public class MainWindow : Window
 {
@@ -78,7 +79,19 @@ public class MainWindow : Window
 
         foreach (var def  in eval.functionDefinitions)
         {
-            defStore.AppendValues(def.Key, def.Value.ToString());
+            string str = def.Key + "(";
+            List<string> args;
+            eval.functionParams.TryGetValue(def.Key, out args);
+            for (int i = 0; i < args.Count; i++)
+            {
+                str += args[i];
+
+                if (i < args.Count - 1)
+                    str += ",";
+            }
+            str += ")";
+
+            defStore.AppendValues(str, def.Value.ToString());
         }
     }
 
