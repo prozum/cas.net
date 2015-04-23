@@ -12,9 +12,18 @@ namespace Ast
     public abstract class Expression
     {
         public Operator parent;
-        public abstract Expression Evaluate();
 
-        public virtual void SetFunctionCall(UserDefinedFunction functionCall){ }
+        public virtual bool CompareTo(Expression other)
+        {
+            if (this.GetType() == other.GetType())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         public virtual Expression Expand()
         {
@@ -31,19 +40,11 @@ namespace Ast
             return new Error(this, "Cannot clone");
         }
 
-        public virtual bool CompareTo(Expression other)
-        {
-            if (this.GetType() == other.GetType())
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
+        public virtual void SetFunctionCall(UserDefinedFunction functionCall) { }
 
         public abstract bool ContainsVariable(Variable other);
+
+        public abstract Expression Evaluate();
 
         #region AddWith
         public virtual Expression AddWith(Integer other)

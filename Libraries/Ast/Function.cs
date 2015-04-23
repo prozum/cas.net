@@ -161,6 +161,26 @@ namespace Ast
 
             base.SetFunctionCall(functionCall);
         }
+
+        public override bool ContainsVariable(Variable other)
+        {
+            if (base.ContainsVariable(other))
+            {
+                return true;
+            }
+            else
+            {
+                foreach (var item in (this as Function).args)
+                {
+                    if (item.ContainsVariable(other))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
     }
 
     public class UserDefinedFunction : Function
