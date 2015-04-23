@@ -13,11 +13,12 @@ namespace Ast.Tests
 
         public AstTests()
         {
-            eval = new Evaluator ();
+            eval = new Evaluator();
             parser = new Parser(eval);
         }
 
         #region CompareTo Test Cases
+
         [TestCase("x+y", "y+x")]
         [TestCase("x+y+z", "x+y+z")]
         [TestCase("x+y+z", "x+z+y")]
@@ -38,7 +39,9 @@ namespace Ast.Tests
         }
 
         #region Simplify Test Cases
+
         #region Symbols
+
         [TestCase("2x", "x+x")]
         [TestCase("3x", "x+x+x")]
         [TestCase("3x", "2*x+x")]
@@ -103,7 +106,9 @@ namespace Ast.Tests
         }
 
         #region Parse Test Cases
+
         #region Numbers
+
         [TestCase("1", "1")]
         [TestCase("1", "(1)")]
         [TestCase("1+1", "1+1")]
@@ -163,8 +168,11 @@ namespace Ast.Tests
         }
 
         #region Evaluate Test Cases
+
         #region Operators
+
         #region Integers
+
         [TestCase(10, "10")] //value = value
         [TestCase(20, "10+10")] //add
         [TestCase(0, "10-10")] //sub
@@ -287,25 +295,25 @@ namespace Ast.Tests
             var res = Evaluator.SimplifyExp(parser.Parse(calculation)).Evaluate();
             
             if (res is Integer)
-	        {
+            {
                 Assert.AreEqual(expected, (res as Integer).value);
-	        } 
+            }
             else if (res is Rational)
             {
                 Assert.AreEqual(expected, (res as Rational).value.value);
-	        } 
+            }
             else if (res is Irrational)
             {
                 Assert.AreEqual(expected, (res as Irrational).value);
-	        }
+            }
             else if (res is Boolean)
             {
                 Assert.AreEqual(expected, (res as Boolean).value);
-	        }
+            }
             else
-	        {
-		        Assert.Fail();
-	        }
+            {
+                Assert.Fail();
+            }
         }
     }
 }

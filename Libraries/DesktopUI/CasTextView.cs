@@ -9,14 +9,15 @@ namespace DesktopUI
     {
         public bool teacherEditOnly = false;
 
-        public CasTextView(string SerializedString, bool TeacherCanEdit) : base()
+        public CasTextView(string SerializedString, bool TeacherCanEdit)
+            : base()
         {
             DeserializeCasTextView(SerializedString);
             teacherEditOnly = TeacherCanEdit;
             ShowAll();
         }
 
-        public byte[] SerializeCasTextView()
+        public string SerializeCasTextView()
         {
             TextIter startIter, endIter;
             Buffer.GetBounds(out startIter, out endIter);
@@ -25,7 +26,7 @@ namespace DesktopUI
 
             Console.WriteLine(serializedTextView);
 
-            return byteTextView;
+            return serializedTextView;
         }
 
         public void DeserializeCasTextView(string serializedTextView)

@@ -87,6 +87,8 @@ namespace CAS.NET.Desktop
 
             Add(vbox);
 
+            SetSizeRequest(600, 600);
+
             ShowAll();
 
             foreach (Widget w in menu)
