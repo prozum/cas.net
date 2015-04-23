@@ -8,7 +8,6 @@ namespace Ast
 {
     public abstract class Variable : Expression
     {
-        public UserDefinedFunction functionCall;
         public Evaluator evaluator;
         public string identifier;
         public Number prefix, exponent;
@@ -28,7 +27,6 @@ namespace Ast
             res.identifier = identifier;
             res.prefix = prefix.Clone() as Number;
             res.exponent = exponent.Clone() as Number;
-            res.functionCall = functionCall;
             res.evaluator = evaluator;
 
             return res;
@@ -36,24 +34,10 @@ namespace Ast
 
         public override bool ContainsVariable(Variable other)
         {
-            if (identifier == other.identifier && this.GetType() == other.GetType() && ((other.functionCall == null && functionCall == null) || ((other.functionCall != null && functionCall != null) && other.functionCall.CompareTo(functionCall))))
-            {
-                return true;
-            }
-            else if (this is Function)
-            {
-                foreach (var item in (this as Function).args)
-	            {
-		            if (item.ContainsVariable(other))
+            if (identifier == other.identifier && GetType() == other.GetType())
                     {
                         return true;
                     }
-	            }
-            }
-            else if (this is Symbol)
-            {
-                return (this as Symbol).GetValue(other).ContainsVariable(other);
-            }
 
             return false;
         }
