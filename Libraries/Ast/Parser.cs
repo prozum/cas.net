@@ -24,7 +24,7 @@ namespace Ast
         {
             error = null;
             scope = globalScope;
-            return ParseScope(Scanner.Tokenize(parseString), TokenKind.EndOfString, true);
+            return ParseScope(Scanner.Tokenize(parseString), TokenKind.EndOfString, false);
         }
 
         public static Scope ParseScope(Queue<Token> tokens, TokenKind stopToken, bool newScope = false)
@@ -44,6 +44,7 @@ namespace Ast
 
                 if (tok.kind == stopToken)
                 {
+                    tokens.Dequeue();
                     break;
                 }
                 else
@@ -147,10 +148,10 @@ namespace Ast
 //                        exs.Enqueue(Parse(tokens, TokenKind.SquareEnd, true));
 //                        break;
                     case TokenKind.CurlyStart:
-                        ParseScope(tokens, TokenKind.CurlyEnd);
+                        exs.Enqueue(ParseScope(tokens, TokenKind.CurlyEnd, true));
                         break;
                     case TokenKind.Comma:
-                        if (resList == null)
+                        if (list)
                             resList.elements.Add(CreateAst(exs, ops));
                         else
                             return new Error("Invalid comma");

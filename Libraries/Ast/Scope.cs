@@ -3,19 +3,29 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class Scope
+    public class Scope : Expression
     {
         public new Scope parent;
         public Dictionary<string,Expression> locals = new Dictionary<string,Expression>();
         public List<Expression> statements = new List<Expression>();
 
-//        public override Expression Evaluate()
-//        {
-//            foreach (var statement in statements)
-//            {
-//                statement.Evaluate();
-//            }
-//        }
+        public override Expression Evaluate()
+        {
+            Expression res = new Integer(0);
+
+            foreach (var statement in statements)
+            {
+                res = statement.Evaluate();
+            }
+
+            return res;
+        }
+
+        public override bool ContainsVariable(Variable other)
+        {
+            // TODO
+            return false;
+        }
 
         public Scope() : this(null) { }
         public Scope(Scope parent)

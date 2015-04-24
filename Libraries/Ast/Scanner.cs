@@ -43,6 +43,8 @@ namespace Ast
                 tok = ScanNext ();
             }
 
+            tokens.Enqueue(new Token(TokenKind.EndOfString, "EndOfString", pos));
+
             return tokens;
         }
 
