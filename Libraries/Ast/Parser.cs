@@ -89,6 +89,7 @@ namespace Ast
                     case TokenKind.KW_False:
                         exs.Enqueue(new Boolean(false));
                         break;
+
                     case TokenKind.Assign:
                         ops.Enqueue(new Assign());
                         break;
@@ -131,14 +132,24 @@ namespace Ast
                     
                     case TokenKind.ParenthesesStart:
                         exs.Enqueue(ParseExpr(tokens, TokenKind.ParenthesesEnd));
-                        tokens.Dequeue();
+                        if (tokens.Count > 0)
+                            tokens.Dequeue();
+                        else
+                            ErrorHandler("Missing ) bracket");
                         break;
                     case TokenKind.SquareStart:
                         exs.Enqueue(ParseExpr(tokens, TokenKind.SquareEnd, true));
-                        tokens.Dequeue();
+                        if (tokens.Count > 0)
+                            tokens.Dequeue();
+                        else
+                            ErrorHandler("Missing ] bracket");
                         break;
                     case TokenKind.CurlyStart:
                         exs.Enqueue(ParseScope(tokens, TokenKind.CurlyEnd, true));
+                        if (tokens.Count > 0)
+                            tokens.Dequeue();
+                        else
+                            ErrorHandler("Missing } bracket");
                         break;
                     case TokenKind.Comma:
                         if (list)
@@ -152,10 +163,11 @@ namespace Ast
                         else
                             ErrorHandler("Unexpected semicolon in list");
                         break;
+
                     case TokenKind.ParenthesesEnd:
                     case TokenKind.SquareEnd:
                     case TokenKind.CurlyEnd:
-                        ErrorHandler("Unexpected end bracker");
+                        ErrorHandler("Unexpected end bracket");
                         break;
                     case TokenKind.Unknown:
                         ErrorHandler("Unknown token");
@@ -191,6 +203,8 @@ namespace Ast
                 top = ops.Peek();
             else
                 return ErrorHandler("Missing operator");
+
+
             left = exs.Dequeue();
 
             while (ops.Count > 0)
