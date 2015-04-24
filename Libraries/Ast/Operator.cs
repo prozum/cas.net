@@ -334,9 +334,16 @@ namespace Ast
             if (Left is InstanceFunc)
             {
                 var insFunc = (InstanceFunc)Left;
+
+                foreach (var arg in insFunc.args)
+                {
+                    if (!(arg is Symbol))
+                        return new Error(this, "All arguments must be symbols");
+                }
+
                 var defFunc = new UsrFunc(insFunc.identifier, insFunc.args, insFunc.scope);
 
-                defFunc.expr = insFunc.expr;
+                defFunc.expr = Right;
 
                 insFunc.scope.SetVar(insFunc.identifier, defFunc);
 

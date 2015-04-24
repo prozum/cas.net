@@ -203,7 +203,7 @@ namespace Ast
                 var usrFuncDef = (UsrFunc)@var;
 
                 if (args.Count != usrFuncDef.args.Count)
-                    return new Error(identifier + " Function takes " + usrFuncDef.args.Count.ToString() + " arguments. Not " + args.Count.ToString() + ".");
+                    return new Error(identifier + " takes " + usrFuncDef.args.Count.ToString() + " arguments. Not " + args.Count.ToString() + ".");
 
                 for (int i = 0; i < args.Count; i++)
                 {
@@ -212,14 +212,15 @@ namespace Ast
                     scope.SetVar(arg.identifier, args[i]);
                 }
 
+                expr = usrFuncDef.expr;
+
                 return expr.Evaluate();
             }
             else
             {
                 return new Error(this, "Variable is not a function");
             }
-
-            throw new Exception("This should not happen");
+                
 
 
 //            if (def.ContainsVariable(this))

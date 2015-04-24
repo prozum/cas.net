@@ -319,57 +319,41 @@ namespace Ast
                 args = (res as List).elements;
             else
                 return res;
+                
+            switch (tok.value.ToLower())
+            {
+                case "sin":
+                    return new Sin(args, scope);
+                case "cos":
+                    return new Cos(args, scope);
+                case "tan":
+                    return new Tan(args, scope);
+                case "asin":
+                    return new ASin(args, scope);
+                case "acos":
+                    return new ACos(args, scope);
+                case "atan":
+                    return new ATan(args, scope);
+                case "sqrt":
+                    return new Sqrt(args, scope);
+                case "simplify":
+                    return new Simplify(args, scope);
+                case "expand":
+                    return new Expand(args, scope);
+                case "range":
+                    return new Range(args, scope);
+                case "map":
+                    return new Map(args, scope);
+                case "plot":
+                    return new Plot(args, scope);
+                case "solve":
+                    return new Solve(args, scope);
+                default:
+                    return new InstanceFunc(tok.value, args, scope);
+                    //res = new UsrFunc(tok.value.ToLower(), args, scope);
+            }
 
-            return new InstanceFunc(tok.value, args, scope);
-
-
-//            switch (tok.value.ToLower())
-//            {
-//                case "sin":
-//                    res = new Sin(args, scope);
-//                    break;
-//                case "cos":
-//                    res = new Cos(args, scope);
-//                    break;
-//                case "tan":
-//                    res = new Tan(args, scope);
-//                    break;
-//                case "asin":
-//                    res = new ASin(args, scope);
-//                    break;
-//                case "acos":
-//                    res = new ACos(args, scope);
-//                    break;
-//                case "atan":
-//                    res = new ATan(args, scope);
-//                    break;
-//                case "sqrt":
-//                    res = new Sqrt(args, scope);
-//                    break;
-//                case "simplify":
-//                    res = new Simplify(args, scope);
-//                    break;
-//                case "expand":
-//                    res = new Expand(args, scope);
-//                    break;
-//                case "range":
-//                    res = new Range(args, scope);
-//                    break;
-//                case "map":
-//                    res = new Map(args, scope);
-//                    break;
-//                case "plot":
-//                    res = new Plot(args, scope);
-//                    break;
-//                case "solve":
-//                    res = new Solve(args, scope);
-//                    break;
-//                default:
-//                    res = new UsrFunc(tok.value.ToLower(), args, scope);
-//                    break;
-//            }
-
-//            return res;
+            return res;
 
         }
         public static Error ErrorHandler(string message)
