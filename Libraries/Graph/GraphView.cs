@@ -10,15 +10,19 @@ namespace Graph
         int h,w;
         int iter = 1000;
         double scale = 20;
-        double a,b,c;
+        //double a,b,c;
+        List xCords;
+        List yCords;
+
+        Symbol sym;
+        Expression exp;
 
         public GraphView (PlotData plotData)
         {
-            //plotData.sym.evaluator.
-            SetSizeRequest (600, 600);
-            this.a = a;
-            this.b = b;
-            this.c = c;
+            sym = plotData.sym;
+            xCords = (List)sym.GetValue().Evaluate();
+            exp = plotData.exp;
+            SetSizeRequest(600, 600);
         }
 
         private void DrawAxes(Context ct)
@@ -57,6 +61,12 @@ namespace Graph
             }
         }
 
+        private void CalcYCords()
+        {
+            tempDefinitions = new Dictionary<string, Expression>(sym.evaluator.symDefs);
+
+        }
+
         private void DrawGraph(Context ct)
         {
             double x, y;
@@ -67,8 +77,8 @@ namespace Graph
             ct.MoveTo ((x/scale + 0.5) * w, (-y/scale + 0.5) * h);
 
             
-			for (int i = 1; i <= iter; i++) 
-			{
+            for (int i = 1; i <= iter; i++) 
+            {
                 x = ((double)i / iter - 0.5) * scale;
                 y = a * x*x + b * x + c;
 
