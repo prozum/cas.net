@@ -5,6 +5,8 @@ namespace Ast
     public enum TokenKind
     {
         Identifier,
+        KW_True,
+        KW_False,
 
         Integer,
         Decimal,

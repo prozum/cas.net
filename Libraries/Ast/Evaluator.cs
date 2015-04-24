@@ -19,7 +19,9 @@ namespace Ast
 
         public EvalData Evaluation(string inputString)
         {
-            var exp = Parser.Parse(inputString, scope);
+            var res = Parser.Parse(inputString, scope);
+
+            var exp = res.statements[0];
 
             if (exp is Assign)
             {

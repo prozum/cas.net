@@ -20,14 +20,43 @@ namespace Ast
 //            this.evaluator = eval;
 //        }
 
-        public static Expression Parse(string parseString, Scope parseScope)
+        public static Scope Parse(string parseString, Scope globalScope)
         {
             error = null;
-            scope = parseScope;
-            return Parse(Scanner.Tokenize(parseString), TokenKind.EndOfString);
+            scope = globalScope;
+            return ParseScope(Scanner.Tokenize(parseString), TokenKind.EndOfString, true);
         }
 
-        public static Expression Parse(Queue<Token> tokens, TokenKind stopToken, bool list = false)
+        public static Scope ParseScope(Queue<Token> tokens, TokenKind stopToken, bool newScope = false)
+        {
+            Scope res;
+
+            Token tok;
+
+            if (newScope)
+                res = scope = new Scope(scope);
+            else
+                res = scope;
+
+            while (tokens.Count > 0)
+            {
+                tok = tokens.Peek();
+
+                if (tok.kind == stopToken)
+                {
+                    break;
+                }
+                else
+                    scope.statements.Add(ParseExpr(tokens, stopToken));
+            }
+
+            if (newScope)
+                scope = scope.parent;
+
+            return res;
+        }
+
+        public static Expression ParseExpr(Queue<Token> tokens, TokenKind stopToken, bool list = false)
         {
             Token tok;
             List resList = null;
@@ -42,10 +71,10 @@ namespace Ast
 
             while (tokens.Count > 0)
             {
-                tok = tokens.Dequeue();
-
-                if (tok.kind == stopToken)
+                if (tokens.Peek().kind == stopToken)
                     break;
+
+                tok = tokens.Dequeue();
 
                 switch (tok.kind)
                 {
@@ -65,7 +94,12 @@ namespace Ast
                         else
                             exs.Enqueue(new Symbol(tok.value, scope));
                         break;
-
+                    case TokenKind.KW_True:
+                        exs.Enqueue(new Boolean(true));
+                        break;
+                    case TokenKind.KW_False:
+                        exs.Enqueue(new Boolean(false));
+                        break;
                     case TokenKind.Assign:
                         ops.Enqueue(new Assign());
                         break;
@@ -107,13 +141,13 @@ namespace Ast
                         break;
                     
                     case TokenKind.ParenthesesStart:
-                        exs.Enqueue(Parse(tokens, TokenKind.ParenthesesEnd, true));
+                        exs.Enqueue(ParseExpr(tokens, TokenKind.ParenthesesEnd));
                         break;
-                    case TokenKind.SquareStart:
-                        exs.Enqueue(Parse(tokens, TokenKind.SquareEnd, true));
-                        break;
+//                    case TokenKind.SquareStart:
+//                        exs.Enqueue(Parse(tokens, TokenKind.SquareEnd, true));
+//                        break;
                     case TokenKind.CurlyStart:
-                        exs.Enqueue(Parse(tokens, TokenKind.CurlyEnd, true));
+                        ParseScope(tokens, TokenKind.CurlyEnd);
                         break;
                     case TokenKind.Comma:
                         if (resList == null)
@@ -127,9 +161,16 @@ namespace Ast
                         //list.elements = ExtractBrackets(tok.kind, tokens, TokenKind.Semicolon);
                         //exs.Enqueue(list);
                         break;
+                    case TokenKind.Semicolon:
+                        if (!list)
+                            return CreateAst(exs, ops);
+                        else
+                            ErrorHandler("Unexpected semicolon in list");
+                        break;
+
+
                     case TokenKind.ParenthesesEnd:
                     case TokenKind.SquareEnd:
-                    case TokenKind.CurlyEnd:
                         ErrorHandler("Unexpected end bracker");
                         break;
                     case TokenKind.Unknown:
@@ -370,7 +411,7 @@ namespace Ast
         {
             scope = new Scope(scope);
 
-            var args = Parse(tokens, TokenKind.ParenthesesEnd, true);
+            //var args = Parse(tokens, TokenKind.ParenthesesEnd, true);
 
             scope = scope.parent;
 

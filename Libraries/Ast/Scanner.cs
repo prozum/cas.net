@@ -144,7 +144,17 @@ namespace Ast
                 pos++;
             }
 
-            return new Token(TokenKind.Identifier, identifier, startPos);
+            identifier = identifier.ToLower();
+
+            switch (identifier)
+            {
+                case "true":
+                    return new Token(TokenKind.KW_True, identifier, startPos);
+                case "false":
+                    return new Token(TokenKind.KW_False, identifier, startPos);
+                default:
+                    return new Token(TokenKind.Identifier, identifier, startPos);
+            }
         }
 
         private static Token ScanOperator()

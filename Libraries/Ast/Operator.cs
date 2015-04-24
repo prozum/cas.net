@@ -329,6 +329,14 @@ namespace Ast
 
         public override Expression Expand()
         {
+            if (Right is Scope)
+            {
+                if (Left is Symbol)
+                {
+                    //scope
+                }
+            }
+
             var res = new Assign(Left.Expand(), Right.Expand());
 
             return res;

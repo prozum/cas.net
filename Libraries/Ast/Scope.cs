@@ -5,8 +5,17 @@ namespace Ast
 {
     public class Scope
     {
-        public Scope parent;
+        public new Scope parent;
         public Dictionary<string,Expression> locals = new Dictionary<string,Expression>();
+        public List<Expression> statements = new List<Expression>();
+
+//        public override Expression Evaluate()
+//        {
+//            foreach (var statement in statements)
+//            {
+//                statement.Evaluate();
+//            }
+//        }
 
         public Scope() : this(null) { }
         public Scope(Scope parent)
