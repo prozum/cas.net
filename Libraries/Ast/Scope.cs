@@ -18,7 +18,10 @@ namespace Ast
                 var exp = statements.Dequeue().Evaluate();
 
                 if (exp is Error)
+                {
+                    statements.Clear();
                     return exp;
+                }
 
                 res.elements.Add(exp);
             }

@@ -47,35 +47,6 @@ namespace Ast
                 return new Error(this, "Could not get value");
 
             return value;
-//
-//            if (this.functionCall is UserDefinedFunction)
-//            {
-//                if (functionCall.locals.ContainsKey(identifier))
-//                {
-//                    functionCall.locals.TryGetValue(identifier, out res);
-//
-//                    if (res.ContainsVariable(other) && res.Evaluate() is Error)
-//                    {
-//                        return new Error(this, "Could not get value of: " + other.identifier);
-//                    }
-//
-//                    return ReturnValue(res.Clone());
-//                }
-//            }
-//            else
-//            {
-//                if (evaluator.globals.ContainsKey(identifier))
-//                {
-//                    evaluator.globals.TryGetValue(identifier, out res);
-//
-//                    if (res.ContainsVariable(other))
-//                    {
-//                        return new Error(this, "Could not get value of: " + other.identifier);
-//                    }
-//
-//                    return ReturnValue(res.Clone());
-//                }
-//            }
         }
 
         public override bool CompareTo(Expression other)

@@ -32,7 +32,6 @@ namespace Ast
 
                 if (tok.kind == stopToken)
                 {
-                    tokens.Dequeue();
                     break;
                 }
                 else
@@ -308,57 +307,65 @@ namespace Ast
 
         public static Expression ParseFunction(Token tok, Queue<Token> tokens)
         {
-            scope = new Scope(scope);
+            List<Expression> args;
 
-            //var args = Parse(tokens, TokenKind.ParenthesesEnd, true);
+            Expression res = ParseExpr(tokens, TokenKind.SquareEnd, true);
+            if (tokens.Count > 0)
+                tokens.Dequeue();
+            else
+                ErrorHandler("Missing ) bracket");
 
-            scope = scope.parent;
+            if (res is List)
+                args = (res as List).elements;
+            else
+                return res;
 
-            throw new NotImplementedException();
-            //return new Func(tok.value.ToLower(), args, scope);
+            return new InstanceFunc(tok.value, args, scope);
+
+
 //            switch (tok.value.ToLower())
 //            {
 //                case "sin":
-//                    res = new Sin(args, evaluator);
+//                    res = new Sin(args, scope);
 //                    break;
 //                case "cos":
-//                    res = new Cos(args, evaluator);
+//                    res = new Cos(args, scope);
 //                    break;
 //                case "tan":
-//                    res = new Tan(args, evaluator);
+//                    res = new Tan(args, scope);
 //                    break;
 //                case "asin":
-//                    res = new ASin(args, evaluator);
+//                    res = new ASin(args, scope);
 //                    break;
 //                case "acos":
-//                    res = new ACos(args, evaluator);
+//                    res = new ACos(args, scope);
 //                    break;
 //                case "atan":
-//                    res = new ATan(args, evaluator);
+//                    res = new ATan(args, scope);
 //                    break;
 //                case "sqrt":
-//                    res = new Sqrt(args, evaluator);
+//                    res = new Sqrt(args, scope);
 //                    break;
 //                case "simplify":
-//                    res = new Simplify(args, evaluator);
+//                    res = new Simplify(args, scope);
 //                    break;
 //                case "expand":
-//                    res = new Expand(args, evaluator);
+//                    res = new Expand(args, scope);
 //                    break;
 //                case "range":
-//                    res = new Range(args, evaluator);
+//                    res = new Range(args, scope);
 //                    break;
 //                case "map":
-//                    res = new Map(args, evaluator);
+//                    res = new Map(args, scope);
 //                    break;
 //                case "plot":
-//                    res = new Plot(args, evaluator);
+//                    res = new Plot(args, scope);
 //                    break;
 //                case "solve":
-//                    res = new Solve(args, evaluator);
+//                    res = new Solve(args, scope);
 //                    break;
 //                default:
-//                    res = new UsrFunc(tok.value.ToLower(), args, evaluator);
+//                    res = new UsrFunc(tok.value.ToLower(), args, scope);
 //                    break;
 //            }
 

@@ -73,12 +73,6 @@ namespace Ast
             }
         }
 
-//        public override void SetFunctionCall(UserDefinedFunction functionCall)
-//        {
-//            Left.SetFunctionCall(functionCall);
-//            Right.SetFunctionCall(functionCall);
-//        }
-
         public override bool CompareTo(Expression other)
         {
             Expression thisSimplified = Evaluator.SimplifyExp(this);
@@ -337,12 +331,16 @@ namespace Ast
                 return new Info(sym.identifier + " assigned");
             }
 
-            if (Left is UsrFunc)
+            if (Left is InstanceFunc)
             {
-                var func = (UsrFunc)Left;
-                func.scope.SetVar(func.identifier, Right);
+                var insFunc = (InstanceFunc)Left;
+                var defFunc = new UsrFunc(insFunc.identifier, insFunc.args, insFunc.scope);
 
-                return new Info(func.ToString() + " assigned");
+                defFunc.expr = insFunc.expr;
+
+                insFunc.scope.SetVar(insFunc.identifier, defFunc);
+
+                return new Info(insFunc.ToString() + " assigned");
             }
 
             return new Error(this, "Left operand must be Symbol or Function");

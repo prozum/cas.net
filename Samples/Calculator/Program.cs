@@ -63,7 +63,7 @@ public class MainWindow : Window
         defTree.Expand = true;
 
         renderer = new CellRendererText();
-        defTree.AppendColumn("Name", renderer, "text",0);
+        defTree.AppendColumn("Variable", renderer, "text",0);
         renderer = new CellRendererText();
         defTree.AppendColumn("Value", renderer, "text",1);
     }
@@ -74,21 +74,13 @@ public class MainWindow : Window
 
         foreach (var def in eval.scope.locals)
         {
-            if (def.Value is UsrFunc)
+            if (def.Value is SysFunc)
             {
-//                string str = def.Key + "(";
-//                List<string> args = (def.Value as UserDefinedFunction).argNames;
-//                //eval.funcParams.TryGetValue(def.Key, out args);
-//                for (int i = 0; i < args.Count; i++)
-//                {
-//                    str += args[i];
-//
-//                    if (i < args.Count - 1)
-//                        str += ",";
-//                }
-//                str += ")";
-
-                defStore.AppendValues(def.Value.ToString(), (def.Value as UsrFunc).GetValue().ToString());
+                defStore.AppendValues(def.Value.ToString(), "System Magic");
+            }
+            else if (def.Value is UsrFunc)
+            {
+                defStore.AppendValues(def.Value.ToString(), (def.Value as UsrFunc).expr.ToString());
             }
             else
             {
@@ -100,8 +92,6 @@ public class MainWindow : Window
     public MainWindow() : base("MainWindow")
     {
         DeleteEvent += (o, a) => Application.Quit ();
-
-        eval = new Evaluator ();
 
         SetSizeRequest(500, 500);
 
@@ -132,7 +122,8 @@ public class MainWindow : Window
         CreateDefTree();
         grid.Attach(defTree, 1, 0, 1, 2);
 
-
+        eval = new Evaluator ();
+        UpdateDefinitions();
 
         ShowAll ();
     }

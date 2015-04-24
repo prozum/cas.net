@@ -23,43 +23,11 @@ namespace Ast
         {
             this.args = args;
         }
-
-        public override string ToString ()
-        {
-            string str = "";
-
-            if (((prefix is Integer) && (prefix as Integer).value != 1) || ((prefix is Rational) && (prefix as Rational).value.value != 1) || ((prefix is Irrational) && (prefix as Irrational).value != 1))
-            {
-                str += prefix.ToString() + identifier + '(';
-            }
-            else
-            {
-                str += identifier + '(';
-            }
-
-            for (int i = 0; i < args.Count; i++) 
-            {
-                str += args[i].ToString ();
-
-                if (i < args.Count - 1) 
-                {
-                    str += ',';
-                }
-            }
-
-            str += ')';
-
-            if (((exponent is Integer) && (exponent as Integer).value != 1) || ((exponent is Rational) && (exponent as Rational).value.value != 1) || ((exponent is Irrational) && (exponent as Irrational).value != 1))
-            {
-                str += '^' + exponent.ToString();
-            }
-
-            return str;
-        }
+            
 
         public override bool CompareTo(Expression other)
         {
-            if (other is Func)
+            if (other is SysFunc)
             {
                 return identifier == (other as Func).identifier && prefix.CompareTo((other as Func).prefix) && exponent.CompareTo((other as Func).exponent) && CompareArgsTo(other as Func);
             }
@@ -125,6 +93,39 @@ namespace Ast
         public SysFunc(string identifier, List<Expression> args, Scope scope)
             : base(identifier, args, scope) { }
 
+        public override string ToString ()
+        {
+            string str = "";
+
+            if (((prefix is Integer) && (prefix as Integer).value != 1) || ((prefix is Rational) && (prefix as Rational).value.value != 1) || ((prefix is Irrational) && (prefix as Irrational).value != 1))
+            {
+                str += prefix.ToString() + identifier + '[';
+            }
+            else
+            {
+                str += identifier + '[';
+            }
+
+            for (int i = 0; i < argKinds.Count; i++) 
+            {
+                str += argKinds[i].ToString ();
+
+                if (i < argKinds.Count - 1) 
+                {
+                    str += ',';
+                }
+            }
+
+            str += ']';
+
+            if (((exponent is Integer) && (exponent as Integer).value != 1) || ((exponent is Rational) && (exponent as Rational).value.value != 1) || ((exponent is Irrational) && (exponent as Irrational).value != 1))
+            {
+                str += '^' + exponent.ToString();
+            }
+
+            return str;
+        }
+
         public bool isArgsValid()
         {
             if (args.Count != argKinds.Count)
@@ -165,55 +166,69 @@ namespace Ast
         }
     }
 
-    public class UsrFunc : Func
+    public class InstanceFunc : Func
     {
-        //public List<string> argNames;
         public Expression expr;
 
-        public UsrFunc() : this(null, null, null) { }
-        public UsrFunc(string identifier, List<Expression> args, Scope scope) : base(identifier, args, scope) { }
+        public InstanceFunc() : this(null, null, null) { }
+        public InstanceFunc(string identifier, List<Expression> args, Scope scope) : base(identifier, args, scope) { }
 
         public override Expression Evaluate()
         {
             return Evaluator.SimplifyExp(GetValue()).Evaluate();
         }
-            
+
         public Expression GetValue()
         {
             Expression @var;
 
-            // TODO 
-            //if (scope != null)
             @var = scope.GetVar(identifier);
-            //else
-            //    @var = evaluator.scope.GetVar(identifier);
 
             if (@var == null)
-            {
-                return new Error(this, "Function has no definition");
-            }
-                
-            var def = (UsrFunc)@var;
+                return new Error(identifier + "> has no definition");
 
-            if (def.args.Count != args.Count)
+            if (@var is SysFunc)
             {
-                return new Error(this, "Function takes " + def.args.Count.ToString() + " arguments. Not " + args.Count.ToString() + ".");
+                var sysFuncDef = (SysFunc)@var;
+
+                sysFuncDef.args = args;
+                if (!sysFuncDef.isArgsValid())
+                    return new ArgError(sysFuncDef);
+                    
+                return sysFuncDef.Evaluate();
+
+            }
+            else if (@var is UsrFunc)
+            {
+                var usrFuncDef = (UsrFunc)@var;
+
+                if (args.Count != usrFuncDef.args.Count)
+                    return new Error(identifier + " Function takes " + usrFuncDef.args.Count.ToString() + " arguments. Not " + args.Count.ToString() + ".");
+
+                for (int i = 0; i < args.Count; i++)
+                {
+                    var arg = (Symbol)usrFuncDef.args[i];
+
+                    scope.SetVar(arg.identifier, args[i]);
+                }
+
+                return expr.Evaluate();
+            }
+            else
+            {
+                return new Error(this, "Variable is not a function");
             }
 
-            for (int i = 0; i < def.args.Count; i++)
-            {
-                var arg = (Symbol)def.args[i];
+            throw new Exception("This should not happen");
 
-                scope.SetVar(arg.identifier, args[i]);
-            }
 
-            if (def.ContainsVariable(this))
-            {
-                return new Error(this, "Could not get value of: " + this.identifier);
-            }
+//            if (def.ContainsVariable(this))
+//            {
+//                return new Error(this, "Could not get value of: " + this.identifier);
+//            }
 
             //return ReturnValue(res.Clone());
-            return ReturnValue(def.expr);
+            //return ReturnValue(func.expr.);
         }
 
         public override Expression Clone()
@@ -237,7 +252,7 @@ namespace Ast
 
         public override string ToString()
         {
-            string str = identifier + "(";
+            string str = identifier + "[";
 
             for (int i = 0; i < args.Count; i++)
             {
@@ -246,7 +261,94 @@ namespace Ast
                 if (i < args.Count - 1)
                     str += ",";
             }
-            str += ")";
+            str += "]";
+
+            return str;
+        }
+    }
+
+    public class UsrFunc : Func
+    {
+        public Expression expr;
+
+        public UsrFunc() : this(null, null, null) { }
+        public UsrFunc(string identifier, List<Expression> args, Scope scope) : base(identifier, args, scope) { }
+
+//        public override Expression Evaluate()
+//        {
+//            return Evaluator.SimplifyExp(GetValue()).Evaluate();
+//        }
+            
+        public Expression GetValue()
+        {
+//            Expression @var;
+
+//            // TODO 
+//            //if (scope != null)
+//            @var = scope.GetVar(identifier);
+//            //else
+//            //    @var = evaluator.scope.GetVar(identifier);
+//
+//            if (@var == null)
+//            {
+//                return new Error(this, "Function has no definition");
+//            }
+//                
+//            var def = (InstFunc)@var;
+//
+//            if (def.args.Count != args.Count)
+//            {
+//                return new Error(this, "Function takes " + def.args.Count.ToString() + " arguments. Not " + args.Count.ToString() + ".");
+//            }
+//
+//            for (int i = 0; i < def.args.Count; i++)
+//            {
+//                var arg = (Symbol)def.args[i];
+//
+//                scope.SetVar(arg.identifier, args[i]);
+//            }
+//
+//            if (def.ContainsVariable(this))
+//            {
+//                return new Error(this, "Could not get value of: " + this.identifier);
+//            }
+
+            //return ReturnValue(res.Clone());
+//            return ReturnValue(def.expr);
+            return null;
+        }
+
+        public override Expression Clone()
+        {
+            return MakeClone<UsrFunc>();
+        }
+
+        public override Expression Simplify()
+        {
+            if (prefix.CompareTo(Constant.Zero))
+            {
+                return new Integer(0);
+            }
+            if (exponent.CompareTo(Constant.Zero))
+            {
+                return new Integer(1);
+            }
+
+            return GetValue();
+        }
+
+        public override string ToString()
+        {
+            string str = identifier + "[";
+
+            for (int i = 0; i < args.Count; i++)
+            {
+                str += args[i];
+
+                if (i < args.Count - 1)
+                    str += ",";
+            }
+            str += "]";
 
             return str;
         }
@@ -271,7 +373,7 @@ namespace Ast
 
             var res = args[0].Evaluate();
 
-            var degrees = (Boolean)scope.GetVar("degrees");
+            var degrees = (Boolean)scope.GetVar("deg");
             if (degrees == null)
                 degrees = new Boolean(false);
                 
@@ -325,7 +427,7 @@ namespace Ast
 
             var res = args[0].Evaluate();
 
-            var degrees = (Boolean)scope.GetVar("degrees");
+            var degrees = (Boolean)scope.GetVar("deg");
             if (degrees == null)
                 degrees = new Boolean(false);
 
@@ -379,7 +481,7 @@ namespace Ast
 
             var res = args[0].Evaluate();
 
-            var degrees = (Boolean)scope.GetVar("degrees");
+            var degrees = (Boolean)scope.GetVar("deg");
             if (degrees == null)
                 degrees = new Boolean(false);
 
@@ -433,7 +535,7 @@ namespace Ast
 
             var res = args[0].Evaluate();
 
-            var degrees = (Boolean)scope.GetVar("degrees");
+            var degrees = (Boolean)scope.GetVar("deg");
             if (degrees == null)
                 degrees = new Boolean(false);
 
@@ -487,7 +589,7 @@ namespace Ast
 
             var res = args[0].Evaluate();
 
-            var degrees = (Boolean)scope.GetVar("degrees");
+            var degrees = (Boolean)scope.GetVar("deg");
             if (degrees == null)
                 degrees = new Boolean(false);
 
@@ -541,7 +643,7 @@ namespace Ast
 
             var res = args[0].Evaluate();
 
-            var degrees = (Boolean)scope.GetVar("degrees");
+            var degrees = (Boolean)scope.GetVar("deg");
             if (degrees == null)
                 degrees = new Boolean(false);
 

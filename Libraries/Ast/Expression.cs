@@ -13,24 +13,28 @@ namespace Ast
     {
         public Operator parent;
 
-        private Scope _scope;
-        public Scope scope
-        {
-            get
-            {
-                if (parent != null)
-                {
-                    return parent.scope;
-                }
-                return _scope;
-            }
-            set
-            {
-                _scope = value;
-            }
-        }
+        public Scope scope;
+//        private Scope _scope;
+//        public Scope scope
+//        {
+//            get
+//            {
+//                if (parent != null)
+//                {
+//                    return parent.scope;
+//                }
+//                return _scope;
+//            }
+//            set
+//            {
+//                _scope = value;
+//            }
+//        }
 
-        public abstract Expression Evaluate();
+        public virtual Expression Evaluate()
+        {
+            return new Error(this, "Cannot evaluate");
+        }
 
         //public virtual void SetFunctionCall(UserDefinedFunction functionCall){ }
 

@@ -8,14 +8,11 @@ namespace Ast
 {
     public abstract class Variable : Expression
     {
-        //public UserDefinedFunction functionCall;
-        public Scope scope;
-        //public Evaluator evaluator;
         public string identifier;
         public Number prefix, exponent;
 
-        public Variable(string identifier) : this(identifier, null) { }
-        public Variable(string identifier, Scope scope)
+        protected Variable(string identifier) : this(identifier, null) { }
+        protected Variable(string identifier, Scope scope)
         {
             this.identifier = identifier;
             this.scope = scope;
@@ -30,7 +27,6 @@ namespace Ast
             res.identifier = identifier;
             res.prefix = prefix.Clone() as Number;
             res.exponent = exponent.Clone() as Number;
-            //res.functionCall = functionCall;
             res.scope = scope;
 
             return res;

@@ -6,15 +6,11 @@ namespace Ast
     public class Evaluator
     {
         public Scope scope;
-        //public Parser parser;
-        //public Dictionary<string,Expression> globals = new Dictionary<string,Expression>();
-        //public Dictionary<string, Expression> funcDefs = new Dictionary<string, Expression>();
-        //public Dictionary<string,List<string>> funcParams = new Dictionary<string, List<string>>();
-        public bool degrees = true;
 
         public Evaluator ()
         {
             scope = new Scope();
+            scope.SetVar("deg", new Boolean(true));
         }
 
         public EvalData Evaluation(string inputString)
