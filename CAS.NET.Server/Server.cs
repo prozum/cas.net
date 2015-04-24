@@ -157,16 +157,47 @@ namespace CAS.NET.Server
 			return "Success";
         }
 
-		private string TeacherGetCompleted(HttpListenerRequest request, HttpListenerResponse response, Database db)
-        {   
-			/* teachers can use this to get other classes completed assignments */
-			/* todo fix */
+		private string TeacherGetCompletedList(HttpListenerRequest request, HttpListenerResponse response, Database db)
+		{
 			if (request.Headers["Grade"] != null &&	request.Headers["Filename"] != null)
 			{
 				string grade = request.Headers ["Grade"];
 				string filename = request.Headers ["Filename"];
 
-				string file = db.GetCompleted(filename, grade);
+				string[] StudentsAndCompleted = db.GetCompletedList(filename, grade);
+
+				if (StudentsAndCompleted[0] == "No students have completed the assignment")
+				{
+					return StudentsAndCompleted[0];
+				}
+				else if (StudentsAndCompleted[0] == "Error")
+				{
+					return "Failed";
+				}
+
+				for (int i = 0; i < StudentsAndCompleted.Length; i++)
+				{
+					response.Headers.Add("Student" + i.ToString(), StudentsAndCompleted[i*2]);
+					response.Headers.Add("Status" + i.ToString(), StudentsAndCompleted[(i*2)+1]);
+				}
+
+				return "Success";
+			}
+
+			return "Failed";
+		}
+
+		private string TeacherGetCompleted(HttpListenerRequest request, HttpListenerResponse response, Database db)
+        {   
+			/* teachers can use this to get other classes completed assignments */
+			/* todo fix */
+			if (request.Headers["Grade"] != null && request.Headers["Filename"] != null && request.Headers["Student"] != null)
+			{
+				string student = request.Headers ["Student"];
+				string grade = request.Headers ["Grade"];
+				string filename = request.Headers ["Filename"];
+
+				string file = db.GetCompleted(filename, student, grade);
 				string checksum = Checksum.GetMd5Hash(file);
 
 				response.Headers.Add("File", file);
@@ -181,12 +212,14 @@ namespace CAS.NET.Server
 		private string TeacherAddFeedback(HttpListenerRequest request, Database db)
         {
 			if (request.Headers["Checksum"] != null && request.Headers["Grade"] != null &&
-				request.Headers["Filename"] != null && request.Headers["File"] != null)
+				request.Headers["Filename"] != null && request.Headers["File"] != null &&
+				request.Headers["Student"] != null)
 			{
 				string checksum = request.Headers ["Checksum"];
 				string grade = request.Headers ["Grade"];
 				string filename = request.Headers ["Filename"];
 				string file = request.Headers ["File"];
+				string student = request.Headers["Student"];
 
 				// Prevents the server from saving the files if it's checksum is invalid
 				string checksumNew = Checksum.GetMd5Hash(file);
@@ -199,7 +232,7 @@ namespace CAS.NET.Server
 					return "Corruption";
 				}
 
-				return db.AddFeedback(filename, file, grade);
+				return db.AddFeedback(filename, file, student, grade);
 			}
 
 			return "Failed";
