@@ -6,19 +6,7 @@ namespace Ast
     public static class Parser
     {
         static Scope scope;
-        //Scanner scanner;
-        //Evaluator evaluator;
         static Error error;
-
-        //static Queue<Expression> exs;
-        //static Queue<Operator> ops;
-
-//        public Parser() : this(new Evaluator()) { }
-//        public Parser (Evaluator eval)
-//        {
-//            this.scanner = new Scanner();
-//            this.evaluator = eval;
-//        }
 
         public static Scope Parse(string parseString, Scope globalScope)
         {
@@ -44,7 +32,6 @@ namespace Ast
 
                 if (tok.kind == stopToken)
                 {
-                    tokens.Dequeue();
                     break;
                 }
                 else
@@ -73,7 +60,10 @@ namespace Ast
             while (tokens.Count > 0)
             {
                 if (tokens.Peek().kind == stopToken)
+                {
+                    tokens.Dequeue();
                     break;
+                }
 
                 tok = tokens.Dequeue();
 
@@ -87,7 +77,7 @@ namespace Ast
                         break;
 
                     case TokenKind.Identifier:
-                        if (tokens.Count > 0 && tokens.Peek().kind == TokenKind.ParenthesesStart)
+                        if (tokens.Count > 0 && tokens.Peek().kind == TokenKind.SquareStart)
                         {
                             tokens.Dequeue(); // Eat start parentheses
                             exs.Enqueue(ParseFunction(tok, tokens));
@@ -144,9 +134,9 @@ namespace Ast
                     case TokenKind.ParenthesesStart:
                         exs.Enqueue(ParseExpr(tokens, TokenKind.ParenthesesEnd));
                         break;
-//                    case TokenKind.SquareStart:
-//                        exs.Enqueue(Parse(tokens, TokenKind.SquareEnd, true));
-//                        break;
+                    case TokenKind.SquareStart:
+                        exs.Enqueue(ParseExpr(tokens, TokenKind.SquareEnd, true));
+                        break;
                     case TokenKind.CurlyStart:
                         exs.Enqueue(ParseScope(tokens, TokenKind.CurlyEnd, true));
                         break;
@@ -155,12 +145,6 @@ namespace Ast
                             resList.elements.Add(CreateAst(exs, ops));
                         else
                             return new Error("Invalid comma");
-                        //ExtractBrackets(tok.kind, tokens, TokenKind.Comma);
-                        //exs.Enqueue(ExtractBrackets(tok.kind, tokens, TokenKind.None)[0]);
-                        //break;
-                        //var list = new List();
-                        //list.elements = ExtractBrackets(tok.kind, tokens, TokenKind.Semicolon);
-                        //exs.Enqueue(list);
                         break;
                     case TokenKind.Semicolon:
                         if (!list)
@@ -168,10 +152,9 @@ namespace Ast
                         else
                             ErrorHandler("Unexpected semicolon in list");
                         break;
-
-
                     case TokenKind.ParenthesesEnd:
                     case TokenKind.SquareEnd:
+                    case TokenKind.CurlyEnd:
                         ErrorHandler("Unexpected end bracker");
                         break;
                     case TokenKind.Unknown:
@@ -256,55 +239,6 @@ namespace Ast
             return top;
         }
 
-//        public static void ExtractBrackets(TokenKind startBracket, Queue<Token> tokens, TokenKind seperator)
-//        {
-//            //List<Expression> exs = new List<Expression> ();
-//            Token tok;
-//
-//            TokenKind endBracket;
-//            switch (startBracket)
-//            {
-//                case TokenKind.ParenthesesStart:
-//                    endBracket = TokenKind.ParenthesesEnd;
-//                    break;
-//                case TokenKind.SquareStart:
-//                    endBracket = TokenKind.SquareEnd;
-//                    break;
-//                case TokenKind.CurlyStart:
-//                    endBracket = TokenKind.CurlyEnd;
-//                    break;
-//                default:
-//                    throw new Exception("Wrong bracket token");
-//            }
-//
-//            var subTokens = new Queue<Token>();
-//
-//            while (tokens.Count > 0)
-//            {
-//                tok = tokens.Dequeue();
-//
-//                if (tok.kind == startBracket)
-//                {
-//                    ExtractBrackets(tok.kind, tokens, TokenKind.Comma);
-//                }
-//                else if (tok.kind == seperator)
-//                {
-//                    exs.Enqueue(Parse(subTokens, endBracket));
-//                }
-//                else if (tok.kind == endBracket)
-//                {
-//                    exs.Enqueue(Parse(subTokens));
-//                    return;
-//                }
-//                else
-//                {
-//                    subTokens.Enqueue(tok);
-//                }
-//            }
-//
-//            error = new Error("Missing end bracket");
-//        }
-
         public static Expression ParseNumber(Token tok, bool negative = false)
         {
             Int64 intRes;
@@ -355,58 +289,8 @@ namespace Ast
                 default:
                     throw new Exception("Wrong number token");
             }
-
         }
 
-//        public static Expression ExtractArgs(TokenKind startBracket, Queue<Token> tokens, TokenKind seperator)
-//        {
-//            List<Expression> args = new List<Expression> ();
-//
-//            Token tok;
-//
-//            TokenKind endBracket;
-//            switch (startBracket)
-//            {
-//                case TokenKind.ParenthesesStart:
-//                    endBracket = TokenKind.ParenthesesEnd;
-//                    break;
-//                case TokenKind.SquareStart:
-//                    endBracket = TokenKind.SquareEnd;
-//                    break;
-//                case TokenKind.CurlyStart:
-//                    endBracket = TokenKind.CurlyEnd;
-//                    break;
-//                default:
-//                    throw new Exception("Wrong bracket token");
-//            }
-//
-//            var subTokens = new Queue<Token>();
-//
-//            while (tokens.Count > 0)
-//            {
-//                tok = tokens.Dequeue();
-//
-//                if (tok.kind == startBracket)
-//                {
-//                    ExtractBrackets(tok.kind, tokens, TokenKind.Comma);
-//                }
-//                else if (tok.kind == seperator)
-//                {
-//                    exs.Enqueue(Parse(subTokens));
-//                }
-//                else if (tok.kind == endBracket)
-//                {
-//                    exs.Enqueue(Parse(subTokens));
-//                    return null;
-//                }
-//                else
-//                {
-//                    subTokens.Enqueue(tok);
-//                }
-//            }
-//
-//            error = new Error("Missing end bracket");
-//        }
 
         public static Expression ParseFunction(Token tok, Queue<Token> tokens)
         {

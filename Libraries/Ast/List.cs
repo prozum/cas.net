@@ -21,13 +21,13 @@ namespace Ast
 
         public override string ToString()
         {
-            string str = "{";
+            string str = "[";
 
             for (int i = 0; i < elements.Count; i++) 
             {
-                if (i >= MaxElementPrint)
+                if (i >= MaxElementPrint - 1)
                 {
-                    str += "..." + (elements.Count - i).ToString() + "e";
+                    str += "..." + elements[elements.Count - 1].ToString();
                     break;
                 }
                 else
@@ -36,12 +36,12 @@ namespace Ast
 
                     if (i < elements.Count - 1) 
                     {
-                        str += ';';
+                        str += ',';
                     }
                 }
             }
 
-            str += "}";
+            str += "]";
 
             return str;
         }
