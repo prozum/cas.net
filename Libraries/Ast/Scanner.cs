@@ -93,6 +93,8 @@ namespace Ast
                     return new Token(TokenKind.Comma, cur.ToString(), pos++);
                 case ';':
                     return new Token(TokenKind.Semicolon, cur.ToString(), pos++);
+                case '.':
+                    return new Token(TokenKind.Dot, cur.ToString(), pos++);
                 default:
                     if (char.IsLetter(cur))
                         return ScanIdentifier();

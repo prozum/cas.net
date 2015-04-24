@@ -35,6 +35,7 @@ namespace Ast
 
         Comma,
         Semicolon,
+        Dot,
 
         EndOfString,
         None,
