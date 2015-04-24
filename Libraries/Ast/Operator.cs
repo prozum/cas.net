@@ -368,15 +368,15 @@ namespace Ast
         public Equal() : base("=", 0) { }
         public Equal(Expression left, Expression right) : base(left, right, "=", 0) { }
 
-        public override Expression Expand()
+        protected override Expression SimplifyHelper(Expression left, Expression right)
+        {
+            return new Equal(Left.Simplify(), Right.Simplify());
+        }
+
+        protected override Expression ExpandHelper(Expression left, Expression right)
         {
             return new Equal(Left.Expand(), Right.Expand());
         }
-
-        public override Expression Simplify()
-        {
-            return new Equal(Left.Simplify(), Right.Simplify());
-            }
 
         public override Expression Clone()
         {
@@ -394,15 +394,15 @@ namespace Ast
         public Assign() : base(":=", 0) { }
         public Assign(Expression left, Expression right) : base(left, right, ":=", 0) { }
 
-        public override Expression Expand()
+        protected override Expression ExpandHelper(Expression left, Expression right)
         {
             return new Assign(Left.Expand(), Right.Expand());
         }
 
-        public override Expression Simplify()
+        protected override Expression SimplifyHelper(Expression left, Expression right)
         {
             return new Assign(Left.Simplify(), Right.Simplify());
-            }
+        }
 
         public override Expression Clone()
         {
@@ -610,6 +610,27 @@ namespace Ast
             else
             {
                 return this;
+            }
+        }
+
+        public override string ToString()
+        {
+            var sym = symbol;
+            var tempRight = Right;
+
+            if (Right is Number && (Right as Number).IsNegative())
+            {
+                tempRight = (Right as Number).ToNegative();
+                sym = "-";
+            }
+
+            if (parent == null || priority >= parent.priority)
+            {
+                return Left.ToString() + sym + tempRight.ToString();
+            }
+            else
+            {
+                return '(' + Left.ToString() + sym + tempRight.ToString() + ')';
             }
         }
     }
@@ -976,8 +997,8 @@ namespace Ast
 
     public class Div : Operator, IInvertable
     {
-        public Div() : base("/", 35) { }
-        public Div(Expression left, Expression right) : base(left, right, "/", 35) { }
+        public Div() : base("/", 40) { }
+        public Div(Expression left, Expression right) : base(left, right, "/", 40) { }
 
         public override Expression Evaluate()
         {
@@ -1101,7 +1122,7 @@ namespace Ast
 
     public class Exp : Operator, IInvertable
     {
-        public Exp() : base("^", 40) { }
+        public Exp() : base("^", 50) { }
         public Exp(Expression left, Expression right) : base(left, right, "^", 40) { }
 
         public override Expression Evaluate()

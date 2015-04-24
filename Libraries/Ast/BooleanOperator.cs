@@ -25,6 +25,16 @@ namespace Ast
         {
             return new BooleanEqual(Left.CurrectOperator(), Right.CurrectOperator());
         }
+
+        protected override Expression SimplifyHelper(Expression left, Expression right)
+        {
+            return new BooleanEqual(left.Simplify(), right.Simplify());
+        }
+
+        protected override Expression ExpandHelper(Expression left, Expression right)
+        {
+            return new BooleanEqual(left.Expand(), right.Expand());
+        }
     }
 
     public class Lesser : Operator
@@ -45,6 +55,16 @@ namespace Ast
         public override Expression CurrectOperator()
         {
             return new Lesser(Left.CurrectOperator(), Right.CurrectOperator());
+        }
+
+        protected override Expression SimplifyHelper(Expression left, Expression right)
+        {
+            return new Lesser(left.Simplify(), right.Simplify());
+        }
+
+        protected override Expression ExpandHelper(Expression left, Expression right)
+        {
+            return new Lesser(left.Expand(), right.Expand());
         }
     }
 
@@ -67,6 +87,16 @@ namespace Ast
         {
             return new LesserOrEqual(Left.CurrectOperator(), Right.CurrectOperator());
         }
+
+        protected override Expression SimplifyHelper(Expression left, Expression right)
+        {
+            return new LesserOrEqual(left.Simplify(), right.Simplify());
+        }
+
+        protected override Expression ExpandHelper(Expression left, Expression right)
+        {
+            return new LesserOrEqual(left.Expand(), right.Expand());
+        }
     }
 
     public class Greater : Operator
@@ -88,6 +118,16 @@ namespace Ast
         {
             return new Greater(Left.CurrectOperator(), Right.CurrectOperator());
         }
+
+        protected override Expression SimplifyHelper(Expression left, Expression right)
+        {
+            return new Greater(left.Simplify(), right.Simplify());
+        }
+
+        protected override Expression ExpandHelper(Expression left, Expression right)
+        {
+            return new Greater(left.Expand(), right.Expand());
+        }
     }
 
     public class GreaterOrEqual : Operator
@@ -108,6 +148,16 @@ namespace Ast
         public override Expression CurrectOperator()
         {
             return new GreaterOrEqual(Left.CurrectOperator(), Right.CurrectOperator());
+        }
+
+        protected override Expression SimplifyHelper(Expression left, Expression right)
+        {
+            return new GreaterOrEqual(left.Simplify(), right.Simplify());
+        }
+
+        protected override Expression ExpandHelper(Expression left, Expression right)
+        {
+            return new GreaterOrEqual(left.Expand(), right.Expand());
         }
     }
 }
