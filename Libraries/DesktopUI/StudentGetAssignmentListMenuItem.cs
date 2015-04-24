@@ -25,8 +25,6 @@ namespace DesktopUI
 
         void Onclicked()
         {
-//            throw new NotImplementedException();
-
             Window window = new Window("Get Assignment List");
           
             string[] assignmentList = user.student.GetAssignmentList();
