@@ -9,12 +9,10 @@ namespace Ast.Tests
     public class AstTests
     {
         public Evaluator eval;
-        public Parser parser;
 
         public AstTests()
         {
             eval = new Evaluator();
-            parser = new Parser(eval);
         }
 
         #region CompareTo Test Cases
@@ -35,7 +33,7 @@ namespace Ast.Tests
         #endregion
         public void ExpCompareTo(string inputString1, string inputString2)
         {
-            Assert.IsTrue(parser.Parse(inputString1).CompareTo(parser.Parse(inputString2)));
+            Assert.IsTrue(Parser.Parse(inputString1).CompareTo(Parser.Parse(inputString2)));
         }
 
         #region Simplify Test Cases
@@ -99,7 +97,7 @@ namespace Ast.Tests
         #endregion
         public void Simplify(string expected, string inputString)
         {
-            var res = parser.Parse(inputString).Simplify();
+            var res = Parser.Parse(inputString).Simplify();
             Assert.AreEqual(expected, res.ToString());
         }
 
@@ -194,7 +192,7 @@ namespace Ast.Tests
         #endregion
         public void Parse(string expected, string inputString)
         {
-            Assert.AreEqual(expected, parser.Parse(inputString).ToString());
+            Assert.AreEqual(expected, Parser.Parse(inputString).ToString());
         }
 
         #region Evaluate Test Cases
@@ -321,7 +319,7 @@ namespace Ast.Tests
         #endregion
         public void Evaluate(dynamic expected, string calculation)
         {
-            var res = parser.Parse(calculation).Simplify().Evaluate();
+            var res = Parser.Parse(calculation).Simplify().Evaluate();
             
             if (res is Integer)
             {
@@ -365,10 +363,10 @@ namespace Ast.Tests
         {
             var args = new List<Expression>();
 
-            args.Add(parser.Parse(inputString));
-            args.Add(parser.Parse("x"));
+            args.Add(Parser.Parse(inputString));
+            args.Add(Parser.Parse("x"));
 
-            var solve = new Solve(args, eval).Evaluate().ToString();
+            var solve = new Solve(args, eval.scope).Evaluate().ToString();
 
             Assert.AreEqual(expected, solve);
         }

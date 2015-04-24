@@ -8,6 +8,11 @@ namespace Ast
         static Scope scope;
         static Error error;
 
+        public static Scope Parse(string parseString)
+        {
+            return Parse(parseString, new Scope());
+        }
+
         public static Scope Parse(string parseString, Scope globalScope)
         {
             error = null;
