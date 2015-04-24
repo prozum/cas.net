@@ -53,6 +53,11 @@ namespace Ast
             this.value = value;
             this.pos = pos + 1;
         }
+
+        public string ToString()
+        {
+            return value;
+        }
     }
 }
 
