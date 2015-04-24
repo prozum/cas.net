@@ -22,8 +22,7 @@ namespace DesktopUI
 
         void OnClicked()
         {
-            throw new NotImplementedException();
-            // WHAT TO DO?
+            TeacherGetCompletedWindow window = new TeacherGetCompletedWindow(ref user, ref textviews);
         }
     }
 }
