@@ -33,8 +33,9 @@ namespace Account
 			return response;
         }
 
-        public string GetCompleted(string filename, string grade)
+        public string GetCompleted(string student, string filename, string grade)
         {
+			client.Headers.Add ("Student", student);
 			client.Headers.Add ("Grade", grade);
 			client.Headers.Add ("Filename", filename);
 
@@ -53,7 +54,7 @@ namespace Account
 				}
 				else
 				{
-					return this.GetCompleted(filename, grade);
+					return this.GetCompleted(filename, student, grade);
 				}
 			}
 
@@ -84,9 +85,30 @@ namespace Account
 			return null;
         }
 
-        public string AddFeedback(string file, string filename, string grade)
+		public string[] GetCompletedList()
+		{
+			string response = client.UploadString(host, "GetCompletedList");
+
+			if (response == "Success")
+			{
+				string[] studentlist = new string[client.ResponseHeaders.Count/2];
+
+				for (int i = 0; i < client.ResponseHeaders.Count/2; i++)
+				{
+					studentlist[i] = client.ResponseHeaders["Student" + i.ToString()];
+					studentlist[(2*i)+1] = client.ResponseHeaders["Status" + i.ToString()];
+				}
+
+				return studentlist;
+			}
+
+			return null;
+		}
+
+		public string AddFeedback(string file, string filename, string username, string grade)
         {
 			client.Headers.Add ("Checksum", Checksum.GetMd5Hash (file));
+			client.Headers.Add("Student", username);
 			client.Headers.Add ("Grade", grade);
 			client.Headers.Add ("Filename", filename);
 			client.Headers.Add ("File", file);

@@ -23,6 +23,7 @@ namespace Account
 
         public string AddCompleted(string file, string filename)
         {
+			using (client = new WebClient())
             client.Headers.Add("Checksum", Checksum.GetMd5Hash(file));
             client.Headers.Add("Filename", filename);
             client.Headers.Add("File", file);
@@ -34,10 +35,9 @@ namespace Account
             return response;
         }
 
-        string[] filelist;
-
         public string[] GetAssignmentList()
         {
+			string[] filelist = null;
             string response = client.UploadString(host, "StudentGetAssignmentList");
 
             client.Headers.Clear();
@@ -59,15 +59,11 @@ namespace Account
                         return this.GetAssignmentList();
                     }
                 }
+
+				return filelist;
             }
 
-
-            foreach (var item in filelist)
-            {
-                Console.WriteLine(item);
-            }
-
-            return filelist;
+			return null;
         }
 
         public string GetAssignment(string filename)
