@@ -327,19 +327,30 @@ namespace Ast
         public Assign() : base(":=", 0) { }
         public Assign(Expression left, Expression right) : base(left, right, ":=", 0) { }
 
-        public override Expression Expand()
+        public override Expression Evaluate()
         {
-            if (Right is Scope)
+
+            if (Left is Symbol)
             {
-                if (Left is Symbol)
-                {
-                    //scope
-                }
+                var sym = (Symbol)Left;
+                sym.scope.SetVar(sym.identifier, Right);
+                return new Info(sym.identifier + " assigned");
             }
 
-            var res = new Assign(Left.Expand(), Right.Expand());
+            if (Left is UsrFunc)
+            {
+                var func = (UsrFunc)Left;
+                func.scope.SetVar(func.identifier, Right);
 
-            return res;
+                return new Info(func.ToString() + " assigned");
+            }
+
+            return new Error(this, "Left operand must be Symbol or Function");
+        }
+
+        public override Expression Expand()
+        {
+            return new Assign(Left.Expand(), Right.Expand());
         }
 
         public override Expression Simplify()
