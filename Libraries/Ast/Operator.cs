@@ -388,7 +388,6 @@ namespace Ast
         public Assign() : base(":=", 0) { }
         public Assign(Expression left, Expression right) : base(left, right, ":=", 0) { }
 
-<<<<<<< HEAD
         public override Expression Evaluate()
         {
 
@@ -423,10 +422,6 @@ namespace Ast
 
         public override Expression Expand()
         {
-=======
-        protected override Expression ExpandHelper(Expression left, Expression right)
-        {
->>>>>>> 963d3e36dbd286a1e62bb6b93f55acebb4bcd975
             return new Assign(Left.Expand(), Right.Expand());
         }
 

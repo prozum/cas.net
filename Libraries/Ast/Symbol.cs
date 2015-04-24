@@ -5,9 +5,7 @@ namespace Ast
 {
     public class Symbol : Variable
     {
-        public UserDefinedFunction functionCall;
         public Symbol() : this(null, null) { }
-        //public Symbol(Symbol symbolExp) : this(symbolExp.evaluator, symbolExp.identifier) { }
         public Symbol(string sym, Scope scope) : base(sym, scope) { }
 
         public override string ToString()
@@ -80,16 +78,11 @@ namespace Ast
 
             return this;
         }
-
-//        public override void SetFunctionCall(UserDefinedFunction functionCall)
-//        {
-//            this.functionCall = functionCall;
-//        }
+            
 
         public override Expression Clone()
         {
             var res = MakeClone<Symbol>();
-            res.functionCall = functionCall;
 
             return res;
         }
@@ -99,17 +92,11 @@ namespace Ast
             if (base.ContainsVariable(other))
             {
                 return true;
-                /*
-                if ((other.functionCall == null && functionCall == null) || (((other.functionCall != null && functionCall != null)) && other.functionCall.CompareTo(functionCall)))
-                {
-                    return true;
-                }
-                */
             }
-            else
-            {
-                return (this as Symbol).GetValue(other).ContainsVariable(other);
-            }
+//            else
+//            {
+//                return (this as Symbol).GetValue(other).ContainsVariable(other);
+//            }
 
             return false;
         }

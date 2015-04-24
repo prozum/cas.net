@@ -36,6 +36,11 @@ namespace Ast
             return new Error(this, "Cannot evaluate");
         }
 
+        public virtual Expression CurrectOperator()
+        {
+            return this;
+        }
+
         public virtual Expression Expand()
         {
             return this;

@@ -64,11 +64,11 @@ namespace Ast
         public ArgError(SysFunc obj) : base(obj, "Valid args: ")
         {
             message += "(";
-            for(int i = 0; i < obj.argKinds.Count; i++)
+            for(int i = 0; i < obj.validArgs.Count; i++)
             {
-                message += obj.argKinds[i].ToString();
+                message += obj.validArgs[i].ToString();
 
-                if (i < obj.argKinds.Count -1) 
+                if (i < obj.validArgs.Count -1) 
                 {
                     message += ',';
                 }

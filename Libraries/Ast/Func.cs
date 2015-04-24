@@ -87,7 +87,7 @@ namespace Ast
         
     public abstract class SysFunc : Func
     {
-        public List<ArgKind> argKinds;
+        public List<ArgKind> validArgs;
 
         public SysFunc(string identifier, List<Expression> args, Scope scope)
             : base(identifier, args, scope) { }
@@ -105,11 +105,11 @@ namespace Ast
                 str += identifier + '[';
             }
 
-            for (int i = 0; i < argKinds.Count; i++) 
+            for (int i = 0; i < validArgs.Count; i++) 
             {
-                str += argKinds[i].ToString ();
+                str += validArgs[i].ToString ();
 
-                if (i < argKinds.Count - 1) 
+                if (i < validArgs.Count - 1) 
                 {
                     str += ',';
                 }
@@ -127,12 +127,12 @@ namespace Ast
 
         public bool isArgsValid()
         {
-            if (args.Count != argKinds.Count)
+            if (args.Count != validArgs.Count)
                 return false;
 
             for (int i = 0; i < args.Count; i++)
             {
-                switch (argKinds[i])
+                switch (validArgs[i])
                 {
                     case ArgKind.Expression:
                         if (!(args[i] is Expression))
@@ -174,7 +174,7 @@ namespace Ast
 
         public override Expression Evaluate()
         {
-            return Evaluator.SimplifyExp(GetValue()).Evaluate();
+            return GetValue().Simplify().Evaluate();
         }
 
         public Expression GetValue()
@@ -273,7 +273,7 @@ namespace Ast
             }
             else
             {
-                foreach (var item in (this as Function).args)
+                foreach (var item in (this as Func).args)
                 {
                     if (item.ContainsVariable(other))
                     {
@@ -808,7 +808,7 @@ namespace Ast
         public Expand(List<Expression> args, Scope scope)
             : base("expand", args, scope)
         {
-            argKinds = new List<ArgKind>()
+            validArgs = new List<ArgKind>()
             {
                 ArgKind.Expression
             };
@@ -830,7 +830,7 @@ namespace Ast
         public Range(List<Expression> args, Scope scope)
             : base("range", args, scope)
         {
-            argKinds = new List<ArgKind>()
+            validArgs = new List<ArgKind>()
             {
                 ArgKind.Number,
                 ArgKind.Number,
@@ -891,7 +891,7 @@ namespace Ast
         public Map(List<Expression> args, Scope scope)
             : base("map", args, scope)
         {
-            argKinds = new List<ArgKind>()
+            validArgs = new List<ArgKind>()
             {
                 ArgKind.Symbol,
                 ArgKind.List
@@ -948,7 +948,7 @@ namespace Ast
         public Plot(List<Expression> args, Scope scope)
             : base("plot", args, scope)
         {
-            argKinds = new List<ArgKind>()
+            validArgs = new List<ArgKind>()
             {
                 ArgKind.Expression,
                 ArgKind.Symbol
@@ -975,7 +975,7 @@ namespace Ast
         public Solve(List<Expression> args, Scope scope)
             : base("solve", args, scope)
         {
-            argKinds = new List<ArgKind>()
+            validArgs = new List<ArgKind>()
             {
                 ArgKind.Equation,
                 ArgKind.Symbol
