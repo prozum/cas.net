@@ -99,7 +99,7 @@ namespace Ast.Tests
         #endregion
         public void Simplify(string expected, string inputString)
         {
-            var res = Evaluator.SimplifyExp(parser.Parse(inputString)).CurrectOperator();
+            var res = parser.Parse(inputString).Simplify();
             Assert.AreEqual(expected, res.ToString());
         }
 
@@ -321,7 +321,7 @@ namespace Ast.Tests
         #endregion
         public void Evaluate(dynamic expected, string calculation)
         {
-            var res = Evaluator.SimplifyExp(parser.Parse(calculation)).Evaluate();
+            var res = parser.Parse(calculation).Simplify().Evaluate();
             
             if (res is Integer)
             {

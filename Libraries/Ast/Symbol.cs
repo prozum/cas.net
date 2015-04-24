@@ -40,7 +40,7 @@ namespace Ast
 
         public override Expression Evaluate()
         {
-            return Evaluator.SimplifyExp(GetValue()).Evaluate();
+            return GetValue().Simplify().Evaluate();
         }
 
         public Expression GetValue() { return GetValue(this); }
@@ -82,7 +82,7 @@ namespace Ast
 
         public override bool CompareTo(Expression other)
         {
-            var otherSimplified = Evaluator.SimplifyExp(other).CurrectOperator();
+            var otherSimplified = other.Simplify();
 
             if (otherSimplified is Symbol)
             {

@@ -192,7 +192,7 @@ namespace Ast
 
         public override Expression Evaluate()
         {
-            return Evaluator.SimplifyExp(GetValue()).Evaluate();
+            return GetValue().Simplify().Evaluate();
         }
 
         public Expression GetValue() { return GetValue(this); }
@@ -660,7 +660,7 @@ namespace Ast
             if (!isArgsValid())
                 return new ArgError(this);
 
-            return Evaluator.SimplifyExp(args[0]).CurrectOperator();
+            return args[0].Simplify();
         }
 
         public override Expression Clone()
@@ -682,7 +682,7 @@ namespace Ast
 
         public override Expression Evaluate()
         {
-            return Evaluator.ExpandExp(args[0]).CurrectOperator();
+            return args[0].Expand();
         }
 
         public override Expression Clone()
@@ -799,7 +799,7 @@ namespace Ast
             equal = (Equal)args[0];
             sym = (Symbol)args[1];
 
-            Expression resLeft = Evaluator.SimplifyExp(new Sub(equal.Left, equal.Right)).Expand();
+            Expression resLeft = new Sub(equal.Left, equal.Right).Simplify().Expand();
             Expression resRight = new Integer(0);
 
             System.Diagnostics.Debug.WriteLine(equal.ToString());
@@ -836,7 +836,7 @@ namespace Ast
                 System.Diagnostics.Debug.WriteLine(resLeft.ToString() + "=" + resRight.ToString());
             }
 
-            return new Equal(resLeft, Evaluator.SimplifyExp(resRight)).CurrectOperator();
+            return new Equal(resLeft, resRight.Simplify());
         }
 
         private bool InvertOperator(ref Expression resLeft, ref Expression resRight)

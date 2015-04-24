@@ -49,7 +49,7 @@ namespace Ast
             }
             else
             {
-                exp = SimplifyExp(exp).Evaluate();
+                exp = exp.Simplify().Evaluate();
             }
 
             if (exp is Error)
@@ -114,35 +114,6 @@ namespace Ast
             variableDefinitions.Add(sym.identifier, exp);
 
             return new MsgData(MsgType.Info, "Evaluator> Variable defined");
-        }
-
-        public static Expression SimplifyExp(Expression exp)
-        {
-            var prevExp = "";
-
-            do
-            {
-                prevExp = exp.ToString();
-                    
-                exp = exp.Simplify();
-
-            } while (exp.ToString() != prevExp);
-
-            return exp;
-        }
-
-        public static Expression ExpandExp(Expression exp)
-        {
-            var prevExp = "";
-
-            do
-            {
-                prevExp = exp.ToString();
-
-                exp = exp.Expand();
-            } while (exp.ToString() != prevExp);
-
-            return exp;
         }
     }
 }

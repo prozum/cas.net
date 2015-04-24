@@ -423,6 +423,9 @@ Global
 		{3E0FBD2D-3E67-45BE-BCB0-B6B298718749} = {55F13B97-EEC4-4F2A-B870-22346B6236AB}
 		{A6BE9C65-1637-4E97-A08C-F479621A20AF} = {55F13B97-EEC4-4F2A-B870-22346B6236AB}
 	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0
 		$0.DotNetNamingPolicy = $1
