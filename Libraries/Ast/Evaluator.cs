@@ -29,8 +29,10 @@ namespace Ast
                 {
                     return AssignSymbol((exp as Assign).Left as Symbol, (exp as Assign).Right);
                 }
-
-                return new MsgData(MsgType.Error, "Evaluator> Left expression is not a variable or function");
+                else
+                {
+                    return new MsgData(MsgType.Error, "Evaluator> Left expression is not a symbol or function");
+                }
             }
 
             if (exp is Plot)
@@ -46,7 +48,7 @@ namespace Ast
             }
             else
             {
-                exp = SimplifyExp(exp).Evaluate();
+                exp = exp.Simplify().Evaluate();
             }
 
             if (exp is Error)
@@ -100,36 +102,6 @@ namespace Ast
             scope.SetVar(sym.identifier, exp);
 
             return new MsgData(MsgType.Info, "Evaluator> Variable '" + sym.ToString() + "' defined");
-        }
-
-        
-
-        public static Expression SimplifyExp(Expression exp)
-        {
-            var prevExp = "";
-            
-            do
-            {
-                prevExp = exp.ToString();
-
-                exp = exp.Simplify();
-            } while (exp.ToString() != prevExp);
-
-            return exp;
-        }
-
-        public static Expression ExpandExp(Expression exp)
-        {
-            var prevExp = "";
-
-            do
-            {
-                prevExp = exp.ToString();
-
-                exp = exp.Expand();
-            } while (exp.ToString() != prevExp);
-
-            return exp;
         }
     }
 }

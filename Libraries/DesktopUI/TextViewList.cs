@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using Ast;
 using System.Collections.Generic;
 using Gtk;
 
@@ -6,20 +8,32 @@ namespace DesktopUI
 {
 	public class TextViewList : Grid
 	{
-		List<MovableCasTextView> castextviews = new List<MovableCasTextView>();
-		Button AddNewMovableTextView = new Button("+");
-
+		public List<MovableCasTextView> castextviews = new List<MovableCasTextView>();
+		Grid ButtonGrid = new Grid();
+		Evaluator Eval = new Evaluator ();
+		Button AddNewMovableTextView = new Button("New Textbox");
+		Button AddNewMovableCalcView = new Button("New Calcbox");
+		
 		public TextViewList() : base()
 		{
 			AddNewMovableTextView.Clicked += delegate
 				{
-					Insert("", false);
+					InsertTextView("", false);
 				};
 
-			Attach(AddNewMovableTextView, 1, 1, 1, 1);
+			AddNewMovableCalcView.Clicked += delegate
+				{
+					InsertCalcView();
+				};
+
+			ButtonGrid.Attach(AddNewMovableTextView, 1, 1, 1, 1);
+			ButtonGrid.Attach(AddNewMovableCalcView, 2, 1, 1, 1);
+			Attach(ButtonGrid, 1, 1, 1, 1);
+
+			ShowAll();
 		}
 
-		public void Insert(string serializedString, bool teacherCanEdit)
+		public void InsertTextView(string serializedString, bool teacherCanEdit)
 		{
 			castextviews.Add(new MovableCasTextView(this, serializedString, teacherCanEdit));
 
@@ -28,12 +42,20 @@ namespace DesktopUI
 			ShowAll();
 		}
 
-		public void Clear()
+		public void InsertCalcView()
 		{
-			foreach (Widget widget in this)
+			MovableCasCalcView MovCasCalcView =  new MovableCasCalcView(Eval, this);
+			MovCasCalcView.calcview.input.Activated += delegate
 			{
-				Remove(widget);
-			}
+				Reevaluate();
+				MovCasCalcView.ShowAll();
+			};
+
+			castextviews.Add(MovCasCalcView);
+
+			Clear();
+			Redraw();
+			ShowAll();
 		}
 
 		public void Move(int ID, int UpOrDown)
@@ -59,7 +81,16 @@ namespace DesktopUI
 			}
 
 			Clear();
+			Reevaluate ();
 			Redraw();
+		}
+
+		public void Clear()
+		{
+			foreach (Widget widget in this)
+			{
+				Remove(widget);
+			}
 		}
 
 		public void Redraw()
@@ -69,7 +100,21 @@ namespace DesktopUI
 				Attach(widget, 1, Children.Length, 1, 1);
 			}
 
-			Attach(AddNewMovableTextView, 1, Children.Length, 1, 1);
+			Attach(ButtonGrid, 1, Children.Length, 1, 1);
+		}
+
+		public void Reevaluate()
+		{
+			Evaluator NewEval = new Evaluator();
+
+			foreach (Widget widget in castextviews)
+			{
+				if (widget.GetType() == typeof(MovableCasCalcView))
+				{
+					(widget as MovableCasCalcView).calcview.Eval = NewEval;
+					(widget as MovableCasCalcView).calcview.Evaluate ();
+				}
+			}
 		}
 	}
 }

@@ -5,6 +5,7 @@ namespace Ast
 {
     public class Symbol : Variable
     {
+        public UserDefinedFunction functionCall;
         public Symbol() : this(null, null) { }
         //public Symbol(Symbol symbolExp) : this(symbolExp.evaluator, symbolExp.identifier) { }
         public Symbol(string sym, Scope scope) : base(sym, scope) { }
@@ -36,7 +37,7 @@ namespace Ast
 
         public override Expression Evaluate()
         {
-            return Evaluator.SimplifyExp(GetValue()).Evaluate();
+            return GetValue().Simplify().Evaluate();
         }
             
         public Expression GetValue()
@@ -51,17 +52,19 @@ namespace Ast
 
         public override bool CompareTo(Expression other)
         {
-            if (other is Symbol)
+            var otherSimplified = other.Simplify();
+
+            if (otherSimplified is Symbol)
             {
-                if (identifier == (other as Symbol).identifier && prefix.CompareTo((other as Symbol).prefix) && exponent.CompareTo((other as Symbol).exponent))
+                if (identifier == (otherSimplified as Symbol).identifier && prefix.CompareTo((otherSimplified as Symbol).prefix) && exponent.CompareTo((otherSimplified as Symbol).exponent))
                 {
                     return true;
                 }
 
-                return GetValue().CompareTo((other as Symbol).GetValue());
+                return GetValue().CompareTo((otherSimplified as Symbol).GetValue());
             }
 
-            return other.CompareTo(this.GetValue());
+            return otherSimplified.CompareTo(this.GetValue());
         }
 
         public override Expression Simplify()
@@ -75,7 +78,7 @@ namespace Ast
                 return prefix;
             }
 
-            return base.Simplify();
+            return this;
         }
 
 //        public override void SetFunctionCall(UserDefinedFunction functionCall)
@@ -85,8 +88,32 @@ namespace Ast
 
         public override Expression Clone()
         {
-            return MakeClone<Symbol>();
+            var res = MakeClone<Symbol>();
+            res.functionCall = functionCall;
+
+            return res;
         }
+
+        public override bool ContainsVariable(Variable other)
+        {
+            if (base.ContainsVariable(other))
+            {
+                return true;
+                /*
+                if ((other.functionCall == null && functionCall == null) || (((other.functionCall != null && functionCall != null)) && other.functionCall.CompareTo(functionCall)))
+                {
+                    return true;
+                }
+                */
+            }
+            else
+            {
+                return (this as Symbol).GetValue(other).ContainsVariable(other);
+            }
+
+            return false;
+        }
+
     }
 }
 

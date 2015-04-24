@@ -16,7 +16,7 @@ namespace Ast
 
         public abstract bool IsNegative();
 
-        public abstract void ToNegative();
+        public abstract Number ToNegative();
     }
 
     public class Integer : Number
@@ -29,8 +29,8 @@ namespace Ast
         }
 
         public override string ToString()
-        {
-            return value.ToString ();
+        {  
+            return value.ToString();
         }
 
         public override bool CompareTo(Expression other)
@@ -77,9 +77,9 @@ namespace Ast
             return false;
         }
 
-        public override void ToNegative()
+        public override Number ToNegative()
         {
-            value *= -1;
+            return new Integer(value * -1);
         }
 
         #region AddWith
@@ -90,7 +90,7 @@ namespace Ast
 
         public override Expression AddWith(Rational other)
         {
-            return new Rational(this, new Integer(1)) - other;
+            return new Rational(this, new Integer(1)) + other;
         }
 
         public override Expression AddWith(Irrational other)
@@ -312,9 +312,9 @@ namespace Ast
             return value.IsNegative();
         }
 
-        public override void ToNegative()
+        public override Number ToNegative()
         {
-            numerator.ToNegative();
+            return new Rational(numerator.ToNegative() as Integer, denominator);
         }
 
         #region AddWith
@@ -325,10 +325,10 @@ namespace Ast
 
         public override Expression AddWith(Rational other)
         {
-            var leftNumerator = numerator * other.denominator;
-            var rightNumerator = denominator * other.numerator;
+            var newNumerator = numerator * other.denominator;
+            var otherNewNumerator = denominator * other.numerator;
 
-            return new Rational((leftNumerator + rightNumerator) as Integer, (denominator * other.denominator) as Integer);
+            return new Rational((newNumerator + otherNewNumerator) as Integer, (denominator * other.denominator) as Integer);
         }
 
         public override Expression AddWith(Irrational other)
@@ -385,7 +385,7 @@ namespace Ast
 
         public override Expression DivWith(Rational other)
         {
-            return new Rational(denominator, numerator) * other;
+            return this * new Rational(other.denominator, other.numerator);
         }
 
         public override Expression DivWith(Irrational other)
@@ -544,9 +544,9 @@ namespace Ast
             return false;
         }
 
-        public override void ToNegative()
+        public override Number ToNegative()
         {
-            value *= -1;
+            return new Irrational(value *= -1);
         }
 
         #region AddWith
@@ -753,7 +753,7 @@ namespace Ast
             throw new NotImplementedException();
         }
 
-        public override void ToNegative()
+        public override Number ToNegative()
         {
             throw new NotImplementedException();
         }
@@ -788,7 +788,7 @@ namespace Ast
             throw new NotImplementedException();
         }
 
-        public override void ToNegative()
+        public override Number ToNegative()
         {
             throw new NotImplementedException();
         }

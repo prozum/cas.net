@@ -23,7 +23,6 @@ namespace Ast
         {
             this.args = args;
         }
-            
 
         public override bool CompareTo(Expression other)
         {
@@ -220,7 +219,6 @@ namespace Ast
             {
                 return new Error(this, "Variable is not a function");
             }
-                
 
 
 //            if (def.ContainsVariable(this))
@@ -265,6 +263,26 @@ namespace Ast
             str += "]";
 
             return str;
+        }
+
+        public override bool ContainsVariable(Variable other)
+        {
+            if (base.ContainsVariable(other))
+            {
+                return true;
+            }
+            else
+            {
+                foreach (var item in (this as Function).args)
+                {
+                    if (item.ContainsVariable(other))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
     }
 
@@ -361,7 +379,7 @@ namespace Ast
         public Sin(List<Expression> args, Scope scope)
             : base("sin", args, scope)
         {
-            argKinds = new List<ArgKind>()
+            validArgs = new List<ArgKind>()
             {
                 ArgKind.Expression
             };
@@ -415,7 +433,7 @@ namespace Ast
         public ASin(List<Expression> args, Scope scope)
             : base("asin", args, scope)
         {
-            argKinds = new List<ArgKind>()
+            validArgs = new List<ArgKind>()
             {
                 ArgKind.Expression
             };
@@ -469,7 +487,7 @@ namespace Ast
         public Cos(List<Expression> args, Scope scope)
             : base("cos", args, scope)
         {
-            argKinds = new List<ArgKind>()
+            validArgs = new List<ArgKind>()
             {
                 ArgKind.Expression
             };
@@ -523,7 +541,7 @@ namespace Ast
         public ACos(List<Expression> args, Scope scope)
             : base("acos", args, scope)
         {
-            argKinds = new List<ArgKind>()
+            validArgs = new List<ArgKind>()
             {
                 ArgKind.Expression
             };
@@ -577,7 +595,7 @@ namespace Ast
         public Tan(List<Expression> args, Scope scope)
             : base("tan", args, scope)
         {
-            argKinds = new List<ArgKind>()
+            validArgs = new List<ArgKind>()
             {
                 ArgKind.Expression
             };
@@ -631,7 +649,7 @@ namespace Ast
         public ATan(List<Expression> args, Scope scope)
             : base("atan", args, scope)
         {
-            argKinds = new List<ArgKind>()
+            validArgs = new List<ArgKind>()
             {
                 ArgKind.Expression
             };
@@ -685,7 +703,7 @@ namespace Ast
         public Sqrt(List<Expression> args, Scope scope)
             : base("sqrt", args, scope)
         {
-            argKinds = new List<ArgKind>()
+            validArgs = new List<ArgKind>()
             {
                 ArgKind.Expression
             };
@@ -743,7 +761,7 @@ namespace Ast
         public Negation(List<Expression> args, Scope scope)
             : base("negation", args, scope)
         {
-            argKinds = new List<ArgKind>()
+            validArgs = new List<ArgKind>()
             {
                 ArgKind.Expression
             };
@@ -765,7 +783,7 @@ namespace Ast
         public Simplify(List<Expression> args, Scope scope)
             : base("simplify", args, scope)
         {
-            argKinds = new List<ArgKind>()
+            validArgs = new List<ArgKind>()
             {
                 ArgKind.Expression
             };
@@ -776,7 +794,7 @@ namespace Ast
             if (!isArgsValid())
                 return new ArgError(this);
 
-            return Evaluator.SimplifyExp(args[0]);
+            return args[0].Simplify();
         }
 
         public override Expression Clone()
@@ -798,7 +816,7 @@ namespace Ast
 
         public override Expression Evaluate()
         {
-            return Evaluator.ExpandExp(args[0]);
+            return args[0].Expand();
         }
 
         public override Expression Clone()
@@ -972,7 +990,7 @@ namespace Ast
             equal = (Equal)args[0];
             sym = (Symbol)args[1];
 
-            Expression resLeft = Evaluator.SimplifyExp(new Sub(equal.Left, equal.Right)).Expand();
+            Expression resLeft = new Sub(equal.Left, equal.Right).Simplify().Expand();
             Expression resRight = new Integer(0);
 
             System.Diagnostics.Debug.WriteLine(equal.ToString());
@@ -1009,7 +1027,7 @@ namespace Ast
                 System.Diagnostics.Debug.WriteLine(resLeft.ToString() + "=" + resRight.ToString());
             }
 
-            return new Equal(resLeft, Evaluator.SimplifyExp(resRight));
+            return new Equal(resLeft, resRight.Simplify());
         }
 
         private bool InvertOperator(ref Expression resLeft, ref Expression resRight)
@@ -1045,10 +1063,6 @@ namespace Ast
                     {
                         return true;
                     }
-                }
-                else if (op is Exp)
-                {
-                    return true;
                 }
                 else
                 {

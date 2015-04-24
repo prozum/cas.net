@@ -36,8 +36,6 @@ namespace Ast
             return new Error(this, "Cannot evaluate");
         }
 
-        //public virtual void SetFunctionCall(UserDefinedFunction functionCall){ }
-
         public virtual Expression Expand()
         {
             return this;
