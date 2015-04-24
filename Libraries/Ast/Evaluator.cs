@@ -21,7 +21,7 @@ namespace Ast
         {
             var res = Parser.Parse(inputString, scope);
 
-            var exp = res.statements[0];
+            var exp = res.Evaluate();
 
             if (exp is Assign)
             {

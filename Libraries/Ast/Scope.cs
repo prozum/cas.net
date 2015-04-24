@@ -7,15 +7,20 @@ namespace Ast
     {
         public new Scope parent;
         public Dictionary<string,Expression> locals = new Dictionary<string,Expression>();
-        public List<Expression> statements = new List<Expression>();
+        public Queue<Expression> statements = new Queue<Expression>();
 
         public override Expression Evaluate()
         {
-            Expression res = new Integer(0);
+            List res = new List();
 
-            foreach (var statement in statements)
+            while(statements.Count > 0)
             {
-                res = statement.Evaluate();
+                var exp = statements.Dequeue().Evaluate();
+
+                if (exp is Error)
+                    return exp;
+
+                res.elements.Add(exp);
             }
 
             return res;

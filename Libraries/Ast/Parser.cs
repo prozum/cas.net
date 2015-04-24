@@ -32,10 +32,11 @@ namespace Ast
 
                 if (tok.kind == stopToken)
                 {
+                    tokens.Dequeue();
                     break;
                 }
                 else
-                    scope.statements.Add(ParseExpr(tokens, stopToken));
+                    scope.statements.Enqueue(ParseExpr(tokens, stopToken));
             }
 
             if (newScope)
@@ -60,10 +61,7 @@ namespace Ast
             while (tokens.Count > 0)
             {
                 if (tokens.Peek().kind == stopToken)
-                {
-                    tokens.Dequeue();
                     break;
-                }
 
                 tok = tokens.Dequeue();
 
@@ -133,9 +131,11 @@ namespace Ast
                     
                     case TokenKind.ParenthesesStart:
                         exs.Enqueue(ParseExpr(tokens, TokenKind.ParenthesesEnd));
+                        tokens.Dequeue();
                         break;
                     case TokenKind.SquareStart:
                         exs.Enqueue(ParseExpr(tokens, TokenKind.SquareEnd, true));
+                        tokens.Dequeue();
                         break;
                     case TokenKind.CurlyStart:
                         exs.Enqueue(ParseScope(tokens, TokenKind.CurlyEnd, true));
