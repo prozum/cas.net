@@ -390,7 +390,6 @@ namespace Ast
 
         public override Expression Evaluate()
         {
-
             if (Left is Symbol)
             {
                 var sym = (Symbol)Left;
@@ -415,6 +414,11 @@ namespace Ast
                 insFunc.scope.SetVar(insFunc.identifier, defFunc);
 
                 return new Info(insFunc.ToString() + " assigned");
+            }
+
+            if (Left is SysFunc)
+            {
+                return new Error(this, "Cannot override system function");
             }
 
             return new Error(this, "Left operand must be Symbol or Function");
