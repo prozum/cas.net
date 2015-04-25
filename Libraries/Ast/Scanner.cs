@@ -78,9 +78,9 @@ namespace Ast
                 case ':':
                     return ScanOperator();
                 case '(':
-                    return new Token(TokenKind.ParenthesesStart, cur.ToString(), pos++);
+                    return new Token(TokenKind.ParentStart, cur.ToString(), pos++);
                 case ')':
-                    return new Token(TokenKind.ParenthesesEnd, cur.ToString(), pos++);
+                    return new Token(TokenKind.ParentEnd, cur.ToString(), pos++);
                 case '[':
                     return new Token(TokenKind.SquareStart, cur.ToString(), pos++);
                 case ']':
@@ -182,9 +182,9 @@ namespace Ast
                 case "==":
                     return new Token(TokenKind.BooleanEqual, op, startPos);
                 case "<=":
-                    return new Token(TokenKind.LesserOrEqual, op, startPos);
+                    return new Token(TokenKind.LesserEqual, op, startPos);
                 case ">=":
-                    return new Token(TokenKind.GreaterOrEqual, op, startPos);
+                    return new Token(TokenKind.GreaterEqual, op, startPos);
                 case "<":
                     return new Token(TokenKind.Lesser, op, startPos);
                 case ">":

@@ -14,22 +14,6 @@ namespace Ast
         public Operator parent;
 
         public Scope scope;
-//        private Scope _scope;
-//        public Scope scope
-//        {
-//            get
-//            {
-//                if (parent != null)
-//                {
-//                    return parent.scope;
-//                }
-//                return _scope;
-//            }
-//            set
-//            {
-//                _scope = value;
-//            }
-//        }
 
         public virtual Expression Evaluate()
         {

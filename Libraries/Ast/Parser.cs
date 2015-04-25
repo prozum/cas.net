@@ -40,7 +40,7 @@ namespace Ast
                     break;
                 }
                 else
-                    scope.statements.Enqueue(ParseExpr(tokens, stopToken));
+                    scope.statements.Add(ParseExpr(tokens, stopToken));
             }
 
             if (newScope)
@@ -103,11 +103,11 @@ namespace Ast
                     case TokenKind.BooleanEqual:
                         ops.Enqueue(new BooleanEqual());
                         break;
-                    case TokenKind.LesserOrEqual:
-                        ops.Enqueue(new LesserOrEqual());
+                    case TokenKind.LesserEqual:
+                        ops.Enqueue(new LesserEqual());
                         break;
-                    case TokenKind.GreaterOrEqual:
-                        ops.Enqueue(new GreaterOrEqual());
+                    case TokenKind.GreaterEqual:
+                        ops.Enqueue(new GreaterEqual());
                         break;
                     case TokenKind.Lesser:
                         ops.Enqueue(new Lesser());
@@ -134,8 +134,8 @@ namespace Ast
                         ops.Enqueue(new Exp());
                         break;
                     
-                    case TokenKind.ParenthesesStart:
-                        exs.Enqueue(ParseExpr(tokens, TokenKind.ParenthesesEnd));
+                    case TokenKind.ParentStart:
+                        exs.Enqueue(ParseExpr(tokens, TokenKind.ParentEnd));
                         if (tokens.Count > 0)
                             tokens.Dequeue();
                         else
@@ -168,7 +168,7 @@ namespace Ast
                             ErrorHandler("Unexpected semicolon in list");
                         break;
 
-                    case TokenKind.ParenthesesEnd:
+                    case TokenKind.ParentEnd:
                     case TokenKind.SquareEnd:
                     case TokenKind.CurlyEnd:
                         ErrorHandler("Unexpected end bracket");
@@ -354,8 +354,7 @@ namespace Ast
                 case "solve":
                     return new Solve(args, scope);
                 default:
-                    return new InstanceFunc(tok.value, args, scope);
-                    //res = new UsrFunc(tok.value.ToLower(), args, scope);
+                    return new UsrFunc(tok.value.ToLower(), args, scope);
             }
 
             return res;
