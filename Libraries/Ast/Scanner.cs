@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.IO;
 using System.Globalization;
 using System.Collections.Generic;
 
@@ -16,23 +15,49 @@ namespace Ast
 
         static string tokenString;
         static char[] chars;
-        static int pos;
-        static char cur
+        static Pos pos;
+
+//        static char cur
+//        {
+//            get
+//            {
+//                if (pos.i < chars.Length)
+//                    return chars[pos.i++];
+//                else
+//                    return EOS;
+//            }
+//        }
+//        static char cur
+//        {
+//            get
+//            {
+//                if (pos.i < chars.Length)
+//                    return chars[pos.i];
+//                else
+//                    return EOS;
+//            }
+//        }
+
+        public static char CharNext(bool consume = true)
         {
-            get
+            if (pos.i < chars.Length)
             {
-                if (pos < chars.Length)
-                    return chars[pos];
-                else
-                    return EOS;
+                if (consume)
+                {
+                    pos.Column++;
+                    return chars[pos.i++];
+                }
+                return chars[pos.i];
             }
+            else
+                return EOS;
         }
 
         public static Queue<Token> Tokenize(string str)
         {
             tokenString = str;
             chars = tokenString.ToCharArray();
-            pos = 0;
+            pos = new Pos();
 
             var tokens = new Queue<Token> ();
 
@@ -52,10 +77,12 @@ namespace Ast
         {
             SkipWhitespace();
 
-            switch (cur)
+            var @char = CharNext();
+
+            switch (@char)
             {
                 case EOS:
-                    return new Token(TokenKind.EndOfString, cur.ToString(), pos);
+                    return new Token(TokenKind.EndOfString, @char, pos);
                 case '0':
                 case '1':
                 case '2':
@@ -66,7 +93,7 @@ namespace Ast
                 case '7':
                 case '8':
                 case '9':
-                    return ScanNumber();
+                    return ScanNumber(@char);
                 case '=':
                 case '<':
                 case '>':
@@ -76,76 +103,75 @@ namespace Ast
                 case '/':
                 case '^':
                 case ':':
-                    return ScanOperator();
+                    return ScanOperator(@char);
                 case '(':
-                    return new Token(TokenKind.ParentStart, cur.ToString(), pos++);
+                    return new Token(TokenKind.ParentStart, @char, pos);
                 case ')':
-                    return new Token(TokenKind.ParentEnd, cur.ToString(), pos++);
+                    return new Token(TokenKind.ParentEnd, @char, pos);
                 case '[':
-                    return new Token(TokenKind.SquareStart, cur.ToString(), pos++);
+                    return new Token(TokenKind.SquareStart, @char, pos);
                 case ']':
-                    return new Token(TokenKind.SquareEnd, cur.ToString(), pos++);
+                    return new Token(TokenKind.SquareEnd, @char, pos);
                 case '{':
-                    return new Token(TokenKind.CurlyStart, cur.ToString(), pos++);
+                    return new Token(TokenKind.CurlyStart, @char, pos);
                 case '}':
-                    return new Token(TokenKind.CurlyEnd, cur.ToString(), pos++);
+                    return new Token(TokenKind.CurlyEnd, @char, pos);
                 case ',':
-                    return new Token(TokenKind.Comma, cur.ToString(), pos++);
+                    return new Token(TokenKind.Comma, @char, pos);
                 case ';':
-                    return new Token(TokenKind.Semicolon, cur.ToString(), pos++);
+                    return new Token(TokenKind.Semicolon, @char, pos);
                 case '.':
-                    return new Token(TokenKind.Dot, cur.ToString(), pos++);
+                    return new Token(TokenKind.Dot, @char, pos);
                 default:
-                    if (char.IsLetter(cur))
-                        return ScanIdentifier();
+                    if (char.IsLetter(@char))
+                        return ScanIdentifier(@char);
                     else
-                        return new Token(TokenKind.Unknown, cur.ToString(), pos++);
+                        return new Token(TokenKind.Unknown, @char, pos);
             }
         }
 
-        private static Token ScanNumber()
+        private static Token ScanNumber(char @char)
         {
             TokenKind kind = TokenKind.Integer;
-            string number = "";
-            int startPos = pos;
+            string number = @char.ToString();
+            Pos startPos = pos;
 
+            var cur = CharNext(false);
             while (char.IsDigit(cur) || cur == sep)
             {
+                CharNext();
                 number += cur;
 
                 if (cur == sep)
                 {
                     //More than one Seperator. Error!
-                    if (kind == TokenKind.Decimal )
-                    {
-                        Errors = true;
-                    }
+                    Errors |= kind == TokenKind.Decimal;
                     kind = TokenKind.Decimal;
                 }
-                pos++;
+
+                cur = CharNext(false);
             }
 
             if (cur == 'i')
             {
-                if (kind == TokenKind.Integer)
-                    kind = TokenKind.ImaginaryInt;
-                else
-                    kind = TokenKind.ImaginaryDec;
-                pos++;
+                kind = kind == TokenKind.Integer ? TokenKind.ImaginaryInt : TokenKind.ImaginaryDec;
+                CharNext();
             }
 
             return new Token(kind, number, startPos);
         }
 
-        private static Token ScanIdentifier()
+        private static Token ScanIdentifier(char @char)
         {
-            string identifier = "";
-            int startPos = pos;
+            string identifier = @char.ToString();
+            Pos startPos = pos;
 
+            var cur = CharNext(false);
             while (char.IsLetterOrDigit (cur))
             {
+                CharNext(true);
                 identifier += cur;
-                pos++;
+                cur = CharNext(false);
             }
 
             identifier = identifier.ToLower();
@@ -161,16 +187,16 @@ namespace Ast
             }
         }
 
-        private static Token ScanOperator()
+        private static Token ScanOperator(char @char)
         {
-            string op = cur.ToString();
-            int startPos = pos;
-            pos++;
+            string op = @char.ToString();
+            Pos startPos = pos;
 
+            var cur = CharNext(false);
             if (opChars.Contains(cur))
             {
                 op += cur;
-                pos++;
+                CharNext();
             }
 
             switch(op)
@@ -207,9 +233,16 @@ namespace Ast
 
         private static void SkipWhitespace()
         {
-            while (char.IsWhiteSpace (cur)) 
+            var cur = CharNext(false);
+            while (char.IsWhiteSpace (cur) || cur == '\n') 
             {
-                pos++;
+                CharNext(true);
+                if (cur == '\n')
+                {
+                    pos.Line++;
+                    pos.Column = 0;
+                }
+                cur = CharNext(false);
             }
         }
     }

@@ -18,21 +18,21 @@ namespace Ast
 
             if (Left is UsrFunc)
             {
-                var insFunc = (UsrFunc)Left;
+                var usrFunc = (UsrFunc)Left;
 
-                foreach (var arg in insFunc.args)
+                foreach (var arg in usrFunc.args)
                 {
                     if (!(arg is Symbol))
                         return new Error(this, "All arguments must be symbols");
                 }
 
-                var defFunc = new UsrFunc(insFunc.identifier, insFunc.args, insFunc.scope);
+                var defFunc = new UsrFunc(usrFunc.identifier, usrFunc.args, usrFunc.scope);
 
                 defFunc.expr = Right;
 
-                insFunc.scope.SetVar(insFunc.identifier, defFunc);
+                usrFunc.scope.SetVar(usrFunc.identifier, defFunc);
 
-                return new Info(insFunc.ToString() + ":=" + Right.ToString());
+                return new Info(usrFunc.ToString() + ":=" + Right.ToString());
             }
 
             if (Left is SysFunc)

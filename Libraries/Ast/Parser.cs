@@ -7,6 +7,7 @@ namespace Ast
     {
         static Scope scope;
         static Error error;
+        static Pos pos;
 
         public static Scope Parse(string parseString)
         {
@@ -54,6 +55,8 @@ namespace Ast
             Token tok;
             List resList = null;
 
+            Expression expr = null;
+
             var exs = new Queue<Expression> ();
             var ops = new Queue<Operator> ();
 
@@ -68,6 +71,7 @@ namespace Ast
                     break;
 
                 tok = tokens.Dequeue();
+                pos = tok.pos;
 
                 switch (tok.kind)
                 {
@@ -75,23 +79,24 @@ namespace Ast
                     case TokenKind.Decimal:
                     case TokenKind.ImaginaryInt:
                     case TokenKind.ImaginaryDec:
-                        exs.Enqueue(ParseNumber(tok));
+                        expr = ParseNumber(tok);
                         break;
 
                     case TokenKind.Identifier:
                         if (tokens.Count > 0 && tokens.Peek().kind == TokenKind.SquareStart)
                         {
-                            tokens.Dequeue(); // Eat start parentheses
-                            exs.Enqueue(ParseFunction(tok, tokens));
+                            expr = ParseFunction(tok, tokens);
                         }
                         else
-                            exs.Enqueue(new Symbol(tok.value, scope));
+                        {
+                            expr = new Symbol(tok.value, scope);
+                        }
                         break;
                     case TokenKind.KW_True:
-                        exs.Enqueue(new Boolean(true));
+                        expr = new Boolean(true);
                         break;
                     case TokenKind.KW_False:
-                        exs.Enqueue(new Boolean(false));
+                        expr = new Boolean(false);
                         break;
 
                     case TokenKind.Assign:
@@ -120,7 +125,7 @@ namespace Ast
                         break;
                     case TokenKind.Sub:
                         if (first)
-                            exs.Enqueue(ParseNumber(tokens.Dequeue(), true));
+                            expr = ParseNumber(tokens.Dequeue(), true);
                         else
                             ops.Enqueue(new Sub());
                         break;
@@ -135,53 +140,60 @@ namespace Ast
                         break;
                     
                     case TokenKind.ParentStart:
-                        exs.Enqueue(ParseExpr(tokens, TokenKind.ParentEnd));
+                        expr = ParseExpr(tokens, TokenKind.ParentEnd);
                         if (tokens.Count > 0)
                             tokens.Dequeue();
                         else
-                            ErrorHandler("Missing ) bracket");
+                            expr = ErrorHandler("Missing ) bracket");
                         break;
                     case TokenKind.SquareStart:
-                        exs.Enqueue(ParseExpr(tokens, TokenKind.SquareEnd, true));
+                        expr = ParseExpr(tokens, TokenKind.SquareEnd, true);
                         if (tokens.Count > 0)
                             tokens.Dequeue();
                         else
-                            ErrorHandler("Missing ] bracket");
+                            expr = ErrorHandler("Missing ] bracket");
                         break;
                     case TokenKind.CurlyStart:
                         exs.Enqueue(ParseScope(tokens, TokenKind.CurlyEnd, true));
                         if (tokens.Count > 0)
                             tokens.Dequeue();
                         else
-                            ErrorHandler("Missing } bracket");
+                            expr = ErrorHandler("Missing } bracket");
                         break;
                     case TokenKind.Comma:
                         if (list)
                             resList.items.Add(CreateAst(exs, ops));
                         else
-                            return new Error("Invalid comma");
+                            expr = ErrorHandler("Invalid comma");
                         break;
                     case TokenKind.Semicolon:
                         if (!list)
                             return CreateAst(exs, ops);
                         else
-                            ErrorHandler("Unexpected semicolon in list");
+                            expr = ErrorHandler("Unexpected semicolon in list");
                         break;
 
                     case TokenKind.ParentEnd:
                     case TokenKind.SquareEnd:
                     case TokenKind.CurlyEnd:
-                        ErrorHandler("Unexpected end bracket");
+                        expr = ErrorHandler("Unexpected end bracket");
                         break;
                     case TokenKind.Unknown:
-                        ErrorHandler("Unknown token");
+                        expr = ErrorHandler("Unknown token");
                         break;
                 }
-
+                
                 first = false;
 
-                if (error != null)
-                    return error;
+
+                if (expr != null)
+                {
+                    pos = tok.pos;
+                    exs.Enqueue(expr);
+                    if (expr is Error)
+                        return expr;
+                    expr = null;
+                }
             }
 
             if (list)
@@ -200,14 +212,14 @@ namespace Ast
             Operator curOp, nextOp, top;
 
             if (exs.Count == 0)
-                return ErrorHandler("Parser> No expressions");
-            if (exs.Count == 1)
+                return ErrorHandler("No expressions");
+            if (exs.Count == 1 && ops.Count == 0)
                 return exs.Dequeue();
                 
             if (ops.Count > 0)
                 top = ops.Peek();
             else
-                return ErrorHandler("Parser> Missing operator");
+                return ErrorHandler("Missing operator");
 
 
             left = exs.Dequeue();
@@ -247,13 +259,15 @@ namespace Ast
                 }
                 else
                 {
+                    if (!(exs.Count > 0))
+                        return ErrorHandler("Missing right operand");
                     right = exs.Dequeue();
                     curOp.Right = right;
                 }
             }
 
             if (exs.Count != 0)
-                return ErrorHandler("Parser> The operators cannot use all the operands");
+                return ErrorHandler("The operators cannot use all the operands");
 
             return top;
         }
@@ -315,11 +329,12 @@ namespace Ast
         {
             List<Expression> args;
 
+            tokens.Dequeue(); // Eat start parentheses
             Expression res = ParseExpr(tokens, TokenKind.SquareEnd, true);
             if (tokens.Count > 0)
                 tokens.Dequeue();
             else
-                ErrorHandler("Missing ) bracket");
+                ErrorHandler("Missing ] bracket");
 
             if (res is List)
                 args = (res as List).items;
@@ -361,13 +376,10 @@ namespace Ast
                 default:
                     return new UsrFunc(tok.value.ToLower(), args, scope);
             }
-
-            return res;
-
         }
-        public static Error ErrorHandler(string message)
+        public static Error ErrorHandler(string msg)
         {
-            error = new Error(message);
+            error = new Error("Parser at [" + pos.Column + ";" + pos.Line + "]: " + msg);
 
             return error;
         }

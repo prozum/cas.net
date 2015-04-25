@@ -15,8 +15,8 @@ public class MainWindow : Window
     TextView textView;
     TextBuffer buffer;
 
-    Entry entry;
-
+    TextView input;
+    Button evalButton;
 
 
     static void Main(string[] args)
@@ -27,9 +27,9 @@ public class MainWindow : Window
     }
 
 
-    public void EvaluateEntry()
+    public void EvaluateInput()
     {
-        output = eval.Evaluation(entry.Text);
+        output = eval.Evaluation(input.Buffer.Text);
 
         TextIter insertIter = buffer.StartIter;
 
@@ -98,18 +98,22 @@ public class MainWindow : Window
         grid = new Grid ();
         Add (grid);
 
-        entry = new Entry ();
-        entry.Activated += (o, a) => EvaluateEntry ();
-        entry.Activated += (o, a) => UpdateDefinitions();
-        grid.Attach (entry, 0, 0, 1, 1);
+        input = new TextView ();
+        grid.Attach (input, 0, 0, 1, 1);
+
+        evalButton = new Button("Evaluate");
+        evalButton.Clicked += (o, a) => EvaluateInput();
+        evalButton.Clicked += (o, a) => UpdateDefinitions();
+        grid.Attach(evalButton, 0, 1, 1, 1); 
 
         textView = new TextView();
         textView.Expand = true;
         textView.Editable = false;
         var sw = new ScrolledWindow ();
         sw.Add(textView);
-        grid.Attach (sw, 0, 1, 1, 1);
+        grid.Attach (sw, 0, 2, 1, 1);
         buffer = textView.Buffer;
+
 
         var infoTag = new TextTag ("info");
         infoTag.Foreground = "blue";

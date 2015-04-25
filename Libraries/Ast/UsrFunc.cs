@@ -24,23 +24,14 @@ namespace Ast
             if (@var == null)
                 return new Error(identifier + "> has no definition");
 
-            if (@var is SysFunc)
-            {
-                var sysFuncDef = (SysFunc)@var;
-
-                sysFuncDef.args = args;
-                if (!sysFuncDef.isArgsValid())
-                    return new ArgError(sysFuncDef);
-
-                return sysFuncDef.Evaluate();
-            }
-
             if (@var is UsrFunc)
             {
                 var usrFuncDef = (UsrFunc)@var;
 
                 if (args.Count != usrFuncDef.args.Count)
                     return new Error(identifier + " takes " + usrFuncDef.args.Count.ToString() + " arguments. Not " + args.Count.ToString() + ".");
+
+                scope = new Scope(scope);
 
                 for (int i = 0; i < args.Count; i++)
                 {

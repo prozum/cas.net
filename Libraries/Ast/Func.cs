@@ -19,7 +19,7 @@ namespace Ast
         public List<Expression> args;
 
         public Func(string identifier, List<Expression> args, Scope scope)
-            : base(identifier, scope) 
+            : base(identifier,  scope) 
         {
             this.args = args;
         }

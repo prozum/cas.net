@@ -12,8 +12,8 @@ namespace Ast
     public abstract class Expression
     {
         public Operator parent;
-
         public Scope scope;
+        public Pos pos;
 
         public virtual Expression Evaluate()
         {

@@ -42,20 +42,37 @@ namespace Ast
         Unknown
     }
 
+    public struct Pos
+    {
+        public int i;
+
+        public int Line;
+        public int Column;
+
+        public Pos()
+        {
+            i = 0;
+            Line = 1;
+            Column = 0;
+        }
+    }
+
     public class Token
     {
         public TokenKind kind;
         public string value;
-        public int pos;
+        public Pos pos;
 
-        public Token(TokenKind kind, string value, int pos)
+        public Token(TokenKind kind, char value, Pos pos) : this(kind, value.ToString(), pos) {}
+        public Token(TokenKind kind, string value, Pos pos)
         {
             this.kind = kind;
             this.value = value;
-            this.pos = pos + 1;
+            this.pos = pos;
+            this.pos.i++;
         }
 
-        public string ToString()
+        public override string ToString()
         {
             return value;
         }
