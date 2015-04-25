@@ -103,10 +103,10 @@ namespace Ast
                     case TokenKind.BooleanEqual:
                         ops.Enqueue(new BooleanEqual());
                         break;
-                    case TokenKind.LesserOrEqual:
+                    case TokenKind.LesserEqual:
                         ops.Enqueue(new LesserEqual());
                         break;
-                    case TokenKind.GreaterOrEqual:
+                    case TokenKind.GreaterEqual:
                         ops.Enqueue(new GreaterEqual());
                         break;
                     case TokenKind.Lesser:
@@ -134,8 +134,8 @@ namespace Ast
                         ops.Enqueue(new Exp());
                         break;
                     
-                    case TokenKind.ParenthesesStart:
-                        exs.Enqueue(ParseExpr(tokens, TokenKind.ParenthesesEnd));
+                    case TokenKind.ParentStart:
+                        exs.Enqueue(ParseExpr(tokens, TokenKind.ParentEnd));
                         if (tokens.Count > 0)
                             tokens.Dequeue();
                         else
@@ -168,7 +168,7 @@ namespace Ast
                             ErrorHandler("Unexpected semicolon in list");
                         break;
 
-                    case TokenKind.ParenthesesEnd:
+                    case TokenKind.ParentEnd:
                     case TokenKind.SquareEnd:
                     case TokenKind.CurlyEnd:
                         ErrorHandler("Unexpected end bracket");
