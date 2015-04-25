@@ -98,6 +98,8 @@ namespace CAS.NET.Server
                     {
                         case "AddAssignment":
 							return TeacherAddAssignment(identity.Name, request, db);
+						case "GetCompletedList":
+							return TeacherGetCompletedList(request, response, db);
                         case "GetCompleted":
 							return TeacherGetCompleted(request, response, db);
                         case "AddFeedback":
@@ -159,6 +161,8 @@ namespace CAS.NET.Server
 
 		private string TeacherGetCompletedList(HttpListenerRequest request, HttpListenerResponse response, Database db)
 		{
+			response.Headers.Clear();
+
 			if (request.Headers["Grade"] != null &&	request.Headers["Filename"] != null)
 			{
 				string grade = request.Headers ["Grade"];
@@ -175,7 +179,7 @@ namespace CAS.NET.Server
 					return "Failed";
 				}
 
-				for (int i = 0; i < StudentsAndCompleted.Length; i++)
+				for (int i = 0; i < StudentsAndCompleted.Length/2; i++)
 				{
 					response.Headers.Add("Student" + i.ToString(), StudentsAndCompleted[i*2]);
 					response.Headers.Add("Status" + i.ToString(), StudentsAndCompleted[(i*2)+1]);

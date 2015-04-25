@@ -175,7 +175,6 @@ namespace CAS.NET.Server
 
 		public string[] GetCompletedList(string filename, string grade)
 		{
-			List<string> FileList = new List<string>();
 			List<String> FeedbackList = new List<string>();
 			List<string> TotalStudents = new List<string>();
 			List<string> CompletedStudents = new List<string>();
@@ -223,7 +222,6 @@ namespace CAS.NET.Server
 					while (rdr.Read())
 					{
 						CompletedStudents.Add(rdr.GetString(UserNameColumn));
-						FileList.Add(rdr.GetString(FileNameColumn));
 						FeedbackList.Add(rdr.GetString(FeedbackColumn));
 					}
 				}
@@ -238,7 +236,7 @@ namespace CAS.NET.Server
 
 			for (int i = 0; i < StudentsCount; i++)
 			{
-				int index = CompletedStudents.FindIndex(str => str == TotalStudents[i]);
+				int index = CompletedStudents.FindIndex(x => x.StartsWith(TotalStudents[2*i]));
 
 				if (index == -1)
 				{
@@ -246,7 +244,9 @@ namespace CAS.NET.Server
 				}
 				else
 				{
-					if (FeedbackList[(2*i)+1] == "1")
+					Console.WriteLine(FeedbackList[index]);
+
+					if (FeedbackList[index] == "1")
 					{
 						TotalStudents.Insert((2*i)+1, "Feedback");
 					}

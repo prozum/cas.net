@@ -11,8 +11,6 @@ namespace Account
         private readonly string host;
         private WebClient client;
 
-        // http://localhost/:8080
-
         public Student(string username, string password, string host)
         {
             this.host = host;
@@ -23,7 +21,6 @@ namespace Account
 
         public string AddCompleted(string file, string filename)
         {
-			using (client = new WebClient())
             client.Headers.Add("Checksum", Checksum.GetMd5Hash(file));
             client.Headers.Add("Filename", filename);
             client.Headers.Add("File", file);

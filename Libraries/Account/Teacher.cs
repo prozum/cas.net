@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Text;
-using System.IO;
 using ImEx;
 
 namespace Account
@@ -67,10 +68,11 @@ namespace Account
 
 			if (response == "Success")
 			{
-				string[] filelist = new string[client.ResponseHeaders.Count/2];
-				string[] checksumlist = new string[client.ResponseHeaders.Count/2];
+				List<string> filelist = new List<string>();
+				List<string> checksumlist = new List<string>();
+				int i = 0;
 
-				for (int i = 0; i < client.ResponseHeaders.Count/2; i++)
+				while (client.ResponseHeaders["File" + i.ToString()] != null)
 				{
 					filelist[i] = client.ResponseHeaders["File" + i.ToString()];
 					checksumlist[i] = client.ResponseHeaders["Checksum" + i.ToString()];
@@ -79,27 +81,39 @@ namespace Account
 					{
 						return this.GetAssignmentList();
 					}
+
+					i++;
 				}
+
+				return filelist.ToArray();
 			}
 
 			return null;
         }
 
-		public string[] GetCompletedList()
+		public string[] GetCompletedList(string filename, string grade)
 		{
+			client.Headers.Add("Filename", filename);
+			client.Headers.Add("Grade", grade);
+
 			string response = client.UploadString(host, "GetCompletedList");
+
+			client.Headers.Clear();
 
 			if (response == "Success")
 			{
-				string[] studentlist = new string[client.ResponseHeaders.Count/2];
+				List<string> studentlist = new List<string>();
+				int i = 0;
 
-				for (int i = 0; i < client.ResponseHeaders.Count/2; i++)
+				while (client.ResponseHeaders["Student" + i.ToString()] != null)
 				{
-					studentlist[i] = client.ResponseHeaders["Student" + i.ToString()];
-					studentlist[(2*i)+1] = client.ResponseHeaders["Status" + i.ToString()];
+					studentlist.Add(client.ResponseHeaders["Student" + i.ToString()]);
+					studentlist.Add(client.ResponseHeaders["Status" + i.ToString()]);
+
+					i++;
 				}
 
-				return studentlist;
+				return studentlist.ToArray();
 			}
 
 			return null;
@@ -108,12 +122,16 @@ namespace Account
 		public string AddFeedback(string file, string filename, string username, string grade)
         {
 			client.Headers.Add ("Checksum", Checksum.GetMd5Hash (file));
-			client.Headers.Add("Student", username);
+			client.Headers.Add ("Student", username);
 			client.Headers.Add ("Grade", grade);
 			client.Headers.Add ("Filename", filename);
 			client.Headers.Add ("File", file);
 	
-            return client.UploadString(host, "AddFeedback");
+            string response = client.UploadString(host, "AddFeedback");
+
+			client.Headers.Clear();
+
+			return response;
         }
     }
 }
