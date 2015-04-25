@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -34,30 +35,28 @@ namespace Account
 
         public string[] GetAssignmentList()
         {
-			string[] filelist = null;
             string response = client.UploadString(host, "StudentGetAssignmentList");
 
             client.Headers.Clear();
 
             if (response == "Success")
             {
-                filelist = new string[client.ResponseHeaders.Count / 2];
-                string[] checksumlist = new string[client.ResponseHeaders.Count / 2];
+				List<string> filelist = new List<string>();
+				List<string> checksumlist = new List<string>();
+				int i = 0;
             
-                for (int i = 0; i < client.ResponseHeaders.Count / 2 - 2; i++) // <- Subtract two, otherwise it doesn't work. Subtracting fewer results in stupid nullexception.
-                {
-            
-                    filelist[i] = client.ResponseHeaders["File" + i.ToString()];
+				while (client.ResponseHeaders["File" + i.ToString()] != null)
+				{
+					filelist.Add(client.ResponseHeaders["File" + i.ToString()]);
+					checksumlist.Add(client.ResponseHeaders["Checksum" + i.ToString()]);
 
-                    checksumlist[i] = client.ResponseHeaders["Checksum" + i.ToString()];
+					if (Checksum.GetMd5Hash(filelist[i]) != checksumlist[i])
+					{
+						return this.GetAssignmentList();
+					}
+				}
 
-                    if (Checksum.GetMd5Hash(filelist[i]) != checksumlist[i])
-                    {
-                        return this.GetAssignmentList();
-                    }
-                }
-
-				return filelist;
+				return filelist.ToArray();
             }
 
 			return null;
