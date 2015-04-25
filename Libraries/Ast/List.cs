@@ -5,13 +5,13 @@ namespace Ast
 {
     public class List : Expression
     {
-        public List<Expression> elements;
+        public List<Expression> items;
 
         const int MaxElementPrint = 10;
 
         public List()
         {
-            elements = new List<Expression> ();
+            items = new List<Expression> ();
         }
 
         public override Expression Evaluate()
@@ -23,18 +23,18 @@ namespace Ast
         {
             string str = "[";
 
-            for (int i = 0; i < elements.Count; i++) 
+            for (int i = 0; i < items.Count; i++) 
             {
                 if (i >= MaxElementPrint - 1)
                 {
-                    str += "..." + elements[elements.Count - 1].ToString();
+                    str += "..." + items[items.Count - 1].ToString();
                     break;
                 }
                 else
                 {
-                    str += elements[i].ToString ();
+                    str += items[i].ToString ();
 
-                    if (i < elements.Count - 1) 
+                    if (i < items.Count - 1) 
                     {
                         str += ',';
                     }
@@ -48,7 +48,7 @@ namespace Ast
 
         public override bool ContainsVariable(Variable other)
         {
-            foreach (var item in elements)
+            foreach (var item in items)
             {
                 if (item.ContainsVariable(other))
                 {
@@ -63,9 +63,9 @@ namespace Ast
         {
             var res = new List();
 
-            foreach (var item in elements)
+            foreach (var item in items)
             {
-                res.elements.Add(item.Clone());
+                res.items.Add(item.Clone());
             }
 
             return res;

@@ -49,7 +49,7 @@ namespace Ast
             var list = new Ast.List ();
             for (Decimal i = start; i < end; i += step)
             {
-                list.elements.Add(new Irrational(i));
+                list.items.Add(new Irrational(i));
             }
 
             return list;

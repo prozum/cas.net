@@ -157,7 +157,7 @@ namespace Ast
                         break;
                     case TokenKind.Comma:
                         if (list)
-                            resList.elements.Add(CreateAst(exs, ops));
+                            resList.items.Add(CreateAst(exs, ops));
                         else
                             return new Error("Invalid comma");
                         break;
@@ -186,7 +186,7 @@ namespace Ast
 
             if (list)
             {
-                resList.elements.Add(CreateAst(exs, ops));
+                resList.items.Add(CreateAst(exs, ops));
                 return resList;
             }
 
@@ -199,14 +199,14 @@ namespace Ast
             Operator curOp, nextOp, top;
 
             if (exs.Count == 0)
-                return ErrorHandler("No expressions");
+                return ErrorHandler("Parser> No expressions");
             if (exs.Count == 1)
                 return exs.Dequeue();
                 
             if (ops.Count > 0)
                 top = ops.Peek();
             else
-                return ErrorHandler("Missing operator");
+                return ErrorHandler("Parser> Missing operator");
 
 
             left = exs.Dequeue();
@@ -252,7 +252,7 @@ namespace Ast
             }
 
             if (exs.Count != 0)
-                return ErrorHandler("The operators cannot use all the operands");
+                return ErrorHandler("Parser> The operators cannot use all the operands");
 
             return top;
         }
@@ -321,7 +321,7 @@ namespace Ast
                 ErrorHandler("Missing ) bracket");
 
             if (res is List)
-                args = (res as List).elements;
+                args = (res as List).items;
             else
                 return res;
                 

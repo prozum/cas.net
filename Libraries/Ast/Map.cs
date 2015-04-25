@@ -42,13 +42,13 @@ namespace Ast
             //var locals = new Dictionary<string, Expression>(func.locals);
 
             var res = new List();
-            foreach (var element in list.elements)
+            foreach (var element in list.items)
             {
                 //locals.Remove(func.argNames[0]);
                 //locals.Add(func.argNames[0], element);
                 func.args[0] = element;
 
-                res.elements.Add(func.Evaluate());
+                res.items.Add(func.Evaluate());
             }
 
             return res;

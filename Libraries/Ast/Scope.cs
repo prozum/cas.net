@@ -25,7 +25,7 @@ namespace Ast
                     return exp;
                 }
 
-                res.elements.Add(exp);
+                res.items.Add(exp);
             }
 
             return res;
