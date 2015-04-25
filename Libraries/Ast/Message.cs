@@ -63,7 +63,7 @@ namespace Ast
         public ArgError(string message) : base(message) { }
         public ArgError(SysFunc obj) : base(obj, "Valid args: ")
         {
-            message += "(";
+            message += "[";
             for(int i = 0; i < obj.validArgs.Count; i++)
             {
                 message += obj.validArgs[i].ToString();
@@ -73,7 +73,7 @@ namespace Ast
                     message += ',';
                 }
             }
-            message += ")";
+            message += "]";
         }
 
         public override Expression Clone()

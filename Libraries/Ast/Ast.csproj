@@ -114,6 +114,52 @@
     <Compile Include="Boolean.cs">
       <DependentUpon>Number.cs</DependentUpon>
     </Compile>
+    <Compile Include="UsrFunc.cs">
+      <DependentUpon>Variable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SysFunc.cs" />
+    <Compile Include="Sin.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ASin.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cos.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ACos.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tan.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ATan.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Sqrt.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Negation.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Simplify.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Expand.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Range.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Map.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Plot.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Solve.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ProjectExtensions>
