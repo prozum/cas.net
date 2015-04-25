@@ -160,6 +160,12 @@
     <Compile Include="Solve.cs">
       <DependentUpon>SysFunc.cs</DependentUpon>
     </Compile>
+    <Compile Include="Enter.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Exit.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ProjectExtensions>

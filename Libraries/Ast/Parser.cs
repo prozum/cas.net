@@ -186,7 +186,8 @@ namespace Ast
 
             if (list)
             {
-                resList.items.Add(CreateAst(exs, ops));
+                if (exs.Count > 0)
+                    resList.items.Add(CreateAst(exs, ops));
                 return resList;
             }
 
@@ -353,6 +354,10 @@ namespace Ast
                     return new Plot(args, scope);
                 case "solve":
                     return new Solve(args, scope);
+                case "enter":
+                    return new Enter(args, scope);
+                case "Exit":
+                    return new Exit(args, scope);
                 default:
                     return new UsrFunc(tok.value.ToLower(), args, scope);
             }
