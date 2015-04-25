@@ -13,6 +13,9 @@ namespace Ast
 
         public override Expression Evaluate()
         {
+            if (statements.Count == 1)
+                return statements[0].Evaluate();
+
             List res = new List();
 
             foreach (var statement in statements)
