@@ -2,16 +2,21 @@
 using Gtk;
 using ImEx;
 using System.Collections.Generic;
+using Gdk;
+using System.IO;
 
 namespace DesktopUI
 {
     public class SaveToolButton : ToolButton
     {
+        static Image image = new Image();
         TextViewList textviews;
 
         public SaveToolButton(TextViewList textviews)
-            : base(Stock.Save)
+            : base(/*image,*/ "Save")
         {
+//            SetIcon();
+
             this.textviews = textviews;
 
             this.Clicked += delegate
@@ -100,6 +105,42 @@ namespace DesktopUI
                         break;
                     }
             
+            }
+        }
+
+        void SetIcon()
+        {
+            OperatingSystem os = Environment.OSVersion;
+            PlatformID pid = os.Platform;
+
+            switch (pid)
+            {
+                case PlatformID.Win32S:
+                case PlatformID.Win32Windows:
+                case PlatformID.WinCE:
+                case PlatformID.Win32NT: // <- if one, this is the one we really need
+                    {
+                        byte[] buffer = File.ReadAllBytes("");
+                        Pixbuf pixbuf = new Pixbuf(buffer);
+                        pixbuf = pixbuf.ScaleSimple(25, 25, InterpType.Bilinear);
+                        image.Pixbuf = pixbuf;
+
+                        break;
+                    }
+                case PlatformID.Unix:
+                case PlatformID.MacOSX:
+                    {
+                        byte[] buffer = File.ReadAllBytes("");
+                        Pixbuf pixbuf = new Pixbuf(buffer);
+                        pixbuf = pixbuf.ScaleSimple(25, 25, InterpType.Bilinear);
+                        image.Pixbuf = pixbuf;
+
+                        break;
+                    }
+                default:
+                    {
+                        break;
+                    }
             }
         }
 

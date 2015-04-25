@@ -7,6 +7,7 @@ namespace DesktopUI
     public class User
     {
         public int privilege;
+        public string username;
 
         public Student student;
         public Teacher teacher;
@@ -17,6 +18,7 @@ namespace DesktopUI
 
         public void Login(string username, string password, string host)
         {
+            this.username = username;
             student = new Student(username, password, host);
             teacher = new Teacher(username, password, host);
         }
