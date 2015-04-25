@@ -7,15 +7,17 @@ namespace Ast
     {
         public new Scope parent;
         public Dictionary<string,Expression> locals = new Dictionary<string,Expression>();
-        public Queue<Expression> statements = new Queue<Expression>();
+        public List<Expression> statements = new List<Expression>();
+
+        const int MaxStatementPrint = 5;
 
         public override Expression Evaluate()
         {
             List res = new List();
 
-            while(statements.Count > 0)
+            foreach (var statement in statements)
             {
-                var exp = statements.Dequeue().Evaluate();
+                var exp = statement.Evaluate();
 
                 if (exp is Error)
                 {
@@ -66,6 +68,33 @@ namespace Ast
             }
 
             return null;
+        }
+            
+        public override string ToString()
+        {
+            string str = "{";
+
+            for (int i = 0; i < statements.Count; i++) 
+            {
+                if (i >= MaxStatementPrint)
+                {
+                    str += "...";
+                    break;
+                }
+                else
+                {
+                    str += statements[i].ToString ();
+
+                    if (i < statements.Count - 1) 
+                    {
+                        str += ';';
+                    }
+                }
+            }
+
+            str += "}";
+
+            return str;
         }
     }
 }

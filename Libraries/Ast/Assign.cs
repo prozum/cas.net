@@ -16,9 +16,9 @@ namespace Ast
                 return new Info(sym.identifier + ":=" + Right.ToString());
             }
 
-            if (Left is InstanceFunc)
+            if (Left is UsrFunc)
             {
-                var insFunc = (InstanceFunc)Left;
+                var insFunc = (UsrFunc)Left;
 
                 foreach (var arg in insFunc.args)
                 {

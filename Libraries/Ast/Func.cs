@@ -165,12 +165,12 @@ namespace Ast
         }
     }
 
-    public class InstanceFunc : Func
+    public class UsrFunc : Func
     {
         public Expression expr;
 
-        public InstanceFunc() : this(null, null, null) { }
-        public InstanceFunc(string identifier, List<Expression> args, Scope scope) : base(identifier, args, scope) { }
+        public UsrFunc() : this(null, null, null) { }
+        public UsrFunc(string identifier, List<Expression> args, Scope scope) : base(identifier, args, scope) { }
 
         public override Expression Evaluate()
         {
@@ -226,8 +226,6 @@ namespace Ast
 //                return new Error(this, "Could not get value of: " + this.identifier);
 //            }
 
-            //return ReturnValue(res.Clone());
-            //return ReturnValue(func.expr.);
         }
 
         public override Expression Clone()
@@ -285,94 +283,7 @@ namespace Ast
             return false;
         }
     }
-
-    public class UsrFunc : Func
-    {
-        public Expression expr;
-
-        public UsrFunc() : this(null, null, null) { }
-        public UsrFunc(string identifier, List<Expression> args, Scope scope) : base(identifier, args, scope) { }
-
-//        public override Expression Evaluate()
-//        {
-//            return Evaluator.SimplifyExp(GetValue()).Evaluate();
-//        }
-            
-        public Expression GetValue()
-        {
-//            Expression @var;
-
-//            // TODO 
-//            //if (scope != null)
-//            @var = scope.GetVar(identifier);
-//            //else
-//            //    @var = evaluator.scope.GetVar(identifier);
-//
-//            if (@var == null)
-//            {
-//                return new Error(this, "Function has no definition");
-//            }
-//                
-//            var def = (InstFunc)@var;
-//
-//            if (def.args.Count != args.Count)
-//            {
-//                return new Error(this, "Function takes " + def.args.Count.ToString() + " arguments. Not " + args.Count.ToString() + ".");
-//            }
-//
-//            for (int i = 0; i < def.args.Count; i++)
-//            {
-//                var arg = (Symbol)def.args[i];
-//
-//                scope.SetVar(arg.identifier, args[i]);
-//            }
-//
-//            if (def.ContainsVariable(this))
-//            {
-//                return new Error(this, "Could not get value of: " + this.identifier);
-//            }
-
-            //return ReturnValue(res.Clone());
-//            return ReturnValue(def.expr);
-            return null;
-        }
-
-        public override Expression Clone()
-        {
-            return MakeClone<UsrFunc>();
-        }
-
-        public override Expression Simplify()
-        {
-            if (prefix.CompareTo(Constant.Zero))
-            {
-                return new Integer(0);
-            }
-            if (exponent.CompareTo(Constant.Zero))
-            {
-                return new Integer(1);
-            }
-
-            return GetValue();
-        }
-
-        public override string ToString()
-        {
-            string str = identifier + "[";
-
-            for (int i = 0; i < args.Count; i++)
-            {
-                str += args[i];
-
-                if (i < args.Count - 1)
-                    str += ",";
-            }
-            str += "]";
-
-            return str;
-        }
-    }
-
+        
     public class Sin : SysFunc, IInvertable
     {
         public Sin() : this(null, null) { }

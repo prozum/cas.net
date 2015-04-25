@@ -40,7 +40,7 @@ namespace Ast
                     break;
                 }
                 else
-                    scope.statements.Enqueue(ParseExpr(tokens, stopToken));
+                    scope.statements.Add(ParseExpr(tokens, stopToken));
             }
 
             if (newScope)
@@ -354,8 +354,7 @@ namespace Ast
                 case "solve":
                     return new Solve(args, scope);
                 default:
-                    return new InstanceFunc(tok.value, args, scope);
-                    //res = new UsrFunc(tok.value.ToLower(), args, scope);
+                    return new UsrFunc(tok.value.ToLower(), args, scope);
             }
 
             return res;
