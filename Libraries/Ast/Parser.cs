@@ -104,10 +104,10 @@ namespace Ast
                         ops.Enqueue(new BooleanEqual());
                         break;
                     case TokenKind.LesserOrEqual:
-                        ops.Enqueue(new LesserOrEqual());
+                        ops.Enqueue(new LesserEqual());
                         break;
                     case TokenKind.GreaterOrEqual:
-                        ops.Enqueue(new GreaterOrEqual());
+                        ops.Enqueue(new GreaterEqual());
                         break;
                     case TokenKind.Lesser:
                         ops.Enqueue(new Lesser());
