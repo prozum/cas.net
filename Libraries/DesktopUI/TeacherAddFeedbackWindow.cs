@@ -61,7 +61,7 @@ namespace DesktopUI
                     && string.IsNullOrEmpty(entFilename.Text) == false)
                 {
                     string feedbackString = Export.Serialize(metaTypeList);
-                    this.user.teacher.AddFeedback(feedbackString, entFilename.Text, entClass.Text);
+                    this.user.teacher.AddFeedback(feedbackString, entFilename.Text, this.user.username, entClass.Text);
                 }
 
                 Destroy();
