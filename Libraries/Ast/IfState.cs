@@ -85,6 +85,22 @@ namespace Ast
 //            }
             throw new NotImplementedException();
         }
+
+        public override string ToString()
+        {
+            int i = 0;
+            string str = "if " + conditions[i].ToString() + ":" + expressions[i].ToString();
+
+            for (i = 1; i < conditions.Count; i++)
+            {
+                str += "elif " + conditions[i].ToString() + ":" + expressions[i].ToString();
+            }
+
+            if (conditions.Count + 1 == expressions.Count)
+                str += "else" + expressions[i].ToString();
+
+            return str;
+        }
     }
 }
 

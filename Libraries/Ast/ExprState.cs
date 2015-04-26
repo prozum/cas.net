@@ -19,6 +19,12 @@ namespace Ast
         {
             return expr.Evaluate();
         }
+
+        public override string ToString()
+        {
+            return expr.ToString();
+        }
+
     }
 }
 
