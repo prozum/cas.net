@@ -56,7 +56,7 @@ namespace Ast
             if (obj is Expression)
             {
                 str += obj.GetType().Name;
-                str += "at [" +(obj as Expression).pos.Column;
+                str += " at [" +(obj as Expression).pos.Column;
                 str += ";" +(obj as Expression).pos.Line + "]: ";
                 str += msg;
             }

@@ -62,13 +62,13 @@ namespace Ast
             var tokens = new Queue<Token> ();
 
             var tok = ScanNext();
-            while (tok.kind != TokenKind.EndOfString)
+            while (tok.kind != TokenKind.END_OF_STRING)
             {
                 tokens.Enqueue(tok);
                 tok = ScanNext ();
             }
 
-            tokens.Enqueue(new Token(TokenKind.EndOfString, "EndOfString", pos));
+            tokens.Enqueue(new Token(TokenKind.END_OF_STRING, "EndOfString", pos));
 
             return tokens;
         }
@@ -82,7 +82,7 @@ namespace Ast
             switch (@char)
             {
                 case EOS:
-                    return new Token(TokenKind.EndOfString, @char, pos);
+                    return new Token(TokenKind.END_OF_STRING, @char, pos);
                 case '0':
                 case '1':
                 case '2':
@@ -105,34 +105,34 @@ namespace Ast
                 case ':':
                     return ScanOperator(@char);
                 case '(':
-                    return new Token(TokenKind.ParentStart, @char, pos);
+                    return new Token(TokenKind.PARENT_START, @char, pos);
                 case ')':
-                    return new Token(TokenKind.ParentEnd, @char, pos);
+                    return new Token(TokenKind.PARENT_END, @char, pos);
                 case '[':
-                    return new Token(TokenKind.SquareStart, @char, pos);
+                    return new Token(TokenKind.SQUARE_START, @char, pos);
                 case ']':
-                    return new Token(TokenKind.SquareEnd, @char, pos);
+                    return new Token(TokenKind.SQUARE_END, @char, pos);
                 case '{':
-                    return new Token(TokenKind.CurlyStart, @char, pos);
+                    return new Token(TokenKind.CURLY_START, @char, pos);
                 case '}':
-                    return new Token(TokenKind.CurlyEnd, @char, pos);
+                    return new Token(TokenKind.CURLY_END, @char, pos);
                 case ',':
-                    return new Token(TokenKind.Comma, @char, pos);
+                    return new Token(TokenKind.COMMA, @char, pos);
                 case ';':
-                    return new Token(TokenKind.Semicolon, @char, pos);
+                    return new Token(TokenKind.SEMICOLON, @char, pos);
                 case '.':
-                    return new Token(TokenKind.Dot, @char, pos);
+                    return new Token(TokenKind.DOT, @char, pos);
                 default:
                     if (char.IsLetter(@char))
                         return ScanIdentifier(@char);
                     else
-                        return new Token(TokenKind.Unknown, @char, pos);
+                        return new Token(TokenKind.UNKNOWN, @char, pos);
             }
         }
 
         private static Token ScanNumber(char @char)
         {
-            TokenKind kind = TokenKind.Integer;
+            TokenKind kind = TokenKind.INTEGER;
             string number = @char.ToString();
             Pos startPos = pos;
 
@@ -145,8 +145,8 @@ namespace Ast
                 if (cur == sep)
                 {
                     //More than one Seperator. Error!
-                    Errors |= kind == TokenKind.Decimal;
-                    kind = TokenKind.Decimal;
+                    Errors |= kind == TokenKind.DECIMAL;
+                    kind = TokenKind.DECIMAL;
                 }
 
                 cur = CharNext(false);
@@ -154,7 +154,7 @@ namespace Ast
 
             if (cur == 'i')
             {
-                kind = kind == TokenKind.Integer ? TokenKind.ImaginaryInt : TokenKind.ImaginaryDec;
+                kind = kind == TokenKind.INTEGER ? TokenKind.IMAG_INT : TokenKind.IMAG_DEC;
                 CharNext();
             }
 
@@ -179,11 +179,17 @@ namespace Ast
             switch (identifier)
             {
                 case "true":
-                    return new Token(TokenKind.KW_True, identifier, startPos);
+                    return new Token(TokenKind.TRUE, identifier, startPos);
                 case "false":
-                    return new Token(TokenKind.KW_False, identifier, startPos);
+                    return new Token(TokenKind.FALSE, identifier, startPos);
+                case "if":
+                    return new Token(TokenKind.IF, identifier, startPos);
+                case "else":
+                    return new Token(TokenKind.ELSE, identifier, startPos);
+                case "return":
+                    return new Token(TokenKind.RETURN, identifier, startPos);
                 default:
-                    return new Token(TokenKind.Identifier, identifier, startPos);
+                    return new Token(TokenKind.IDENTIFIER, identifier, startPos);
             }
         }
 
@@ -202,32 +208,32 @@ namespace Ast
             switch(op)
             {
                 case ":=":
-                    return new Token(TokenKind.Assign, op, startPos);
+                    return new Token(TokenKind.ASSIGN, op, startPos);
                 case "=":
-                    return new Token(TokenKind.Equal, op, startPos);
+                    return new Token(TokenKind.EQUAL, op, startPos);
                 case "==":
-                    return new Token(TokenKind.BooleanEqual, op, startPos);
+                    return new Token(TokenKind.BOOL_EQUAL, op, startPos);
                 case "<=":
-                    return new Token(TokenKind.LesserEqual, op, startPos);
+                    return new Token(TokenKind.LESS_EQUAL, op, startPos);
                 case ">=":
-                    return new Token(TokenKind.GreaterEqual, op, startPos);
+                    return new Token(TokenKind.GREAT_EQUAL, op, startPos);
                 case "<":
-                    return new Token(TokenKind.Lesser, op, startPos);
+                    return new Token(TokenKind.LESS, op, startPos);
                 case ">":
-                    return new Token(TokenKind.Greater, op, startPos);
+                    return new Token(TokenKind.GREAT, op, startPos);
                 case "+":
-                    return new Token(TokenKind.Add, op, startPos);
+                    return new Token(TokenKind.ADD, op, startPos);
                 case "-":
-                    return new Token(TokenKind.Sub, op, startPos);
+                    return new Token(TokenKind.SUB, op, startPos);
                 case "*":
-                    return new Token(TokenKind.Mul, op, startPos);
+                    return new Token(TokenKind.MUL, op, startPos);
                 case "/":
-                    return new Token(TokenKind.Div, op, startPos);
+                    return new Token(TokenKind.DIV, op, startPos);
                 case "^":
-                    return new Token(TokenKind.Exp, op, startPos);
+                    return new Token(TokenKind.EXP, op, startPos);
                 default:
                     Errors = true;
-                    return new Token(TokenKind.Unknown, op, startPos);
+                    return new Token(TokenKind.UNKNOWN, op, startPos);
             }
         }
 

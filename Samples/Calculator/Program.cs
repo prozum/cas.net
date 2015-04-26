@@ -6,6 +6,7 @@ public class MainWindow : Window
 {
     Evaluator eval;
     EvalData output;
+    List<EvalData> DataList;
 
     Grid grid;
 
@@ -29,29 +30,41 @@ public class MainWindow : Window
 
     public void EvaluateInput()
     {
-        output = eval.Evaluation(input.Buffer.Text);
+        eval.Parse(input.Buffer.Text);
+
+        do
+        {
+            output = eval.Step();
+            DataList.Add(output);
+
+        } while (!(output is DoneData));
 
         TextIter insertIter = buffer.StartIter;
 
-        if (output is MsgData)
+        foreach(var data in DataList)
         {
-            switch ((output as MsgData).type)
+            if (data is MsgData)
             {
-                case MsgType.Print:
-                    buffer.Insert(ref insertIter, (output as MsgData).msg + "\n");
-                    break;
-                case MsgType.Error:
-                    buffer.InsertWithTagsByName(ref insertIter, (output as MsgData).msg + "\n", "error");
-                    break;
-                case MsgType.Info:
-                    buffer.InsertWithTagsByName(ref insertIter, (output as MsgData).msg + "\n", "info");
-                    break;
+                switch ((data as MsgData).type)
+                {
+                    case MsgType.Print:
+                        buffer.Insert(ref insertIter, (data as MsgData).msg + "\n");
+                        break;
+                    case MsgType.Error:
+                        buffer.InsertWithTagsByName(ref insertIter, (data as MsgData).msg + "\n", "error");
+                        break;
+                    case MsgType.Info:
+                        buffer.InsertWithTagsByName(ref insertIter, (data as MsgData).msg + "\n", "info");
+                        break;
+                }
+            }
+            else if (data is PlotData)
+            {
+
             }
         }
-        else if (output is PlotData)
-        {
 
-        }
+        DataList.Clear();
     }
 
     public void CreateDefTree()
@@ -124,9 +137,10 @@ public class MainWindow : Window
 
 
         CreateDefTree();
-        grid.Attach(defTree, 1, 0, 1, 2);
+        grid.Attach(defTree, 1, 0, 1, 3);
 
         eval = new Evaluator ();
+        DataList = new List<EvalData>();
         UpdateDefinitions();
 
         ShowAll ();

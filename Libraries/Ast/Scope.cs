@@ -7,7 +7,9 @@ namespace Ast
     {
         public new Scope parent;
         public Dictionary<string,Expression> locals = new Dictionary<string,Expression>();
-        public List<Expression> statements = new List<Expression>();
+        public List<State> statements = new List<State>();
+
+        public int curStep = 0;
 
         const int MaxStatementPrint = 5;
 
@@ -32,6 +34,15 @@ namespace Ast
             }
 
             return res;
+        }
+
+        public EvalData Step()
+        {
+            if (curStep < statements.Count)
+                return statements[curStep++].Step();
+
+            curStep = 0;
+            return new DoneData();
         }
 
         public override bool ContainsVariable(Variable other)
