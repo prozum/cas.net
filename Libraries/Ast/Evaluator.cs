@@ -15,21 +15,20 @@ namespace Ast
 
         public EvalData Evaluation(string inputString)
         {
+            Parse(inputString);
+
+            return new MsgData(MsgType.Print, scope.Evaluate().ToString());
+        }
+
+        public void Parse(string inputString)
+        {
             scope.statements.Clear();
             Parser.Parse(inputString, scope);
-            var exp = scope.Evaluate();
+        }
 
-            if (exp is Error)
-            {
-                return new MsgData(MsgType.Error, exp.ToString());
-            }
-
-            if (exp is Info)
-            {
-                return new MsgData(MsgType.Info, exp.ToString());
-            }
-
-            return new MsgData(MsgType.Print, exp.ToString());
+        public EvalData Step()
+        {
+            return scope.Step();
         }
     }
 }

@@ -9,6 +9,10 @@ namespace Ast
     {
     }
 
+    public class DoneData : EvalData
+    {
+    }
+
     public class MsgData : EvalData
     {
         public MsgType type;
