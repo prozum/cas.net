@@ -84,6 +84,8 @@
     <Compile Include="TeacherAddFeedbackWindow.cs" />
     <Compile Include="TeacherGetAssignmentListWindow.cs" />
     <Compile Include="TeacherGetCompletedWindow.cs" />
+    <Compile Include="TeacherGetCompletedListMenuItem.cs" />
+    <Compile Include="TeacherGetCompletedListWindow.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\GtkSharp.3.1.2\build\net45\GtkSharp.targets" Condition="Exists('..\..\packages\GtkSharp.3.1.2\build\net45\GtkSharp.targets')" />
