@@ -1,5 +1,7 @@
 ﻿using System;
 using Gtk;
+using ImEx;
+using System.Collections.Generic;
 
 namespace DesktopUI
 {
@@ -39,7 +41,44 @@ namespace DesktopUI
 						grid.Remove(widget);
 					}
 
-					Destroy();
+					for (int i = 0; i < StudentList; i++)
+					{
+						Button button = new Button(StudentList[i]);
+
+						button.Clicked += delegate
+							{
+								List<MetaType> metaTypeList = new List<MetaType>();
+
+								foreach (Widget w in this.textviews)
+								{
+									if (w.GetType() == typeof(MovableCasCalcView))
+									{
+										MetaType metaType = new MetaType();
+										MovableCasCalcView calcView = (MovableCasCalcView)w;
+										metaType.type = typeof(MovableCasCalcView);
+										metaType.metastring = calcView.calcview.input.Text;
+										metaTypeList.Add(metaType);
+									}
+									else if (w.GetType() == typeof(MovableCasTextView))
+									{
+										MetaType metaType = new MetaType();
+										MovableCasTextView textView = (MovableCasTextView)w;
+										metaType.type = typeof(MovableCasTextView);
+										metaType.metastring = textView.textview.SerializeCasTextView();
+										metaTypeList.Add(metaType);
+									}
+								}
+
+								if (metaTypeList.Count != 0 && string.IsNullOrEmpty(FileNameEntry.Text) == false)
+								{
+									string serializedString = ImEx.Export.Serialize(metaTypeList);
+									this.user.student.AddCompleted(serializedString, FileNameEntry.Text);
+								}
+								Destroy();
+							};
+
+						grid.Attach(button, i+1, 1, 1, 1);
+					}
 				};
 
 			grid.Attach(FileNameLabel, 1, 1, 1 ,1);
