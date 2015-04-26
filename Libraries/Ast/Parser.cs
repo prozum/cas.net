@@ -43,7 +43,7 @@ namespace Ast
 
                 if (tok.kind == TokenKind.IF)
                 {
-                    //scope.statements.Add(ParseIfStatement(token));
+                    scope.statements.Add(ParseIfState(tokens));
                 }
                 else
                 {
@@ -67,16 +67,55 @@ namespace Ast
             return state;
         }
 
-//        public static ExprState ParseIfState(Queue<Token> tokens)
-//        {
-//            var state = new ExprState();
-//
-//            tokens.Dequeue(); // Skip IF
-//
-//            state.expr = ParseExpr(tokens, TokenKind.END_OF_STRING);
-//
-//            return state;
-//        }
+        public static IfState ParseIfState(Queue<Token> tokens)
+        {
+            var state = new IfState();
+
+            tokens.Dequeue(); // Skip 'if'
+
+            state.conditions.Add(ParseExpr(tokens, TokenKind.COLON));
+            tokens.Dequeue(); // Skip ':'
+
+            if (tokens.Count == 0)
+            {
+                ErrorHandler("If syntax: if bool expr: {}");
+                return null;
+            }
+
+            if (tokens.Peek().kind == TokenKind.CURLY_START)
+                state.expressions.Add(ParseScope(tokens, TokenKind.CURLY_END, true));
+            else
+                state.expressions.Add(ParseScope(tokens, TokenKind.SEMICOLON, true));
+            tokens.Dequeue(); // Skip '}' or ';'
+               
+
+            while (tokens.Count > 0 && tokens.Peek().kind == TokenKind.ELIF)
+            {
+                tokens.Dequeue(); // Skip 'elif'
+
+                state.conditions.Add(ParseExpr(tokens, TokenKind.COLON));
+                tokens.Dequeue(); // Skip ':'
+
+                if (tokens.Peek().kind == TokenKind.CURLY_START)
+                    state.expressions.Add(ParseScope(tokens, TokenKind.CURLY_END, true));
+                else
+                    state.expressions.Add(ParseScope(tokens, TokenKind.SEMICOLON, true));
+                tokens.Dequeue(); // Skip '}' or ';'
+            }
+
+            if (tokens.Count > 0 && tokens.Peek().kind == TokenKind.ELSE)
+            {
+                tokens.Dequeue(); // Skip 'else'
+
+                if (tokens.Peek().kind == TokenKind.CURLY_START)
+                    state.expressions.Add(ParseScope(tokens, TokenKind.CURLY_END, true));
+                else
+                    state.expressions.Add(ParseScope(tokens, TokenKind.SEMICOLON, true));
+                tokens.Dequeue(); // Skip '}' or ';'
+            }
+
+            return state;
+        }
 
         public static Expression ParseExpr(Queue<Token> tokens, TokenKind stopToken, bool list = false)
         {
@@ -287,7 +326,7 @@ namespace Ast
                 }
                 else
                 {
-                    if (!(exs.Count > 0))
+                    if (exs.Count <= 0)
                         return ErrorHandler("Missing right operand");
                     right = exs.Dequeue();
                     curOp.Right = right;

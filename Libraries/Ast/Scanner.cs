@@ -77,7 +77,8 @@ namespace Ast
         {
             SkipWhitespace();
 
-            var @char = CharNext();
+            char @char2;
+            char @char = CharNext();
 
             switch (@char)
             {
@@ -94,16 +95,38 @@ namespace Ast
                 case '8':
                 case '9':
                     return ScanNumber(@char);
-                case '=':
-                case '<':
-                case '>':
+                
                 case '+':
+                    return new Token(TokenKind.ADD, @char.ToString(), pos);
                 case '-':
+                    return new Token(TokenKind.SUB, @char.ToString(), pos);
                 case '*':
+                    return new Token(TokenKind.MUL, @char.ToString(), pos);
                 case '/':
+                    return new Token(TokenKind.DIV, @char.ToString(), pos);
                 case '^':
+                    return new Token(TokenKind.EXP, @char.ToString(), pos);
+                case '=':
+                    if (CharNext(false) == '=')
+                        return new Token(TokenKind.BOOL_EQUAL, @char.ToString() + CharNext(), pos);
+                    else
+                        return new Token(TokenKind.EQUAL, @char.ToString(), pos);
+                case '<':
+                    if (CharNext(false) == '=')
+                        return new Token(TokenKind.LESS_EQUAL, @char.ToString() + CharNext(), pos);
+                    else
+                        return new Token(TokenKind.LESS, @char.ToString(), pos);
+                case '>':
+                    if (CharNext(false) == '=')
+                        return new Token(TokenKind.GREAT_EQUAL, @char.ToString() + CharNext(), pos);
+                    else
+                        return new Token(TokenKind.GREAT, @char.ToString(), pos);
                 case ':':
-                    return ScanOperator(@char);
+                    if (CharNext(false) == '=')
+                        return new Token(TokenKind.ASSIGN, @char.ToString() + CharNext(), pos);
+                    else
+                        return new Token(TokenKind.COLON, @char.ToString(), pos);
+
                 case '(':
                     return new Token(TokenKind.PARENT_START, @char, pos);
                 case ')':
@@ -184,6 +207,8 @@ namespace Ast
                     return new Token(TokenKind.FALSE, identifier, startPos);
                 case "if":
                     return new Token(TokenKind.IF, identifier, startPos);
+                case "elif":
+                    return new Token(TokenKind.ELIF, identifier, startPos);
                 case "else":
                     return new Token(TokenKind.ELSE, identifier, startPos);
                 case "return":
@@ -209,28 +234,6 @@ namespace Ast
             {
                 case ":=":
                     return new Token(TokenKind.ASSIGN, op, startPos);
-                case "=":
-                    return new Token(TokenKind.EQUAL, op, startPos);
-                case "==":
-                    return new Token(TokenKind.BOOL_EQUAL, op, startPos);
-                case "<=":
-                    return new Token(TokenKind.LESS_EQUAL, op, startPos);
-                case ">=":
-                    return new Token(TokenKind.GREAT_EQUAL, op, startPos);
-                case "<":
-                    return new Token(TokenKind.LESS, op, startPos);
-                case ">":
-                    return new Token(TokenKind.GREAT, op, startPos);
-                case "+":
-                    return new Token(TokenKind.ADD, op, startPos);
-                case "-":
-                    return new Token(TokenKind.SUB, op, startPos);
-                case "*":
-                    return new Token(TokenKind.MUL, op, startPos);
-                case "/":
-                    return new Token(TokenKind.DIV, op, startPos);
-                case "^":
-                    return new Token(TokenKind.EXP, op, startPos);
                 default:
                     Errors = true;
                     return new Token(TokenKind.UNKNOWN, op, startPos);

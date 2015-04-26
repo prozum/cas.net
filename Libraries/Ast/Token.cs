@@ -8,6 +8,7 @@ namespace Ast
         TRUE,
         FALSE,
         IF,
+        ELIF,
         ELSE,
         RETURN,
 
@@ -37,6 +38,7 @@ namespace Ast
         CURLY_END,
 
         COMMA,
+        COLON,
         SEMICOLON,
         DOT,
 
