@@ -42,7 +42,7 @@ namespace DesktopUI
                             if (metaItem.type == typeof(MovableCasCalcView))
                             {
                                 Evaluator Eval = new Evaluator();
-                                MovableCasCalcView movableCasCalcView = new MovableCasCalcView(Eval, this.textviews);
+                                MovableCasCalcView movableCasCalcView = new MovableCasCalcView(Eval);
                                 movableCasCalcView.calcview.input.Text = metaItem.metastring;
                                 this.textviews.castextviews.Add(movableCasCalcView);
                             }

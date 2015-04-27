@@ -105,7 +105,7 @@ namespace DesktopUI
                     else if (item.type == typeof(MovableCasCalcView))
                     {
                         Evaluator Eval = new Evaluator();
-                        MovableCasCalcView movableCasCalcView = new MovableCasCalcView(Eval, textviews);
+                        MovableCasCalcView movableCasCalcView = new MovableCasCalcView(Eval);
                         movableCasCalcView.calcview.input.Text = item.metastring;
 
                         textviews.castextviews.Add(movableCasCalcView);

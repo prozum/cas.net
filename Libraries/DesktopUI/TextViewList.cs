@@ -101,7 +101,7 @@ namespace DesktopUI
             MovCasCalcView.calcview.input.Activated += delegate
             {
 				MovCasCalcView.calcview.Eval.scope.locals.Clear();
-                Reevaluate();
+                MovCasCalcView.calcview.Evaluate();
                 MovCasCalcView.ShowAll();
             };
 
