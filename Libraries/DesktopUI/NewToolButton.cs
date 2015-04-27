@@ -14,6 +14,8 @@ namespace DesktopUI
         {
 //            SetIcon();
 
+            this.TooltipText = "New .CAS file";
+
             this.Clicked += delegate
             {
                 textviews.castextviews.Clear();

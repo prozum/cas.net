@@ -7,7 +7,7 @@ namespace Ast
         public Div() : base("/", 40) { }
         public Div(Expression left, Expression right) : base(left, right, "/", 40) { }
 
-        public override Expression Evaluate()
+        protected override Expression Evaluate(Expression caller)
         {
             return Left / Right;
         }
@@ -49,6 +49,7 @@ namespace Ast
                 return new Div(left.Expand(), right.Expand());
             }
         }
+
         protected override Expression SimplifyHelper(Expression left, Expression right)
         {
             if (right is Number && right.CompareTo(Constant.One))

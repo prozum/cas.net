@@ -10,9 +10,9 @@ namespace Ast
         public UsrFunc() : this(null, null, null) { }
         public UsrFunc(string identifier, List<Expression> args, Scope scope) : base(identifier, args, scope) { }
 
-        public override Expression Evaluate()
+        protected override Expression Evaluate(Expression caller)
         {
-            return GetValue().Simplify().Evaluate();
+            return GetValue().Evaluate();
         }
 
         public Expression GetValue()
@@ -84,7 +84,7 @@ namespace Ast
             return MakeClone<UsrFunc>();
         }
 
-        public override Expression Simplify()
+        internal override Expression Simplify(Expression caller)
         {
             if (prefix.CompareTo(Constant.Zero))
             {

@@ -19,6 +19,8 @@ namespace DesktopUI
 
 //            SetIcon();
 
+            this.TooltipText = "Open .CAS file";
+
             this.textviews = textviews;
 
             this.Clicked += delegate

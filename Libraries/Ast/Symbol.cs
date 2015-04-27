@@ -33,9 +33,9 @@ namespace Ast
             return res;
         }
 
-        public override Expression Evaluate()
+        protected override Expression Evaluate(Expression caller)
         {
-            return GetValue().Simplify().Evaluate();
+            return GetValue().Evaluate();
         }
             
         public Expression GetValue()
@@ -65,7 +65,7 @@ namespace Ast
             return otherSimplified.CompareTo(this.GetValue());
         }
 
-        public override Expression Simplify()
+        internal override Expression Simplify(Expression caller)
         {
             if (prefix.CompareTo(Constant.Zero))
             {

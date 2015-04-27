@@ -15,7 +15,12 @@ namespace Ast
         public Scope scope;
         public Pos pos;
 
-        public virtual Expression Evaluate()
+        public virtual Expression Evaluate() 
+        {
+            var simplified = Simplify();
+            return simplified.Evaluate(this); 
+        }
+        protected virtual Expression Evaluate(Expression caller)
         {
             return new Error(this, "Cannot evaluate");
         }
@@ -30,7 +35,8 @@ namespace Ast
             return this;
         }
 
-        public virtual Expression Simplify()
+        public virtual Expression Simplify() { return this.Simplify(this).CurrectOperator(); }
+        internal virtual Expression Simplify(Expression caller)
         {
             return this;
         }

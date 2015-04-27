@@ -41,5 +41,20 @@ namespace Ast
             this.exp = plot.exp;
         }
     }
+
+    public class ExpData : EvalData
+    {
+        public Expression exp;
+
+        public ExpData(Expression exp)
+        {
+            this.exp = exp;
+        }
+
+        public override string ToString()
+        {
+            return exp.ToString();
+        }
+    }
 }
 

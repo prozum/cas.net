@@ -7,7 +7,7 @@ namespace Ast
         public Add() : base("+", 20) { }
         public Add(Expression left, Expression right) : base(left, right, "+", 20) { }
 
-        public override Expression Evaluate ()
+        protected override Expression Evaluate(Expression caller)
         {
             return Left + Right;
         }
@@ -68,11 +68,11 @@ namespace Ast
             {
                 if (Left.CompareTo(other))
                 {
-                    return new Add(new Mul(new Integer(2), other).Simplify(), Right);
+                    return new Add(new Mul(new Integer(2), other), Right);
                 }
                 else if (Right.CompareTo(other))
                 {
-                    return new Add(Left, new Mul(new Integer(2), other).Simplify());
+                    return new Add(Left, new Mul(new Integer(2), other));
                 }
                 else
                 {

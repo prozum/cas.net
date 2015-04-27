@@ -22,19 +22,19 @@ namespace Ast
 
             if (!((evaluatedOther = other.Evaluate()) is Error))
             {
-                if (other is Integer)
+                if (evaluatedOther is Integer)
                 {
-                    return value == (other as Integer).value;
+                    return value == (evaluatedOther as Integer).value;
                 }
 
-                if (other is Rational)
+                if (evaluatedOther is Rational)
                 {
-                    return value == (other as Rational).value.value;
+                    return value == (evaluatedOther as Rational).value.value;
                 }
 
-                if (other is Irrational)
+                if (evaluatedOther is Irrational)
                 {
-                    return value == (other as Irrational).value;
+                    return value == (evaluatedOther as Irrational).value;
                 }
 
                 return false;

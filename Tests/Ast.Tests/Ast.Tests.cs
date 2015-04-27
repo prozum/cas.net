@@ -97,7 +97,8 @@ namespace Ast.Tests
         #endregion
         public void Simplify(string expected, string inputString)
         {
-            var res = Parser.Parse(inputString).Simplify();
+            var simString = "Simplify[" + inputString + "]";
+            var res = eval.Evaluation(simString);
             Assert.AreEqual(expected, res.ToString());
         }
 
@@ -319,7 +320,7 @@ namespace Ast.Tests
         #endregion
         public void Evaluate(dynamic expected, string calculation)
         {
-            var res = Parser.Parse(calculation).Simplify().Evaluate();
+            var res = (eval.Evaluation(calculation) as ExpData).exp;
             
             if (res is Integer)
             {
@@ -336,6 +337,10 @@ namespace Ast.Tests
             else if (res is Boolean)
             {
                 Assert.AreEqual(expected, (res as Boolean).value);
+            }
+            else if (res is Message)
+            {
+                Assert.Fail(res.ToString());
             }
             else
             {

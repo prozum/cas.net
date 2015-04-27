@@ -15,7 +15,7 @@ namespace Ast
                 };
         }
 
-        public override Expression Evaluate()
+        protected override Expression Evaluate(Expression caller)
         {
             if (!isArgsValid())
                 return new ArgError(this);
@@ -40,14 +40,14 @@ namespace Ast
             return new Error(this, "Could not take Sqrt of: " + args[0]);
         }
 
-        public override Expression Simplify()
+        internal override Expression Simplify(Expression caller)
         {
             if (exponent.CompareTo(Constant.Two))
             {
                 return args[0];
             }
 
-            return base.Simplify();
+            return this;
         }
 
         public override Expression Clone()

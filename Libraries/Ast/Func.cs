@@ -62,7 +62,7 @@ namespace Ast
             return res;
         }
 
-        public override Expression Simplify()
+        internal override Expression Simplify(Expression caller)
         {
             if (prefix.CompareTo(Constant.Zero))
             {
@@ -73,7 +73,7 @@ namespace Ast
                 return new Integer(1);
             }
 
-            return base.Simplify();
+            return this;
         }
 
         protected override T MakeClone<T>()

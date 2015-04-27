@@ -7,7 +7,7 @@ namespace Ast
         public LesserEqual() : base("<=", 10) { }
         public LesserEqual(Expression left, Expression right) : base(left, right, "<=", 10) { }
 
-        public override Expression Evaluate()
+        protected override Expression Evaluate(Expression caller)
         {
             return Left <= Right;
         }
@@ -24,7 +24,7 @@ namespace Ast
 
         protected override Expression SimplifyHelper(Expression left, Expression right)
         {
-            return new LesserEqual(left.Simplify(), right.Simplify());
+            return new LesserEqual(left.Simplify(this), right.Simplify(this));
         }
 
         protected override Expression ExpandHelper(Expression left, Expression right)
