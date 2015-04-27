@@ -136,7 +136,7 @@ namespace DesktopUI
                 case PlatformID.WinCE:
                 case PlatformID.Win32NT: // <- if one, this is the one we really need
                     {
-                        byte[] buffer = File.ReadAllBytes("..\\..\\..\\Ressources\\Icons\\Gnome-document-open.svg");
+                        byte[] buffer = File.ReadAllBytes("..\\..\\..\\Ressources\\Icons\\Gnome-document-open.png");
                         Pixbuf pixbuf = new Pixbuf(buffer);
                         pixbuf = pixbuf.ScaleSimple(25, 25, InterpType.Bilinear);
                         image.Pixbuf = pixbuf;
