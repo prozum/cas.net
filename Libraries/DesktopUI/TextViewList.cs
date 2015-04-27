@@ -107,12 +107,14 @@ namespace DesktopUI
 
 			ButtonMoveUp.Clicked += delegate
 			{
+				MovCasCalcView.calcview.Eval.scope.locals.Clear();
 				Move(MovCasCalcView.id_, -1);
 				MovCasCalcView.calcview.Eval.scope.locals.Clear();
 			};
 
 			ButtonMoveDown.Clicked += delegate
 			{
+				MovCasCalcView.calcview.Eval.scope.locals.Clear();
 				Move(MovCasCalcView.id_, 1);
 				MovCasCalcView.calcview.Eval.scope.locals.Clear();
 			};
