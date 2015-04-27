@@ -1,6 +1,8 @@
 ﻿using Gtk;
 using Ast;
 using System.Collections.Generic;
+using System.Threading;
+using System.Globalization;
 
 public class MainWindow : Window
 {
@@ -22,6 +24,7 @@ public class MainWindow : Window
 
     static void Main(string[] args)
     {
+        Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
         Application.Init ();
         new MainWindow ();
         Application.Run();
