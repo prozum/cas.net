@@ -9,10 +9,14 @@ namespace DesktopUI
     {
         public bool locked = false;
 
+        public TextTag tag = new TextTag("BoldTag");
+
         public CasTextView(string SerializedString, bool locked)
             : base()
         {
-            Console.WriteLine(locked);
+
+            tag.Weight = Pango.Weight.Bold;
+            Buffer.TagTable.Add(tag);
 
             WrapMode = WrapMode.WordChar;
             DeserializeCasTextView(SerializedString);

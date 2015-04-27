@@ -116,6 +116,8 @@ namespace DesktopUI
                     }
                 }
 
+                textviews.castextviews.Reverse();
+
                 textviews.Clear();
                 textviews.Redraw();
                 textviews.Reevaluate();

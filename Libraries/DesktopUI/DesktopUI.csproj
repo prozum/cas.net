@@ -91,6 +91,7 @@
     <Compile Include="DrawCanvasFigure.cs" />
     <Compile Include="DrawCanvasMouse.cs" />
     <Compile Include="MovableDrawCanvas.cs" />
+    <Compile Include="BoldToolButton.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\GtkSharp.3.1.2\build\net45\GtkSharp.targets" Condition="Exists('..\..\packages\GtkSharp.3.1.2\build\net45\GtkSharp.targets')" />
