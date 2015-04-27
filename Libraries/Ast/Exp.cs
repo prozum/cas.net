@@ -7,7 +7,7 @@ namespace Ast
         public Exp() : base("^", 50) { }
         public Exp(Expression left, Expression right) : base(left, right, "^", 40) { }
 
-        public override Expression Evaluate()
+        protected override Expression Evaluate(Expression caller)
         {
             return Left ^ Right;
         }
@@ -59,7 +59,7 @@ namespace Ast
             }
             else if (left is Variable && right is Number)
             {
-                return VariableOperation(left as Variable, right as Number).Simplify();
+                return VariableOperation(left as Variable, right as Number);
             }
 
             return new Exp(left, right);

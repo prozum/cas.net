@@ -97,7 +97,8 @@ namespace Ast.Tests
         #endregion
         public void Simplify(string expected, string inputString)
         {
-            var res = Parser.Parse(inputString).Simplify();
+            var simString = "Simplify[" + inputString + "]";
+            var res = eval.Evaluation(simString);
             Assert.AreEqual(expected, res.ToString());
         }
 
@@ -178,6 +179,7 @@ namespace Ast.Tests
         [TestCase("f[x]/f[x]", "(f[x])/f[x]")]
         [TestCase("f[x]/f[x]", "f[x]/(f[x])")]
         [TestCase("f[x]/f[x]", "(f[x]/f[x])")]
+        [TestCase("simplify[sqrt[2]^2]", "simplify[sqrt[2]^2]")]
         #endregion
 
         #region Negative
@@ -319,7 +321,7 @@ namespace Ast.Tests
         #endregion
         public void Evaluate(dynamic expected, string calculation)
         {
-            var res = Parser.Parse(calculation).Simplify().Evaluate();
+            var res = (eval.Evaluation(calculation) as ExpData).exp;
             
             if (res is Integer)
             {
@@ -336,6 +338,10 @@ namespace Ast.Tests
             else if (res is Boolean)
             {
                 Assert.AreEqual(expected, (res as Boolean).value);
+            }
+            else if (res is Message)
+            {
+                Assert.Fail(res.ToString());
             }
             else
             {
@@ -361,14 +367,9 @@ namespace Ast.Tests
         #endregion
         public void Solve(string expected, string inputString)
         {
-            var args = new List<Expression>();
+            var testString = "solve[" + inputString + ",x]";
 
-            args.Add(Parser.Parse(inputString));
-            args.Add(Parser.Parse("x"));
-
-            var solve = new Solve(args, eval.scope).Evaluate().ToString();
-
-            Assert.AreEqual(expected, solve);
+            Assert.AreEqual(expected, eval.Evaluation(testString).ToString());
         }
     }
 }

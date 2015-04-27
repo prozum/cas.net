@@ -18,7 +18,7 @@ namespace Ast
                 };
         }
 
-        public override Expression Evaluate()
+        protected override Expression Evaluate(Expression caller)
         {
             if (!isArgsValid())
                 return new ArgError(this);
@@ -52,12 +52,12 @@ namespace Ast
                     }
                     else
                     {
-                        return new Error(this, " could not solve " + sym.ToString());
+                        return new Error(this, " could not solve " + sym.ToString() + ". Left was not a valid type");
                     }
                 }
                 else
                 {
-                    return new Error(this, " could not solve " + sym.ToString());
+                    return new Error(this, " could not solve " + sym.ToString() + ". Left was not invertable");
                 }
 
                 System.Diagnostics.Debug.WriteLine(resLeft.ToString() + "=" + resRight.ToString());

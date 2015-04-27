@@ -55,7 +55,7 @@ namespace Ast
             this.priority = priority;
         }
 
-        public override Expression Evaluate()
+        protected override Expression Evaluate(Expression caller)
         {
             return new Error(this, "Cannot evaluate operator expression!");
         }
@@ -158,14 +158,15 @@ namespace Ast
             return Left.ContainsVariable(other) || Right.ContainsVariable(other);
         }
 
-        public override Expression Simplify()
+        internal override Expression Simplify(Expression caller)
         {
             var prev = ToString();
-            var res = SimplifyHelper(Left.Simplify(), Right.Simplify());
+            var prevType = GetType();
+            var res = SimplifyHelper(Left.Simplify(caller), Right.Simplify(caller));
 
-            if (prev != res.ToString())
+            if (prevType != res.GetType() || prev != res.ToString())
             {
-                res = res.Simplify();
+                res = res.Simplify(caller);
             }
 
             return res;
@@ -208,6 +209,11 @@ namespace Ast
         public override Expression AddWith(Irrational other)
         {
             return Evaluate() + other;
+        }
+
+        public override Expression AddWith(Text other)
+        {
+            return new Text(Evaluate().ToString() + other);
         }
 
         #endregion

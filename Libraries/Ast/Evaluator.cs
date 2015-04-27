@@ -17,7 +17,7 @@ namespace Ast
         {
             Parse(inputString);
 
-            return new MsgData(MsgType.Print, scope.Evaluate().ToString());
+            return new ExpData(scope.Evaluate());
         }
 
         public void Parse(string inputString)

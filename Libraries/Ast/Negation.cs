@@ -15,7 +15,7 @@ namespace Ast
                 };
         }
 
-        public override Expression Evaluate()
+        protected override Expression Evaluate(Expression caller)
         {
             throw new NotImplementedException();
         }

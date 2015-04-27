@@ -148,7 +148,11 @@ namespace Ast
                     case TokenKind.IMAG_DEC:
                         expr = ParseNumber(tok);
                         break;
-
+                    
+                    case TokenKind.TEXT:
+                        expr = new Text(tok.value);
+                        break;
+                    
                     case TokenKind.IDENTIFIER:
                         if (tokens.Count > 0 && tokens.Peek().kind == TokenKind.SQUARE_START)
                         {

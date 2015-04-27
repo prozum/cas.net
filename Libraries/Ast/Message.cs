@@ -18,7 +18,7 @@ namespace Ast
             return msg;
         }
 
-        public override Expression Evaluate()
+        protected override Expression Evaluate(Expression caller)
         {
             return this;
         }

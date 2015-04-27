@@ -7,7 +7,7 @@ namespace Ast
         public Sub() : base("-", 20) { }
         public Sub(Expression left, Expression right) : base(left, right, "-", 20) { }
 
-        public override Expression Evaluate ()
+        protected override Expression Evaluate(Expression caller)
         {
             return Left - Right;
         }
@@ -19,7 +19,7 @@ namespace Ast
 
         protected override Expression SimplifyHelper(Expression left, Expression right)
         {
-            var newRight = new Mul(new Integer(-1), right).Simplify();
+            var newRight = new Mul(new Integer(-1), right).Simplify(this);
             return new Add(left, newRight);
         }
 
