@@ -161,9 +161,10 @@ namespace Ast
         internal override Expression Simplify(Expression caller)
         {
             var prev = ToString();
+            var prevType = GetType();
             var res = SimplifyHelper(Left.Simplify(caller), Right.Simplify(caller));
 
-            if (prev != res.ToString())
+            if (prevType != res.GetType() || prev != res.ToString())
             {
                 res = res.Simplify(caller);
             }

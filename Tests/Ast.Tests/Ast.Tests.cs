@@ -179,6 +179,7 @@ namespace Ast.Tests
         [TestCase("f[x]/f[x]", "(f[x])/f[x]")]
         [TestCase("f[x]/f[x]", "f[x]/(f[x])")]
         [TestCase("f[x]/f[x]", "(f[x]/f[x])")]
+        [TestCase("simplify[sqrt[2]^2]", "simplify[sqrt[2]^2]")]
         #endregion
 
         #region Negative
@@ -366,14 +367,9 @@ namespace Ast.Tests
         #endregion
         public void Solve(string expected, string inputString)
         {
-            var args = new List<Expression>();
+            var testString = "solve[" + inputString + ",x]";
 
-            args.Add(Parser.Parse(inputString));
-            args.Add(Parser.Parse("x"));
-
-            var solve = new Solve(args, eval.scope).Evaluate().ToString();
-
-            Assert.AreEqual(expected, solve);
+            Assert.AreEqual(expected, eval.Evaluation(testString).ToString());
         }
     }
 }
