@@ -97,7 +97,7 @@ namespace DesktopUI
 			Button ButtonMoveUp = new Button("↑");
 			Button ButtonMoveDown = new Button("↓");
 
-            MovableCasCalcView MovCasCalcView = new MovableCasCalcView(Eval, this);
+            MovableCasCalcView MovCasCalcView = new MovableCasCalcView(Eval);
             MovCasCalcView.calcview.input.Activated += delegate
             {
                 Reevaluate();
