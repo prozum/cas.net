@@ -6,7 +6,7 @@ namespace DesktopUI
 {
     public class User
     {
-        public int privilege;
+        public int privilege = -1;
         public string username;
 
         public Student student;

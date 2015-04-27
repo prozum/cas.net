@@ -34,24 +34,24 @@ namespace Ast
 
         public override bool ContainsVariable(Variable other)
         {
-//            if (identifier == other.identifier && this.GetType() == other.GetType() && ((other.functionCall == null && functionCall == null) || ((other.functionCall != null && functionCall != null) && other.functionCall.CompareTo(functionCall))))
-//            {
-//                return true;
-//            }
-//            else if (this is Function)
-//            {
-//                foreach (var item in (this as Function).args)
-//                {
-//                    if (item.ContainsVariable(other))
-//                    {
-//                        return true;
-//                    }
-//                }
-//            }
-//            else if (this is Symbol)
-//            {
-//                return (this as Symbol).GetValue(other).ContainsVariable(other);
-//            }
+            if (identifier == other.identifier && this.GetType() == other.GetType())
+            {
+                return true;
+            }
+            else if (this is Func)
+            {
+                foreach (var item in (this as Func).args)
+                {
+                    if (item.ContainsVariable(other))
+                    {
+                        return true;
+                    }
+                }
+            }
+            else if (this is Symbol)
+            {
+                return (this as Symbol).GetValue().ContainsVariable(other);
+            }
 
             return false;
         }
@@ -85,31 +85,40 @@ namespace Ast
             return res;
         }
 
-        public override Expression Expand()
+        public Expression SeberateNumbers()
         {
-            Expression res;
-            var variable = Clone();
+            var thisClone = Clone() as Symbol;
+            thisClone.prefix = new Integer(1);
+            thisClone.exponent = new Integer(1);
 
-            (variable as Variable).prefix = new Integer(1);
-            (variable as Variable).exponent = new Integer(1);
-
-            if (!exponent.CompareTo(Constant.One))
-            {
-                res = new Exp(variable, exponent);
-            } 
-            else
-	        {
-                res = variable;
-	        }
-
-            if (!prefix.CompareTo(Constant.One))
-            {
-                res = new Mul(prefix, res);
-            }
-
-            return res;
-
+            return ReturnValue(thisClone);
         }
+
+        //public override Expression Expand()
+        //{
+        //    Expression res;
+        //    var variable = Clone();
+
+        //    (variable as Variable).prefix = new Integer(1);
+        //    (variable as Variable).exponent = new Integer(1);
+
+        //    if (!exponent.CompareTo(Constant.One))
+        //    {
+        //        res = new Exp(variable, exponent);
+        //    } 
+        //    else
+        //    {
+        //        res = variable;
+        //    }
+
+        //    if (!prefix.CompareTo(Constant.One))
+        //    {
+        //        res = new Mul(prefix, res);
+        //    }
+
+        //    return res;
+
+        //}
 
         #region AddWith
         public override Expression AddWith(Integer other)

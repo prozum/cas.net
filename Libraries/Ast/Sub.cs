@@ -4,7 +4,7 @@ namespace Ast
 {
     public class Sub : Operator, ISwappable, IInvertable
     {
-        public Sub() : base("-", 20) { }
+        public Sub() : base("-", 30) { }
         public Sub(Expression left, Expression right) : base(left, right, "-", 20) { }
 
         protected override Expression Evaluate(Expression caller)

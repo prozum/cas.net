@@ -12,7 +12,9 @@ namespace CAS.NET.Desktop
 {
     class MainWindow : Window
     {
-        TextViewList textviews = new TextViewList();
+        User user = new User();
+
+        TextViewList textviews;
         MenuBar menubar = new MenuBar();
         Menu menu = new Menu();
         ServerMenuItem server;
@@ -28,8 +30,6 @@ namespace CAS.NET.Desktop
         TeacherGetCompletedMenuItem teaGetCom;
         StudentGetAssignmentMenuItem studentGetAssignmentMenuItem;
 
-        User user = new User();
-
         Toolbar toolbar = new Toolbar();
         OpenToolButton open;
         SaveToolButton save;
@@ -41,6 +41,8 @@ namespace CAS.NET.Desktop
             : base("CAS.NET")
         {
             DeleteEvent += (o, a) => Application.Quit();
+
+            textviews = new TextViewList(ref user);
 
             // Initiating menu elements
             server = new ServerMenuItem();
@@ -70,7 +72,7 @@ namespace CAS.NET.Desktop
 
             menubar.Append(server);
 
-            open = new OpenToolButton(textviews);
+            open = new OpenToolButton(textviews, ref user);
             save = new SaveToolButton(textviews);
             neo = new NewToolButton(textviews);
 
