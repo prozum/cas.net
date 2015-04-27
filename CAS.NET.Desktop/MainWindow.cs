@@ -106,7 +106,7 @@ namespace CAS.NET.Desktop
                     || w.GetType() == typeof(TeacherAddAssignmentMenuItem)
                     || w.GetType() == typeof(TeacherAddFeedbackMenuItem)
                     || w.GetType() == typeof(TeacherGetAssignmentListMenuItem)
-                    //|| w.GetType() == typeof(TeacherGetCompletedListMenuItem)
+                    || w.GetType() == typeof(TeacherGetCompletedListMenuItem)
                     || w.GetType() == typeof(TeacherGetCompletedMenuItem)
                     || w.GetType() == typeof(LogoutMenuItem))
                 {
