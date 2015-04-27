@@ -7,7 +7,6 @@ namespace DesktopUI
     public class MovableCasTextView : Grid
     {
         public CasTextView textview;
-        /* insert arror moving thingy here */
 
         static int ID = 0;
         public int id_;
