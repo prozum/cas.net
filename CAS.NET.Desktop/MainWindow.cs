@@ -80,6 +80,9 @@ namespace CAS.NET.Desktop
             open = new OpenToolButton(textviews, ref user);
             save = new SaveToolButton(textviews);
             neo = new NewToolButton(textviews);
+
+            SeparatorToolItem separator1 = new SeparatorToolItem();
+
             bold = new BoldToolButton(ref textviews);
             italic = new ItalicToolButton(ref textviews);
             underline = new UnderlineToolButton(ref textviews);
@@ -87,6 +90,7 @@ namespace CAS.NET.Desktop
             toolbar.Add(open);
             toolbar.Add(save);
             toolbar.Add(neo);
+            toolbar.Add(separator1);
             toolbar.Add(bold);
             toolbar.Add(italic);
             toolbar.Add(underline);

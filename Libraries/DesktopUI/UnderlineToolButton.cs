@@ -1,6 +1,8 @@
 ﻿using System;
 using Gtk;
 using System.Text;
+using System.IO;
+using Gdk;
 
 namespace DesktopUI
 {
@@ -8,10 +10,14 @@ namespace DesktopUI
     {
         TextViewList textviews;
 
+        static Image image = new Image();
+
         public UnderlineToolButton(ref TextViewList textviews)
-            : base("Underline")
+            : base(image, "Underline")
         {
             this.textviews = textviews;
+
+            SetIcon();
 
             Clicked += delegate
             {
@@ -66,6 +72,43 @@ namespace DesktopUI
             }
 
         }
+
+        void SetIcon()
+        {
+            OperatingSystem os = Environment.OSVersion;
+            PlatformID pid = os.Platform;
+
+            switch (pid)
+            {
+                case PlatformID.Win32S:
+                case PlatformID.Win32Windows:
+                case PlatformID.WinCE:
+                case PlatformID.Win32NT: // <- if one, this is the one we really need
+                    {
+                        byte[] buffer = File.ReadAllBytes("..\\..\\..\\Ressources\\Icons\\Gnome-format-text-underline.png");
+                        Pixbuf pixbuf = new Pixbuf(buffer);
+                        pixbuf = pixbuf.ScaleSimple(25, 25, InterpType.Bilinear);
+                        image.Pixbuf = pixbuf;
+
+                        break;
+                    }
+                case PlatformID.Unix:
+                case PlatformID.MacOSX:
+                    {
+                        byte[] buffer = File.ReadAllBytes("../../../Ressources/Icons/Gnome-format-text-underline.svg");
+                        Pixbuf pixbuf = new Pixbuf(buffer);
+                        pixbuf = pixbuf.ScaleSimple(25, 25, InterpType.Bilinear);
+                        image.Pixbuf = pixbuf;
+
+                        break;
+                    }
+                default:
+                    {
+                        break;
+                    }
+            }
+        }
+
     }
 }
 
