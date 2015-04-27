@@ -1,6 +1,8 @@
 ﻿using NUnit.Framework;
 using Ast;
 using System.Collections.Generic;
+using System.Threading;
+using System.Globalization;
 
 
 namespace Ast.Tests
@@ -12,6 +14,7 @@ namespace Ast.Tests
 
         public AstTests()
         {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
             eval = new Evaluator();
         }
 
