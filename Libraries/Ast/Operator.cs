@@ -55,7 +55,7 @@ namespace Ast
             this.priority = priority;
         }
 
-        public override Expression Evaluate()
+        protected override Expression Evaluate(Expression caller)
         {
             return new Error(this, "Cannot evaluate operator expression!");
         }

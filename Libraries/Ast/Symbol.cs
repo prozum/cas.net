@@ -33,9 +33,9 @@ namespace Ast
             return res;
         }
 
-        public override Expression Evaluate()
+        protected override Expression Evaluate(Expression caller)
         {
-            return GetValue().Simplify().Evaluate();
+            return GetValue().Evaluate();
         }
             
         public Expression GetValue()

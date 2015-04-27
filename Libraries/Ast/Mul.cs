@@ -7,7 +7,7 @@ namespace Ast
         public Mul() : base("*", 30) { }
         public Mul(Expression left, Expression right) : base(left, right, "*", 30) { }
 
-        public override Expression Evaluate ()
+        protected override Expression Evaluate(Expression caller)
         {
             return Left * Right;
         }
@@ -229,10 +229,10 @@ namespace Ast
 
         private Expression SameVariableOperation(Variable left, Variable right)
         {
-            var res = left.Clone();
+            var res = left.Clone() as Variable;
 
-            (res as Variable).prefix = (left.prefix * right.prefix) as Number;
-            (res as Variable).exponent = (left.exponent + right.exponent) as Number;
+            res.prefix = (left.prefix * right.prefix) as Number;
+            res.exponent = (left.exponent + right.exponent) as Number;
 
             return res;
         }

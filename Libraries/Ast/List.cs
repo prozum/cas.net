@@ -14,7 +14,7 @@ namespace Ast
             items = new List<Expression> ();
         }
 
-        public override Expression Evaluate()
+        protected override Expression Evaluate(Expression caller)
         {
             return this;
         }

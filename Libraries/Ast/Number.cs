@@ -2,9 +2,9 @@
 
 namespace Ast
 {
-    public abstract class Number : Expression 
+    public abstract class Number : Expression
     {
-        public override Expression Evaluate()
+        protected override Expression Evaluate(Expression caller)
         {
             return this;
         }

@@ -7,7 +7,7 @@ namespace Ast
         public Add() : base("+", 20) { }
         public Add(Expression left, Expression right) : base(left, right, "+", 20) { }
 
-        public override Expression Evaluate ()
+        protected override Expression Evaluate(Expression caller)
         {
             return Left + Right;
         }

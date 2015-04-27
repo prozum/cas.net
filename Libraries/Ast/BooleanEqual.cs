@@ -7,7 +7,7 @@ namespace Ast
         public BooleanEqual() : base("==", 10) { }
         public BooleanEqual(Expression left, Expression right) : base(left, right, "==", 10) { }
 
-        public override Expression Evaluate()
+        protected override Expression Evaluate(Expression caller)
         {
             return new Boolean(Left.CompareTo(Right));
         }

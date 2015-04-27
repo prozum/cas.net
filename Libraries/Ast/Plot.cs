@@ -24,7 +24,7 @@ namespace Ast
             }
         }
 
-        public override Expression Evaluate()
+        protected override Expression Evaluate(Expression caller)
         {
             return new Error(this, "Cannot evaluate plot");
         }
