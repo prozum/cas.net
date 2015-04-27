@@ -78,7 +78,7 @@ namespace Geomet
                 return 0;
             }
         }
-        public static double areaSimple(double width, double height)
+        public static double AreaSimple(double width, double height)
         {
             return 0.5 * height * width;
         }
