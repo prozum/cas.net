@@ -77,7 +77,6 @@ namespace Ast
         {
             SkipWhitespace();
 
-            char @char2;
             char @char = CharNext();
 
             switch (@char)
@@ -95,6 +94,9 @@ namespace Ast
                 case '8':
                 case '9':
                     return ScanNumber(@char);
+                
+                case '"':
+                    return ScanText();
                 
                 case '+':
                     return new Token(TokenKind.ADD, @char.ToString(), pos);
@@ -184,6 +186,30 @@ namespace Ast
             return new Token(kind, number, startPos);
         }
 
+        private static Token ScanText()
+        {
+            string text = "";
+            Pos startPos = pos;
+
+            char cur;
+            do
+            {
+                cur = CharNext(false);
+                if (cur == '"')
+                    break;
+                text += cur;
+                CharNext(true);
+            }
+            while (cur != EOS);
+
+            if (cur != '"')
+                Errors = true;
+            else
+                CharNext(true);
+
+            return new Token(TokenKind.TEXT, text, startPos);
+        }
+
         private static Token ScanIdentifier(char @char)
         {
             string identifier = @char.ToString();
@@ -215,28 +241,6 @@ namespace Ast
                     return new Token(TokenKind.RETURN, identifier, startPos);
                 default:
                     return new Token(TokenKind.IDENTIFIER, identifier, startPos);
-            }
-        }
-
-        private static Token ScanOperator(char @char)
-        {
-            string op = @char.ToString();
-            Pos startPos = pos;
-
-            var cur = CharNext(false);
-            if (opChars.Contains(cur))
-            {
-                op += cur;
-                CharNext();
-            }
-
-            switch(op)
-            {
-                case ":=":
-                    return new Token(TokenKind.ASSIGN, op, startPos);
-                default:
-                    Errors = true;
-                    return new Token(TokenKind.UNKNOWN, op, startPos);
             }
         }
 

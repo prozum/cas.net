@@ -173,6 +173,7 @@
     <Compile Include="IfState.cs">
       <DependentUpon>State.cs</DependentUpon>
     </Compile>
+    <Compile Include="Text.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ProjectExtensions>

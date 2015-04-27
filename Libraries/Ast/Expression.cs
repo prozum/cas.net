@@ -111,6 +111,11 @@ namespace Ast
             return new Error(this, "Don't support adding " + other.GetType().Name);
         }
 
+        public virtual Expression AddWith(Text other)
+        {
+            return new Error(this, "Don't support adding " + other.GetType().Name);
+        }
+
         #endregion
 
         #region SubWith
@@ -160,6 +165,11 @@ namespace Ast
         }
 
         public virtual Expression SubWith(Scope other)
+        {
+            return new Error(this, "Don't support subbing " + other.GetType().Name);
+        }
+
+        public virtual Expression SubWith(Text other)
         {
             return new Error(this, "Don't support subbing " + other.GetType().Name);
         }
@@ -217,6 +227,11 @@ namespace Ast
             return new Error(this, "Don't support multipying " + other.GetType().Name);
         }
 
+        public virtual Expression MulWith(Text other)
+        {
+            return new Error(this, "Don't support multipying " + other.GetType().Name);
+        }
+
         #endregion
 
         #region DivWith
@@ -266,6 +281,11 @@ namespace Ast
         }
 
         public virtual Expression DivWith(Scope other)
+        {
+            return new Error(this, "Don't support diving " + other.GetType().Name);
+        }
+
+        public virtual Expression DivWith(Text other)
         {
             return new Error(this, "Don't support diving " + other.GetType().Name);
         }
@@ -323,6 +343,11 @@ namespace Ast
             return new Error(this, "Don't support powering " + other.GetType().Name);
         }
 
+        public virtual Expression ExpWith(Text other)
+        {
+            return new Error(this, "Don't support powering " + other.GetType().Name);
+        }
+
         #endregion
 
         #region GreaterThan
@@ -372,6 +397,11 @@ namespace Ast
         }
 
         public virtual Expression GreaterThan(Scope other)
+        {
+            return new Error(this, "Don't support greater than " + other.GetType().Name);
+        }
+
+        public virtual Expression GreaterThan(Text other)
         {
             return new Error(this, "Don't support greater than " + other.GetType().Name);
         }
@@ -429,6 +459,11 @@ namespace Ast
             return new Error(this, "Don't support lesser than " + other.GetType().Name);
         }
 
+        public virtual Expression LesserThan(Text other)
+        {
+            return new Error(this, "Don't support lesser than " + other.GetType().Name);
+        }
+
         #endregion
 
         #region GreaterThanOrEqualTo
@@ -482,6 +517,11 @@ namespace Ast
             return new Error(this, "Don't support greater than or equal to " + other.GetType().Name);
         }
 
+        public virtual Expression GreaterThanOrEqualTo(Text other)
+        {
+            return new Error(this, "Don't support greater than or equal to " + other.GetType().Name);
+        }
+
         #endregion
 
         #region LesserThanOrEqualTo
@@ -531,6 +571,11 @@ namespace Ast
         }
 
         public virtual Expression LesserThanOrEqualTo(Scope other)
+        {
+            return new Error(this, "Don't support lesser than or equal " + other.GetType().Name);
+        }
+
+        public virtual Expression LesserThanOrEqualTo(Text other)
         {
             return new Error(this, "Don't support lesser than or equal " + other.GetType().Name);
         }
