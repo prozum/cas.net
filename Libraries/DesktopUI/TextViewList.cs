@@ -6,116 +6,162 @@ using Gtk;
 
 namespace DesktopUI
 {
-	public class TextViewList : Grid
-	{
-		public List<MovableCasTextView> castextviews = new List<MovableCasTextView>();
-		Grid ButtonGrid = new Grid();
-		Evaluator Eval = new Evaluator ();
-		Button AddNewMovableTextView = new Button("New Textbox");
-		Button AddNewMovableCalcView = new Button("New Calcbox");
-		
-		public TextViewList() : base()
-		{
-			AddNewMovableTextView.Clicked += delegate
-				{
-					InsertTextView("", false);
-				};
+    public class TextViewList : Grid
+    {
+        public List<MovableCasTextView> castextviews = new List<MovableCasTextView>();
+        Grid ButtonGrid = new Grid();
+        Evaluator Eval = new Evaluator();
+        Button AddNewMovableTextView = new Button("New Textbox");
+        Button AddNewMovableCalcView = new Button("New Calcbox");
+        User user;
 
-			AddNewMovableCalcView.Clicked += delegate
-				{
-					InsertCalcView();
-				};
 
-			ButtonGrid.Attach(AddNewMovableTextView, 1, 1, 1, 1);
-			ButtonGrid.Attach(AddNewMovableCalcView, 2, 1, 1, 1);
-			Attach(ButtonGrid, 1, 1, 1, 1);
+        public TextViewList(ref User user)
+            : base()
+        {
+            this.user = user;
 
-			ShowAll();
-		}
+            AddNewMovableTextView.Clicked += delegate
+            {
+                InsertTextView("", false);
+            };
 
-		public void InsertTextView(string serializedString, bool teacherCanEdit)
-		{
-			castextviews.Add(new MovableCasTextView(this, serializedString, teacherCanEdit));
+            AddNewMovableCalcView.Clicked += delegate
+            {
+                InsertCalcView();
+            };
 
-			Clear();
-			Redraw();
-			ShowAll();
-		}
+            ButtonGrid.Attach(AddNewMovableTextView, 1, 1, 1, 1);
+            ButtonGrid.Attach(AddNewMovableCalcView, 2, 1, 1, 1);
+            Attach(ButtonGrid, 1, 1, 1, 1);
 
-		public void InsertCalcView()
-		{
-			MovableCasCalcView MovCasCalcView =  new MovableCasCalcView(Eval, this);
-			MovCasCalcView.calcview.input.Activated += delegate
-			{
-				Reevaluate();
-				MovCasCalcView.ShowAll();
-			};
+            ShowAll();
+        }
 
-			castextviews.Add(MovCasCalcView);
+        public void InsertTextView(string serializedString, bool locked)
+        {
+            Button ButtonMoveUp = new Button("↑");
+            Button ButtonMoveDown = new Button("↓");
 
-			Clear();
-			Redraw();
-			ShowAll();
-		}
+            ButtonMoveUp.Clicked += delegate
+            {
+//                    MoveUp();
+            };
 
-		public void Move(int ID, int UpOrDown)
-		{
-			int i = 0;
+            ButtonMoveDown.Clicked += delegate
+            {
+//                    MoveDown();
+            };
 
-			while (ID != castextviews[i].id_)
-			{
-				i++;
-			}
 
-			// move down
-			if (UpOrDown == 1 && i+1 < castextviews.Count)
-			{
-				castextviews.Insert(i+2, castextviews[i]);
-				castextviews.RemoveAt(i);
-			}
+            if (user.privilege == 1)
+            {
+                MovableLockedCasTextView movableLockedCasTextView = new MovableLockedCasTextView(serializedString, locked);
+                movableLockedCasTextView.textview.LockTextView(false);
+                castextviews.Add(new MovableLockedCasTextView(serializedString, false));
+
+                movableLockedCasTextView.Attach(ButtonMoveUp, 2, 1, 1, 1);
+                movableLockedCasTextView.Attach(ButtonMoveDown, 2, 2, 1, 1);
+
+                ButtonMoveDown.Show();
+                ButtonMoveUp.Show();
+
+            }
+            else if (user.privilege == 0)
+            {
+                MovableCasTextView movableCasTextView = new MovableCasTextView(serializedString, locked);
+                movableCasTextView.textview.LockTextView(locked);
+
+                if (locked == false)
+                {
+                    movableCasTextView.Attach(ButtonMoveUp, 2, 1, 1, 1);
+                    movableCasTextView.Attach(ButtonMoveDown, 2, 2, 1, 1);
+
+                    ButtonMoveDown.Show();
+                    ButtonMoveUp.Show();
+                }
+                castextviews.Add(movableCasTextView);
+            }
+
+            Clear();
+            Redraw();
+            ShowAll();
+        }
+
+        public void InsertCalcView()
+        {
+            MovableCasCalcView MovCasCalcView = new MovableCasCalcView(Eval, this);
+            MovCasCalcView.calcview.input.Activated += delegate
+            {
+                Reevaluate();
+                MovCasCalcView.ShowAll();
+            };
+
+            castextviews.Add(MovCasCalcView);
+
+            Clear();
+            Redraw();
+            ShowAll();
+        }
+
+        public void Move(int ID, int UpOrDown)
+        {
+            int i = 0;
+
+            while (ID != castextviews[i].id_)
+            {
+                i++;
+            }
+
+            // move down
+            if (UpOrDown == 1 && i + 1 < castextviews.Count)
+            {
+                castextviews.Insert(i + 2, castextviews[i]);
+                castextviews.RemoveAt(i);
+            }
 			// move up
-			else if (UpOrDown == -1 && i-1 >= 0)
-			{
-				castextviews.Insert(i-1, castextviews[i]);
-				castextviews.RemoveAt(i+1);
-			}
+			else if (UpOrDown == -1 && i - 1 >= 0)
+            {
+                castextviews.Insert(i - 1, castextviews[i]);
+                castextviews.RemoveAt(i + 1);
+            }
 
-			Clear();
-			Reevaluate ();
-			Redraw();
-		}
+            Clear();
+            Reevaluate();
+            Redraw();
+        }
 
-		public void Clear()
-		{
-			foreach (Widget widget in this)
-			{
-				Remove(widget);
-			}
-		}
+        public void Clear()
+        {
+            foreach (Widget widget in this)
+            {
+                Remove(widget);
+            }
+        }
 
-		public void Redraw()
-		{
-			foreach (Widget widget in castextviews)
-			{
-				Attach(widget, 1, Children.Length, 1, 1);
-			}
+        public void Redraw()
+        {
+            foreach (Widget widget in castextviews)
+            {
+                Attach(widget, 1, Children.Length, 1, 1);
+            }
 
-			Attach(ButtonGrid, 1, Children.Length, 1, 1);
-		}
+            Attach(ButtonGrid, 1, Children.Length, 1, 1);
+        }
 
-		public void Reevaluate()
-		{
-			Evaluator NewEval = new Evaluator();
+        public void Reevaluate()
+        {
+            Evaluator NewEval = new Evaluator();
 
-			foreach (Widget widget in castextviews)
-			{
-				if (widget.GetType() == typeof(MovableCasCalcView))
-				{
-					(widget as MovableCasCalcView).calcview.Eval = NewEval;
-					(widget as MovableCasCalcView).calcview.Evaluate ();
-				}
-			}
-		}
-	}
+            foreach (Widget widget in castextviews)
+            {
+                if (widget.GetType() == typeof(MovableCasCalcView))
+                {
+                    (widget as MovableCasCalcView).calcview.Eval = NewEval;
+                    (widget as MovableCasCalcView).calcview.Evaluate();
+                }
+            }
+        }
+    }
 }
 

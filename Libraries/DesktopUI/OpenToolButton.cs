@@ -12,8 +12,9 @@ namespace DesktopUI
     {
         static Image image = new Image();
         TextViewList textviews;
+        User user;
 
-        public OpenToolButton(TextViewList textviews)
+        public OpenToolButton(TextViewList textviews, ref User user)
             : base(/*image,*/ "open")
         {
 
@@ -22,6 +23,8 @@ namespace DesktopUI
             this.TooltipText = "Open .CAS file";
 
             this.textviews = textviews;
+
+            this.user = user;
 
             this.Clicked += delegate
             {
@@ -93,17 +96,23 @@ namespace DesktopUI
 
                 foreach (var item in metaTypeList)
                 {
-                    if (item.type == typeof(MovableCasCalcView))
+                    if (item.type == typeof(MovableCasTextView) && user.privilege == 1)
+                    {
+//                        MovableLockedCasTextView movableLockedCasTextView = new MovableLockedCasTextView(item.metastring, item.locked);
+//                        textviews.castextviews.Add(movableLockedCasTextView);
+                        textviews.InsertTextView(item.metastring, item.locked);
+                    }
+                    else if (item.type == typeof(MovableCasCalcView))
                     {
                         Evaluator Eval = new Evaluator();
                         MovableCasCalcView movableCasCalcView = new MovableCasCalcView(Eval, textviews);
                         movableCasCalcView.calcview.input.Text = item.metastring;
+
                         textviews.castextviews.Add(movableCasCalcView);
                     }
                     else if (item.type == typeof(MovableCasTextView))
                     {
-                        MovableCasTextView movableCasTextView = new MovableCasTextView(textviews, item.metastring, true);
-                        textviews.castextviews.Add(movableCasTextView);
+                        textviews.InsertTextView(item.metastring, item.locked);
                     }
                 }
 

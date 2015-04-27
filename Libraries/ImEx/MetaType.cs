@@ -16,20 +16,23 @@ namespace ImEx
 
         public string metastring;
 
+        public bool locked;
+
         public MetaType()
         {
         }
 
-        public MetaType(object o)
-        {
-            this.type = o.GetType();
-            this.metastring = Export.Serialize(o);
-        }
+        //        public MetaType(object o)
+        //        {
+        //            this.type = o.GetType();
+        //            this.metastring = Export.Serialize(o);
+        //        }
 
-        public MetaType(Type t, string s)
+        public MetaType(Type t, string s, bool locked)
         {
             this.type = t;
             this.metastring = s;
+            this.locked = locked;
         }
     }
 }
