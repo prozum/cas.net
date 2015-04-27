@@ -6,8 +6,9 @@ namespace Ast
     {
         public Expression expr;
 
-        public ExprState()
+        public ExprState(Expression expr)
         {
+            this.expr = expr;
         }
 
         public override EvalData Step()
