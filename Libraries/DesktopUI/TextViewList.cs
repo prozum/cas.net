@@ -94,12 +94,28 @@ namespace DesktopUI
 
         public void InsertCalcView()
         {
+			Button ButtonMoveUp = new Button("↑");
+			Button ButtonMoveDown = new Button("↓");
+
             MovableCasCalcView MovCasCalcView = new MovableCasCalcView(Eval, this);
             MovCasCalcView.calcview.input.Activated += delegate
             {
                 Reevaluate();
                 MovCasCalcView.ShowAll();
             };
+
+			ButtonMoveUp.Clicked += delegate
+			{
+				Move(MovCasCalcView.id_, -1);
+			};
+
+			ButtonMoveDown.Clicked += delegate
+			{
+				Move(MovCasCalcView.id_, 1);
+			};
+
+			MovCasCalcView.Attach(ButtonMoveUp, 2, 1, 1, 1);
+			MovCasCalcView.Attach(ButtonMoveDown, 2, 2, 1, 1);
 
             castextviews.Add(MovCasCalcView);
 
