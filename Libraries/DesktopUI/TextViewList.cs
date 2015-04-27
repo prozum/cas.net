@@ -107,11 +107,13 @@ namespace DesktopUI
 			ButtonMoveUp.Clicked += delegate
 			{
 				Move(MovCasCalcView.id_, -1);
+				MovCasCalcView.calcview.Eval.scope.locals.Clear();
 			};
 
 			ButtonMoveDown.Clicked += delegate
 			{
 				Move(MovCasCalcView.id_, 1);
+				MovCasCalcView.calcview.Eval.scope.locals.Clear();
 			};
 
 			MovCasCalcView.Attach(ButtonMoveUp, 2, 1, 1, 1);
@@ -171,13 +173,10 @@ namespace DesktopUI
 
         public void Reevaluate()
         {
-            Evaluator NewEval = new Evaluator();
-
             foreach (Widget widget in castextviews)
             {
                 if (widget.GetType() == typeof(MovableCasCalcView))
                 {
-                    (widget as MovableCasCalcView).calcview.Eval = NewEval;
                     (widget as MovableCasCalcView).calcview.Evaluate();
                 }
             }
