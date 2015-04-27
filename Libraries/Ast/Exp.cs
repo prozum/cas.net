@@ -4,7 +4,7 @@ namespace Ast
 {
     public class Exp : Operator, IInvertable
     {
-        public Exp() : base("^", 50) { }
+        public Exp() : base("^", 60) { }
         public Exp(Expression left, Expression right) : base(left, right, "^", 40) { }
 
         protected override Expression Evaluate(Expression caller)
@@ -18,19 +18,19 @@ namespace Ast
             {
                 if (left is Add)
                 {
-                    return new Add(new Add(new Exp((left as Operator).Left, right), new Exp((left as Operator).Right, right)), new Mul(new Integer(2), new Mul((left as Operator).Left, (left as Operator).Right)));
+                    return new Add(new Add(new Exp((left as Operator).Left, right).Simplify(), new Exp((left as Operator).Right, right).Simplify()), new Mul(new Integer(2), new Mul((left as Operator).Left, (left as Operator).Right)).Simplify());
                 }
                 else if (left is Sub)
                 {
-                    return new Sub(new Add(new Exp((left as Operator).Left, right), new Exp((left as Operator).Right, right)), new Mul(new Integer(2), new Mul((left as Operator).Left, (left as Operator).Right)));
+                    return new Sub(new Add(new Exp((left as Operator).Left, right).Simplify(), new Exp((left as Operator).Right, right).Simplify()), new Mul(new Integer(2), new Mul((left as Operator).Left, (left as Operator).Right)).Simplify());
                 }
                 else if (left is Mul)
                 {
-                    return new Mul(new Exp((left as Operator).Left, right), new Exp((left as Operator).Right, right));
+                    return new Mul(new Exp((left as Operator).Left, right).Simplify(), new Exp((left as Operator).Right, right).Simplify());
                 }
                 else if (left is Div)
                 {
-                    return new Div(new Exp((left as Operator).Left, right), new Exp((left as Operator).Right, right));
+                    return new Div(new Exp((left as Operator).Left, right).Simplify(), new Exp((left as Operator).Right, right).Simplify());
                 }
                 else
                 {

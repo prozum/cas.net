@@ -79,7 +79,6 @@ namespace Ast
             return this;
         }
             
-
         public override Expression Clone()
         {
             var res = MakeClone<Symbol>();

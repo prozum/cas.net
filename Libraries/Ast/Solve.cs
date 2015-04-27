@@ -20,111 +20,121 @@ namespace Ast
 
         protected override Expression Evaluate(Expression caller)
         {
+            Equal solved;
+
             if (!isArgsValid())
                 return new ArgError(this);
 
             equal = (Equal)args[0];
             sym = (Symbol)args[1];
 
-            Expression resLeft = new Sub(equal.Left, equal.Right).Simplify().Expand();
-            Expression resRight = new Integer(0);
+            if (equal.Right.ContainsVariable(sym))
+            {
+                solved = new Equal(new Sub(equal.Left, equal.Right).Simplify().Expand(), new Integer(0));
+            }
+            else
+            {
+                solved = equal;
+            }
 
             System.Diagnostics.Debug.WriteLine(equal.ToString());
-            System.Diagnostics.Debug.WriteLine(resLeft.ToString() + "=" + resRight.ToString());
+            System.Diagnostics.Debug.WriteLine(solved);
 
-            while (!((resLeft is Symbol) && resLeft.CompareTo(sym)))
+            while (!((solved.Left is Symbol) && solved.Left.CompareTo(sym)))
             {
-                if (resLeft is IInvertable)
+                if (solved.Left is IInvertable)
                 {
-                    if (resLeft is Operator)
+                    if (solved.Left is Operator)
                     {
-                        if (InvertOperator(ref resLeft, ref resRight))
-                        {
-                            return new Error(this, " could not solve " + sym.ToString());
-                        }
+                        solved = InvertOperator(solved.Left, solved.Right);
+
+                        if (solved == null)
+                            return new Error(this, " could not solve " + sym.ToString() + ": " + solved.ToString());
                     }
-                    else if (resLeft is Func)
+                    else if (solved.Left is Func)
                     {
-                        if (InvertFunction(ref resLeft, ref resRight))
-                        {
-                            return new Error(this, " could not solve " + sym.ToString());
-                        }
+                        solved = InvertFunction(solved.Left, solved.Right);
+
+                        if (solved == null)
+                            return new Error(this, " could not solve " + sym.ToString() + ": " + solved.ToString());
                     }
                     else
                     {
-                        return new Error(this, " could not solve " + sym.ToString() + ". Left was not a valid type");
+                        return new Error(this, " could not solve " + sym.ToString() + ": " + solved.ToString());
                     }
+                }
+                else if (solved.Left is Symbol)
+                {
+                    var newLeft = solved.Left.Clone() as Symbol;
+                    newLeft.prefix = new Integer(1);
+
+                    solved = new Equal(newLeft, new Div(solved.Right, (solved.Left as Symbol).prefix));
                 }
                 else
                 {
-                    return new Error(this, " could not solve " + sym.ToString() + ". Left was not invertable");
+                    return new Error(this, " could not solve " + sym.ToString() + ": " + solved.ToString());
                 }
 
-                System.Diagnostics.Debug.WriteLine(resLeft.ToString() + "=" + resRight.ToString());
+                System.Diagnostics.Debug.WriteLine(solved);
             }
 
-            return new Equal(resLeft, resRight.Simplify());
+            return solved.Simplify();
         }
 
-        private bool InvertOperator(ref Expression resLeft, ref Expression resRight)
+        private Equal InvertOperator(Expression left, Expression right)
         {
-            Operator op = resLeft as Operator;
+            Operator op = left as Operator;
 
             if (op.Right.ContainsVariable(sym) && op.Left.ContainsVariable(sym))
             {
-                throw new NotImplementedException();
+                return BothSideSymbolSolver(left, right);
             }
             else if (op.Left.ContainsVariable(sym))
             {
-                resRight = (op as IInvertable).Inverted(resRight);
-                resLeft = op.Left;
-                return false;
+                return new Equal(op.Left, (op as IInvertable).Inverted(right));
             }
             else if (op.Right.ContainsVariable(sym))
             {
                 if (op is ISwappable)
                 {
-                    resLeft = (op as ISwappable).Swap();
-                    return false;
+                    return new Equal((op as ISwappable).Swap(), right);
                 }
                 else if (op is Div)
                 {
-                    if (!resRight.CompareTo(Constant.Zero))
+                    if (!right.CompareTo(Constant.Zero))
                     {
-                        resRight = new Div(op.Left, resRight);
-                        resLeft = op.Right;
-                        return false;
-                    }
-                    else
-                    {
-                        return true;
+                        return new Equal(op.Right, new Div(op.Left, right));
                     }
                 }
-                else
-                {
-                    return true;
-                }
+            }
+
+            return null;
+        }
+
+        private Equal BothSideSymbolSolver(Expression left, Expression right)
+        {
+            var leftSimplified = left.Simplify();
+
+            if (leftSimplified is Operator && ((leftSimplified as Operator).Left.ContainsVariable(sym) && (leftSimplified as Operator).Right.ContainsVariable(sym)))
+            {
+                return null;
             }
             else
             {
-                return true;
+                return new Equal(leftSimplified, right);
             }
         }
 
-        private bool InvertFunction(ref Expression resLeft, ref Expression resRight)
+        private Equal InvertFunction(Expression left, Expression right)
         {
-            Func func = resLeft as Func;
+            Func func = left as Func;
 
             if (func.ContainsVariable(sym))
             {
-                resRight = (func as IInvertable).Inverted(resRight);
-                resLeft = func.args[0];
-                return false;
+                return new Equal(func.args[0], (func as IInvertable).Inverted(right));
             }
-            else
-            {
-                return true;
-            }
+
+            return null;
         }
     }
 }

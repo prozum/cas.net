@@ -4,7 +4,7 @@ namespace Ast
 {
     public class Mul : Operator, ISwappable, IInvertable
     {
-        public Mul() : base("*", 30) { }
+        public Mul() : base("*", 40) { }
         public Mul(Expression left, Expression right) : base(left, right, "*", 30) { }
 
         protected override Expression Evaluate(Expression caller)
@@ -18,11 +18,11 @@ namespace Ast
             {
                 if (left is Add)
                 {
-                    return new Add(new Mul((left as Operator).Left, right), new Mul((left as Operator).Right, right));
+                    return new Add(new Mul((left as Operator).Left, right).Simplify(), new Mul((left as Operator).Right, right).Simplify());
                 }
                 else if (left is Sub)
                 {
-                    return new Sub(new Mul((left as Operator).Left, right), new Mul((left as Operator).Right, right));
+                    return new Sub(new Mul((left as Operator).Left, right).Simplify(), new Mul((left as Operator).Right, right).Simplify());
                 }
                 else
                 {
@@ -33,11 +33,11 @@ namespace Ast
             {
                 if (right is Add)
                 {
-                    return new Add(new Mul((right as Operator).Left, left), new Mul((right as Operator).Right, left));
+                    return new Add(new Mul((right as Operator).Left, left).Simplify(), new Mul((right as Operator).Right, left).Simplify());
                 }
                 else if (right is Sub)
                 {
-                    return new Sub(new Mul((right as Operator).Left, left), new Mul((right as Operator).Right, left));
+                    return new Sub(new Mul((right as Operator).Left, left).Simplify(), new Mul((right as Operator).Right, left).Simplify());
                 }
                 else
                 {

@@ -15,10 +15,10 @@ namespace DesktopUI
         User user;
 
         public OpenToolButton(TextViewList textviews, ref User user)
-            : base(/*image,*/ "open")
+            : base(image, "open")
         {
 
-//            SetIcon();
+            SetIcon();
 
             this.TooltipText = "Open .CAS file";
 
@@ -136,7 +136,7 @@ namespace DesktopUI
                 case PlatformID.WinCE:
                 case PlatformID.Win32NT: // <- if one, this is the one we really need
                     {
-                        byte[] buffer = File.ReadAllBytes("");
+                        byte[] buffer = File.ReadAllBytes("..\\..\\..\\Ressources\\Icons\\Gnome-document-open.svg");
                         Pixbuf pixbuf = new Pixbuf(buffer);
                         pixbuf = pixbuf.ScaleSimple(25, 25, InterpType.Bilinear);
                         image.Pixbuf = pixbuf;
@@ -146,7 +146,7 @@ namespace DesktopUI
                 case PlatformID.Unix:
                 case PlatformID.MacOSX:
                     {
-                        byte[] buffer = File.ReadAllBytes("");
+                        byte[] buffer = File.ReadAllBytes("../../../Ressources/Icons/Gnome-document-open.svg");
                         Pixbuf pixbuf = new Pixbuf(buffer);
                         pixbuf = pixbuf.ScaleSimple(25, 25, InterpType.Bilinear);
                         image.Pixbuf = pixbuf;

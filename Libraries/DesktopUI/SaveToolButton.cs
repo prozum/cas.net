@@ -13,9 +13,9 @@ namespace DesktopUI
         TextViewList textviews;
 
         public SaveToolButton(TextViewList textviews)
-            : base(/*image,*/ "Save")
+            : base(image, "Save")
         {
-//            SetIcon();
+            SetIcon();
 
             this.TooltipText = "Save .CAS file";
 
@@ -132,7 +132,7 @@ namespace DesktopUI
                 case PlatformID.WinCE:
                 case PlatformID.Win32NT: // <- if one, this is the one we really need
                     {
-                        byte[] buffer = File.ReadAllBytes("");
+                        byte[] buffer = File.ReadAllBytes("..\\..\\..\\Ressources\\Icons\\Gnome-media-floppy.svg");
                         Pixbuf pixbuf = new Pixbuf(buffer);
                         pixbuf = pixbuf.ScaleSimple(25, 25, InterpType.Bilinear);
                         image.Pixbuf = pixbuf;
@@ -142,7 +142,7 @@ namespace DesktopUI
                 case PlatformID.Unix:
                 case PlatformID.MacOSX:
                     {
-                        byte[] buffer = File.ReadAllBytes("");
+                        byte[] buffer = File.ReadAllBytes("../../../Ressources/Icons/Gnome-media-floppy.svg");
                         Pixbuf pixbuf = new Pixbuf(buffer);
                         pixbuf = pixbuf.ScaleSimple(25, 25, InterpType.Bilinear);
                         image.Pixbuf = pixbuf;
