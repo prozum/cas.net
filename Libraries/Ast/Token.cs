@@ -54,11 +54,11 @@ namespace Ast
         public int Line;
         public int Column;
 
-        public Pos()
+        public Pos(int i = 0, int line = 1, int column = 0)
         {
-            i = 0;
-            Line = 1;
-            Column = 0;
+            this.i = i;
+            Line = line;
+            Column = column;
         }
     }
 
