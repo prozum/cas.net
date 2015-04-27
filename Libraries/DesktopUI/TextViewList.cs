@@ -148,8 +148,11 @@ namespace DesktopUI
                 Move(movableDrawCanvas.id_, 1);
             };
 
-            movableDrawCanvas.Attach(ButtonMoveUp, 2, 1, 1, 1);
-            movableDrawCanvas.Attach(ButtonMoveDown, 2, 2, 1, 1);
+            VBox vbox = new VBox();
+            vbox.PackStart(ButtonMoveUp, false, false, 2);
+            vbox.PackEnd(ButtonMoveDown, false, false, 2);
+
+            movableDrawCanvas.Attach(vbox, 2, 1, 1, 2);
 
             castextviews.Add(movableDrawCanvas);
 

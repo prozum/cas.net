@@ -19,8 +19,6 @@ namespace DesktopUI
             mouse = new DrawCanvasMouse();
             GLib.Timeout.Add(1, new GLib.TimeoutHandler(CoordAddDelay));
 
-            SetSizeRequest(300, 300);
-
         }
 
         protected override bool OnDrawn(Context ctx)
