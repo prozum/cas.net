@@ -6,7 +6,6 @@ namespace DesktopUI
 {
     public class MovableCasTextView : Grid
     {
-        TextViewList parent;
         public CasTextView textview;
         /* insert arror moving thingy here */
 
