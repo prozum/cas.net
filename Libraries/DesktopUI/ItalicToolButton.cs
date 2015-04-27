@@ -4,22 +4,22 @@ using System.Text;
 
 namespace DesktopUI
 {
-    public class BoldToolButton : ToolButton
+    public class ItalicToolButton : ToolButton
     {
         TextViewList textviews;
 
-        public BoldToolButton(ref TextViewList textviews)
-            : base("Bold")
+        public ItalicToolButton(ref TextViewList textviews)
+            : base("Italic")
         {
             this.textviews = textviews;
 
             Clicked += delegate
             {
-                OnBoldClicked();
+                OnItalicClicked();
             };
         }
 
-        void OnBoldClicked()
+        void OnItalicClicked()
         {
             foreach (var item in textviews)
             {
@@ -32,13 +32,13 @@ namespace DesktopUI
                     byte[] byteTextView = buffer.Serialize(buffer, buffer.RegisterSerializeTagset(null), startIter, endIter);
                     string s = Encoding.UTF8.GetString(byteTextView);
 
-                    if (s.Contains("<attr name=\"weight\" type=\"gint\" value=\"700\" />"))
+                    if (s.Contains("<attr name=\"style\" type=\"PangoStyle\" value=\"PANGO_STYLE_ITALIC\" />"))
                     {
-                        buffer.RemoveTag((item as MovableCasTextView).textview.boldTag, startIter, endIter);                
+                        buffer.RemoveTag((item as MovableCasTextView).textview.italicTag, startIter, endIter);
                     }
                     else
                     {
-                        buffer.ApplyTag((item as MovableCasTextView).textview.boldTag, startIter, endIter);
+                        buffer.ApplyTag((item as MovableCasTextView).textview.italicTag, startIter, endIter);
                     }
 
                 }
@@ -51,15 +51,16 @@ namespace DesktopUI
                     byte[] byteTextView = buffer.Serialize(buffer, buffer.RegisterSerializeTagset(null), startIter, endIter);
                     string s = Encoding.UTF8.GetString(byteTextView);
 
-                    if (s.Contains("<attr name=\"weight\" type=\"gint\" value=\"700\" />"))
+                    if (s.Contains("<attr name=\"style\" type=\"PangoStyle\" value=\"PANGO_STYLE_ITALIC\" />"))
                     {
-                        buffer.RemoveTag((item as MovableCasTextView).textview.boldTag, startIter, endIter);                
+                        buffer.RemoveTag((item as MovableLockedCasTextView).textview.italicTag, startIter, endIter);
                     }
                     else
                     {
-                        buffer.ApplyTag((item as MovableCasTextView).textview.boldTag, startIter, endIter);
+                        buffer.ApplyTag((item as MovableLockedCasTextView).textview.italicTag, startIter, endIter);
                     }
                 }
+
             }
         }
     }

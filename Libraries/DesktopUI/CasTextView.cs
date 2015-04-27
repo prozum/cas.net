@@ -9,14 +9,18 @@ namespace DesktopUI
     {
         public bool locked = false;
 
-        public TextTag tag = new TextTag("BoldTag");
+        public TextTag boldTag = new TextTag("BoldTag");
+        public TextTag italicTag = new TextTag("ItalicTag");
 
         public CasTextView(string SerializedString, bool locked)
             : base()
         {
 
-            tag.Weight = Pango.Weight.Bold;
-            Buffer.TagTable.Add(tag);
+            boldTag.Weight = Pango.Weight.Bold;
+            Buffer.TagTable.Add(boldTag);
+
+            italicTag.Style = Pango.Style.Italic;
+            Buffer.TagTable.Add(italicTag);
 
             WrapMode = WrapMode.WordChar;
             DeserializeCasTextView(SerializedString);

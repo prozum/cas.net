@@ -35,6 +35,7 @@ namespace CAS.NET.Desktop
         SaveToolButton save;
         NewToolButton neo;
         BoldToolButton bold;
+        ItalicToolButton italic;
 
         ScrolledWindow scrolledWindow = new ScrolledWindow();
 
@@ -79,11 +80,13 @@ namespace CAS.NET.Desktop
             save = new SaveToolButton(textviews);
             neo = new NewToolButton(textviews);
             bold = new BoldToolButton(ref textviews);
+            italic = new ItalicToolButton(ref textviews);
 
             toolbar.Add(open);
             toolbar.Add(save);
             toolbar.Add(neo);
             toolbar.Add(bold);
+            toolbar.Add(italic);
 
             VBox vbox = new VBox();
 
