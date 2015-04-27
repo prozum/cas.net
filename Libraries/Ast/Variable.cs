@@ -85,6 +85,15 @@ namespace Ast
             return res;
         }
 
+        public Expression SeberateNumbers()
+        {
+            var thisClone = Clone() as Symbol;
+            thisClone.prefix = new Integer(1);
+            thisClone.exponent = new Integer(1);
+
+            return ReturnValue(thisClone);
+        }
+
         //public override Expression Expand()
         //{
         //    Expression res;

@@ -65,10 +65,9 @@ namespace Ast
                 }
                 else if (solved.Left is Symbol)
                 {
-                    var newLeft = solved.Left.Clone() as Symbol;
-                    newLeft.prefix = new Integer(1);
+                    var newLeft = (solved.Left as Symbol).SeberateNumbers();
 
-                    solved = new Equal(newLeft, new Div(solved.Right, (solved.Left as Symbol).prefix));
+                    solved = new Equal(newLeft, solved.Right);
                 }
                 else
                 {
@@ -117,6 +116,7 @@ namespace Ast
 
             if (leftSimplified is Operator && ((leftSimplified as Operator).Left.ContainsVariable(sym) && (leftSimplified as Operator).Right.ContainsVariable(sym)))
             {
+                throw new NotImplementedException();
                 return null;
             }
             else
