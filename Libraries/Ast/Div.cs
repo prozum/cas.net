@@ -4,7 +4,7 @@ namespace Ast
 {
     public class Div : Operator, IInvertable
     {
-        public Div() : base("/", 40) { }
+        public Div() : base("/", 50) { }
         public Div(Expression left, Expression right) : base(left, right, "/", 40) { }
 
         protected override Expression Evaluate(Expression caller)
@@ -18,11 +18,11 @@ namespace Ast
             {
                 if (left is Add)
                 {
-                    return new Add(new Div((left as Operator).Left, right), new Div((left as Operator).Right, right));
+                    return new Add(new Div((left as Operator).Left, right).Simplify(), new Div((left as Operator).Right, right).Simplify());
                 }
                 else if (left is Sub)
                 {
-                    return new Sub(new Div((left as Operator).Left, right), new Div((left as Operator).Right, right));
+                    return new Sub(new Div((left as Operator).Left, right).Simplify(), new Div((left as Operator).Right, right).Simplify());
                 }
                 else
                 {
@@ -33,11 +33,11 @@ namespace Ast
             {
                 if (right is Add)
                 {
-                    return new Add(new Div((right as Operator).Left, left), new Div((right as Operator).Right, Left));
+                    return new Add(new Div((right as Operator).Left, left).Simplify(), new Div((right as Operator).Right, Left).Simplify());
                 }
                 else if (right is Sub)
                 {
-                    return new Sub(new Div((right as Operator).Left, left), new Div((right as Operator).Right, Left));
+                    return new Sub(new Div((right as Operator).Left, left).Simplify(), new Div((right as Operator).Right, Left).Simplify());
                 }
                 else
                 {

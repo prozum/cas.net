@@ -8,7 +8,6 @@ namespace Ast
     public static class Scanner
     {
         const char EOS = (char)0;
-        static readonly char sep = NumberFormatInfo.CurrentInfo.CurrencyDecimalSeparator[0];
         static readonly char[] opChars = {'=', '<', '>', '+', '-', '*', '/', '^', ':'};
 
         static bool Errors = false; 
@@ -162,12 +161,12 @@ namespace Ast
             Pos startPos = pos;
 
             var cur = CharNext(false);
-            while (char.IsDigit(cur) || cur == sep)
+            while (char.IsDigit(cur) || cur == '.')
             {
                 CharNext();
                 number += cur;
 
-                if (cur == sep)
+                if (cur == '.')
                 {
                     //More than one Seperator. Error!
                     Errors |= kind == TokenKind.DECIMAL;
