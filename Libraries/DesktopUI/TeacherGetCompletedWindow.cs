@@ -13,8 +13,6 @@ namespace DesktopUI
         {
             this.user = user;
             this.textviews = textviews;
-
-            throw new NotImplementedException();
         }
     }
 }
