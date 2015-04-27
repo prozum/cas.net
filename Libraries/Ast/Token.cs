@@ -12,6 +12,8 @@ namespace Ast
         ELSE,
         RETURN,
 
+        TEXT,
+
         INTEGER,
         DECIMAL,
         IMAG_INT,

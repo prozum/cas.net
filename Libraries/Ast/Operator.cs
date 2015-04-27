@@ -210,6 +210,11 @@ namespace Ast
             return Evaluate() + other;
         }
 
+        public override Expression AddWith(Text other)
+        {
+            return new Text(Evaluate().ToString() + other);
+        }
+
         #endregion
 
         #region SubWith

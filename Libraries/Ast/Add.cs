@@ -205,7 +205,7 @@ namespace Ast
             var sym = symbol;
             var tempRight = Right;
 
-            if (Right is Number && (Right as Number).IsNegative())
+            if (Right is Number && (Right as Number).IsNegative())  
             {
                 tempRight = (Right as Number).ToNegative();
                 sym = "-";
