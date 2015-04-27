@@ -84,7 +84,7 @@ namespace Ast
             return MakeClone<UsrFunc>();
         }
 
-        public override Expression Simplify()
+        internal override Expression Simplify(Expression caller)
         {
             if (prefix.CompareTo(Constant.Zero))
             {

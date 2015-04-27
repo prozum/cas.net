@@ -49,6 +49,7 @@ namespace Ast
                 return new Div(left.Expand(), right.Expand());
             }
         }
+
         protected override Expression SimplifyHelper(Expression left, Expression right)
         {
             if (right is Number && right.CompareTo(Constant.One))

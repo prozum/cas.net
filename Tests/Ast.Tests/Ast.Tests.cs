@@ -97,7 +97,8 @@ namespace Ast.Tests
         #endregion
         public void Simplify(string expected, string inputString)
         {
-            var res = Parser.Parse(inputString).Simplify();
+            var simString = "Simplify[" + inputString + "]";
+            var res = eval.Evaluation(simString);
             Assert.AreEqual(expected, res.ToString());
         }
 

@@ -35,7 +35,8 @@ namespace Ast
             return this;
         }
 
-        public virtual Expression Simplify()
+        public virtual Expression Simplify() { return this.Simplify(this).CurrectOperator(); }
+        internal virtual Expression Simplify(Expression caller)
         {
             return this;
         }

@@ -68,11 +68,11 @@ namespace Ast
             {
                 if (Left.CompareTo(other))
                 {
-                    return new Add(new Mul(new Integer(2), other).Simplify(), Right);
+                    return new Add(new Mul(new Integer(2), other), Right);
                 }
                 else if (Right.CompareTo(other))
                 {
-                    return new Add(Left, new Mul(new Integer(2), other).Simplify());
+                    return new Add(Left, new Mul(new Integer(2), other));
                 }
                 else
                 {

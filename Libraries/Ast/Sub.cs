@@ -19,7 +19,7 @@ namespace Ast
 
         protected override Expression SimplifyHelper(Expression left, Expression right)
         {
-            var newRight = new Mul(new Integer(-1), right).Simplify();
+            var newRight = new Mul(new Integer(-1), right).Simplify(this);
             return new Add(left, newRight);
         }
 

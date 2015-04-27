@@ -144,11 +144,11 @@ namespace Ast
             {
                 if (Left.CompareTo(other))
                 {
-                    return new Mul(new Exp(other, new Integer(2)).Simplify(), Right);
+                    return new Mul(new Exp(other, new Integer(2)).Simplify(this), Right);
                 }
                 else if (Right.CompareTo(other))
                 {
-                    return new Mul(Left, new Exp(other, new Integer(2)).Simplify());
+                    return new Mul(Left, new Exp(other, new Integer(2)).Simplify(this));
                 }
                 else
                 {

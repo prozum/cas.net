@@ -9,7 +9,7 @@ namespace Ast
 
         protected override Expression SimplifyHelper(Expression left, Expression right)
         {
-            return new Equal(Left.Simplify(), Right.Simplify());
+            return new Equal(Left.Simplify(this), Right.Simplify(this));
         }
 
         protected override Expression ExpandHelper(Expression left, Expression right)

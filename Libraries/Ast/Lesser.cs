@@ -24,7 +24,7 @@ namespace Ast
 
         protected override Expression SimplifyHelper(Expression left, Expression right)
         {
-            return new Lesser(left.Simplify(), right.Simplify());
+            return new Lesser(left.Simplify(this), right.Simplify(this));
         }
 
         protected override Expression ExpandHelper(Expression left, Expression right)

@@ -158,14 +158,14 @@ namespace Ast
             return Left.ContainsVariable(other) || Right.ContainsVariable(other);
         }
 
-        public override Expression Simplify()
+        internal override Expression Simplify(Expression caller)
         {
             var prev = ToString();
-            var res = SimplifyHelper(Left.Simplify(), Right.Simplify());
+            var res = SimplifyHelper(Left.Simplify(caller), Right.Simplify(caller));
 
             if (prev != res.ToString())
             {
-                res = res.Simplify();
+                res = res.Simplify(caller);
             }
 
             return res;

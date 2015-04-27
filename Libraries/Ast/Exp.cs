@@ -59,7 +59,7 @@ namespace Ast
             }
             else if (left is Variable && right is Number)
             {
-                return VariableOperation(left as Variable, right as Number).Simplify();
+                return VariableOperation(left as Variable, right as Number);
             }
 
             return new Exp(left, right);

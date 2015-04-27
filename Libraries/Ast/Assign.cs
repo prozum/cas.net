@@ -50,7 +50,7 @@ namespace Ast
 
         protected override Expression SimplifyHelper(Expression left, Expression right)
         {
-            return new Assign(Left.Simplify(), Right.Simplify());
+            return new Assign(Left.Simplify(this), Right.Simplify(this));
         }
 
         public override Expression Clone()
