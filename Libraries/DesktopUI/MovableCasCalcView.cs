@@ -8,7 +8,7 @@ namespace DesktopUI
         public CasCalcView calcview;
 
         public MovableCasCalcView(Evaluator Eval, TextViewList parent)
-            : base(parent, "", false)
+            : base("", false)
         {
             calcview = new CasCalcView(Eval);
 

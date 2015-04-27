@@ -7,15 +7,19 @@ namespace DesktopUI
 {
     public class CasTextView : TextView
     {
-        public bool teacherEditOnly = false;
+        public bool locked = false;
 
-        public CasTextView(string SerializedString, bool TeacherCanEdit)
+        public CasTextView(string SerializedString, bool locked)
             : base()
         {
+            Console.WriteLine(locked);
+
             WrapMode = WrapMode.WordChar;
             DeserializeCasTextView(SerializedString);
-            teacherEditOnly = TeacherCanEdit;
+            this.locked = locked;
+
             ShowAll();
+
         }
 
         public string SerializeCasTextView()
@@ -33,6 +37,12 @@ namespace DesktopUI
             TextIter textIter = Buffer.StartIter;
             byte[] byteTextView = Convert.FromBase64String(serializedTextView);
             Buffer.Deserialize(Buffer, Buffer.RegisterDeserializeTagset(null), ref textIter, byteTextView, (ulong)byteTextView.Length);
+        }
+
+        public void LockTextView(bool locked)
+        {
+            Console.WriteLine(locked);
+            Editable = !locked;
         }
     }
 }

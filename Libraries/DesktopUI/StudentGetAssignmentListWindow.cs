@@ -48,7 +48,7 @@ namespace DesktopUI
                             }
                             else if (metaItem.type == typeof(MovableCasTextView))
                             {
-                                MovableCasTextView movableCasTextView = new MovableCasTextView(this.textviews, metaItem.metastring, true);
+                                MovableCasTextView movableCasTextView = new MovableCasTextView(metaItem.metastring, true);
                                 this.textviews.castextviews.Add(movableCasTextView);
                             }
                         }
