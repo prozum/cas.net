@@ -259,7 +259,7 @@ namespace Ast
 
                 if (expr != null)
                 {
-                    pos = tok.pos;
+                    pos = expr.pos = tok.pos;
                     exs.Enqueue(expr);
                     if (expr is Error)
                         return expr;

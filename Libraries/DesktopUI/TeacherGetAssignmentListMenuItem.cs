@@ -21,7 +21,6 @@ namespace DesktopUI
 
         void OnClicked()
         {
-            throw new NotImplementedException();
             TeacherGetAssignmentListWindow window = new TeacherGetAssignmentListWindow(ref user, ref textviews);
         }
     }

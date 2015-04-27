@@ -8,7 +8,7 @@ public class MainWindow : Window
 {
     Evaluator eval;
     EvalData output;
-    List<EvalData> DataList;
+    List<EvalData> dataList;
 
     Grid grid;
 
@@ -38,13 +38,13 @@ public class MainWindow : Window
         do
         {
             output = eval.Step();
-            DataList.Add(output);
+            dataList.Add(output);
 
         } while (!(output is DoneData));
 
         TextIter insertIter = buffer.StartIter;
 
-        foreach(var data in DataList)
+        foreach(var data in dataList)
         {
             if (data is MsgData)
             {
@@ -61,13 +61,13 @@ public class MainWindow : Window
                         break;
                 }
             }
-            else if (data is PlotData)
+            else if (data is ExprData)
             {
-
+                buffer.Insert(ref insertIter, (data as ExprData).expr.ToString() + "\n");
             }
         }
 
-        DataList.Clear();
+        dataList.Clear();
     }
 
     public void CreateDefTree()
@@ -143,7 +143,7 @@ public class MainWindow : Window
         grid.Attach(defTree, 1, 0, 1, 3);
 
         eval = new Evaluator ();
-        DataList = new List<EvalData>();
+        dataList = new List<EvalData>();
         UpdateDefinitions();
 
         ShowAll ();

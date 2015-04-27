@@ -17,13 +17,17 @@ namespace DesktopUI
             this.user = user;
             this.textviews = textviews;
 
+			SetSizeRequest(300, 300);
+
             Grid grid = new Grid();
 
             Label FileNameLabel = new Label("Filename:");
             Entry FileNameEntry = new Entry();
+			FileNameEntry.WidthRequest = 200;
 
             Label GradeLabel = new Label("Grade:");
             Entry GradeEntry = new Entry();
+			GradeEntry.WidthRequest = 200;
 
             Button CancelButton = new Button("Cancel");
             CancelButton.Clicked += delegate
@@ -32,7 +36,7 @@ namespace DesktopUI
             };
 
             Button DownloadButton = new Button("List of Completed Students");
-            CancelButton.Clicked += delegate
+            DownloadButton.Clicked += delegate
             {
                 StudentList = this.user.teacher.GetCompletedList(FileNameEntry.Text, GradeEntry.Text);
 
@@ -40,6 +44,8 @@ namespace DesktopUI
                 {
                     grid.Remove(widget);
                 }
+
+					Console.WriteLine (StudentList.Length);
 
                 for (int i = 0; i < StudentList.Length; i++)
                 {
@@ -77,21 +83,21 @@ namespace DesktopUI
                         Destroy();
                     };
 
-                    grid.Attach(button, i + 1, 1, 1, 1);
+                    grid.Attach(button, 1, 1 + i, 1, 1);
+					ShowAll();				
                 }
             };
 
             grid.Attach(FileNameLabel, 1, 1, 1, 1);
-            grid.Attach(FileNameEntry, 2, 1, 1, 1);
+            grid.Attach(FileNameEntry, 1, 2, 1, 1);
 
-            grid.Attach(GradeLabel, 1, 2, 1, 1);
+            grid.Attach(GradeLabel, 2, 1, 1, 1);
             grid.Attach(GradeEntry, 2, 2, 1, 1);
 
-            grid.Attach(DownloadButton, 3, 1, 1, 1);
-            grid.Attach(CancelButton, 3, 2, 1, 1);
+            grid.Attach(DownloadButton, 1, 3, 1, 1);
+            grid.Attach(CancelButton, 2, 3, 1, 1);
 
-            Add(grid);
-
+			Add(grid);
             ShowAll();
         }
     }

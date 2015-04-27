@@ -12,7 +12,7 @@ namespace Ast
 
         public override EvalData Step()
         {
-            return new MsgData(MsgType.Print, expr.Evaluate().ToString());
+            return expr.Step();
         }
 
         public override Expression Evaluate()
