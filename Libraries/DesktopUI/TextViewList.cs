@@ -55,18 +55,18 @@ namespace DesktopUI
                 MovableLockedCasTextView movableLockedCasTextView = new MovableLockedCasTextView(serializedString, locked);
                 movableLockedCasTextView.textview.LockTextView(false);
 
-				ButtonMoveUp.Clicked += delegate
-				{
-					Move(movableLockedCasTextView.id_, -1);
-				};
+                ButtonMoveUp.Clicked += delegate
+                {
+                    Move(movableLockedCasTextView.id_, -1);
+                };
 
-				ButtonMoveDown.Clicked += delegate
-				{
-					Move(movableLockedCasTextView.id_, 1);
-				};
+                ButtonMoveDown.Clicked += delegate
+                {
+                    Move(movableLockedCasTextView.id_, 1);
+                };
 
-				movableLockedCasTextView.Attach(ButtonMoveUp, 2, 1, 1, 1);
-				movableLockedCasTextView.Attach(ButtonMoveDown, 2, 2, 1, 1);
+                movableLockedCasTextView.Attach(ButtonMoveUp, 2, 1, 1, 1);
+                movableLockedCasTextView.Attach(ButtonMoveDown, 2, 2, 1, 1);
 
                 castextviews.Add(movableLockedCasTextView);
             }
@@ -77,15 +77,15 @@ namespace DesktopUI
 
                 if (locked == false)
                 {
-					ButtonMoveUp.Clicked += delegate
-					{
-						Move(movableCasTextView.id_, -1);
-					};
+                    ButtonMoveUp.Clicked += delegate
+                    {
+                        Move(movableCasTextView.id_, -1);
+                    };
 
-					ButtonMoveDown.Clicked += delegate
-					{
-						Move(movableCasTextView.id_, 1);
-					};
+                    ButtonMoveDown.Clicked += delegate
+                    {
+                        Move(movableCasTextView.id_, 1);
+                    };
 
                     movableCasTextView.Attach(ButtonMoveUp, 2, 1, 1, 1);
                     movableCasTextView.Attach(ButtonMoveDown, 2, 2, 1, 1);
@@ -101,33 +101,33 @@ namespace DesktopUI
 
         public void InsertCalcView()
         {
-			Button ButtonMoveUp = new Button("↑");
-			Button ButtonMoveDown = new Button("↓");
+            Button ButtonMoveUp = new Button("↑");
+            Button ButtonMoveDown = new Button("↓");
 
             MovableCasCalcView MovCasCalcView = new MovableCasCalcView(Eval);
             MovCasCalcView.calcview.input.Activated += delegate
             {
-				MovCasCalcView.calcview.Eval.scope.locals.Clear();
+                MovCasCalcView.calcview.Eval.scope.locals.Clear();
                 MovCasCalcView.calcview.Evaluate();
                 MovCasCalcView.ShowAll();
             };
 
-			ButtonMoveUp.Clicked += delegate
-			{
-				MovCasCalcView.calcview.Eval.scope.locals.Clear();
-				Move(MovCasCalcView.id_, -1);
-				MovCasCalcView.calcview.Eval.scope.locals.Clear();
-			};
+            ButtonMoveUp.Clicked += delegate
+            {
+                MovCasCalcView.calcview.Eval.scope.locals.Clear();
+                Move(MovCasCalcView.id_, -1);
+                MovCasCalcView.calcview.Eval.scope.locals.Clear();
+            };
 
-			ButtonMoveDown.Clicked += delegate
-			{
-				MovCasCalcView.calcview.Eval.scope.locals.Clear();
-				Move(MovCasCalcView.id_, 1);
-				MovCasCalcView.calcview.Eval.scope.locals.Clear();
-			};
+            ButtonMoveDown.Clicked += delegate
+            {
+                MovCasCalcView.calcview.Eval.scope.locals.Clear();
+                Move(MovCasCalcView.id_, 1);
+                MovCasCalcView.calcview.Eval.scope.locals.Clear();
+            };
 
-			MovCasCalcView.Attach(ButtonMoveUp, 2, 1, 1, 1);
-			MovCasCalcView.Attach(ButtonMoveDown, 2, 2, 1, 1);
+            MovCasCalcView.Attach(ButtonMoveUp, 2, 1, 1, 1);
+            MovCasCalcView.Attach(ButtonMoveDown, 2, 2, 1, 1);
 
             castextviews.Add(MovCasCalcView);
 
@@ -143,12 +143,12 @@ namespace DesktopUI
 
             MovableDrawCanvas movableDrawCanvas = new MovableDrawCanvas();
 
-            ButtonMoveUp.Activated += delegate
+            ButtonMoveUp.Clicked += delegate
             {
                 Move(movableDrawCanvas.id_, -1);
             };
 
-            ButtonMoveDown.Activated += delegate
+            ButtonMoveDown.Clicked += delegate
             {
                 Move(movableDrawCanvas.id_, 1);
             };

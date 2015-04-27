@@ -6,9 +6,6 @@ namespace DesktopUI
     {
         public DrawCanvas canvas;
 
-        static int ID = 0;
-        public int id_;
-
         public MovableDrawCanvas()
             : base("", false)
         {
