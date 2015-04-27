@@ -1,0 +1,32 @@
+﻿using System;
+
+namespace DesktopUI
+{
+    public class MovableDrawCanvas : MovableCasTextView
+    {
+        public DrawCanvas canvas;
+
+        static int ID = 0;
+        public int id_;
+
+        public MovableDrawCanvas()
+            : base("", false)
+        {
+            canvas = new DrawCanvas();
+
+            Remove(textview);
+            textview = null;
+            Attach(canvas, 1, 1, 2, 2);
+
+            GLib.Timeout.Add(15, new GLib.TimeoutHandler(RedrawCanvas));
+
+        }
+
+        public bool RedrawCanvas()
+        {
+            canvas.QueueDraw();
+            return true;
+        }
+    }
+}
+

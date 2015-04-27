@@ -16,7 +16,7 @@ namespace DesktopUI
 
             this.Activated += delegate
             {
-				
+                OnClicked();
             };
         }
 
