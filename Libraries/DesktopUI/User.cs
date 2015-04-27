@@ -79,10 +79,14 @@ namespace DesktopUI
                     {
                         w.Show();
                     }
-                    else if (w.GetType() == typeof(TeacherGetCompletedMenuItem))
+                    else if (w.GetType() == typeof(TeacherGetCompletedListMenuItem))
                     {
                         w.Show();
                     }
+					else if (w.GetType() == typeof(TeacherGetCompletedMenuItem))
+					{
+						w.Show();
+					}
                 }
             }
         }

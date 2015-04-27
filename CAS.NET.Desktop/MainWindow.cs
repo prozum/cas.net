@@ -27,8 +27,8 @@ namespace CAS.NET.Desktop
         TeacherAddAssignmentMenuItem teaAddAsm;
         TeacherAddFeedbackMenuItem teaAddFee;
         TeacherGetAssignmentListMenuItem teaGetAsmList;
+        TeacherGetCompletedListMenuItem teaGetComList;
         TeacherGetCompletedMenuItem teaGetCom;
-        StudentGetAssignmentMenuItem studentGetAssignmentMenuItem;
 
         Toolbar toolbar = new Toolbar();
         OpenToolButton open;
@@ -55,6 +55,7 @@ namespace CAS.NET.Desktop
             teaAddAsm = new TeacherAddAssignmentMenuItem(ref user, ref textviews);
             teaAddFee = new TeacherAddFeedbackMenuItem(ref user, ref textviews);
             teaGetAsmList = new TeacherGetAssignmentListMenuItem(ref user, ref textviews);
+            teaGetComList = new TeacherGetCompletedListMenuItem(ref user, ref textviews);
             teaGetCom = new TeacherGetCompletedMenuItem(ref user, ref textviews);
 
             // Adding elements to menu
@@ -68,6 +69,7 @@ namespace CAS.NET.Desktop
             menu.Append(teaAddAsm);
             menu.Append(teaAddFee);
             menu.Append(teaGetAsmList);
+            menu.Append(teaGetComList);
             menu.Append(teaGetCom);
 
             menubar.Append(server);
@@ -104,6 +106,7 @@ namespace CAS.NET.Desktop
                     || w.GetType() == typeof(TeacherAddAssignmentMenuItem)
                     || w.GetType() == typeof(TeacherAddFeedbackMenuItem)
                     || w.GetType() == typeof(TeacherGetAssignmentListMenuItem)
+                    //|| w.GetType() == typeof(TeacherGetCompletedListMenuItem)
                     || w.GetType() == typeof(TeacherGetCompletedMenuItem)
                     || w.GetType() == typeof(LogoutMenuItem))
                 {
