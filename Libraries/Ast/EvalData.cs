@@ -42,18 +42,18 @@ namespace Ast
         }
     }
 
-    public class ExpData : EvalData
+    public class ExprData : EvalData
     {
-        public Expression exp;
+        public Expression expr;
 
-        public ExpData(Expression exp)
+        public ExprData(Expression exp)
         {
-            this.exp = exp;
+            this.expr = exp;
         }
 
         public override string ToString()
         {
-            return exp.ToString();
+            return expr.ToString();
         }
     }
 }
