@@ -43,29 +43,25 @@ namespace DesktopUI
             Button ButtonMoveUp = new Button("↑");
             Button ButtonMoveDown = new Button("↓");
 
-            ButtonMoveUp.Clicked += delegate
-            {
-//                    MoveUp();
-            };
-
-            ButtonMoveDown.Clicked += delegate
-            {
-//                    MoveDown();
-            };
-
-
             if (user.privilege == 1)
             {
                 MovableLockedCasTextView movableLockedCasTextView = new MovableLockedCasTextView(serializedString, locked);
                 movableLockedCasTextView.textview.LockTextView(false);
-                castextviews.Add(new MovableLockedCasTextView(serializedString, false));
 
-                movableLockedCasTextView.Attach(ButtonMoveUp, 2, 1, 1, 1);
-                movableLockedCasTextView.Attach(ButtonMoveDown, 2, 2, 1, 1);
+				ButtonMoveUp.Clicked += delegate
+				{
+					Move(movableLockedCasTextView.id_, -1);
+				};
 
-                ButtonMoveDown.Show();
-                ButtonMoveUp.Show();
+				ButtonMoveDown.Clicked += delegate
+				{
+					Move(movableLockedCasTextView.id_, 1);
+				};
 
+				movableLockedCasTextView.Attach(ButtonMoveUp, 2, 1, 1, 1);
+				movableLockedCasTextView.Attach(ButtonMoveDown, 2, 2, 1, 1);
+
+                castextviews.Add(movableLockedCasTextView);
             }
             else if (user.privilege == 0)
             {
@@ -74,12 +70,20 @@ namespace DesktopUI
 
                 if (locked == false)
                 {
+					ButtonMoveUp.Clicked += delegate
+					{
+						Move(movableCasTextView.id_, -1);
+					};
+
+					ButtonMoveDown.Clicked += delegate
+					{
+						Move(movableCasTextView.id_, 1);
+					};
+
                     movableCasTextView.Attach(ButtonMoveUp, 2, 1, 1, 1);
                     movableCasTextView.Attach(ButtonMoveDown, 2, 2, 1, 1);
-
-                    ButtonMoveDown.Show();
-                    ButtonMoveUp.Show();
                 }
+
                 castextviews.Add(movableCasTextView);
             }
 
