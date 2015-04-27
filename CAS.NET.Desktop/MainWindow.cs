@@ -36,6 +36,7 @@ namespace CAS.NET.Desktop
         NewToolButton neo;
         BoldToolButton bold;
         ItalicToolButton italic;
+        UnderlineToolButton underline;
 
         ScrolledWindow scrolledWindow = new ScrolledWindow();
 
@@ -81,12 +82,14 @@ namespace CAS.NET.Desktop
             neo = new NewToolButton(textviews);
             bold = new BoldToolButton(ref textviews);
             italic = new ItalicToolButton(ref textviews);
+            underline = new UnderlineToolButton(ref textviews);
 
             toolbar.Add(open);
             toolbar.Add(save);
             toolbar.Add(neo);
             toolbar.Add(bold);
             toolbar.Add(italic);
+            toolbar.Add(underline);
 
             VBox vbox = new VBox();
 

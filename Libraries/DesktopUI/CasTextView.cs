@@ -11,6 +11,7 @@ namespace DesktopUI
 
         public TextTag boldTag = new TextTag("BoldTag");
         public TextTag italicTag = new TextTag("ItalicTag");
+        public TextTag underlineTag = new TextTag("UnderlineTag");
 
         public CasTextView(string SerializedString, bool locked)
             : base()
@@ -21,6 +22,9 @@ namespace DesktopUI
 
             italicTag.Style = Pango.Style.Italic;
             Buffer.TagTable.Add(italicTag);
+
+            underlineTag.Underline = Pango.Underline.Single;
+            Buffer.TagTable.Add(underlineTag);
 
             WrapMode = WrapMode.WordChar;
             DeserializeCasTextView(SerializedString);
