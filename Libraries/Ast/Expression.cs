@@ -25,7 +25,7 @@ namespace Ast
 
         public virtual Expression Evaluate() 
         {
-            var simplified = Simplify();
+            var simplified = Reduce();
             return simplified.Evaluate(this); 
         }
         protected virtual Expression Evaluate(Expression caller)
@@ -51,8 +51,8 @@ namespace Ast
             return this;
         }
 
-        public virtual Expression Simplify() { return this.Simplify(this).CurrectOperator(); }
-        internal virtual Expression Simplify(Expression caller)
+        public virtual Expression Reduce() { return this.Reduce(this).CurrectOperator(); }
+        internal virtual Expression Reduce(Expression caller)
         {
             return this;
         }

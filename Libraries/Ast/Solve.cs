@@ -30,7 +30,7 @@ namespace Ast
 
             if (equal.Right.ContainsVariable(sym))
             {
-                solved = new Equal(new Sub(equal.Left, equal.Right).Simplify().Expand(), new Integer(0));
+                solved = new Equal(new Sub(equal.Left, equal.Right).Reduce().Expand(), new Integer(0));
             }
             else
             {
@@ -77,7 +77,7 @@ namespace Ast
                 System.Diagnostics.Debug.WriteLine(solved);
             }
 
-            return solved.Simplify();
+            return solved.Reduce();
         }
 
         private Equal InvertOperator(Expression left, Expression right)
@@ -117,7 +117,7 @@ namespace Ast
 
         private Equal BothSideSymbolSolver(Expression left, Expression right)
         {
-            var leftSimplified = left.Simplify();
+            var leftSimplified = left.Reduce();
 
             if (leftSimplified is Operator && ((leftSimplified as Operator).Left.ContainsVariable(sym) && (leftSimplified as Operator).Right.ContainsVariable(sym)))
             {

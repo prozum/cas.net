@@ -74,8 +74,8 @@ namespace Ast
 
         public override bool CompareTo(Expression other)
         {
-            Expression thisSimplified = Simplify();
-            Expression otherSimplified = other.Simplify();
+            Expression thisSimplified = Reduce();
+            Expression otherSimplified = other.Reduce();
 
             if (!(thisSimplified is Operator))
             {
@@ -100,7 +100,7 @@ namespace Ast
 
         private bool CompareSwappables(ISwappable exp1, Operator exp2)
         {
-            if (CompareSides(exp1 as Operator, exp2) || CompareSides(exp1.Swap().Simplify() as Operator, exp2))
+            if (CompareSides(exp1 as Operator, exp2) || CompareSides(exp1.Swap().Reduce() as Operator, exp2))
             {
                 return true;
             }
@@ -158,21 +158,21 @@ namespace Ast
             return Left.ContainsVariable(other) || Right.ContainsVariable(other);
         }
 
-        internal override Expression Simplify(Expression caller)
+        internal override Expression Reduce(Expression caller)
         {
             var prev = ToString();
             var prevType = GetType();
-            var res = SimplifyHelper(Left.Simplify(caller), Right.Simplify(caller));
+            var res = ReduceHelper(Left.Reduce(caller), Right.Reduce(caller));
 
             if (prevType != res.GetType() || prev != res.ToString())
             {
-                res = res.Simplify(caller);
+                res = res.Reduce(caller);
             }
 
             return res;
         }
 
-        protected virtual Expression SimplifyHelper(Expression left, Expression right)
+        protected virtual Expression ReduceHelper(Expression left, Expression right)
         {
             return this;
         }

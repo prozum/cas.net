@@ -6,7 +6,7 @@ namespace Ast
     public class Exp : Operator, IInvertable
     {
         public Exp() : base("^", 60) { }
-        public Exp(Expression left, Expression right) : base(left, right, "^", 40) { }
+        public Exp(Expression left, Expression right) : base(left, right, "^", 60) { }
 
         protected override Expression Evaluate(Expression caller)
         {
@@ -19,19 +19,19 @@ namespace Ast
             {
                 if (left is Add)
                 {
-                    return new Add(new Add(new Exp((left as Operator).Left, right).Simplify(), new Exp((left as Operator).Right, right).Simplify()), new Mul(new Integer(2), new Mul((left as Operator).Left, (left as Operator).Right)).Simplify());
+                    return new Add(new Add(new Exp((left as Operator).Left, right).Reduce(), new Exp((left as Operator).Right, right).Reduce()), new Mul(new Integer(2), new Mul((left as Operator).Left, (left as Operator).Right)).Reduce());
                 }
                 else if (left is Sub)
                 {
-                    return new Sub(new Add(new Exp((left as Operator).Left, right).Simplify(), new Exp((left as Operator).Right, right).Simplify()), new Mul(new Integer(2), new Mul((left as Operator).Left, (left as Operator).Right)).Simplify());
+                    return new Sub(new Add(new Exp((left as Operator).Left, right).Reduce(), new Exp((left as Operator).Right, right).Reduce()), new Mul(new Integer(2), new Mul((left as Operator).Left, (left as Operator).Right)).Reduce());
                 }
                 else if (left is Mul)
                 {
-                    return new Mul(new Exp((left as Operator).Left, right).Simplify(), new Exp((left as Operator).Right, right).Simplify());
+                    return new Mul(new Exp((left as Operator).Left, right).Reduce(), new Exp((left as Operator).Right, right).Reduce());
                 }
                 else if (left is Div)
                 {
-                    return new Div(new Exp((left as Operator).Left, right).Simplify(), new Exp((left as Operator).Right, right).Simplify());
+                    return new Div(new Exp((left as Operator).Left, right).Reduce(), new Exp((left as Operator).Right, right).Reduce());
                 }
                 else
                 {
@@ -44,7 +44,7 @@ namespace Ast
             }
         }
 
-        protected override Expression SimplifyHelper(Expression left, Expression right)
+        protected override Expression ReduceHelper(Expression left, Expression right)
         {
             if (left is Number && left.CompareTo(Constant.One))
             {
@@ -91,7 +91,7 @@ namespace Ast
                 var answers = new Ast.List();
 
                 answers.items.Add(answer);
-                answers.items.Add(new Mul(new Integer(-1), answer).Simplify());
+                answers.items.Add(new Mul(new Integer(-1), answer).Reduce());
                 return answers;
             }
             else

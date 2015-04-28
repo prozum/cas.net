@@ -459,8 +459,8 @@ namespace Ast
                     return new ATan(args, scope);
                 case "sqrt":
                     return new Sqrt(args, scope);
-                case "simplify":
-                    return new Simplify(args, scope);
+                case "reduce":
+                    return new Reduce(args, scope);
                 case "expand":
                     return new Expand(args, scope);
                 case "range":

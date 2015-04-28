@@ -62,7 +62,7 @@ namespace Ast
             return res;
         }
 
-        internal override Expression Simplify(Expression caller)
+        internal override Expression Reduce(Expression caller)
         {
             if (prefix.CompareTo(Constant.Zero))
             {
@@ -80,6 +80,25 @@ namespace Ast
         {
             T res = base.MakeClone<T>();
             (res as Func).args = new List<Expression>(args);
+
+            return res;
+        }
+
+        protected T ReduceHelper<T>() where T : Func, new()
+        {
+            var newArgs = new List<Expression>();
+            var res = new T();
+
+            foreach (var arg in args)
+            {
+                newArgs.Add(arg.Reduce());
+            }
+
+            res.args = newArgs;
+            res.identifier = identifier;
+            res.scope = scope;
+            res.prefix = prefix.Clone() as Number;
+            res.exponent = exponent.Clone() as Number;
 
             return res;
         }

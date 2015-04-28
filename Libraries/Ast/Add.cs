@@ -17,7 +17,7 @@ namespace Ast
             return new Add(left.Expand(), right.Expand());
         }
 
-        protected override Expression SimplifyHelper(Expression left, Expression right)
+        protected override Expression ReduceHelper(Expression left, Expression right)
         {
             if (left is Number && left.CompareTo(Constant.Zero))
             {
@@ -33,11 +33,11 @@ namespace Ast
             }
             else if (left is Add)
             {
-                return (left as Add).SimplifyMultiAdd(right);
+                return (left as Add).ReduceMultiAdd(right);
             }
             else if (right is Add)
             {
-                return (right as Add).SimplifyMultiAdd(left);
+                return (right as Add).ReduceMultiAdd(left);
             }
             else if ((left is Variable && right is Variable) && CompareVariables(left as Variable, right as Variable))
             {
@@ -58,11 +58,11 @@ namespace Ast
             return left.identifier == right.identifier && left.exponent.CompareTo(right.exponent) && left.GetType() == right.GetType();
         }
 
-        private Expression SimplifyMultiAdd(dynamic other)
+        private Expression ReduceMultiAdd(dynamic other)
         {
             if (other is Variable || other is Number)
             {
-                return SimplifyMultiAdd(other);
+                return ReduceMultiAdd(other);
             }
             else
             {
@@ -81,7 +81,7 @@ namespace Ast
             }
         }
 
-        private Expression SimplifyMultiAdd(Number other)
+        private Expression ReduceMultiAdd(Number other)
         {
             if (Left is Number)
             {
@@ -97,7 +97,7 @@ namespace Ast
             }
         }
 
-        private Expression SimplifyMultiAdd(Variable other)
+        private Expression ReduceMultiAdd(Variable other)
         {
             if (Left is Variable && CompareVariables(Left as Variable, other))
             {
@@ -109,7 +109,7 @@ namespace Ast
             }
             else if (Left is Add)
             {
-                var res = new Add((Left as Add).SimplifyMultiAdd(other), Right);
+                var res = new Add((Left as Add).ReduceMultiAdd(other), Right);
 
                 if (res.ToString() == new Add(new Add(Left, other), Right).ToString())
                 {
@@ -120,7 +120,7 @@ namespace Ast
             }
             else if (Right is Add)
             {
-                var res = new Add(Left, (Right as Add).SimplifyMultiAdd(other));
+                var res = new Add(Left, (Right as Add).ReduceMultiAdd(other));
 
                 if (res.ToString() == new Add(Left, new Add(Right, other)).ToString())
                 {

@@ -5,7 +5,7 @@ namespace Ast
     public class Div : Operator, IInvertable
     {
         public Div() : base("/", 50) { }
-        public Div(Expression left, Expression right) : base(left, right, "/", 40) { }
+        public Div(Expression left, Expression right) : base(left, right, "/", 50) { }
 
         protected override Expression Evaluate(Expression caller)
         {
@@ -18,11 +18,11 @@ namespace Ast
             {
                 if (left is Add)
                 {
-                    return new Add(new Div((left as Operator).Left, right).Simplify(), new Div((left as Operator).Right, right).Simplify());
+                    return new Add(new Div((left as Operator).Left, right).Reduce(), new Div((left as Operator).Right, right).Reduce());
                 }
                 else if (left is Sub)
                 {
-                    return new Sub(new Div((left as Operator).Left, right).Simplify(), new Div((left as Operator).Right, right).Simplify());
+                    return new Sub(new Div((left as Operator).Left, right).Reduce(), new Div((left as Operator).Right, right).Reduce());
                 }
                 else
                 {
@@ -33,11 +33,11 @@ namespace Ast
             {
                 if (right is Add)
                 {
-                    return new Add(new Div((right as Operator).Left, left).Simplify(), new Div((right as Operator).Right, Left).Simplify());
+                    return new Add(new Div((right as Operator).Left, left).Reduce(), new Div((right as Operator).Right, Left).Reduce());
                 }
                 else if (right is Sub)
                 {
-                    return new Sub(new Div((right as Operator).Left, left).Simplify(), new Div((right as Operator).Right, Left).Simplify());
+                    return new Sub(new Div((right as Operator).Left, left).Reduce(), new Div((right as Operator).Right, Left).Reduce());
                 }
                 else
                 {
@@ -50,7 +50,7 @@ namespace Ast
             }
         }
 
-        protected override Expression SimplifyHelper(Expression left, Expression right)
+        protected override Expression ReduceHelper(Expression left, Expression right)
         {
             if (right is Number && right.CompareTo(Constant.One))
             {

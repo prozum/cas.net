@@ -44,6 +44,11 @@ namespace Ast
             return new Error(this, "Could not take Tan of: " + args[0]);
         }
 
+        internal override Expression Reduce(Expression caller)
+        {
+            return ReduceHelper<Tan>();
+        }
+
         public override Expression Clone()
         {
             return MakeClone<Tan>();

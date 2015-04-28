@@ -39,7 +39,7 @@ namespace Ast.Tests
             Assert.IsTrue(Parser.Parse(inputString1).CompareTo(Parser.Parse(inputString2)));
         }
 
-        #region Simplify Test Cases
+        #region Reduce Test Cases
         #region Symbols
         [TestCase("2x", "x+x")]
         [TestCase("3x", "x+x+x")]
@@ -98,9 +98,9 @@ namespace Ast.Tests
         [TestCase("(x-y)^2", "x^2+y^2-2*x*y")]
         #endregion
         #endregion
-        public void Simplify(string expected, string inputString)
+        public void Reduce(string expected, string inputString)
         {
-            var simString = "Simplify[" + inputString + "]";
+            var simString = "Reduce[" + inputString + "]";
             var res = eval.Evaluation(simString);
             Assert.AreEqual(expected, res.ToString());
         }
@@ -182,7 +182,7 @@ namespace Ast.Tests
         [TestCase("{f[x]/f[x]}", "(f[x])/f[x]")]
         [TestCase("{f[x]/f[x]}", "f[x]/(f[x])")]
         [TestCase("{f[x]/f[x]}", "(f[x]/f[x])")]
-        [TestCase("{simplify[sqrt[2]^2]}", "simplify[sqrt[2]^2]")]
+        [TestCase("{reduce[sqrt[2]^2]}", "reduce[sqrt[2]^2]")]
         #endregion
 
         #region Negative
@@ -363,7 +363,7 @@ namespace Ast.Tests
         [TestCase("x=2", "x*3=6")]
         [TestCase("x=2", "6/x=3")]
         [TestCase("x=6", "x/3=2")]
-        [TestCase("x=2", "x^2=4")]
+        [TestCase("x=[sqrt[4],-sqrt[4]]", "x^2=4")]
         [TestCase("x=2", "x^3=8")]
         [TestCase("x=4", "x+x=8")]
         [TestCase("x=2", "x*x^2=8")]
