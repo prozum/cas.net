@@ -50,7 +50,7 @@ namespace Ast
 
         public override bool CompareTo(Expression other)
         {
-            var otherSimplified = other.Simplify();
+            var otherSimplified = other.Reduce();
 
             if (otherSimplified is Symbol)
             {
@@ -65,7 +65,7 @@ namespace Ast
             return otherSimplified.CompareTo(this.GetValue());
         }
 
-        internal override Expression Simplify(Expression caller)
+        internal override Expression Reduce(Expression caller)
         {
             if (prefix.CompareTo(Constant.Zero))
             {

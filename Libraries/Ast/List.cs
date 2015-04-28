@@ -16,7 +16,14 @@ namespace Ast
 
         protected override Expression Evaluate(Expression caller)
         {
-            return this;
+            var res = new List();
+
+            foreach (var item in items)
+            {
+                res.items.Add(item.Evaluate());
+            }
+
+            return res;
         }
 
         public override string ToString()

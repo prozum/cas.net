@@ -25,16 +25,6 @@ namespace Ast
         {
             return new Boolean(value);
         }
-
-        public override bool IsNegative()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override Number ToNegative()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
 

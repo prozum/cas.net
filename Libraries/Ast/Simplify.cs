@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class Simplify : SysFunc
+    public class Reduce : SysFunc
     {
-        public Simplify(List<Expression> args, Scope scope)
-            : base("simplify", args, scope)
+        public Reduce(List<Expression> args, Scope scope)
+            : base("reduce", args, scope)
         {
             validArgs = new List<ArgKind>()
                 {
@@ -19,7 +19,7 @@ namespace Ast
             if (!isArgsValid())
                 return new ArgError(this);
 
-            return args[0].Simplify();
+            return args[0].Reduce();
         }
 
         public override Expression Clone()

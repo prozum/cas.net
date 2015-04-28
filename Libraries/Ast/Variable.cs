@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ast
 {
-    public abstract class Variable : Expression
+    public abstract class Variable : Expression, INegative
     {
         public string identifier;
         public Number prefix, exponent;
@@ -94,31 +94,18 @@ namespace Ast
             return ReturnValue(thisClone);
         }
 
-        //public override Expression Expand()
-        //{
-        //    Expression res;
-        //    var variable = Clone();
+        public bool IsNegative()
+        {
+            return prefix is INegative && (prefix as INegative).IsNegative();
+        }
 
-        //    (variable as Variable).prefix = new Integer(1);
-        //    (variable as Variable).exponent = new Integer(1);
+        public Expression ToNegative()
+        {
+            var res = Clone();
+            (res as Variable).prefix = (prefix as INegative).ToNegative() as Number;
 
-        //    if (!exponent.CompareTo(Constant.One))
-        //    {
-        //        res = new Exp(variable, exponent);
-        //    } 
-        //    else
-        //    {
-        //        res = variable;
-        //    }
-
-        //    if (!prefix.CompareTo(Constant.One))
-        //    {
-        //        res = new Mul(prefix, res);
-        //    }
-
-        //    return res;
-
-        //}
+            return res;
+        }
 
         #region AddWith
         public override Expression AddWith(Integer other)

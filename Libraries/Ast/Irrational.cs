@@ -2,9 +2,7 @@
 
 namespace Ast
 {
-
-
-    public class Irrational : Number 
+    public class Irrational : Number, INegative 
     {
         public decimal value;
 
@@ -52,7 +50,7 @@ namespace Ast
             return new Irrational(value);
         }
 
-        public override bool IsNegative()
+        public bool IsNegative()
         {
             if (value.CompareTo(0) == -1)
             {
@@ -62,7 +60,7 @@ namespace Ast
             return false;
         }
 
-        public override Number ToNegative()
+        public Expression ToNegative()
         {
             return new Irrational(value *= -1);
         }
@@ -225,6 +223,24 @@ namespace Ast
         public override Expression LesserThanOrEqualTo(Irrational other)
         {
             return new Boolean(value <= other.value);
+        }
+
+        #endregion
+
+        #region ModuloWith
+        public override Expression ModuloWith(Integer other)
+        {
+            return new Irrational(value % (decimal)other.value);
+        }
+
+        public override Expression ModuloWith(Rational other)
+        {
+            return this % other.value;
+        }
+
+        public override Expression ModuloWith(Irrational other)
+        {
+            return new Irrational(value % other.value);
         }
 
         #endregion
