@@ -2,6 +2,7 @@
 using Gtk;
 using ImEx;
 using System.Collections.Generic;
+using Ast;
 
 namespace DesktopUI
 {
@@ -17,17 +18,17 @@ namespace DesktopUI
             this.user = user;
             this.textviews = textviews;
 
-			SetSizeRequest(300, 300);
+            SetSizeRequest(300, 300);
 
             Grid grid = new Grid();
 
             Label FileNameLabel = new Label("Filename:");
             Entry FileNameEntry = new Entry();
-			FileNameEntry.WidthRequest = 200;
+            FileNameEntry.WidthRequest = 200;
 
             Label GradeLabel = new Label("Grade:");
             Entry GradeEntry = new Entry();
-			GradeEntry.WidthRequest = 200;
+            GradeEntry.WidthRequest = 200;
 
             Button CancelButton = new Button("Cancel");
             CancelButton.Clicked += delegate
@@ -45,47 +46,51 @@ namespace DesktopUI
                     grid.Remove(widget);
                 }
 
-                for (int i = 0; i < StudentList.Length/2; i++)
+                for (int i = 0; i < StudentList.Length / 2; i++)
                 {
-                    Button button = new Button(StudentList[2*i]);
-					Label label = new Label(StudentList[(2*i)+1]);
+                    Button button = new Button(StudentList[2 * i]);
+                    button.TooltipText = StudentList[2 * i];
+                    Label label = new Label(StudentList[(2 * i) + 1]);
 					
                     button.Clicked += delegate
                     {
-                        List<MetaType> metaTypeList = new List<MetaType>();
+                        string assignment = this.user.teacher.GetCompleted(StudentList[2 * i], FileNameEntry.Text, GradeEntry.Text);
 
-                        foreach (Widget w in this.textviews)
+                        List<MetaType> metaTypeList = ImEx.Import.DeserializeString<List<MetaType>>(assignment);
+
+                        this.textviews.castextviews.Clear();
+
+                        foreach (var metaItem in metaTypeList)
                         {
-                            if (w.GetType() == typeof(MovableCasCalcView))
+                            if (metaItem.type == typeof(MovableCasCalcView))
                             {
-                                MetaType metaType = new MetaType();
-                                MovableCasCalcView calcView = (MovableCasCalcView)w;
-                                metaType.type = typeof(MovableCasCalcView);
-                                metaType.metastring = calcView.calcview.input.Text;
-                                metaTypeList.Add(metaType);
+                                Evaluator Eval = new Evaluator();
+                                MovableCasCalcView movableCasCalcView = new MovableCasCalcView(Eval);
+                                movableCasCalcView.calcview.input.Text = metaItem.metastring;
+                                this.textviews.castextviews.Add(movableCasCalcView);
                             }
-                            else if (w.GetType() == typeof(MovableCasTextView))
+                            else if (metaItem.type == typeof(MovableCasTextView))
                             {
-                                MetaType metaType = new MetaType();
-                                MovableCasTextView textView = (MovableCasTextView)w;
-                                metaType.type = typeof(MovableCasTextView);
-                                metaType.metastring = textView.textview.SerializeCasTextView();
-                                metaTypeList.Add(metaType);
+                                MovableCasTextView movableCasTextView = new MovableCasTextView(metaItem.metastring, true);
+                                this.textviews.castextviews.Add(movableCasTextView);
                             }
                         }
 
-                        if (metaTypeList.Count != 0 && string.IsNullOrEmpty(FileNameEntry.Text) == false)
-                        {
-                            string serializedString = ImEx.Export.Serialize(metaTypeList);
-                            this.user.student.AddCompleted(serializedString, FileNameEntry.Text);
-                        }
+                        this.textviews.castextviews.Reverse();
+
+                        this.textviews.Clear();
+                        this.textviews.Redraw();
+                        this.textviews.Reevaluate();
+                        this.textviews.ShowAll();
+
                         Destroy();
+
                     };
 
-					grid.Attach(button, 1, 1 + i, 1, 1);
-					grid.Attach(label, 2, 1 + i, 1, 1);
+                    grid.Attach(button, 1, 1 + i, 1, 1);
+                    grid.Attach(label, 2, 1 + i, 1, 1);
 					
-					ShowAll();				
+                    ShowAll();				
                 }
             };
 
@@ -98,7 +103,7 @@ namespace DesktopUI
             grid.Attach(DownloadButton, 1, 3, 1, 1);
             grid.Attach(CancelButton, 2, 3, 1, 1);
 
-			Add(grid);
+            Add(grid);
             ShowAll();
         }
     }
