@@ -36,15 +36,24 @@ namespace DesktopUI
             buttonFeedback.Clicked += delegate
             {
 				string[] StudentList = this.user.teacher.GetCompletedList(entFilename.Text, entClass.Text);
+				string feedbackString = String.Empty;
 
 				foreach (Widget widget in grid)
 				{
 					Remove(widget);
 				}
 
+					ShowAll();
+
 				for (int i = 0; i < StudentList.Length/2; i++)
 				{
-
+						Button button = new Button(StudentList[2*i]);
+						button.Clicked += delegate
+							{
+								this.user.teacher.AddFeedback(feedbackString, entFilename.Text, StudentList[2*i], entClass.Text);
+								Destroy();
+							};
+						grid.Attach(button, 1, 1+i, 1, 1);
 				}
 
                 List<MetaType> metaTypeList = new List<MetaType>();
@@ -73,11 +82,10 @@ namespace DesktopUI
                     && string.IsNullOrEmpty(entClass.Text) == false
                     && string.IsNullOrEmpty(entFilename.Text) == false)
                 {
-                    string feedbackString = Export.Serialize(metaTypeList);
-                    this.user.teacher.AddFeedback(feedbackString, entFilename.Text, this.user.username, entClass.Text);
+                    feedbackString = Export.Serialize(metaTypeList);           
                 }
 
-                Destroy();
+                ShowAll();
             };
 
             grid.Attach(labClass, 1, 1, 1, 1);
