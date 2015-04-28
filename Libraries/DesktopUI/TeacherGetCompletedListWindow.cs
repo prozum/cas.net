@@ -56,38 +56,7 @@ namespace DesktopUI
                     button.Clicked += delegate
                     {
                         string completed = this.user.teacher.GetCompleted(button.TooltipText, FileNameEntry.Text, GradeEntry.Text);
-
-                        Console.WriteLine(completed);
-
-                        List<MetaType> metaTypeList = ImEx.Import.DeserializeString<List<MetaType>>(completed);
-
-                        this.textviews.castextviews.Clear();
-
-                        foreach (var metaItem in metaTypeList)
-                        {
-                            if (metaItem.type == typeof(MovableCasCalcView))
-                            {
-                                Evaluator Eval = new Evaluator();
-                                MovableCasCalcView movableCasCalcView = new MovableCasCalcView(Eval);
-                                movableCasCalcView.calcview.input.Text = metaItem.metastring;
-                                this.textviews.castextviews.Add(movableCasCalcView);
-                            }
-                            else if (metaItem.type == typeof(MovableCasTextView))
-                            {
-                                MovableCasTextView movableCasTextView = new MovableCasTextView(metaItem.metastring, true);
-                                this.textviews.castextviews.Add(movableCasTextView);
-                            }
-                        }
-
-                        this.textviews.castextviews.Reverse();
-
-                        this.textviews.Clear();
-                        this.textviews.Redraw();
-                        this.textviews.Reevaluate();
-                        this.textviews.ShowAll();
-
-                        Destroy();
-
+                        LoadWorkspace(completed);
                     };
 
                     grid.Attach(button, 1, 1 + i, 1, 1);
@@ -108,6 +77,35 @@ namespace DesktopUI
 
             Add(grid);
             ShowAll();
+        }
+
+        void LoadWorkspace(string completed)
+        {
+            List<MetaType> metaTypeList = ImEx.Import.DeserializeString<List<MetaType>>(completed);
+
+            this.textviews.castextviews.Clear();
+
+            foreach (var metaItem in metaTypeList)
+            {
+                if (metaItem.type == typeof(MovableCasCalcView))
+                {
+                    textviews.InsertCalcView(metaItem.metastring);
+                }
+                else if (metaItem.type == typeof(MovableCasTextView))
+                {
+                    textviews.InsertTextView(metaItem.metastring, metaItem.locked);
+                }
+            }
+
+            this.textviews.castextviews.Reverse();
+
+            this.textviews.Clear();
+            this.textviews.Redraw();
+            this.textviews.Reevaluate();
+            this.textviews.ShowAll();
+
+            Destroy();
+
         }
     }
 }

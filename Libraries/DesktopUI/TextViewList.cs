@@ -113,6 +113,46 @@ namespace DesktopUI
             ShowAll();
         }
 
+        public void InsertCalcView(string input)
+        {
+            Button ButtonMoveUp = new Button("↑");
+            Button ButtonMoveDown = new Button("↓");
+
+            MovableCasCalcView MovCasCalcView = new MovableCasCalcView(Eval);
+
+            MovCasCalcView.calcview.input.Text = input;
+
+            MovCasCalcView.calcview.input.Activated += delegate
+            {
+                MovCasCalcView.calcview.Eval.scope.locals.Clear();
+                MovCasCalcView.calcview.Evaluate();
+                MovCasCalcView.ShowAll();
+            };
+
+            ButtonMoveUp.Clicked += delegate
+            {
+                MovCasCalcView.calcview.Eval.scope.locals.Clear();
+                Move(MovCasCalcView.id_, -1);
+                MovCasCalcView.calcview.Eval.scope.locals.Clear();
+            };
+
+            ButtonMoveDown.Clicked += delegate
+            {
+                MovCasCalcView.calcview.Eval.scope.locals.Clear();
+                Move(MovCasCalcView.id_, 1);
+                MovCasCalcView.calcview.Eval.scope.locals.Clear();
+            };
+
+            MovCasCalcView.Attach(ButtonMoveUp, 2, 1, 1, 1);
+            MovCasCalcView.Attach(ButtonMoveDown, 2, 2, 1, 1);
+
+            castextviews.Add(MovCasCalcView);
+
+            Clear();
+            Redraw();
+            ShowAll();
+        }
+
         public void InsertDrawCanvas()
         {
             Button ButtonMoveUp = new Button("↑");
