@@ -2,7 +2,7 @@
 
 namespace Ast
 {
-    public class Mul : Operator, ISwappable, IInvertable
+    public class Mul : BinaryOperator, ISwappable, IInvertable
     {
         public Mul() : base("*", 40) { }
         public Mul(Expression left, Expression right) : base(left, right, "*", 40) { }
@@ -14,30 +14,30 @@ namespace Ast
 
         protected override Expression ExpandHelper(Expression left, Expression right)
         {
-            if (left is Operator && (left as Operator).priority < priority)
+            if (left is BinaryOperator && (left as BinaryOperator).priority < priority)
             {
                 if (left is Add)
                 {
-                    return new Add(new Mul((left as Operator).Left, right).Reduce(), new Mul((left as Operator).Right, right).Reduce());
+                    return new Add(new Mul((left as BinaryOperator).Left, right).Reduce(), new Mul((left as BinaryOperator).Right, right).Reduce());
                 }
                 else if (left is Sub)
                 {
-                    return new Sub(new Mul((left as Operator).Left, right).Reduce(), new Mul((left as Operator).Right, right).Reduce());
+                    return new Sub(new Mul((left as BinaryOperator).Left, right).Reduce(), new Mul((left as BinaryOperator).Right, right).Reduce());
                 }
                 else
                 {
                     return new Mul(left.Expand(), right.Expand());
                 }
             }
-            else if (right is Operator && (right as Operator).priority < priority)
+            else if (right is BinaryOperator && (right as BinaryOperator).priority < priority)
             {
                 if (right is Add)
                 {
-                    return new Add(new Mul((right as Operator).Left, left).Reduce(), new Mul((right as Operator).Right, left).Reduce());
+                    return new Add(new Mul((right as BinaryOperator).Left, left).Reduce(), new Mul((right as BinaryOperator).Right, left).Reduce());
                 }
                 else if (right is Sub)
                 {
-                    return new Sub(new Mul((right as Operator).Left, left).Reduce(), new Mul((right as Operator).Right, left).Reduce());
+                    return new Sub(new Mul((right as BinaryOperator).Left, left).Reduce(), new Mul((right as BinaryOperator).Right, left).Reduce());
                 }
                 else
                 {
@@ -262,12 +262,12 @@ namespace Ast
             return new Mul(Left.CurrectOperator(), Right.CurrectOperator());
         }
 
-        public Operator Swap()
+        public BinaryOperator Swap()
         {
             return new Mul(Right, Left);
         }
 
-        public Operator Transform()
+        public BinaryOperator Transform()
         {
             if (Left is Mul)
             {

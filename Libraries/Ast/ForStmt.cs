@@ -12,6 +12,16 @@ namespace Ast
         public ForStmt()
         {
         }
+
+        public override Expression Evaluate()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override EvalData Step()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 

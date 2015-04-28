@@ -60,9 +60,9 @@ namespace Ast
 
             if (obj is Expression)
             {
-                str += obj.GetType().Name;
-                str += " at [" +(obj as Expression).pos.Column;
-                str += ";" +(obj as Expression).pos.Line + "]: ";
+                str += "[" +(obj as Expression).pos.Column;
+                str += ";" +(obj as Expression).pos.Line + "]";
+                str += obj.GetType().Name + ": ";
                 str += msg;
             }
 

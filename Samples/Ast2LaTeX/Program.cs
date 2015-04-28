@@ -14,9 +14,9 @@ namespace Ast2LaTeX
 
         public static string AstLatex (Expression ex)
         {
-            if (ex is Operator) {
-                Operator op = (Operator)ex;
-                return AstLatex (op.Left) + op.symbol + AstLatex (op.Right);
+            if (ex is BinaryOperator) {
+                BinaryOperator op = (BinaryOperator)ex;
+                return AstLatex (op.Left) + op.sym + AstLatex (op.Right);
             } else if (ex is Symbol) {
                 return (ex as Symbol).identifier;
             } else if (ex is Number) {

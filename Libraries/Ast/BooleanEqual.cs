@@ -2,7 +2,7 @@
 
 namespace Ast
 {
-    public class BooleanEqual : Operator
+    public class BooleanEqual : BinaryOperator
     {
         public BooleanEqual() : base("==", 10) { }
         public BooleanEqual(Expression left, Expression right) : base(left, right, "==", 10) { }

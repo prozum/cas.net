@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class Exp : Operator, IInvertable
+    public class Exp : BinaryOperator, IInvertable
     {
         public Exp() : base("^", 60) { }
         public Exp(Expression left, Expression right) : base(left, right, "^", 60) { }
@@ -15,23 +15,23 @@ namespace Ast
 
         protected override Expression ExpandHelper(Expression left, Expression right)
         {
-            if (left is Operator && (left as Operator).priority < priority)
+            if (left is BinaryOperator && (left as BinaryOperator).priority < priority)
             {
                 if (left is Add)
                 {
-                    return new Add(new Add(new Exp((left as Operator).Left, right).Reduce(), new Exp((left as Operator).Right, right).Reduce()), new Mul(new Integer(2), new Mul((left as Operator).Left, (left as Operator).Right)).Reduce());
+                    return new Add(new Add(new Exp((left as BinaryOperator).Left, right).Reduce(), new Exp((left as BinaryOperator).Right, right).Reduce()), new Mul(new Integer(2), new Mul((left as BinaryOperator).Left, (left as BinaryOperator).Right)).Reduce());
                 }
                 else if (left is Sub)
                 {
-                    return new Sub(new Add(new Exp((left as Operator).Left, right).Reduce(), new Exp((left as Operator).Right, right).Reduce()), new Mul(new Integer(2), new Mul((left as Operator).Left, (left as Operator).Right)).Reduce());
+                    return new Sub(new Add(new Exp((left as BinaryOperator).Left, right).Reduce(), new Exp((left as BinaryOperator).Right, right).Reduce()), new Mul(new Integer(2), new Mul((left as BinaryOperator).Left, (left as BinaryOperator).Right)).Reduce());
                 }
                 else if (left is Mul)
                 {
-                    return new Mul(new Exp((left as Operator).Left, right).Reduce(), new Exp((left as Operator).Right, right).Reduce());
+                    return new Mul(new Exp((left as BinaryOperator).Left, right).Reduce(), new Exp((left as BinaryOperator).Right, right).Reduce());
                 }
                 else if (left is Div)
                 {
-                    return new Div(new Exp((left as Operator).Left, right).Reduce(), new Exp((left as Operator).Right, right).Reduce());
+                    return new Div(new Exp((left as BinaryOperator).Left, right).Reduce(), new Exp((left as BinaryOperator).Right, right).Reduce());
                 }
                 else
                 {

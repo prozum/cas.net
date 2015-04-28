@@ -15,6 +15,7 @@ namespace Ast
         static char[] chars;
         static Pos pos;
 
+
         public static char CharNext(bool consume = true)
         {
             if (pos.i < chars.Length)
@@ -77,54 +78,74 @@ namespace Ast
                     return ScanText();
                 
                 case '+':
-                    return new Token(TokenKind.ADD, @char.ToString(), pos);
+                    return new Token(TokenKind.ADD, "+", pos);
                 case '-':
-                    return new Token(TokenKind.SUB, @char.ToString(), pos);
+                    return new Token(TokenKind.SUB, "-", pos);
                 case '*':
-                    return new Token(TokenKind.MUL, @char.ToString(), pos);
+                    return new Token(TokenKind.MUL, "*", pos);
                 case '/':
-                    return new Token(TokenKind.DIV, @char.ToString(), pos);
+                    return new Token(TokenKind.DIV, "/", pos);
                 case '^':
-                    return new Token(TokenKind.EXP, @char.ToString(), pos);
+                    return new Token(TokenKind.EXP, "^", pos);
                 case '=':
                     if (CharNext(false) == '=')
-                        return new Token(TokenKind.BOOL_EQUAL, @char.ToString() + CharNext(), pos);
+                    {
+                        CharNext(true);
+                        return new Token(TokenKind.BOOL_EQUAL, "==", pos);
+                    }
                     else
-                        return new Token(TokenKind.EQUAL, @char.ToString(), pos);
+                        return new Token(TokenKind.EQUAL, "=", pos);
                 case '<':
                     if (CharNext(false) == '=')
-                        return new Token(TokenKind.LESS_EQUAL, @char.ToString() + CharNext(), pos);
+                    {
+                        CharNext(true);
+                        return new Token(TokenKind.LESS_EQUAL, "<=", pos);
+                    }
                     else
-                        return new Token(TokenKind.LESS, @char.ToString(), pos);
+                        return new Token(TokenKind.LESS, "<", pos);
                 case '>':
                     if (CharNext(false) == '=')
-                        return new Token(TokenKind.GREAT_EQUAL, @char.ToString() + CharNext(), pos);
+                    {
+                        CharNext(true);
+                        return new Token(TokenKind.GREAT_EQUAL, ">=", pos);
+                    }
                     else
-                        return new Token(TokenKind.GREAT, @char.ToString(), pos);
+                        return new Token(TokenKind.GREAT, ">", pos);
                 case ':':
                     if (CharNext(false) == '=')
-                        return new Token(TokenKind.ASSIGN, @char.ToString() + CharNext(), pos);
+                    {
+                        CharNext(true);
+                        return new Token(TokenKind.ASSIGN, ":=", pos);
+                    }
                     else
-                        return new Token(TokenKind.COLON, @char.ToString(), pos);
+                        return new Token(TokenKind.COLON, ":", pos);
+                case '!':
+                    if (CharNext(false) == '=')
+                    {
+                        CharNext(true);
+                        return new Token(TokenKind.NOT_EQUAL, "!=", pos);
+                    }
+                    else
+                        return new Token(TokenKind.NEG, "!", pos);
 
                 case '(':
-                    return new Token(TokenKind.PARENT_START, @char, pos);
+                    return new Token(TokenKind.PARENT_START, "(", pos);
                 case ')':
-                    return new Token(TokenKind.PARENT_END, @char, pos);
+                    return new Token(TokenKind.PARENT_END, ")", pos);
                 case '[':
-                    return new Token(TokenKind.SQUARE_START, @char, pos);
+                    return new Token(TokenKind.SQUARE_START, "[", pos);
                 case ']':
-                    return new Token(TokenKind.SQUARE_END, @char, pos);
+                    return new Token(TokenKind.SQUARE_END, "]", pos);
                 case '{':
-                    return new Token(TokenKind.CURLY_START, @char, pos);
+                    return new Token(TokenKind.CURLY_START, "{", pos);
                 case '}':
-                    return new Token(TokenKind.CURLY_END, @char, pos);
+                    return new Token(TokenKind.CURLY_END, "}", pos);
                 case ',':
-                    return new Token(TokenKind.COMMA, @char, pos);
+                    return new Token(TokenKind.COMMA, ",", pos);
                 case ';':
-                    return new Token(TokenKind.SEMICOLON, @char, pos);
+                    return new Token(TokenKind.SEMICOLON, ";", pos);
                 case '.':
-                    return new Token(TokenKind.DOT, @char, pos);
+                    return new Token(TokenKind.DOT, ".", pos);
                 
                 default:
                     if (char.IsLetter(@char))

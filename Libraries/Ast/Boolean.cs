@@ -35,6 +35,11 @@ namespace Ast
         {
             return new Boolean(value);
         }
+
+        public override Expression Negation()
+        {
+            return new Boolean(!value);
+        }
     }
 }
 

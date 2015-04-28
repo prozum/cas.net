@@ -44,7 +44,7 @@ namespace Ast
             {
                 if (solved.Left is IInvertable)
                 {
-                    if (solved.Left is Operator)
+                    if (solved.Left is BinaryOperator)
                     {
                         solved = InvertOperator(solved.Left, solved.Right);
 
@@ -82,7 +82,7 @@ namespace Ast
 
         private Equal InvertOperator(Expression left, Expression right)
         {
-            Operator op = left as Operator;
+            BinaryOperator op = left as BinaryOperator;
 
             if (op.Right.ContainsVariable(sym) && op.Left.ContainsVariable(sym))
             {
@@ -119,7 +119,7 @@ namespace Ast
         {
             var leftSimplified = left.Reduce();
 
-            if (leftSimplified is Operator && ((leftSimplified as Operator).Left.ContainsVariable(sym) && (leftSimplified as Operator).Right.ContainsVariable(sym)))
+            if (leftSimplified is BinaryOperator && ((leftSimplified as BinaryOperator).Left.ContainsVariable(sym) && (leftSimplified as BinaryOperator).Right.ContainsVariable(sym)))
             {
                 if (true)
                 {

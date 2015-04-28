@@ -17,7 +17,7 @@ namespace Ast
 
     public abstract class Expression
     {
-        public Operator parent;
+        public BinaryOperator parent;
         public Scope scope;
         public Pos pos;
 
@@ -107,7 +107,7 @@ namespace Ast
             return this + other.Evaluate();
         }
 
-        public virtual Expression AddWith(Operator other)
+        public virtual Expression AddWith(BinaryOperator other)
         {
             return this + other.Evaluate();
         }
@@ -165,7 +165,7 @@ namespace Ast
             return this - other.Evaluate();
         }
 
-        public virtual Expression SubWith(Operator other)
+        public virtual Expression SubWith(BinaryOperator other)
         {
             return this - other.Evaluate();
         }
@@ -223,7 +223,7 @@ namespace Ast
             return this * other.Evaluate();
         }
 
-        public virtual Expression MulWith(Operator other)
+        public virtual Expression MulWith(BinaryOperator other)
         {
             return this * other.Evaluate();
         }
@@ -281,7 +281,7 @@ namespace Ast
             return this / other.Evaluate();
         }
 
-        public virtual Expression DivWith(Operator other)
+        public virtual Expression DivWith(BinaryOperator other)
         {
             return this / other.Evaluate();
         }
@@ -339,7 +339,7 @@ namespace Ast
             return this / other.Evaluate();
         }
 
-        public virtual Expression ExpWith(Operator other)
+        public virtual Expression ExpWith(BinaryOperator other)
         {
             return this / other.Evaluate();
         }
@@ -397,7 +397,7 @@ namespace Ast
             return this > other.Evaluate();
         }
 
-        public virtual Expression GreaterThan(Operator other)
+        public virtual Expression GreaterThan(BinaryOperator other)
         {
             return this > other.Evaluate();
         }
@@ -455,7 +455,7 @@ namespace Ast
             return this < other.Evaluate();
         }
 
-        public virtual Expression LesserThan(Operator other)
+        public virtual Expression LesserThan(BinaryOperator other)
         {
             return this < other.Evaluate();
         }
@@ -513,7 +513,7 @@ namespace Ast
             return this >= other.Evaluate();
         }
 
-        public virtual Expression GreaterThanOrEqualTo(Operator other)
+        public virtual Expression GreaterThanOrEqualTo(BinaryOperator other)
         {
             return this >= other.Evaluate();
         }
@@ -571,7 +571,7 @@ namespace Ast
             return this <= other.Evaluate();
         }
 
-        public virtual Expression LesserThanOrEqualTo(Operator other)
+        public virtual Expression LesserThanOrEqualTo(BinaryOperator other)
         {
             return this <= other.Evaluate();
         }
@@ -629,7 +629,7 @@ namespace Ast
             return this + other.Evaluate();
         }
 
-        public virtual Expression ModuloWith(Operator other)
+        public virtual Expression ModuloWith(BinaryOperator other)
         {
             return this + other.Evaluate();
         }
@@ -656,6 +656,17 @@ namespace Ast
 
         #endregion
 
+        public virtual Expression Minus()
+        {
+            return new Error(this, "Don't support minus");
+        }
+
+        public virtual Expression Negation()
+        {
+            return new Error(this, "Don't support negation");
+        }
+
+        #region Binary Operator Overload
         public static Expression operator +(Expression left, dynamic right)
         {
             if (left is Message)
@@ -760,5 +771,6 @@ namespace Ast
 
             return left.ModuloWith(right);
         }
+        #endregion
     }
 }
