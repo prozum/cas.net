@@ -37,6 +37,9 @@ namespace CAS.NET.Desktop
         BoldToolButton bold;
         ItalicToolButton italic;
         UnderlineToolButton underline;
+        MovableTextViewToolButton movabletextview;
+        MovableCalcViewToolButton movablecalcview;
+        MovableDrawCanvasToolButton movabledrawcanvas;
 
         ScrolledWindow scrolledWindow = new ScrolledWindow();
 
@@ -87,6 +90,12 @@ namespace CAS.NET.Desktop
             italic = new ItalicToolButton(ref textviews);
             underline = new UnderlineToolButton(ref textviews);
 
+            SeparatorToolItem separator2 = new SeparatorToolItem();
+
+            movabletextview = new MovableTextViewToolButton(ref textviews);
+            movablecalcview = new MovableCalcViewToolButton(ref textviews);
+            movabledrawcanvas = new MovableDrawCanvasToolButton(ref textviews);
+
             toolbar.Add(open);
             toolbar.Add(save);
             toolbar.Add(neo);
@@ -94,6 +103,10 @@ namespace CAS.NET.Desktop
             toolbar.Add(bold);
             toolbar.Add(italic);
             toolbar.Add(underline);
+            toolbar.Add(separator2);
+            toolbar.Add(movabletextview);
+            toolbar.Add(movablecalcview);
+            toolbar.Add(movabledrawcanvas);
 
             VBox vbox = new VBox();
 
@@ -119,7 +132,7 @@ namespace CAS.NET.Desktop
                     || w.GetType() == typeof(TeacherAddAssignmentMenuItem)
                     || w.GetType() == typeof(TeacherAddFeedbackMenuItem)
                     || w.GetType() == typeof(TeacherGetAssignmentListMenuItem)
-                    //|| w.GetType() == typeof(TeacherGetCompletedListMenuItem)
+                    || w.GetType() == typeof(TeacherGetCompletedListMenuItem)
                     || w.GetType() == typeof(TeacherGetCompletedMenuItem)
                     || w.GetType() == typeof(LogoutMenuItem))
                 {

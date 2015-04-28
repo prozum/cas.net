@@ -61,6 +61,8 @@ namespace DesktopUI
             Add(vbox);
 
             ShowAll();
+
+            KeepAbove = true;
         }
 
         void ButtonLoginWrapper()
