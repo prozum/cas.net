@@ -199,26 +199,5 @@ namespace Ast
                 return this;
             }
         }
-
-        public override string ToString()
-        {
-            var sym = symbol;
-            var tempRight = Right;
-
-            if (Right is Number && (Right as Number).IsNegative())  
-            {
-                tempRight = (Right as Number).ToNegative();
-                sym = "-";
-            }
-
-            if (parent == null || priority >= parent.priority)
-            {
-                return Left.ToString() + sym + tempRight.ToString();
-            }
-            else
-            {
-                return '(' + Left.ToString() + sym + tempRight.ToString() + ')';
-            }
-        }
     }
 }
