@@ -46,6 +46,8 @@ namespace Ast
             else
                 res = scope;
 
+            cx = Context.Scope;
+
             while (tokens.Count > 0)
             {
                 if (Eat(stopToken))
@@ -194,6 +196,8 @@ namespace Ast
         {
             var list = new List();
 
+            cx = Context.List;
+
             while (tokens.Count > 0)
             {
                 if (Eat(TokenKind.SQUARE_END))
@@ -214,7 +218,6 @@ namespace Ast
             var biops = new Queue<BinaryOperator>();
             var unops = new Queue<UnaryOperator>();
 
-            //bool first = true;
             bool isUnaryAllowed = true;
 
             while (tokens.Count > 0)
@@ -272,8 +275,10 @@ namespace Ast
                     case TokenKind.GREAT:
                         biops.Enqueue(new Greater());
                         break;
+
                     case TokenKind.ADD:
-                        biops.Enqueue(new Add());
+                        if (!isUnaryAllowed) // Ignore Unary +
+                            biops.Enqueue(new Add());
                         break;
                     case TokenKind.SUB:
                         if (isUnaryAllowed)
@@ -281,6 +286,7 @@ namespace Ast
                         else
                             biops.Enqueue(new Sub());
                         break;
+
                     case TokenKind.MUL:
                         biops.Enqueue(new Mul());
                         break;
