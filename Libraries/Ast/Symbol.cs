@@ -92,12 +92,10 @@ namespace Ast
             {
                 return true;
             }
-//            else
-//            {
-//                return (this as Symbol).GetValue(other).ContainsVariable(other);
-//            }
-
-            return false;
+            else
+            {
+                return GetValue().ContainsVariable(other);
+            }
         }
 
     }
