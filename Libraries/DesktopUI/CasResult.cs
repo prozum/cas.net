@@ -5,29 +5,49 @@ namespace DesktopUI
 {
     public class CasResult : Grid
     {
-        Entry entryFasitSet;
-        Entry entryFasitGet;
+        public Entry entryFasitSet;
+        public Entry entryFasitGet;
 
         Label labelFacitSet;
-        Label labelFacigGet;
+        Label labelFacitGet;
 
         CheckButton checkShowCorrect;
         Label labelCorrect;
 
         User user;
 
-        bool correct = false;
-        string answer;
+        public FacitContainer facitContainer = new FacitContainer();
 
-        public CasResult(User user)
+        public bool correct = false;
+
+        public class FacitContainer
+        {
+
+            public string facit;
+            public string answer;
+
+            public FacitContainer()
+            {
+                facit = "";
+                answer = "";
+            }
+
+        }
+
+        public CasResult(User user, string answer, string facit)
             : base()
         {
             this.user = user;
+            this.facitContainer.answer = answer;
+            this.facitContainer.facit = facit;
 
             entryFasitGet = new Entry();
             entryFasitSet = new Entry();
 
-            labelFacigGet = new Label("Result:");
+            entryFasitGet.Text = answer;
+            entryFasitSet.Text = facit;
+
+            labelFacitGet = new Label("Result:");
             labelFacitSet = new Label("Set result:");
 
             checkShowCorrect = new CheckButton();
@@ -35,19 +55,17 @@ namespace DesktopUI
 
             entryFasitGet.Changed += delegate
             {
-                if (entryFasitGet.Text.Equals(answer))
-                {
-                    labelCorrect.Text = "Correct";
-                }
-                else
-                {
-                    labelCorrect.Text = "Wrong";    
-                }
+                Console.WriteLine("Got setting change...");
+
+                facitContainer.answer = entryFasitGet.Text;
+
+                labelCorrect.Text = entryFasitGet.Text.Equals(facitContainer.facit) ? "Correct" : "Wrong";
             };
 
             entryFasitSet.Changed += delegate
             {
-                answer = entryFasitSet.Text;
+                Console.WriteLine("Got setting change...");
+                facitContainer.facit = entryFasitSet.Text;
             };
 
             checkShowCorrect.Toggled += delegate
@@ -63,14 +81,10 @@ namespace DesktopUI
             }
             if (user.privilege == 0)
             {
-                Attach(labelFacitSet, 1, 1, 1, 1);
-                Attach(entryFasitSet, 2, 1, 1, 1);
+                Attach(labelFacitGet, 1, 1, 1, 1);
+                Attach(entryFasitGet, 2, 1, 1, 1);
 
-                if (correct == true)
-                {
-                    Attach(labelCorrect, 1, 2, 2, 1);
-                }
-
+                Attach(labelCorrect, 1, 2, 2, 1);
             }
         }
     }

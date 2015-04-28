@@ -40,6 +40,7 @@ namespace CAS.NET.Desktop
         MovableTextViewToolButton movabletextview;
         MovableCalcViewToolButton movablecalcview;
         MovableDrawCanvasToolButton movabledrawcanvas;
+        MovableResultToolButton movablecasresult;
 
         ScrolledWindow scrolledWindow = new ScrolledWindow();
 
@@ -95,6 +96,7 @@ namespace CAS.NET.Desktop
             movabletextview = new MovableTextViewToolButton(ref textviews);
             movablecalcview = new MovableCalcViewToolButton(ref textviews);
             movabledrawcanvas = new MovableDrawCanvasToolButton(ref textviews);
+            movablecasresult = new MovableResultToolButton(ref textviews);
 
             toolbar.Add(open);
             toolbar.Add(save);
@@ -107,6 +109,7 @@ namespace CAS.NET.Desktop
             toolbar.Add(movabletextview);
             toolbar.Add(movablecalcview);
             toolbar.Add(movabledrawcanvas);
+            toolbar.Add(movablecasresult);
 
             VBox vbox = new VBox();
 
