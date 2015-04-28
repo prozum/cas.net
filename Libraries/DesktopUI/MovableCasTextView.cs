@@ -6,14 +6,12 @@ namespace DesktopUI
 {
     public class MovableCasTextView : Grid
     {
-        TextViewList parent;
         public CasTextView textview;
-        /* insert arror moving thingy here */
 
         static int ID = 0;
         public int id_;
 
-        public MovableCasTextView(string serializedString, bool locked)
+		public MovableCasTextView(string serializedString, bool locked)
         {
             id_ = ID++;
 

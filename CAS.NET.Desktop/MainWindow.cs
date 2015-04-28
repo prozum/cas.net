@@ -27,13 +27,16 @@ namespace CAS.NET.Desktop
         TeacherAddAssignmentMenuItem teaAddAsm;
         TeacherAddFeedbackMenuItem teaAddFee;
         TeacherGetAssignmentListMenuItem teaGetAsmList;
+        TeacherGetCompletedListMenuItem teaGetComList;
         TeacherGetCompletedMenuItem teaGetCom;
-        StudentGetAssignmentMenuItem studentGetAssignmentMenuItem;
 
         Toolbar toolbar = new Toolbar();
         OpenToolButton open;
         SaveToolButton save;
         NewToolButton neo;
+        BoldToolButton bold;
+        ItalicToolButton italic;
+        UnderlineToolButton underline;
 
         ScrolledWindow scrolledWindow = new ScrolledWindow();
 
@@ -55,6 +58,7 @@ namespace CAS.NET.Desktop
             teaAddAsm = new TeacherAddAssignmentMenuItem(ref user, ref textviews);
             teaAddFee = new TeacherAddFeedbackMenuItem(ref user, ref textviews);
             teaGetAsmList = new TeacherGetAssignmentListMenuItem(ref user, ref textviews);
+            teaGetComList = new TeacherGetCompletedListMenuItem(ref user, ref textviews);
             teaGetCom = new TeacherGetCompletedMenuItem(ref user, ref textviews);
 
             // Adding elements to menu
@@ -68,6 +72,7 @@ namespace CAS.NET.Desktop
             menu.Append(teaAddAsm);
             menu.Append(teaAddFee);
             menu.Append(teaGetAsmList);
+            menu.Append(teaGetComList);
             menu.Append(teaGetCom);
 
             menubar.Append(server);
@@ -76,9 +81,19 @@ namespace CAS.NET.Desktop
             save = new SaveToolButton(textviews);
             neo = new NewToolButton(textviews);
 
+            SeparatorToolItem separator1 = new SeparatorToolItem();
+
+            bold = new BoldToolButton(ref textviews);
+            italic = new ItalicToolButton(ref textviews);
+            underline = new UnderlineToolButton(ref textviews);
+
             toolbar.Add(open);
             toolbar.Add(save);
             toolbar.Add(neo);
+            toolbar.Add(separator1);
+            toolbar.Add(bold);
+            toolbar.Add(italic);
+            toolbar.Add(underline);
 
             VBox vbox = new VBox();
 
@@ -104,6 +119,7 @@ namespace CAS.NET.Desktop
                     || w.GetType() == typeof(TeacherAddAssignmentMenuItem)
                     || w.GetType() == typeof(TeacherAddFeedbackMenuItem)
                     || w.GetType() == typeof(TeacherGetAssignmentListMenuItem)
+                    || w.GetType() == typeof(TeacherGetCompletedListMenuItem)
                     || w.GetType() == typeof(TeacherGetCompletedMenuItem)
                     || w.GetType() == typeof(LogoutMenuItem))
                 {

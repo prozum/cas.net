@@ -15,14 +15,25 @@ namespace Ast
         public Scope scope;
         public Pos pos;
 
+        public bool stepped = false;
+
         public virtual Expression Evaluate() 
         {
             var simplified = Simplify();
             return simplified.Evaluate(this); 
         }
+
         protected virtual Expression Evaluate(Expression caller)
         {
-            return new Error(this, "Cannot evaluate");
+            return new Error(this, "This type cannot evaluate");
+        }
+
+        public virtual EvalData Step()
+        {
+            if (stepped)
+                return new DoneData();
+            stepped =  !stepped;
+            return new ExprData(Evaluate());
         }
 
         public virtual Expression CurrectOperator()

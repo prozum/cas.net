@@ -24,6 +24,7 @@ namespace Ast
         public static Scope ParseScope(Queue<Token> tokens, TokenKind stopToken, bool newScope = false)
         {
             Scope res;
+            State state;
 
             Token tok;
 
@@ -43,12 +44,17 @@ namespace Ast
 
                 if (tok.kind == TokenKind.IF)
                 {
-                    scope.statements.Add(ParseIfState(tokens));
+                    state = ParseIfState(tokens);
                 }
                 else
                 {
-                    scope.statements.Add(ParseExprState(tokens, stopToken));
+                    state = ParseExprState(tokens, stopToken);
                 }
+
+                if (error != null)
+                    state = new ExprState(error);
+
+                scope.statements.Add(state);
             }
 
             if (newScope)
@@ -59,12 +65,7 @@ namespace Ast
 
         public static ExprState ParseExprState(Queue<Token> tokens, TokenKind stopToken)
         {
-            var state = new ExprState();
-
-
-            state.expr = ParseExpr(tokens, stopToken);
-
-            return state;
+            return new ExprState(ParseExpr(tokens, stopToken));
         }
 
         public static IfState ParseIfState(Queue<Token> tokens)
@@ -74,30 +75,57 @@ namespace Ast
             tokens.Dequeue(); // Skip 'if'
 
             state.conditions.Add(ParseExpr(tokens, TokenKind.COLON));
-            tokens.Dequeue(); // Skip ':'
+
 
             if (tokens.Count == 0)
             {
                 ErrorHandler("If syntax: if bool expr: {}");
                 return null;
             }
+            else
+            {
+                tokens.Dequeue(); // Skip ':'
+            }
 
             if (tokens.Peek().kind == TokenKind.CURLY_START)
+            {
+                tokens.Dequeue(); // Skip '{'
                 state.expressions.Add(ParseScope(tokens, TokenKind.CURLY_END, true));
+            }
             else
                 state.expressions.Add(ParseScope(tokens, TokenKind.SEMICOLON, true));
-            tokens.Dequeue(); // Skip '}' or ';'
-               
+
+            if (tokens.Count == 0)
+            {
+                ErrorHandler("If syntax: if bool expr: {}");
+                return null;
+            }
+            else
+            {
+                tokens.Dequeue(); // Skip '}' or ';'
+            }
 
             while (tokens.Count > 0 && tokens.Peek().kind == TokenKind.ELIF)
             {
                 tokens.Dequeue(); // Skip 'elif'
 
                 state.conditions.Add(ParseExpr(tokens, TokenKind.COLON));
-                tokens.Dequeue(); // Skip ':'
+
+                if (tokens.Count == 0)
+                {
+                    ErrorHandler("If syntax: if bool expr: {}");
+                    return null;
+                }
+                else
+                {
+                    tokens.Dequeue(); // Skip ':'
+                }
 
                 if (tokens.Peek().kind == TokenKind.CURLY_START)
+                {
+                    tokens.Dequeue(); // Skip '{'
                     state.expressions.Add(ParseScope(tokens, TokenKind.CURLY_END, true));
+                }
                 else
                     state.expressions.Add(ParseScope(tokens, TokenKind.SEMICOLON, true));
                 tokens.Dequeue(); // Skip '}' or ';'
@@ -108,7 +136,10 @@ namespace Ast
                 tokens.Dequeue(); // Skip 'else'
 
                 if (tokens.Peek().kind == TokenKind.CURLY_START)
+                {
+                    tokens.Dequeue(); // Skip '{'
                     state.expressions.Add(ParseScope(tokens, TokenKind.CURLY_END, true));
+                }
                 else
                     state.expressions.Add(ParseScope(tokens, TokenKind.SEMICOLON, true));
                 tokens.Dequeue(); // Skip '}' or ';'
@@ -259,7 +290,7 @@ namespace Ast
 
                 if (expr != null)
                 {
-                    pos = tok.pos;
+                    pos = expr.pos = tok.pos;
                     exs.Enqueue(expr);
                     if (expr is Error)
                         return expr;

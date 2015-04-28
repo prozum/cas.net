@@ -17,7 +17,7 @@ namespace Ast
         {
             Parse(inputString);
 
-            return new ExpData(scope.Evaluate());
+            return new ExprData(scope.Evaluate());
         }
 
         public void Parse(string inputString)

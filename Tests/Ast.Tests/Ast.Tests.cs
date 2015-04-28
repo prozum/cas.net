@@ -324,7 +324,7 @@ namespace Ast.Tests
         #endregion
         public void Evaluate(dynamic expected, string calculation)
         {
-            var res = (eval.Evaluation(calculation) as ExpData).exp;
+            var res = (eval.Evaluation(calculation) as ExprData).expr;
             
             if (res is Integer)
             {

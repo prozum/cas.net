@@ -6,13 +6,14 @@ namespace Ast
     {
         public Expression expr;
 
-        public ExprState()
+        public ExprState(Expression expr)
         {
+            this.expr = expr;
         }
 
         public override EvalData Step()
         {
-            return new MsgData(MsgType.Print, expr.Evaluate().ToString());
+            return expr.Step();
         }
 
         public override Expression Evaluate()
