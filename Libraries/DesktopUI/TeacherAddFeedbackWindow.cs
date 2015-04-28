@@ -47,10 +47,11 @@ namespace DesktopUI
 
 				for (int i = 0; i < StudentList.Length/2; i++)
 				{
-						Button button = new Button(StudentList[2*i]);
+						int j = 2*i;
+						Button button = new Button(StudentList[j]);
 						button.Clicked += delegate
 							{
-								this.user.teacher.AddFeedback(feedbackString, entFilename.Text, StudentList[2*i], entClass.Text);
+								this.user.teacher.AddFeedback(feedbackString, entFilename.Text, StudentList[j], entClass.Text);
 								Destroy();
 							};
 						grid.Attach(button, 1, 1+i, 1, 1);
