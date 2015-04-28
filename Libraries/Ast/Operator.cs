@@ -23,10 +23,10 @@ namespace Ast
             }
             set
             {
-                if (value != null)
-                value.parent = this;
-
                 left = value;
+
+                if (left != null)
+                    left.parent = this;
             }
         }
 
@@ -39,10 +39,10 @@ namespace Ast
             }
             set
             {
-                if (value != null)
-                    value.parent = this;
-
                 right = value;
+
+                if (right != null)
+                    right.parent = this;
             }
         }
 
