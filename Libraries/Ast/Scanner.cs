@@ -8,34 +8,12 @@ namespace Ast
     public static class Scanner
     {
         const char EOS = (char)0;
-        static readonly char[] opChars = {'=', '<', '>', '+', '-', '*', '/', '^', ':'};
 
         static bool Errors = false; 
 
         static string tokenString;
         static char[] chars;
         static Pos pos;
-
-//        static char cur
-//        {
-//            get
-//            {
-//                if (pos.i < chars.Length)
-//                    return chars[pos.i++];
-//                else
-//                    return EOS;
-//            }
-//        }
-//        static char cur
-//        {
-//            get
-//            {
-//                if (pos.i < chars.Length)
-//                    return chars[pos.i];
-//                else
-//                    return EOS;
-//            }
-//        }
 
         public static char CharNext(bool consume = true)
         {
@@ -82,6 +60,7 @@ namespace Ast
             {
                 case EOS:
                     return new Token(TokenKind.END_OF_STRING, @char, pos);
+
                 case '0':
                 case '1':
                 case '2':
@@ -146,6 +125,7 @@ namespace Ast
                     return new Token(TokenKind.SEMICOLON, @char, pos);
                 case '.':
                     return new Token(TokenKind.DOT, @char, pos);
+                
                 default:
                     if (char.IsLetter(@char))
                         return ScanIdentifier(@char);
@@ -238,6 +218,10 @@ namespace Ast
                     return new Token(TokenKind.ELSE, identifier, startPos);
                 case "return":
                     return new Token(TokenKind.RETURN, identifier, startPos);
+                case "for":
+                    return new Token(TokenKind.FOR, identifier, startPos);
+                case "in":
+                    return new Token(TokenKind.IN, identifier, startPos);
                 default:
                     return new Token(TokenKind.IDENTIFIER, identifier, startPos);
             }

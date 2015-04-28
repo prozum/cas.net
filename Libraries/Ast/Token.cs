@@ -11,6 +11,8 @@ namespace Ast
         ELIF,
         ELSE,
         RETURN,
+        FOR,
+        IN,
 
         TEXT,
 

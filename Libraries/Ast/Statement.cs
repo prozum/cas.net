@@ -2,9 +2,9 @@
 
 namespace Ast
 {
-    public abstract class State
+    public abstract class Statement
     {
-        public State()
+        public Statement()
         {
         }
 

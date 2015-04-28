@@ -11,6 +11,7 @@ namespace Ast
         {
             scope = new Scope();
             scope.SetVar("deg", new Boolean(true));
+            scope.SetVar("debug", new Boolean(true));
         }
 
         public EvalData Evaluation(string inputString)
