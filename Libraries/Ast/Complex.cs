@@ -37,16 +37,6 @@ namespace Ast
         {
             throw new NotImplementedException();
         }
-
-        public override bool IsNegative()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override Number ToNegative()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
 

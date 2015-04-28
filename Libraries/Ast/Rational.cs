@@ -2,7 +2,7 @@
 
 namespace Ast
 {
-    public class Rational : Number 
+    public class Rational : Number, INegative
     {
         public Integer numerator;
         public Integer denominator;
@@ -64,12 +64,12 @@ namespace Ast
             return new Rational(numerator.Clone() as Integer, denominator.Clone() as Integer);
         }
 
-        public override bool IsNegative()
+        public bool IsNegative()
         {
             return value.IsNegative();
         }
 
-        public override Number ToNegative()
+        public Expression ToNegative()
         {
             return new Rational(numerator.ToNegative() as Integer, denominator);
         }
@@ -90,7 +90,7 @@ namespace Ast
 
         public override Expression AddWith(Irrational other)
         {
-            return value - other;
+            return value + other;
         }
 
         #endregion
@@ -238,6 +238,27 @@ namespace Ast
         public override Expression LesserThanOrEqualTo(Irrational other)
         {
             return value <= other;
+        }
+
+        #endregion
+
+        #region ModuloWith
+        public override Expression ModuloWith(Integer other)
+        {
+            return this % new Rational(other, new Integer(1));
+        }
+
+        public override Expression ModuloWith(Rational other)
+        {
+            var newNumerator = numerator * other.denominator;
+            var otherNewNumerator = denominator * other.numerator;
+
+            return new Rational((newNumerator % otherNewNumerator) as Integer, (denominator * other.denominator) as Integer);
+        }
+
+        public override Expression ModuloWith(Irrational other)
+        {
+            return value % other;
         }
 
         #endregion

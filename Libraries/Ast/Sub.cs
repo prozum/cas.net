@@ -5,7 +5,7 @@ namespace Ast
     public class Sub : Operator, ISwappable, IInvertable
     {
         public Sub() : base("-", 30) { }
-        public Sub(Expression left, Expression right) : base(left, right, "-", 20) { }
+        public Sub(Expression left, Expression right) : base(left, right, "-", 30) { }
 
         protected override Expression Evaluate(Expression caller)
         {
@@ -17,9 +17,9 @@ namespace Ast
             return new Sub(left.Expand(), right.Expand());
         }
 
-        protected override Expression SimplifyHelper(Expression left, Expression right)
+        protected override Expression ReduceHelper(Expression left, Expression right)
         {
-            var newRight = new Mul(new Integer(-1), right).Simplify(this);
+            var newRight = new Mul(new Integer(-1), right).Reduce(this);
             return new Add(left, newRight);
         }
 
@@ -64,16 +64,9 @@ namespace Ast
 
         public override Expression CurrectOperator()
         {
-            if (Right is Number && (Right as Number).IsNegative())
+            if (Right is INegative && (Right as INegative).IsNegative())
             {
-                return new Add(Left.CurrectOperator(), (Right as Number).ToNegative());
-            }
-            else if (Right is Variable && (Right as Variable).prefix.IsNegative())
-            {
-                var newRight = Right.Clone();
-                (newRight as Symbol).prefix = (newRight as Symbol).prefix.ToNegative();
-
-                return new Add(Left.CurrectOperator(), newRight);
+                return new Add(Left.CurrectOperator(), (Right as INegative).ToNegative());
             }
 
             return new Sub(Left.CurrectOperator(), Right.CurrectOperator());

@@ -44,6 +44,11 @@ namespace Ast
             return new Error(this, "Could not take Sin of: " + args[0]);
         }
 
+        internal override Expression Reduce(Expression caller)
+        {
+            return ReduceHelper<Sin>();
+        }
+
         public override Expression Clone()
         {
             return MakeClone<Sin>();

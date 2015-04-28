@@ -2,7 +2,7 @@
 
 namespace Ast
 {
-    public class Integer : Number
+    public class Integer : Number, INegative
     {
         public Int64 value;
 
@@ -50,7 +50,7 @@ namespace Ast
             return new Integer(value);
         }
 
-        public override bool IsNegative()
+        public bool IsNegative()
         {
             if (value.CompareTo(0) == -1)
             {
@@ -60,7 +60,7 @@ namespace Ast
             return false;
         }
 
-        public override Number ToNegative()
+        public Expression ToNegative()
         {
             return new Integer(value * -1);
         }
@@ -223,6 +223,24 @@ namespace Ast
         public override Expression LesserThanOrEqualTo(Irrational other)
         {
             return new Boolean((decimal)value <= other.value);
+        }
+
+        #endregion
+
+        #region ModuloWith
+        public override Expression ModuloWith(Integer other)
+        {
+            return new Integer(value % other.value);
+        }
+
+        public override Expression ModuloWith(Rational other)
+        {
+            return new Rational(this, new Integer(1)) % other;
+        }
+
+        public override Expression ModuloWith(Irrational other)
+        {
+            return new Irrational((decimal)value % other.value);
         }
 
         #endregion

@@ -7,9 +7,9 @@ namespace Ast
         public Equal() : base("=", 0) { }
         public Equal(Expression left, Expression right) : base(left, right, "=", 0) { }
 
-        protected override Expression SimplifyHelper(Expression left, Expression right)
+        protected override Expression ReduceHelper(Expression left, Expression right)
         {
-            return new Equal(Left.Simplify(this), Right.Simplify(this));
+            return new Equal(Left.Reduce(this), Right.Reduce(this));
         }
 
         protected override Expression ExpandHelper(Expression left, Expression right)

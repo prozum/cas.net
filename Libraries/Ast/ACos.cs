@@ -44,6 +44,11 @@ namespace Ast
             return new Error(this, "Could not take ACos of: " + args[0]);
         }
 
+        internal override Expression Reduce(Expression caller)
+        {
+            return ReduceHelper<ACos>();
+        }
+
         public override Expression Clone()
         {
             return MakeClone<ACos>();

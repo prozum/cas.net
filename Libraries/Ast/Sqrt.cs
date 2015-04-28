@@ -40,14 +40,30 @@ namespace Ast
             return new Error(this, "Could not take Sqrt of: " + args[0]);
         }
 
-        internal override Expression Simplify(Expression caller)
+        internal override Expression Reduce(Expression caller)
         {
             if (exponent.CompareTo(Constant.Two))
             {
                 return args[0];
             }
+            else
+            {
+                var simplified = ReduceHelper<Sqrt>();
 
-            return this;
+                if (simplified.args[0] is Exp && (simplified.args[0] as Exp).Right.CompareTo(Constant.Two))
+                {
+                    return (simplified.args[0] as Exp).Left;
+                }
+                else if (simplified.args[0] is Variable && (simplified.args[0] as Variable).exponent.CompareTo(Constant.Two))
+                {
+                    var res = simplified.args[0].Clone() as Variable;
+                    res.exponent = new Integer(1);
+
+                    return res;
+                }
+
+                return simplified;
+            }
         }
 
         public override Expression Clone()
