@@ -7,7 +7,7 @@ namespace Ast
     {
         public new Scope parent;
         public Dictionary<string,Expression> locals = new Dictionary<string,Expression>();
-        public List<State> statements = new List<State>();
+        public List<Statement> statements = new List<Statement>();
 
         public int curStep = 0;
 

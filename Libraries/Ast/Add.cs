@@ -2,7 +2,7 @@
 
 namespace Ast
 {
-    public class Add : Operator, ISwappable, IInvertable
+    public class Add : BinaryOperator, ISwappable, IInvertable
     {
         public Add() : base("+", 20) { }
         public Add(Expression left, Expression right) : base(left, right, "+", 20) { }
@@ -164,12 +164,12 @@ namespace Ast
             return new Sub(other, Right);
         }
 
-        public Operator Swap()
+        public BinaryOperator Swap()
         {
             return new Add(Right, Left);
         }
 
-        public Operator Transform()
+        public BinaryOperator Transform()
         {
             if (Left is Add)
             {

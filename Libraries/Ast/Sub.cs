@@ -2,7 +2,7 @@
 
 namespace Ast
 {
-    public class Sub : Operator, ISwappable, IInvertable
+    public class Sub : BinaryOperator, ISwappable, IInvertable
     {
         public Sub() : base("-", 30) { }
         public Sub(Expression left, Expression right) : base(left, right, "-", 30) { }
@@ -33,12 +33,12 @@ namespace Ast
             return new Add(other, Right);
         }
 
-        public Operator Swap()
+        public BinaryOperator Swap()
         {
             return new Add(new Mul(new Integer(-1), Right), Left);
         }
 
-        public Operator Transform()
+        public BinaryOperator Transform()
         {
             if (Left is Add)
             {

@@ -2,7 +2,7 @@
 
 namespace Ast
 {
-    public class LesserEqual : Operator
+    public class LesserEqual : BinaryOperator
     {
         public LesserEqual() : base("<=", 10) { }
         public LesserEqual(Expression left, Expression right) : base(left, right, "<=", 10) { }

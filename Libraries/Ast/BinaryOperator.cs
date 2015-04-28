@@ -5,53 +5,53 @@ namespace Ast
 {
     public interface ISwappable
     {
-        Operator Swap();
-        Operator Transform();
+        BinaryOperator Swap();
+        BinaryOperator Transform();
     }
 
-    public abstract class Operator : Expression
+    public abstract class BinaryOperator : Expression
     {
-        public string symbol;
+        public string sym;
         public int priority;
 
-        private Expression left;
+        private Expression _left;
         public Expression Left
         {
             get
             {
-                return left;
+                return _left;
             }
             set
             {
-                left = value;
+                _left = value;
 
-                if (left != null)
-                    left.parent = this;
+                if (_left != null)
+                    _left.parent = this;
             }
         }
 
-        private Expression right;
+        private Expression _right;
         public Expression Right
         {
             get
             {
-                return right;
+                return _right;
             }
             set
             {
-                right = value;
+                _right = value;
 
-                if (right != null)
-                    right.parent = this;
+                if (_right != null)
+                    _right.parent = this;
             }
         }
 
-        public Operator(string symbol, int priority) : this(null, null, symbol, priority) { }
-        public Operator(Expression left, Expression right, string symbol, int priority)
+        public BinaryOperator(string symbol, int priority) : this(null, null, symbol, priority) { }
+        public BinaryOperator(Expression left, Expression right, string symbol, int priority)
         {
             Left = left;
             Right = right;
-            this.symbol = symbol;
+            this.sym = symbol;
             this.priority = priority;
         }
 
@@ -64,11 +64,11 @@ namespace Ast
         {
             if (parent == null || priority >= parent.priority)
             {
-                return Left.ToString () + symbol + Right.ToString ();
+                return Left.ToString () + sym + Right.ToString ();
             } 
             else 
             {
-                return '(' + Left.ToString () + symbol + Right.ToString () + ')';
+                return '(' + Left.ToString () + sym + Right.ToString () + ')';
             }
         }
 
@@ -77,19 +77,19 @@ namespace Ast
             Expression thisSimplified = Reduce();
             Expression otherSimplified = other.Reduce();
 
-            if (!(thisSimplified is Operator))
+            if (!(thisSimplified is BinaryOperator))
             {
                 return thisSimplified.CompareTo(otherSimplified);
             }
-            else if (thisSimplified is Operator && otherSimplified is Operator)
+            else if (thisSimplified is BinaryOperator && otherSimplified is BinaryOperator)
             {
                 if (thisSimplified is ISwappable)
                 {
-                    return CompareSwappables(thisSimplified as ISwappable, otherSimplified as Operator);
+                    return CompareSwappables(thisSimplified as ISwappable, otherSimplified as BinaryOperator);
                 }
                 else
                 {
-                    return CompareSides(thisSimplified as Operator, otherSimplified as Operator);
+                    return CompareSides(thisSimplified as BinaryOperator, otherSimplified as BinaryOperator);
                 }
             }
             else
@@ -98,13 +98,13 @@ namespace Ast
             }
         }
 
-        private bool CompareSwappables(ISwappable exp1, Operator exp2)
+        private bool CompareSwappables(ISwappable exp1, BinaryOperator exp2)
         {
-            if (CompareSides(exp1 as Operator, exp2) || CompareSides(exp1.Swap().Reduce() as Operator, exp2))
+            if (CompareSides(exp1 as BinaryOperator, exp2) || CompareSides(exp1.Swap().Reduce() as BinaryOperator, exp2))
             {
                 return true;
             }
-            else if ((exp1 as Operator).Left is ISwappable || (exp1 as Operator).Right is ISwappable)
+            else if ((exp1 as BinaryOperator).Left is ISwappable || (exp1 as BinaryOperator).Right is ISwappable)
             {
                 return SwappableCompareAlorithem(exp1, exp2);
             }
@@ -112,9 +112,9 @@ namespace Ast
             return false;
         }
 
-        private bool SwappableCompareAlorithem(ISwappable exp1, Operator exp2)
+        private bool SwappableCompareAlorithem(ISwappable exp1, BinaryOperator exp2)
         {
-            Operator modified = (exp1 as Operator).Clone() as Operator;
+            BinaryOperator modified = (exp1 as BinaryOperator).Clone() as BinaryOperator;
 
             do
             {
@@ -143,12 +143,12 @@ namespace Ast
                         return true;
                     }
                 }
-            } while (!modified.CompareTo(exp1 as Operator));
+            } while (!modified.CompareTo(exp1 as BinaryOperator));
 
             return false;
         }
 
-        private bool CompareSides(Operator exp1, Operator exp2)
+        private bool CompareSides(BinaryOperator exp1, BinaryOperator exp2)
         {
             return exp1.Left.CompareTo(exp2.Left) && exp1.Right.CompareTo(exp2.Right);
         }

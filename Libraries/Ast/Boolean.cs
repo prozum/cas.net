@@ -11,6 +11,16 @@ namespace Ast
             this.value = value;
         }
 
+        public static bool operator true (Boolean b)
+        {
+            return b.value;
+        }
+
+        public static bool operator false (Boolean b)
+        {
+            return b.value;
+        }
+
         public override string ToString()
         {
             return value.ToString();
@@ -24,6 +34,11 @@ namespace Ast
         public override Expression Clone()
         {
             return new Boolean(value);
+        }
+
+        public override Expression Negation()
+        {
+            return new Boolean(!value);
         }
     }
 }

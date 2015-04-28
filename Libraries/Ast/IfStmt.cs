@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class IfState : State
+    public class IfStmt : Statement
     {
         public List<Expression> conditions = new List<Expression>();
         public List<Expression> expressions = new List<Expression>();
@@ -11,7 +11,7 @@ namespace Ast
         int curCond = 0;
         bool? resCond = null;
 
-        public IfState()
+        public IfStmt()
         {
         }
 

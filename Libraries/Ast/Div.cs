@@ -2,7 +2,7 @@
 
 namespace Ast
 {
-    public class Div : Operator, IInvertable
+    public class Div : BinaryOperator, IInvertable
     {
         public Div() : base("/", 50) { }
         public Div(Expression left, Expression right) : base(left, right, "/", 50) { }
@@ -14,30 +14,30 @@ namespace Ast
 
         protected override Expression ExpandHelper(Expression left, Expression right)
         {
-            if (left is Operator && (left as Operator).priority < priority)
+            if (left is BinaryOperator && (left as BinaryOperator).priority < priority)
             {
                 if (left is Add)
                 {
-                    return new Add(new Div((left as Operator).Left, right).Reduce(), new Div((left as Operator).Right, right).Reduce());
+                    return new Add(new Div((left as BinaryOperator).Left, right).Reduce(), new Div((left as BinaryOperator).Right, right).Reduce());
                 }
                 else if (left is Sub)
                 {
-                    return new Sub(new Div((left as Operator).Left, right).Reduce(), new Div((left as Operator).Right, right).Reduce());
+                    return new Sub(new Div((left as BinaryOperator).Left, right).Reduce(), new Div((left as BinaryOperator).Right, right).Reduce());
                 }
                 else
                 {
                     return new Div(left.Expand(), right.Expand());
                 }
             }
-            else if (right is Operator && (right as Operator).priority < priority)
+            else if (right is BinaryOperator && (right as BinaryOperator).priority < priority)
             {
                 if (right is Add)
                 {
-                    return new Add(new Div((right as Operator).Left, left).Reduce(), new Div((right as Operator).Right, Left).Reduce());
+                    return new Add(new Div((right as BinaryOperator).Left, left).Reduce(), new Div((right as BinaryOperator).Right, Left).Reduce());
                 }
                 else if (right is Sub)
                 {
-                    return new Sub(new Div((right as Operator).Left, left).Reduce(), new Div((right as Operator).Right, Left).Reduce());
+                    return new Sub(new Div((right as BinaryOperator).Left, left).Reduce(), new Div((right as BinaryOperator).Right, Left).Reduce());
                 }
                 else
                 {

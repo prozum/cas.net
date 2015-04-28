@@ -2,11 +2,11 @@
 
 namespace Ast
 {
-    public class ExprState : State
+    public class ExprStmt : Statement
     {
         public Expression expr;
 
-        public ExprState(Expression expr)
+        public ExprStmt(Expression expr)
         {
             this.expr = expr;
         }

@@ -2,7 +2,7 @@
 
 namespace Ast
 {
-    public class GreaterEqual : Operator
+    public class GreaterEqual : BinaryOperator
     {
         public GreaterEqual() : base(">=", 10) { }
         public GreaterEqual(Expression left, Expression right) : base(left, right, ">=", 10) { }

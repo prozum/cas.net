@@ -28,17 +28,17 @@ namespace Ast
 
             if (res is Integer)
             {
-                return ReturnValue(new Irrational((decimal)(Math.Asin((res as Integer).value) * Math.Pow((180 / Math.PI), (degrees.value) ? 1 : 0)))).Evaluate();
+                return ReturnValue(new Irrational((decimal)(Math.Asin((res as Integer).value) * Math.Pow((180 / Math.PI), degrees ? 1 : 0)))).Evaluate();
             }
 
             if (res is Rational)
             {
-                return ReturnValue(new Irrational((decimal)(Math.Asin((double)(res as Rational).value.value) * Math.Pow((180 / Math.PI), (degrees.value) ? 1 : 0)))).Evaluate();
+                return ReturnValue(new Irrational((decimal)(Math.Asin((double)(res as Rational).value.value) * Math.Pow((180 / Math.PI), degrees ? 1 : 0)))).Evaluate();
             }
 
             if (res is Irrational)
             {
-                return ReturnValue(new Irrational((decimal)(Math.Asin((double)(res as Irrational).value) * Math.Pow((180 / Math.PI), (degrees.value) ? 1 : 0)))).Evaluate();
+                return ReturnValue(new Irrational((decimal)(Math.Asin((double)(res as Irrational).value) * Math.Pow((180 / Math.PI), degrees ? 1 : 0)))).Evaluate();
             }
 
             return new Error(this, "Could not take ASin of: " + args[0]);

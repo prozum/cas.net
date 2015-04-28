@@ -3,26 +3,13 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class Negation : SysFunc
+    public class Negation : UnaryOperator
     {
-        public Negation() : this(null, null) { }
-        public Negation(List<Expression> args, Scope scope)
-            : base("negation", args, scope)
-        {
-            validArgs = new List<ArgKind>()
-                {
-                    ArgKind.Expression
-                };
-        }
+        public Negation() : base("!") { }
 
         protected override Expression Evaluate(Expression caller)
         {
-            throw new NotImplementedException();
-        }
-
-        public override Expression Clone()
-        {
-            return MakeClone<Negation>();
+            return child.Evaluate().Negation();
         }
     }
 }

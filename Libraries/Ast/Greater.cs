@@ -2,7 +2,7 @@
 
 namespace Ast
 {
-    public class Greater : Operator
+    public class Greater : BinaryOperator
     {
         public Greater() : base(">", 10) { }
         public Greater(Expression left, Expression right) : base(left, right, ">", 10) { }

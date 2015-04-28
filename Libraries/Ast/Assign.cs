@@ -2,7 +2,7 @@
 
 namespace Ast
 {
-    public class Assign : Operator
+    public class Assign : BinaryOperator
     {
         public Assign() : base(":=", 0) { }
         public Assign(Expression left, Expression right) : base(left, right, ":=", 0) { }

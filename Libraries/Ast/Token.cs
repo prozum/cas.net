@@ -11,6 +11,8 @@ namespace Ast
         ELIF,
         ELSE,
         RETURN,
+        FOR,
+        IN,
 
         TEXT,
 
@@ -24,6 +26,7 @@ namespace Ast
         BOOL_EQUAL,
         LESS_EQUAL,
         GREAT_EQUAL,
+        NOT_EQUAL,
         LESS,
         GREAT,
         ADD,
@@ -31,6 +34,7 @@ namespace Ast
         MUL,
         DIV,
         EXP,
+        NEG,
         
         PARENT_START,
         PARENT_END,
