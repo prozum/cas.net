@@ -195,6 +195,24 @@ namespace Ast
             return this;
         }
 
+        protected bool DefaultIsNegative()
+        {
+            return CountNegatives() % 2 == 0;
+        }
+
+        private int CountNegatives()
+        {
+            int res = 0;
+
+            if (Left is INegative && (Left as INegative).IsNegative())
+                res++;
+
+            if (Right is INegative && (Right as INegative).IsNegative())
+                res++;
+
+            return res;
+        }
+
         #region AddWith
         public override Expression AddWith(Integer other)
         {

@@ -125,6 +125,16 @@ namespace Ast
         {
             return new Div(Left.CurrectOperator(), Right.CurrectOperator());
         }
+
+        public bool IsNegative()
+        {
+            return DefaultIsNegative();
+        }
+
+        public Expression ToNegative()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 

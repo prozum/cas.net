@@ -90,7 +90,12 @@ namespace Ast
             }
             else if (op.Left.ContainsVariable(sym))
             {
-                return new Equal(op.Left, (op as IInvertable).Inverted(right));
+                var inverted = (op as IInvertable).Inverted(right);
+
+                if (inverted == null)
+                    return null;
+
+                return new Equal(op.Left, inverted);
             }
             else if (op.Right.ContainsVariable(sym))
             {
@@ -116,6 +121,12 @@ namespace Ast
 
             if (leftSimplified is Operator && ((leftSimplified as Operator).Left.ContainsVariable(sym) && (leftSimplified as Operator).Right.ContainsVariable(sym)))
             {
+                if (true)
+                {
+                    
+                }
+
+
                 throw new NotImplementedException();
                 return null;
             }

@@ -9,6 +9,12 @@ namespace Ast
         Expression Inverted(Expression other);
     }
 
+    public interface INegative
+    {
+        bool IsNegative();
+        Expression ToNegative();
+    }
+
     public abstract class Expression
     {
         public Operator parent;
@@ -22,7 +28,6 @@ namespace Ast
             var simplified = Simplify();
             return simplified.Evaluate(this); 
         }
-
         protected virtual Expression Evaluate(Expression caller)
         {
             return new Error(this, "This type cannot evaluate");
@@ -593,6 +598,64 @@ namespace Ast
 
         #endregion
 
+        #region ModuloWith
+        public virtual Expression ModuloWith(Integer other)
+        {
+            return new Error(this, "Don't support modulo " + other.GetType().Name);
+        }
+
+        public virtual Expression ModuloWith(Rational other)
+        {
+            return new Error(this, "Don't support modulo " + other.GetType().Name);
+        }
+
+        public virtual Expression ModuloWith(Irrational other)
+        {
+            return new Error(this, "Don't support modulo " + other.GetType().Name);
+        }
+
+        public virtual Expression ModuloWith(Boolean other)
+        {
+            return new Error(this, "Don't support modulo " + other.GetType().Name);
+        }
+
+        public virtual Expression ModuloWith(Complex other)
+        {
+            return new Error(this, "Don't support modulo " + other.GetType().Name);
+        }
+
+        public virtual Expression ModuloWith(Variable other)
+        {
+            return this + other.Evaluate();
+        }
+
+        public virtual Expression ModuloWith(Operator other)
+        {
+            return this + other.Evaluate();
+        }
+
+        public virtual Expression ModuloWith(Message other)
+        {
+            return new Error(this, "Don't support modulo " + other.GetType().Name);
+        }
+
+        public virtual Expression ModuloWith(List other)
+        {
+            return new Error(this, "Don't support modulo " + other.GetType().Name);
+        }
+
+        public virtual Expression ModuloWith(Scope other)
+        {
+            return new Error(this, "Don't support modulo " + other.GetType().Name);
+        }
+
+        public virtual Expression ModuloWith(Text other)
+        {
+            return new Error(this, "Don't support modulo " + other.GetType().Name);
+        }
+
+        #endregion
+
         public static Expression operator +(Expression left, dynamic right)
         {
             if (left is Message)
@@ -686,6 +749,16 @@ namespace Ast
                 return right;
 
             return left.LesserThanOrEqualTo(right);
+        }
+
+        public static Expression operator %(Expression left, dynamic right)
+        {
+            if (left is Message)
+                return left;
+            else if (right is Message)
+                return right;
+
+            return left.ModuloWith(right);
         }
     }
 }

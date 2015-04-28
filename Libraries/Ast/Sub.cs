@@ -64,16 +64,9 @@ namespace Ast
 
         public override Expression CurrectOperator()
         {
-            if (Right is Number && (Right as Number).IsNegative())
+            if (Right is INegative && (Right as INegative).IsNegative())
             {
-                return new Add(Left.CurrectOperator(), (Right as Number).ToNegative());
-            }
-            else if (Right is Variable && (Right as Variable).prefix.IsNegative())
-            {
-                var newRight = Right.Clone();
-                (newRight as Symbol).prefix = (newRight as Symbol).prefix.ToNegative();
-
-                return new Add(Left.CurrectOperator(), newRight);
+                return new Add(Left.CurrectOperator(), (Right as INegative).ToNegative());
             }
 
             return new Sub(Left.CurrectOperator(), Right.CurrectOperator());

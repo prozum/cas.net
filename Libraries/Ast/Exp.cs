@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Ast
 {
@@ -81,7 +82,22 @@ namespace Ast
 
         public Expression Inverted(Expression other)
         {
-            throw new NotImplementedException();
+            if (Right.CompareTo(Constant.Two))
+            {
+                var args = new List<Expression>();
+                args.Add(other);
+
+                var answer = new Sqrt(args, other.scope);
+                var answers = new Ast.List();
+
+                answers.items.Add(answer);
+                answers.items.Add(new Mul(new Integer(-1), answer).Simplify());
+                return answers;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public override Expression CurrectOperator()
