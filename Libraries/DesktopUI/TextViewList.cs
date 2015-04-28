@@ -183,6 +183,38 @@ namespace DesktopUI
             ShowAll();
         }
 
+        public void InsertResult(string answer, string facit)
+        {
+            Button ButtonMoveUp = new Button("↑");
+            Button ButtonMoveDown = new Button("↓");
+
+            MovableCasResult MovableCasResult = new MovableCasResult(ref user, answer, facit);
+
+            ButtonMoveUp.Clicked += delegate
+            {
+                Move(MovableCasResult.id_, -1);
+            };
+
+            ButtonMoveDown.Clicked += delegate
+            {
+                Move(MovableCasResult.id_, 1);
+            };
+
+            VBox vbox = new VBox();
+            vbox.PackStart(ButtonMoveUp, false, false, 2);
+            vbox.PackEnd(ButtonMoveDown, false, false, 2);
+
+            MovableCasResult.Attach(vbox, 2, 1, 1, 2);
+
+            castextviews.Add(MovableCasResult);
+
+            Clear();
+            Redraw();
+            ShowAll();
+
+            Console.WriteLine("Inserted");
+        }
+
         public void Move(int ID, int UpOrDown)
         {
             int i = 0;

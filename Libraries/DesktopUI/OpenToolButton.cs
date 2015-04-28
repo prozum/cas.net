@@ -114,6 +114,13 @@ namespace DesktopUI
                     {
                         textviews.InsertTextView(item.metastring, item.locked);
                     }
+                    else if (item.type == typeof(MovableCasResult))
+                    {
+                        CasResult.FacitContainer container = new CasResult.FacitContainer();
+                        container = Import.DeserializeString<CasResult.FacitContainer>(item.metastring);
+
+                        textviews.InsertResult(container.answer, container.facit);
+                    }
                 }
 
                 textviews.castextviews.Reverse();
