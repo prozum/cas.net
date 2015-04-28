@@ -81,6 +81,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{8FF047
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestingChangingValues", "TestingChangingValues\TestingChangingValues.csproj", "{2D9DAA70-A42F-4D90-895F-BEB0060CC255}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -393,6 +395,16 @@ Global
 		{CEA736B0-9A43-44FF-A369-C9D310C9C238}.Release|Mixed Platforms.Build.0 = Release|x86
 		{CEA736B0-9A43-44FF-A369-C9D310C9C238}.Release|x86.ActiveCfg = Release|x86
 		{CEA736B0-9A43-44FF-A369-C9D310C9C238}.Release|x86.Build.0 = Release|x86
+		{2D9DAA70-A42F-4D90-895F-BEB0060CC255}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D9DAA70-A42F-4D90-895F-BEB0060CC255}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D9DAA70-A42F-4D90-895F-BEB0060CC255}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{2D9DAA70-A42F-4D90-895F-BEB0060CC255}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{2D9DAA70-A42F-4D90-895F-BEB0060CC255}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2D9DAA70-A42F-4D90-895F-BEB0060CC255}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D9DAA70-A42F-4D90-895F-BEB0060CC255}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D9DAA70-A42F-4D90-895F-BEB0060CC255}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{2D9DAA70-A42F-4D90-895F-BEB0060CC255}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{2D9DAA70-A42F-4D90-895F-BEB0060CC255}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -422,6 +434,7 @@ Global
 		{E53A7020-0343-4C86-936B-5076B167E2AD} = {F0AC8500-342F-4EA5-9649-3A3CAC990066}
 		{3E0FBD2D-3E67-45BE-BCB0-B6B298718749} = {55F13B97-EEC4-4F2A-B870-22346B6236AB}
 		{A6BE9C65-1637-4E97-A08C-F479621A20AF} = {55F13B97-EEC4-4F2A-B870-22346B6236AB}
+		{2D9DAA70-A42F-4D90-895F-BEB0060CC255} = {E01B11F2-BA7F-4DBA-808D-957047B442F7}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0
