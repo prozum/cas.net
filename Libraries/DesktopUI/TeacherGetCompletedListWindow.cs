@@ -45,12 +45,11 @@ namespace DesktopUI
                     grid.Remove(widget);
                 }
 
-					Console.WriteLine (StudentList.Length);
-
-                for (int i = 0; i < StudentList.Length; i++)
+                for (int i = 0; i < StudentList.Length/2; i++)
                 {
-                    Button button = new Button(StudentList[i]);
-
+                    Button button = new Button(StudentList[2*i]);
+					Label label = new Label(StudentList[(2*i)+1]);
+					
                     button.Clicked += delegate
                     {
                         List<MetaType> metaTypeList = new List<MetaType>();
@@ -83,7 +82,9 @@ namespace DesktopUI
                         Destroy();
                     };
 
-                    grid.Attach(button, 1, 1 + i, 1, 1);
+					grid.Attach(button, 1, 1 + i, 1, 1);
+					grid.Attach(label, 2, 1 + i, 1, 1);
+					
 					ShowAll();				
                 }
             };
