@@ -16,7 +16,7 @@ namespace Ast
         Token tok;
         Error _error;
         //Pos pos;
-        Context cx;
+        Context cx = Context.Scope;
 
         Queue<Token> tokens;
 
@@ -46,6 +46,7 @@ namespace Ast
             else
                 res = scope;
 
+            var lastCx = cx;
             cx = Context.Scope;
 
             while (tokens.Count > 0)
@@ -54,6 +55,7 @@ namespace Ast
                 {
                     if (newScope)
                         scope = scope.parent;
+                    cx = lastCx;
                     return res;
                 }
 
@@ -79,7 +81,7 @@ namespace Ast
 
         public bool Peek()
         {
-            if (tok.kind == TokenKind.END_OF_STRING)
+            if (tokens.Count > 0)
                 return false;
 
             tok = tokens.Peek();
@@ -88,18 +90,19 @@ namespace Ast
 
         public bool Peek(TokenKind kind)
         {
-            if (tok.kind != TokenKind.END_OF_STRING)
+            if (tokens.Count > 0)
                 tok = tokens.Peek();
-
+                
             return tok.kind == kind;
         }
 
         public bool Eat()
         {
-            if (tok.kind != TokenKind.END_OF_STRING)
+            if (tokens.Count > 0)
                 tok = tokens.Dequeue();
 
-            return tok.kind != TokenKind.END_OF_STRING;
+            return tokens.Count > 0;
+            //return tok.kind != TokenKind.END_OF_STRING;
         }
 
         public bool Eat(TokenKind kind)
@@ -196,17 +199,22 @@ namespace Ast
         {
             var list = new List();
 
+            var lastCx = cx;
             cx = Context.List;
 
             while (tokens.Count > 0)
             {
                 if (Eat(TokenKind.SQUARE_END))
+                {
+                    cx = lastCx;
                     return list;
+                }
 
                 list.items.Add(ParseExpr(TokenKind.SQUARE_END));
             }
 
             ReportSyntaxError("Mssing ] bracket");
+
             return list;
         }
 
@@ -222,7 +230,7 @@ namespace Ast
 
             while (tokens.Count > 0)
             {
-                if (Eat(stopToken))
+                if (Peek(stopToken))
                     break;
 
                 Eat(); // Get switch token
@@ -241,10 +249,11 @@ namespace Ast
                         break;
                     
                     case TokenKind.IDENTIFIER:
+                        var sym = tok.value;
                         if (Eat(TokenKind.SQUARE_START))
-                            expr = ParseFunction();
+                            expr = ParseFunction(sym);
                         else
-                            expr = new Symbol(tok.value, scope);
+                            expr = new Symbol(sym, scope);
                         break;
 
                     case TokenKind.TRUE:
@@ -468,12 +477,12 @@ namespace Ast
             }
         }
             
-        public Expression ParseFunction()
+        public Expression ParseFunction(string sym)
         {
             List res = ParseList();
             var args = res.items;
                 
-            switch (tok.value.ToLower())
+            switch (sym.ToLower())
             {
                 case "sin":
                     return new Sin(args, scope);
