@@ -50,13 +50,16 @@ namespace DesktopUI
                 {
                     Button button = new Button(StudentList[2 * i]);
                     button.TooltipText = StudentList[2 * i];
+                    button.HasTooltip = false;
                     Label label = new Label(StudentList[(2 * i) + 1]);
 					
                     button.Clicked += delegate
                     {
-                        string assignment = this.user.teacher.GetCompleted(StudentList[2 * i], FileNameEntry.Text, GradeEntry.Text);
+                        string completed = this.user.teacher.GetCompleted(button.TooltipText, FileNameEntry.Text, GradeEntry.Text);
 
-                        List<MetaType> metaTypeList = ImEx.Import.DeserializeString<List<MetaType>>(assignment);
+                        Console.WriteLine(completed);
+
+                        List<MetaType> metaTypeList = ImEx.Import.DeserializeString<List<MetaType>>(completed);
 
                         this.textviews.castextviews.Clear();
 
