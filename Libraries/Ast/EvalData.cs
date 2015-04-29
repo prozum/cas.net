@@ -27,11 +27,16 @@ namespace Ast
 
     public class ErrorData : EvalData
     {
-        public string msg;
+        public string err;
+
+        public ErrorData(string err)
+        {
+            this.err = err;
+        }
 
         public ErrorData(Error err)
         {
-            msg = err.msg;
+            this.err = err.msg;
         }
     }
 
