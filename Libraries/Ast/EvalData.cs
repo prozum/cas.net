@@ -2,9 +2,6 @@
 
 namespace Ast
 {
-    public enum MsgType {Print, Info, Error};
-
-
     public abstract class EvalData
     {
     }
@@ -13,20 +10,28 @@ namespace Ast
     {
     }
 
-    public class MsgData : EvalData
+    public class PrintData : EvalData
     {
-        public MsgType type;
         public string msg;
 
-        public MsgData(MsgType type, string msg)
+        public PrintData(string msg)
         {
-            this.type = type;
             this.msg = msg;
         }
 
         public override string ToString()
         {
             return msg;
+        }
+    }
+
+    public class ErrorData : EvalData
+    {
+        public string msg;
+
+        public ErrorData(Error err)
+        {
+            msg = err.msg;
         }
     }
 

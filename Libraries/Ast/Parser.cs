@@ -67,7 +67,10 @@ namespace Ast
                     stmt = new ExprStmt(ParseExpr(stopToken));
 
                 if (_error != null)
+                {
                     stmt = new ExprStmt(_error);
+                    return res;
+                }
 
                 scope.statements.Add(stmt);
             }
@@ -107,7 +110,7 @@ namespace Ast
 
         public bool Eat(TokenKind kind)
         {
-            if (tokens.Peek().kind == kind)
+            if (tokens.Count > 0 && tokens.Peek().kind == kind)
             {
                 tok = tokens.Dequeue();
                 return true;
@@ -122,9 +125,9 @@ namespace Ast
         {
             var stmt = new IfStmt();
 
-            if (Eat(TokenKind.COLON))
-                stmt.conditions.Add(ParseExpr(TokenKind.COLON));
-            else
+            stmt.conditions.Add(ParseExpr(TokenKind.COLON));
+
+            if (!Eat(TokenKind.COLON))
             {
                 ReportSyntaxError("If syntax: if bool: {}");
                 return null;
@@ -133,7 +136,15 @@ namespace Ast
             if (Eat(TokenKind.CURLY_START))
                 stmt.expressions.Add(ParseScope(TokenKind.CURLY_END, true));
             else
+            {
                 stmt.expressions.Add(ParseScope(TokenKind.SEMICOLON, true));
+
+                if (!Eat(TokenKind.SEMICOLON))
+                {
+                    ReportSyntaxError("If syntax: if bool: {}");
+                    return null;
+                }
+            }
 
 //            if (Eat())
 //            {
