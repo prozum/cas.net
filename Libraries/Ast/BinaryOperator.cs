@@ -195,24 +195,6 @@ namespace Ast
             return this;
         }
 
-        protected bool DefaultIsNegative()
-        {
-            return CountNegatives() % 2 == 0;
-        }
-
-        private int CountNegatives()
-        {
-            int res = 0;
-
-            if (Left is INegative && (Left as INegative).IsNegative())
-                res++;
-
-            if (Right is INegative && (Right as INegative).IsNegative())
-                res++;
-
-            return res;
-        }
-
         #region AddWith
         public override Expression AddWith(Integer other)
         {
@@ -379,5 +361,37 @@ namespace Ast
         }
 
         #endregion
+    }
+
+    //Pleace do your magic Niclas. Put this in a file under BinaryOperator. Don't know how to do it in VS.
+    public class NotEqual : BinaryOperator
+    {
+        public NotEqual() : base("!=", 10) { }
+        public NotEqual(Expression left, Expression right) : base(left, right, "==", 10) { }
+
+        protected override Expression Evaluate(Expression caller)
+        {
+            return new Boolean(!Left.CompareTo(Right));
+        }
+
+        public override Expression Clone()
+        {
+            return new NotEqual(Left.Clone(), Right.Clone());
+        }
+
+        public override Expression CurrectOperator()
+        {
+            return new NotEqual(Left.CurrectOperator(), Right.CurrectOperator());
+        }
+
+        protected override Expression ReduceHelper(Expression left, Expression right)
+        {
+            return new NotEqual(left.Reduce(this), right.Reduce(this));
+        }
+
+        protected override Expression ExpandHelper(Expression left, Expression right)
+        {
+            return new NotEqual(left.Expand(), right.Expand());
+        }
     }
 }

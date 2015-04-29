@@ -11,11 +11,13 @@ namespace Ast.Tests
     public class AstTests
     {
         public Evaluator eval;
+        public Parser parser;
 
         public AstTests()
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
             eval = new Evaluator();
+            parser = new Parser();
         }
 
         #region CompareTo Test Cases
@@ -36,7 +38,7 @@ namespace Ast.Tests
         #endregion
         public void ExpCompareTo(string inputString1, string inputString2)
         {
-            Assert.IsTrue(Parser.Parse(inputString1).CompareTo(Parser.Parse(inputString2)));
+            Assert.IsTrue(parser.Parse(inputString1).CompareTo(parser.Parse(inputString2)));
         }
 
         #region Reduce Test Cases
@@ -101,6 +103,14 @@ namespace Ast.Tests
         public void Reduce(string expected, string inputString)
         {
             var simString = "Reduce[" + inputString + "]";
+            var res = eval.Evaluation(simString);
+            Assert.AreEqual(expected, res.ToString());
+        }
+
+
+        public void Expand(string expected, string inputString)
+        {
+            var simString = "Expand[" + inputString + "]";
             var res = eval.Evaluation(simString);
             Assert.AreEqual(expected, res.ToString());
         }
@@ -197,7 +207,7 @@ namespace Ast.Tests
         #endregion
         public void Parse(string expected, string inputString)
         {
-            Assert.AreEqual(expected, Parser.Parse(inputString).ToString());
+            Assert.AreEqual(expected, parser.Parse(inputString).ToString());
         }
 
         #region Evaluate Test Cases
@@ -223,6 +233,8 @@ namespace Ast.Tests
         [TestCase(true, "20>=10")] //boolgreaterequal
         [TestCase(true, "10>=10")] //boolgreaterequal
         [TestCase(false, "10>=20")] //boolgreaterequal
+        [TestCase(true, "10!=20")] //boolnotequal
+        [TestCase(false, "20!=20")] //boolnotequal
         #endregion
 
         #region Rationals
@@ -244,6 +256,9 @@ namespace Ast.Tests
         [TestCase(true, "1/2>=1/4")] //boolgreaterequal
         [TestCase(true, "1/4>=2/8")] //boolgreaterequal
         [TestCase(false, "1/4>=1/2")] //boolgreaterequal
+        [TestCase(true, "1/2!=1/4")] //boolnotequal
+        [TestCase(false, "1/2!=2/4")] //boolnotequal
+        [TestCase(false, "1/2!=1/2")] //boolnotequal
         #endregion
 
         #region Irrationals
@@ -264,6 +279,8 @@ namespace Ast.Tests
         [TestCase(true, "2.5>=1.5")] //boolgreaterequal
         [TestCase(true, "1.5>=1.5")] //boolgreaterequal
         [TestCase(false, "1.5>=2.5")] //boolgreaterequal
+        [TestCase(true, "1.5!=2.5")] //boolnotequal
+        [TestCase(false, "2.5!=2.5")] //boolnotequal
         #endregion
 
         #region Mix
