@@ -283,6 +283,9 @@ namespace Ast
                     case TokenKind.BOOL_EQUAL:
                         biops.Enqueue(new BooleanEqual());
                         break;
+                    case TokenKind.NOT_EQUAL:
+                        biops.Enqueue(new NotEqual());
+                        break;
                     case TokenKind.LESS_EQUAL:
                         biops.Enqueue(new LesserEqual());
                         break;
