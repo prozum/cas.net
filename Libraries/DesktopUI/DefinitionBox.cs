@@ -4,30 +4,35 @@ using Gtk;
 
 namespace DesktopUI
 {
-	public class DefinitionBox : Label
+	public class DefinitionBox : TreeView
 	{
-		TextViewList textviews;
-		string definitions;
+        CellRenderer renderer;
+        ListStore list;
 
-		public DefinitionBox (TextViewList textviews) : base()
+        readonly Evaluator Eval;
+
+		public DefinitionBox (Evaluator Eval) : base()
 		{
-			this.textviews = textviews;
-			definitions = String.Empty;
-			Show ();
+            renderer = new CellRendererText();
+            AppendColumn("Variable", renderer, "text", 0);
+
+            renderer = new CellRendererText();
+            AppendColumn("Value", renderer, "text", 1);
+
+            list = new ListStore(typeof(string), typeof(string));
+            Model = list;
+
+            this.Eval = Eval;
 		}
 
 		public void Update()
 		{
-			foreach (Widget widget in textviews.castextviews)
-			{
-				if (widget.GetType() == typeof(CasCalcView))
-				{
-					definitions += (widget as CasCalcView).input + "\n";
-				}
-			}
-
-			Text = definitions;
-			Show ();
+            foreach (var def in Eval.locals)
+            {
+                list.AppendValues(def.Key, def.Value.ToString());
+            }
+  
+			ShowAll ();
 		}
 	}
 }
