@@ -26,6 +26,7 @@ namespace DesktopUI
         {
             Button ButtonMoveUp = new Button("↑");
             Button ButtonMoveDown = new Button("↓");
+            Button ButtonDelete = new Button("X");
 
             if (user.privilege == 1)
             {
@@ -42,8 +43,16 @@ namespace DesktopUI
                     Move(movableLockedCasTextView.id_, 1);
                 };
 
-                movableLockedCasTextView.Attach(ButtonMoveUp, 2, 1, 1, 1);
-                movableLockedCasTextView.Attach(ButtonMoveDown, 2, 2, 1, 1);
+                ButtonDelete.Clicked += delegate
+                {
+                    Delete(movableLockedCasTextView.id_);
+                };
+
+                VBox vbox = new VBox();
+                vbox.PackStart(ButtonMoveUp, false, false, 2);
+                vbox.PackEnd(ButtonMoveDown, false, false, 2);
+                vbox.PackStart(ButtonDelete, false, false, 2);
+                movableLockedCasTextView.Attach(vbox, 2, 1, 1, 2);
 
                 castextviews.Add(movableLockedCasTextView);
             }
@@ -236,6 +245,22 @@ namespace DesktopUI
                 castextviews.Insert(i - 1, castextviews[i]);
                 castextviews.RemoveAt(i + 1);
             }
+
+            Clear();
+            Reevaluate();
+            Redraw();
+        }
+
+        public void Delete(int ID)
+        {
+            int i = 0;
+
+            while (ID != castextviews[i].id_)
+            {
+                i++;
+            }
+
+            castextviews.RemoveAt(i);
 
             Clear();
             Reevaluate();
