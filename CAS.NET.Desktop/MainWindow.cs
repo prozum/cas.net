@@ -51,7 +51,7 @@ namespace CAS.NET.Desktop
         public MainWindow()
             : base("CAS.NET")
         {
-            DeleteEvent += (o, a) => Application.Quit();
+            DeleteEvent += (o, a) => Gtk.Application.Quit();
 
             textviews = new TextViewList(ref user, Eval);
             DefBox = new DefinitionBox(Eval);
