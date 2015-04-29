@@ -35,15 +35,40 @@ namespace DesktopUI
             Button buttonFeedback = new Button("Feedback");
             buttonFeedback.Clicked += delegate
             {
-				string[] StudentList = this.user.teacher.GetCompletedList(entFilename.Text, entClass.Text);
 				string feedbackString = String.Empty;
+				List<MetaType> metaTypeList = new List<MetaType>();
 
-				foreach (Widget widget in grid)
+				foreach (Widget w in this.textviews)
 				{
-					Remove(widget);
+					if (w.GetType() == typeof(MovableCasCalcView))
+					{
+						MetaType metaType = new MetaType();
+						MovableCasCalcView calcView = (MovableCasCalcView)w;
+						metaType.type = typeof(MovableCasCalcView);
+						metaType.metastring = calcView.calcview.input.Text;
+						metaTypeList.Add(metaType);
+					}
+					else if (w.GetType() == typeof(MovableCasTextView))
+					{
+						MetaType metaType = new MetaType();
+						MovableCasTextView textView = (MovableCasTextView)w;
+						metaType.type = typeof(MovableCasTextView);
+						metaType.metastring = textView.textview.SerializeCasTextView();
+						metaTypeList.Add(metaType);
+					}
 				}
 
-					ShowAll();
+				if (metaTypeList.Count != 0
+					&& string.IsNullOrEmpty(entClass.Text) == false
+					&& string.IsNullOrEmpty(entFilename.Text) == false)
+				{
+					feedbackString = Export.Serialize(metaTypeList);           
+				}
+
+				string[] StudentList = this.user.teacher.GetCompletedList(entFilename.Text, entClass.Text);
+
+				grid.Destroy();
+				grid = new Grid();
 
 				for (int i = 0; i < StudentList.Length/2; i++)
 				{
@@ -55,37 +80,9 @@ namespace DesktopUI
 								Destroy();
 							};
 						grid.Attach(button, 1, 1+i, 1, 1);
-				}
-
-                List<MetaType> metaTypeList = new List<MetaType>();
-
-                foreach (Widget w in this.textviews)
-                {
-                    if (w.GetType() == typeof(MovableCasCalcView))
-                    {
-                        MetaType metaType = new MetaType();
-                        MovableCasCalcView calcView = (MovableCasCalcView)w;
-                        metaType.type = typeof(MovableCasCalcView);
-                        metaType.metastring = calcView.calcview.input.Text;
-                        metaTypeList.Add(metaType);
-                    }
-                    else if (w.GetType() == typeof(MovableCasTextView))
-                    {
-                        MetaType metaType = new MetaType();
-                        MovableCasTextView textView = (MovableCasTextView)w;
-                        metaType.type = typeof(MovableCasTextView);
-                        metaType.metastring = textView.textview.SerializeCasTextView();
-                        metaTypeList.Add(metaType);
-                    }
-                }
-
-                if (metaTypeList.Count != 0
-                    && string.IsNullOrEmpty(entClass.Text) == false
-                    && string.IsNullOrEmpty(entFilename.Text) == false)
-                {
-                    feedbackString = Export.Serialize(metaTypeList);           
-                }
-
+				}          
+				
+				Add(grid);
                 ShowAll();
             };
 
@@ -99,7 +96,6 @@ namespace DesktopUI
             Add(grid);
 
             ShowAll();
-
         }
     }
 }
