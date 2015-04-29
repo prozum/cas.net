@@ -40,30 +40,26 @@ public class MainWindow : Window
             output = eval.Step();
             dataList.Add(output);
 
-        } while (!(output is DoneData));
+        } while (!(output is DoneData) || (output is ErrorData));
 
         TextIter insertIter = buffer.StartIter;
 
         foreach(var data in dataList)
         {
-            if (data is MsgData)
+            if (data is PrintData)
             {
-                switch ((data as MsgData).type)
-                {
-                    case MsgType.Print:
-                        buffer.Insert(ref insertIter, (data as MsgData).msg + "\n");
-                        break;
-                    case MsgType.Error:
-                        buffer.InsertWithTagsByName(ref insertIter, (data as MsgData).msg + "\n", "error");
-                        break;
-                    case MsgType.Info:
-                        buffer.InsertWithTagsByName(ref insertIter, (data as MsgData).msg + "\n", "info");
-                        break;
-                }
+                buffer.Insert(ref insertIter, (data as PrintData).msg + "\n");
+            }
+            else if (data is ErrorData)
+            {
+                buffer.InsertWithTagsByName(ref insertIter, (data as ErrorData).msg + "\n", "error");
             }
             else if (data is ExprData)
             {
-                buffer.Insert(ref insertIter, (data as ExprData).expr.ToString() + "\n");
+                var debug = (Boolean)eval.GetVar("debug");
+
+                if (debug)
+                    buffer.Insert(ref insertIter, (data as ExprData).expr.ToString() + "\n");
             }
         }
 
@@ -88,7 +84,7 @@ public class MainWindow : Window
     {
         defStore.Clear();
 
-        foreach (var def in eval.scope.locals)
+        foreach (var def in eval.locals)
         {
             if (def.Value is SysFunc)
             {
