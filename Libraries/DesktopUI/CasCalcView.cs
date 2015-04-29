@@ -41,21 +41,17 @@ namespace DesktopUI
 
             foreach (var data in DataList)
             {
-                if (data.GetType() == typeof(PrintData))
+                if (data is PrintData)
                 {
                     buffer.Insert(ref insertIter, (data as PrintData).msg + "\n");
                 }
-                else if (data.GetType() == typeof(ErrorData))
+                else if (data is ErrorData)
                 {
                     buffer.InsertWithTagsByName(ref insertIter, (data as ErrorData).msg + "\n", "error");
                 }
-                else if (data.GetType() == typeof(ExprData))
+                else if (data is ExprData)
                 {
-                    var debug = (Boolean)Eval.GetVar("debug");
-
-                    if (debug)
-                        buffer.Insert(ref insertIter, (data as ExprData).expr.ToString() + "\n");
-
+                    buffer.Insert(ref insertIter, (data as ExprData).expr.ToString() + "\n");
                 }   
             }
 
