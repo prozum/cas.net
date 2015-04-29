@@ -27,6 +27,7 @@ namespace DesktopUI
             Button ButtonMoveUp = new Button("↑");
             Button ButtonMoveDown = new Button("↓");
             Button ButtonDelete = new Button("X");
+            Button ButtonAddNew = new Button("+");
 
             if (user.privilege == 1)
             {
@@ -48,10 +49,16 @@ namespace DesktopUI
                     Delete(movableLockedCasTextView.id_);
                 };
 
+                ButtonAddNew.Clicked += delegate
+                {
+                    AddNew(movableLockedCasTextView.id_);
+                };
+
                 VBox vbox = new VBox();
                 vbox.PackStart(ButtonMoveUp, false, false, 2);
                 vbox.PackEnd(ButtonMoveDown, false, false, 2);
                 vbox.PackStart(ButtonDelete, false, false, 2);
+                vbox.PackStart(ButtonAddNew, false, false, 2);
                 movableLockedCasTextView.Attach(vbox, 2, 1, 1, 2);
 
                 castextviews.Add(movableLockedCasTextView);
@@ -333,6 +340,35 @@ namespace DesktopUI
                     (widget as MovableCasCalcView).calcview.Evaluate();
                 }
             }
+        }
+
+        public void AddNew(int ID)
+        {
+            Button buttonCalcel = new Button("Cancel");
+            Button buttonTextView = new Button("TextView");
+            Button buttonCalcView = new Button("CalcView");
+            Button buttonDrawCanvas = new Button("DrawCanvas");
+
+            Window window = new Window("Insert new widget");
+
+            window.SetSizeRequest(300, 300);
+
+            VBox vbox = new VBox();
+
+            vbox.PackStart(buttonTextView, false, false, 2);
+            vbox.PackStart(buttonCalcView, false, false, 2);
+            vbox.PackStart(buttonDrawCanvas, false, false, 2);
+
+            vbox.PackEnd(buttonCalcel, false, false, 2);
+
+            window.Add(vbox);
+
+            window.ShowAll();
+
+            buttonCalcel.Clicked += delegate
+            {
+                window.Destroy();
+            };
         }
     }
 }
