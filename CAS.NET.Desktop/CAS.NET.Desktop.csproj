@@ -74,6 +74,10 @@
       <Project>{FF8D208B-A1BE-4418-A2C2-B7A9625EE34C}</Project>
       <Name>DesktopUI</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Libraries\Ast\Ast.csproj">
+      <Project>{82C03E10-075F-411C-A1F1-D5506C62BE1C}</Project>
+      <Name>Ast</Name>
+    </ProjectReference>
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>

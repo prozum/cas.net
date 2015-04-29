@@ -1,5 +1,6 @@
 ﻿using System;
 using Gtk;
+using GLib;
 
 //using TaskGenLib;
 //using System.Collections.Generic;
@@ -7,12 +8,15 @@ using Gtk;
 //using System.Net;
 //using System.Text;
 using DesktopUI;
+using Ast;
 
 namespace CAS.NET.Desktop
 {
     class MainWindow : Window
     {
         User user = new User();
+        Evaluator Eval = new Evaluator();
+        DefinitionBox DefBox;
 
         TextViewList textviews;
         MenuBar menubar = new MenuBar();
@@ -49,7 +53,8 @@ namespace CAS.NET.Desktop
         {
             DeleteEvent += (o, a) => Application.Quit();
 
-            textviews = new TextViewList(ref user);
+            textviews = new TextViewList(ref user, Eval);
+            DefBox = new DefinitionBox(Eval);
 
             // Initiating menu elements
             server = new ServerMenuItem();
@@ -117,6 +122,7 @@ namespace CAS.NET.Desktop
             vbox.PackStart(toolbar, false, false, 2);
             scrolledWindow.Add(textviews);
             vbox.Add(scrolledWindow);
+            vbox.Add(DefBox);
 
             Add(vbox);
 
@@ -146,6 +152,14 @@ namespace CAS.NET.Desktop
                     w.Show();
                 }
             }
+
+            GLib.Timeout.Add (2000, new GLib.TimeoutHandler (DefBoxUpdate));
+        }
+
+        public bool DefBoxUpdate()
+        {
+            DefBox.Update();
+            return true;
         }
     }
 }

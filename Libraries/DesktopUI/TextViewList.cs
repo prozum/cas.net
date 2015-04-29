@@ -10,13 +10,14 @@ namespace DesktopUI
     {
         public List<MovableCasTextView> castextviews = new List<MovableCasTextView>();
         Grid ButtonGrid = new Grid();
-        Evaluator Eval = new Evaluator();
+        Evaluator Eval;
         User user;
 
 
-        public TextViewList(ref User user)
+        public TextViewList(ref User user, Evaluator Eval)
             : base()
         {
+            this.Eval = Eval;
             this.user = user;
 
             ShowAll();
