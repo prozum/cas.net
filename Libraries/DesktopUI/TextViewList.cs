@@ -52,7 +52,7 @@ namespace DesktopUI
 
                 ButtonAddNew.Clicked += delegate
                 {
-                    AddNew(movableLockedCasTextView.id_);
+                    AddNew(movableLockedCasTextView);
                 };
 
                 VBox vbox = new VBox();
@@ -95,7 +95,7 @@ namespace DesktopUI
 
                     ButtonAddNew.Clicked += delegate
                     {
-                        AddNew(movableCasTextView.id_);
+                        AddNew(movableCasTextView);
                     };
 
                     VBox vbox = new VBox();
@@ -156,7 +156,7 @@ namespace DesktopUI
 
             ButtonAddNew.Clicked += delegate
             {
-                AddNew(MovCasCalcView.id_);
+                AddNew(MovCasCalcView);
             };
 
             VBox vbox = new VBox();
@@ -219,7 +219,7 @@ namespace DesktopUI
 
             ButtonAddNew.Clicked += delegate
             {
-                AddNew(MovCasCalcView.id_);
+                AddNew(MovCasCalcView);
             };
 
             VBox vbox = new VBox();
@@ -262,7 +262,7 @@ namespace DesktopUI
 
             ButtonAddNew.Clicked += delegate
             {
-                AddNew(movableDrawCanvas.id_);
+                AddNew(movableDrawCanvas);
             };
 
             VBox vbox = new VBox();
@@ -313,7 +313,7 @@ namespace DesktopUI
 
             ButtonAddNew.Clicked += delegate
             {
-                AddNew(MovableCasResult.id_);
+                AddNew(MovableCasResult);
             };
 
             VBox vbox = new VBox();
@@ -405,9 +405,9 @@ namespace DesktopUI
             }
         }
 
-        public void AddNew(int ID)
+        public void AddNew(Widget w)
         {
-            int _id = ID;
+            int _id = castextviews.IndexOf((MovableCasTextView)w);
 
             Button buttonCalcel = new Button("Cancel");
             Button buttonTextView = new Button("TextView");
