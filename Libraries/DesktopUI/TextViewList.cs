@@ -22,7 +22,7 @@ namespace DesktopUI
             ShowAll();
         }
 
-        public void InsertTextView(string serializedString, bool locked)
+        public void InsertTextView(string serializedString, bool locked, int pos)
         {
             Button ButtonMoveUp = new Button("↑");
             Button ButtonMoveDown = new Button("↓");
@@ -61,7 +61,14 @@ namespace DesktopUI
                 vbox.PackStart(ButtonAddNew, false, false, 2);
                 movableLockedCasTextView.Attach(vbox, 2, 1, 1, 2);
 
-                castextviews.Add(movableLockedCasTextView);
+                if (pos == -1)
+                {
+                    castextviews.Add(movableLockedCasTextView);
+                }
+                else
+                {
+                    castextviews.Insert(pos, movableLockedCasTextView);
+                }
             }
             else if (user.privilege == 0)
             {
@@ -85,14 +92,27 @@ namespace DesktopUI
                         Delete(movableCasTextView.id_);
                     };
 
+                    ButtonAddNew.Clicked += delegate
+                    {
+                        AddNew(movableCasTextView.id_);
+                    };
+
                     VBox vbox = new VBox();
                     vbox.PackStart(ButtonMoveUp, false, false, 2);
                     vbox.PackEnd(ButtonMoveDown, false, false, 2);
                     vbox.PackStart(ButtonDelete, false, false, 2);
+                    vbox.PackStart(ButtonAddNew, false, false, 2);
                     movableCasTextView.Attach(vbox, 2, 1, 1, 2);
                 }
 
-                castextviews.Add(movableCasTextView);
+                if (pos == -1)
+                {
+                    castextviews.Add(movableCasTextView);
+                }
+                else
+                {
+                    castextviews.Insert(pos, movableCasTextView);
+                }
             }
 
             Clear();
@@ -100,11 +120,12 @@ namespace DesktopUI
             ShowAll();
         }
 
-        public void InsertCalcView()
+        public void InsertCalcView(int pos)
         {
             Button ButtonMoveUp = new Button("↑");
             Button ButtonMoveDown = new Button("↓");
             Button ButtonDelete = new Button("X");
+            Button ButtonAddNew = new Button("+");
 
             MovableCasCalcView MovCasCalcView = new MovableCasCalcView(Eval);
             MovCasCalcView.calcview.input.Activated += delegate
@@ -132,13 +153,26 @@ namespace DesktopUI
                 Delete(MovCasCalcView.id_);
             };
 
+            ButtonAddNew.Clicked += delegate
+            {
+                AddNew(MovCasCalcView.id_);
+            };
+
             VBox vbox = new VBox();
             vbox.PackStart(ButtonMoveUp, false, false, 2);
             vbox.PackEnd(ButtonMoveDown, false, false, 2);
             vbox.PackStart(ButtonDelete, false, false, 2);
+            vbox.PackStart(ButtonAddNew, false, false, 2);
             MovCasCalcView.Attach(vbox, 2, 1, 1, 2);
 
-            castextviews.Add(MovCasCalcView);
+            if (pos == -1)
+            {
+                castextviews.Add(MovCasCalcView);
+            }
+            else
+            {
+                castextviews.Insert(pos, MovCasCalcView);
+            }
 
             Clear();
             Redraw();
@@ -150,6 +184,7 @@ namespace DesktopUI
             Button ButtonMoveUp = new Button("↑");
             Button ButtonMoveDown = new Button("↓");
             Button ButtonDelete = new Button("X");
+            Button ButtonAddNew = new Button("+");
 
             MovableCasCalcView MovCasCalcView = new MovableCasCalcView(Eval);
 
@@ -181,10 +216,16 @@ namespace DesktopUI
                 Delete(MovCasCalcView.id_);
             };
 
+            ButtonAddNew.Clicked += delegate
+            {
+                AddNew(MovCasCalcView.id_);
+            };
+
             VBox vbox = new VBox();
             vbox.PackStart(ButtonMoveUp, false, false, 2);
             vbox.PackEnd(ButtonMoveDown, false, false, 2);
             vbox.PackStart(ButtonDelete, false, false, 2);
+            vbox.PackStart(ButtonAddNew, false, false, 2);
             MovCasCalcView.Attach(vbox, 2, 1, 1, 2);
 
             castextviews.Add(MovCasCalcView);
@@ -194,11 +235,12 @@ namespace DesktopUI
             ShowAll();
         }
 
-        public void InsertDrawCanvas()
+        public void InsertDrawCanvas(int pos)
         {
             Button ButtonMoveUp = new Button("↑");
             Button ButtonMoveDown = new Button("↓");
             Button ButtonDelete = new Button("X");
+            Button ButtonAddNew = new Button("+");
 
             MovableDrawCanvas movableDrawCanvas = new MovableDrawCanvas();
 
@@ -217,14 +259,27 @@ namespace DesktopUI
                 Delete(movableDrawCanvas.id_);
             };
 
+            ButtonAddNew.Clicked += delegate
+            {
+                AddNew(movableDrawCanvas.id_);
+            };
+
             VBox vbox = new VBox();
             vbox.PackStart(ButtonMoveUp, false, false, 2);
             vbox.PackEnd(ButtonMoveDown, false, false, 2);
             vbox.PackStart(ButtonDelete, false, false, 2);
+            vbox.PackStart(ButtonAddNew, false, false, 2);
 
             movableDrawCanvas.Attach(vbox, 2, 1, 1, 2);
 
-            castextviews.Add(movableDrawCanvas);
+            if (pos == -1)
+            {
+                castextviews.Add(movableDrawCanvas);
+            }
+            else
+            {
+                castextviews.Insert(pos, movableDrawCanvas);
+            }
 
             Clear();
             Redraw();
@@ -236,6 +291,7 @@ namespace DesktopUI
             Button ButtonMoveUp = new Button("↑");
             Button ButtonMoveDown = new Button("↓");
             Button ButtonDelete = new Button("X");
+            Button ButtonAddNew = new Button("+");
 
             MovableCasResult MovableCasResult = new MovableCasResult(ref user, answer, facit);
 
@@ -254,10 +310,16 @@ namespace DesktopUI
                 Delete(MovableCasResult.id_);
             };
 
+            ButtonAddNew.Clicked += delegate
+            {
+                AddNew(MovableCasResult.id_);
+            };
+
             VBox vbox = new VBox();
             vbox.PackStart(ButtonMoveUp, false, false, 2);
             vbox.PackEnd(ButtonMoveDown, false, false, 2);
             vbox.PackStart(ButtonDelete, false, false, 2);
+            vbox.PackStart(ButtonAddNew, false, false, 2);
 
             MovableCasResult.Attach(vbox, 2, 1, 1, 2);
 
@@ -344,6 +406,8 @@ namespace DesktopUI
 
         public void AddNew(int ID)
         {
+            int _id = ID;
+
             Button buttonCalcel = new Button("Cancel");
             Button buttonTextView = new Button("TextView");
             Button buttonCalcView = new Button("CalcView");
@@ -368,6 +432,36 @@ namespace DesktopUI
             buttonCalcel.Clicked += delegate
             {
                 window.Destroy();
+            };
+
+            buttonTextView.Clicked += delegate
+            {
+                InsertTextView("", false, _id + 1);
+                Clear();
+                Reevaluate();
+                Redraw();
+
+                _id++;
+            };
+
+            buttonCalcView.Clicked += delegate
+            {
+                InsertCalcView(_id + 1);
+                Clear();
+                Reevaluate();
+                Redraw();
+
+                _id++;
+            };
+
+            buttonDrawCanvas.Clicked += delegate
+            {
+                InsertDrawCanvas(_id + 1);
+                Clear();
+                Reevaluate();
+                Redraw();
+
+                _id++;
             };
         }
     }

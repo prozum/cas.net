@@ -93,7 +93,7 @@ namespace DesktopUI
                 }
                 else if (metaItem.type == typeof(MovableCasTextView))
                 {
-                    textviews.InsertTextView(metaItem.metastring, metaItem.locked);
+                    textviews.InsertTextView(metaItem.metastring, metaItem.locked, -1);
                 }
             }
 
