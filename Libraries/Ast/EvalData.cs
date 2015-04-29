@@ -49,17 +49,5 @@ namespace Ast
             return expr.ToString();
         }
     }
-
-    public class PlotData : EvalData
-    {
-        public Expression exp;
-        public Symbol sym;
-
-        public PlotData(Plot plot)
-        {
-            this.sym = plot.sym;
-            this.exp = plot.exp;
-        }
-    }
 }
 
