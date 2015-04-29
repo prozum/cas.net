@@ -108,12 +108,12 @@ namespace Ast.Tests
         }
 
 
-        public void Expand(string expected, string inputString)
-        {
-            var simString = "Expand[" + inputString + "]";
-            var res = eval.Evaluation(simString);
-            Assert.AreEqual(expected, res.ToString());
-        }
+        //public void Expand(string expected, string inputString)
+        //{
+        //    var simString = "Expand[" + inputString + "]";
+        //    var res = eval.Evaluation(simString);
+        //    Assert.AreEqual(expected, res.ToString());
+        //}
 
         #region Parse Test Cases
 
