@@ -18,6 +18,8 @@ namespace DesktopUI
 
             SetSizeRequest(300, 300);
 
+			Grid grid = new Grid();
+
             Label labClass = new Label("Class:");
             Label labFilename = new Label("Filename:");
 
@@ -33,6 +35,28 @@ namespace DesktopUI
             Button buttonFeedback = new Button("Feedback");
             buttonFeedback.Clicked += delegate
             {
+				string[] StudentList = this.user.teacher.GetCompletedList(entFilename.Text, entClass.Text);
+				string feedbackString = String.Empty;
+
+				foreach (Widget widget in grid)
+				{
+					Remove(widget);
+				}
+
+					ShowAll();
+
+				for (int i = 0; i < StudentList.Length/2; i++)
+				{
+						int j = 2*i;
+						Button button = new Button(StudentList[j]);
+						button.Clicked += delegate
+							{
+								this.user.teacher.AddFeedback(feedbackString, entFilename.Text, StudentList[j], entClass.Text);
+								Destroy();
+							};
+						grid.Attach(button, 1, 1+i, 1, 1);
+				}
+
                 List<MetaType> metaTypeList = new List<MetaType>();
 
                 foreach (Widget w in this.textviews)
@@ -55,19 +79,15 @@ namespace DesktopUI
                     }
                 }
 
-
                 if (metaTypeList.Count != 0
                     && string.IsNullOrEmpty(entClass.Text) == false
                     && string.IsNullOrEmpty(entFilename.Text) == false)
                 {
-                    string feedbackString = Export.Serialize(metaTypeList);
-                    this.user.teacher.AddFeedback(feedbackString, entFilename.Text, this.user.username, entClass.Text);
+                    feedbackString = Export.Serialize(metaTypeList);           
                 }
 
-                Destroy();
+                ShowAll();
             };
-
-            Grid grid = new Grid();
 
             grid.Attach(labClass, 1, 1, 1, 1);
             grid.Attach(entClass, 2, 1, 1, 1);
