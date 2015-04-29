@@ -184,6 +184,12 @@
     <Compile Include="DrawData.cs">
       <DependentUpon>Evaluator.cs</DependentUpon>
     </Compile>
+    <Compile Include="Print.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FuncStmt.cs">
+      <DependentUpon>Statement.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ProjectExtensions>

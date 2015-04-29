@@ -9,16 +9,13 @@ namespace DesktopUI
     public class CasCalcView : Grid
     {
         public Entry input = new Entry();
-        //        public Label output = new Label();
-        public TextView output = new TextView();
-        TextBuffer buffer;
+        public Label output = new Label();
         public Evaluator Eval;
         private List<EvalData> DataList = new List<EvalData>();
 
         public CasCalcView(Evaluator Eval)
         {
             this.Eval = Eval;
-            buffer = output.Buffer;
 
             Attach(input, 1, 1, 1, 1);
             Attach(output, 1, 2, 1, 1);
@@ -27,10 +24,10 @@ namespace DesktopUI
 
         public void Evaluate()
         {
-            TextIter insertIter = buffer.StartIter;
-
             Eval.Parse(input.Text);
             EvalData res;
+
+            output.Text = "";
 
             do
             {
@@ -41,21 +38,20 @@ namespace DesktopUI
 
             foreach (var data in DataList)
             {
-                if (data.GetType() == typeof(PrintData))
+                if (data is PrintData)
                 {
-                    buffer.Insert(ref insertIter, (data as PrintData).msg + "\n");
+                    output.Text += (data as PrintData).msg + "\n";
+//                    buffer.Insert(ref insertIter, (data as PrintData).msg + "\n");
                 }
-                else if (data.GetType() == typeof(ErrorData))
+                else if (data is ErrorData)
                 {
-                    buffer.InsertWithTagsByName(ref insertIter, (data as ErrorData).msg + "\n", "error");
+                    output.Text += (data as ErrorData).err + "\n";
+//                    buffer.InsertWithTagsByName(ref insertIter, (data as ErrorData).err + "\n", "error");
                 }
-                else if (data.GetType() == typeof(ExprData))
+                else if (data is ExprData)
                 {
-                    var debug = (Boolean)Eval.GetVar("debug");
-
-                    if (debug)
-                        buffer.Insert(ref insertIter, (data as ExprData).expr.ToString() + "\n");
-
+                    output.Text += (data as ExprData).expr.ToString() + "\n";
+//                    buffer.Insert(ref insertIter, (data as ExprData).expr.ToString() + "\n");
                 }   
             }
 

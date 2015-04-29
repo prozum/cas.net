@@ -102,23 +102,22 @@ namespace DesktopUI
             MovableCasCalcView MovCasCalcView = new MovableCasCalcView(Eval);
             MovCasCalcView.calcview.input.Activated += delegate
             {
-                MovCasCalcView.calcview.Eval.scope.locals.Clear();
+                MovCasCalcView.calcview.Eval.locals.Clear();
                 MovCasCalcView.calcview.Evaluate();
+                Reevaluate();
                 MovCasCalcView.ShowAll();
             };
 
             ButtonMoveUp.Clicked += delegate
             {
-                MovCasCalcView.calcview.Eval.scope.locals.Clear();
+                MovCasCalcView.calcview.Eval.locals.Clear();
                 Move(MovCasCalcView.id_, -1);
-                MovCasCalcView.calcview.Eval.scope.locals.Clear();
             };
 
             ButtonMoveDown.Clicked += delegate
             {
-                MovCasCalcView.calcview.Eval.scope.locals.Clear();
+                MovCasCalcView.calcview.Eval.locals.Clear();
                 Move(MovCasCalcView.id_, 1);
-                MovCasCalcView.calcview.Eval.scope.locals.Clear();
             };
 
             ButtonDelete.Clicked += delegate
