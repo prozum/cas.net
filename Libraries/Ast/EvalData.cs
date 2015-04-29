@@ -35,18 +35,6 @@ namespace Ast
         }
     }
 
-    public class PlotData : EvalData
-    {
-        public Expression exp;
-        public Symbol sym;
-
-        public PlotData(Plot plot)
-        {
-            this.sym = plot.sym;
-            this.exp = plot.exp;
-        }
-    }
-
     public class ExprData : EvalData
     {
         public Expression expr;
@@ -59,6 +47,18 @@ namespace Ast
         public override string ToString()
         {
             return expr.ToString();
+        }
+    }
+
+    public class PlotData : EvalData
+    {
+        public Expression exp;
+        public Symbol sym;
+
+        public PlotData(Plot plot)
+        {
+            this.sym = plot.sym;
+            this.exp = plot.exp;
         }
     }
 }

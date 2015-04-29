@@ -181,6 +181,9 @@
     <Compile Include="Minus.cs">
       <DependentUpon>UnaryOperator.cs</DependentUpon>
     </Compile>
+    <Compile Include="DrawData.cs">
+      <DependentUpon>Evaluator.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ProjectExtensions>
