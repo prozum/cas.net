@@ -1,12 +1,5 @@
 ﻿using System;
 using Gtk;
-using GLib;
-
-//using TaskGenLib;
-//using System.Collections.Generic;
-//using ImEx;
-//using System.Net;
-//using System.Text;
 using DesktopUI;
 using Ast;
 

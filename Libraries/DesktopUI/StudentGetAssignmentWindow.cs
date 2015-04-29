@@ -41,15 +41,21 @@ namespace DesktopUI
                 {
                     if (metaItem.type == typeof(MovableCasCalcView))
                     {
+                        this.textviews.InsertCalcView(metaItem.metastring);
+                        /*
                         Evaluator Eval = new Evaluator();
                         MovableCasCalcView movableCasCalcView = new MovableCasCalcView(Eval);
                         movableCasCalcView.calcview.input.Text = metaItem.metastring;
                         this.textviews.castextviews.Add(movableCasCalcView);
+                        */
                     }
                     else if (metaItem.type == typeof(MovableCasTextView))
                     {
+                        this.textviews.InsertTextView(metaItem.metastring, metaItem.locked, -1);
+                        /*
                         MovableCasTextView movableCasTextView = new MovableCasTextView(metaItem.metastring, true);
                         this.textviews.castextviews.Add(movableCasTextView);
+                        */
                     }
                 }
 
