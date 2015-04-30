@@ -48,18 +48,18 @@ public class MainWindow : Window
         {
             if (data is PrintData)
             {
-                buffer.Insert(ref insertIter, (data as PrintData).msg + "\n");
+                buffer.Insert(ref insertIter, data.ToString() + "\n");
             }
             else if (data is ErrorData)
             {
-                buffer.InsertWithTagsByName(ref insertIter, (data as ErrorData).msg + "\n", "error");
+                buffer.InsertWithTagsByName(ref insertIter, data.ToString() + "\n", "error");
             }
             else if (data is ExprData)
             {
                 var debug = (Boolean)eval.GetVar("debug");
 
                 if (debug)
-                    buffer.Insert(ref insertIter, (data as ExprData).expr.ToString() + "\n");
+                    buffer.InsertWithTagsByName(ref insertIter, data.ToString() + "\n", "debug");
             }
         }
 
@@ -75,9 +75,9 @@ public class MainWindow : Window
         defTree.Expand = true;
 
         renderer = new CellRendererText();
-        defTree.AppendColumn("Variable", renderer, "text",0);
+        defTree.AppendColumn("Variable", renderer, "text", 0);
         renderer = new CellRendererText();
-        defTree.AppendColumn("Value", renderer, "text",1);
+        defTree.AppendColumn("Value", renderer, "text", 1);
     }
 
     public void UpdateDefinitions()
@@ -127,7 +127,7 @@ public class MainWindow : Window
         buffer = textView.Buffer;
 
 
-        var infoTag = new TextTag ("info");
+        var infoTag = new TextTag ("debug");
         infoTag.Foreground = "blue";
         var errorTag = new TextTag ("error");
         errorTag.Foreground = "red";
