@@ -179,14 +179,6 @@ namespace Ast
             {
                 return new Add(new Add(Left, (Right as Add).Left), (Right as Add).Right);
             }
-            else if (Left is Sub)
-            {
-                return new Sub((Left as Sub).Left, new Add((Left as Sub).Right, Right));
-            }
-            else if (Right is Sub)
-            {
-                return new Sub(new Add(Left, (Right as Sub).Left), (Right as Sub).Right);
-            }
             else
             {
                 return this;

@@ -52,7 +52,7 @@ public class MainWindow : Window
             }
             else if (data is ErrorData)
             {
-                buffer.InsertWithTagsByName(ref insertIter, (data as ErrorData).msg + "\n", "error");
+                buffer.InsertWithTagsByName(ref insertIter, (data as ErrorData).err + "\n", "error");
             }
             else if (data is ExprData)
             {
