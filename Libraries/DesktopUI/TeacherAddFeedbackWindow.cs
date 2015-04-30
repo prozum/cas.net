@@ -9,22 +9,21 @@ namespace DesktopUI
     {
         User user;
         TextViewList textviews;
+        string Filename;
 
-        public TeacherAddFeedbackWindow(ref User user, ref TextViewList textviews)
+        public TeacherAddFeedbackWindow(ref User user, ref TextViewList textviews, string Filename)
             : base("Add Feedback")
         {
             this.user = user;
             this.textviews = textviews;
+            this.Filename = Filename;
 
             SetSizeRequest(300, 300);
 
 			Grid grid = new Grid();
 
             Label labClass = new Label("Class:");
-            Label labFilename = new Label("Filename:");
-
             Entry entClass = new Entry();
-            Entry entFilename = new Entry();
 
             Button buttonCancel = new Button("Cancel");
             buttonCancel.Clicked += delegate
@@ -60,12 +59,12 @@ namespace DesktopUI
 
 				if (metaTypeList.Count != 0
 					&& string.IsNullOrEmpty(entClass.Text) == false
-					&& string.IsNullOrEmpty(entFilename.Text) == false)
+                    && string.IsNullOrEmpty(this.Filename) == false)
 				{
 					feedbackString = Export.Serialize(metaTypeList);           
 				}
 
-				string[] StudentList = this.user.teacher.GetCompletedList(entFilename.Text, entClass.Text);
+                    string[] StudentList = this.user.teacher.GetCompletedList(this.Filename, entClass.Text);
 
 				grid.Destroy();
 				grid = new Grid();
@@ -76,7 +75,7 @@ namespace DesktopUI
 						Button button = new Button(StudentList[j]);
 						button.Clicked += delegate
 							{
-								this.user.teacher.AddFeedback(feedbackString, entFilename.Text, StudentList[j], entClass.Text);
+                                this.user.teacher.AddFeedback(feedbackString, this.Filename, StudentList[j], entClass.Text);
 								Destroy();
 							};
 						grid.Attach(button, 1, 1+i, 1, 1);
@@ -88,8 +87,6 @@ namespace DesktopUI
 
             grid.Attach(labClass, 1, 1, 1, 1);
             grid.Attach(entClass, 2, 1, 1, 1);
-            grid.Attach(labFilename, 1, 2, 1, 1);
-            grid.Attach(entFilename, 2, 2, 1, 1);
             grid.Attach(buttonCancel, 1, 3, 1, 1);
             grid.Attach(buttonFeedback, 2, 3, 1, 1);
 
