@@ -52,17 +52,12 @@ namespace Ast
 
         public bool IsNegative()
         {
-            if (value.CompareTo(0) == -1)
-            {
-                return true;
-            }
-
-            return false;
+            return (value.CompareTo(0) == -1) ? true : false;
         }
 
         public Expression ToNegative()
         {
-            return new Irrational(value *= -1);
+            return new Irrational(value * -1);
         }
 
         #region AddWith

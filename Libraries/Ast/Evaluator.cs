@@ -11,6 +11,7 @@ namespace Ast
         {
             SetVar("deg", new Boolean(true));
             SetVar("debug", new Boolean(true));
+            SetVar("PI", new Irrational((decimal)Math.PI));
         }
 
         public EvalData Evaluation(string inputString)

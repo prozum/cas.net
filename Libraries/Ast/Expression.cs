@@ -74,7 +74,10 @@ namespace Ast
             }
         }
 
-        public abstract bool ContainsVariable(Variable other);
+        public virtual bool ContainsVariable(Variable other)
+        {
+            return false;
+        }
 
         #region AddWith
         public virtual Expression AddWith(Integer other)
