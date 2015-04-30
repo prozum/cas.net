@@ -24,13 +24,18 @@ namespace DesktopUI
                 if (!string.IsNullOrEmpty(item))
                 {
                     Label label = new Label(item);
+
                     Button GetCompleted = new Button("Get Completed Assignments");
-                    GetCompleted.Clicked += (sender, e) => new TeacherGetCompletedListWindow(this.user, this.textviews, item);
+                    GetCompleted.Clicked += (sender, e) => new TeacherGetCompletedListWindow(ref this.user, ref this.textviews, item);
+
+                    Button AddFeedback = new Button("Add Feedback on Assignment");
+                    AddFeedback.Clicked += (object sender, EventArgs e) => new TeacherAddFeedbackWindow(ref this.user, ref this.textviews, item);
 
                     HBox hbox = new HBox(false, 2);
 
                     hbox.Add(label);
-                    hbox.Add(GetCompleted);               
+                    hbox.Add(GetCompleted);      
+                    hbox.Add(AddFeedback);
                     vbox.Add(hbox);
                 }
             }
