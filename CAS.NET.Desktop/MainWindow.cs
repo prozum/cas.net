@@ -27,6 +27,9 @@ namespace CAS.NET.Desktop
         TeacherGetCompletedListMenuItem teaGetComList;
         TeacherGetCompletedMenuItem teaGetCom;
 
+        Menu taskgenMenu;
+        TaskGenMenuItem taskGenMenuItem;
+
         Toolbar toolbar = new Toolbar();
         OpenToolButton open;
         SaveToolButton save;
@@ -63,6 +66,8 @@ namespace CAS.NET.Desktop
             teaGetComList = new TeacherGetCompletedListMenuItem(ref user, ref textviews);
             teaGetCom = new TeacherGetCompletedMenuItem(ref user, ref textviews);
 
+                    taskGenMenuItem = new TaskGenMenuItem(textviews);
+
             // Adding elements to menu
             server.Submenu = menu;
             menu.Append(login);
@@ -77,7 +82,10 @@ namespace CAS.NET.Desktop
             menu.Append(teaGetComList);
             menu.Append(teaGetCom);
 
+            taskgenMenu.Append(taskGenMenuItem);
+
             menubar.Append(server);
+            menubar.Append(taskgenMenu);
 
             open = new OpenToolButton(textviews, ref user);
             save = new SaveToolButton(textviews);

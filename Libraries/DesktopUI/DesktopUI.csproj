@@ -8,6 +8,7 @@
     <RootNamespace>DesktopUI</RootNamespace>
     <AssemblyName>DesktopUI</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <NuGetPackageImportStamp>478d11b7</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -53,10 +54,12 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TaskGenMenuItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CasTextView.cs" />
     <Compile Include="OpenToolButton.cs" />
     <Compile Include="SaveToolButton.cs" />
+    <Compile Include="TaskGenWindow.cs" />
     <Compile Include="TextViewList.cs" />
     <Compile Include="ServerMenuItem.cs" />
     <Compile Include="LoginMenuItem.cs" />
@@ -123,6 +126,10 @@
       <Project>{926EE758-EDA5-4B92-BFE8-419C54909810}</Project>
       <Name>Account</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TaskGenLib\TaskGenLib.csproj">
+      <Project>{882174f5-0b72-4df3-997f-bd2eb16c6e6c}</Project>
+      <Name>TaskGenLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
@@ -134,4 +141,11 @@
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
+  <Import Project="..\..\packages\GtkSharp.Win32.3.1.2\build\net45\GtkSharp.Win32.targets" Condition="Exists('..\..\packages\GtkSharp.Win32.3.1.2\build\net45\GtkSharp.Win32.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\GtkSharp.Win32.3.1.2\build\net45\GtkSharp.Win32.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\GtkSharp.Win32.3.1.2\build\net45\GtkSharp.Win32.targets'))" />
+  </Target>
 </Project>
