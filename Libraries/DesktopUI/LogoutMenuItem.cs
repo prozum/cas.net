@@ -26,14 +26,9 @@ namespace DesktopUI
 
             foreach (Widget w in menu)
             {
-                if (w.GetType() == typeof(StudentAddCompletedMenuItem)
-                    || w.GetType() == typeof(StudentGetAssignmentListMenuItem)
-                    || w.GetType() == typeof(StudentGetAssignmentMenuItem)
-                    || w.GetType() == typeof(StudentGetFeedbackMenuItem)
+                if (w.GetType() == typeof(StudentGetAssignmentListMenuItem)
                     || w.GetType() == typeof(TeacherAddAssignmentMenuItem)
-                    || w.GetType() == typeof(TeacherAddFeedbackMenuItem)
                     || w.GetType() == typeof(TeacherGetAssignmentListMenuItem)
-                    || w.GetType() == typeof(TeacherGetCompletedMenuItem)
                     || w.GetType() == typeof(LogoutMenuItem))
                 {
                     w.Hide();

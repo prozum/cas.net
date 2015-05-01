@@ -21,11 +21,20 @@ namespace DesktopUI
 
             ScrolledWindow scrolledWindow = new ScrolledWindow();
             VBox vbox = new VBox(false, 2);
-
-            foreach (var item in assignmentList)
+                                   
+            foreach (var assignment in assignmentList)
             {
-                if (!string.IsNullOrEmpty(item))
+                if (!string.IsNullOrEmpty(assignment))
                 {
+                    Label label = new Label(assignment);
+
+                    Button GetAssignment = new Button("Get Assignment");
+                    GetAssignment.Clicked += (sender, e) => new StudentGetAssignmentWindow(ref this.user, ref this.textviews, assignment);
+
+                    Button AddCompleted = new Button("Add Completed");
+                    Button GetFeedback = new Button("Get Feedback");                 
+
+                    /*
                     Button button = new Button(item);
                     button.Clicked += delegate
                     {
@@ -54,7 +63,7 @@ namespace DesktopUI
                         }
 
                         this.textviews.castextviews.Reverse();
-
+                        
                         this.textviews.Clear();
                         this.textviews.Redraw();
                         this.textviews.Reevaluate();
@@ -62,7 +71,9 @@ namespace DesktopUI
 
                         Destroy();
                     };
-                    vbox.Add(button);
+                    */
+                    
+                    //vbox.Add(button);
                 }
             }
 

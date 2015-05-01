@@ -10,75 +10,42 @@ namespace DesktopUI
     {
         User user;
         TextViewList textviews;
+        string Filename;
 
-        public StudentGetAssignmentWindow(ref User user, ref TextViewList textviews)
+        public StudentGetAssignmentWindow(User user, TextViewList textviews, string Filename)
             : base("Get Assignment")
         {
             this.user = user;
             this.textviews = textviews;
+            this.Filename = Filename;
 
             SetSizeRequest(300, 300);
+            string assignment = this.user.student.GetAssignment(this.Filename);
 
-            Entry entry = new Entry();
-            Label label = new Label("Assignment:");
+            List<MetaType> metaTypeList = ImEx.Import.DeserializeString<List<MetaType>>(assignment);
 
-            Button buttonCancel = new Button("Cancel");
-            buttonCancel.Clicked += delegate
+            this.textviews.castextviews.Clear();
+
+            foreach (var metaItem in metaTypeList)
             {
-                Destroy();
-            };
-
-            Button buttonAssignment = new Button("Get Assignment");
-            buttonAssignment.Clicked += delegate
-            {
-                string assignment = this.user.student.GetAssignment(entry.Text);
-
-                List<MetaType> metaTypeList = ImEx.Import.DeserializeString<List<MetaType>>(assignment);
-
-                this.textviews.castextviews.Clear();
-
-                foreach (var metaItem in metaTypeList)
+                if (metaItem.type == typeof(MovableCasCalcView))
                 {
-                    if (metaItem.type == typeof(MovableCasCalcView))
-                    {
-                        this.textviews.InsertCalcView(metaItem.metastring);
-                        /*
-                        Evaluator Eval = new Evaluator();
-                        MovableCasCalcView movableCasCalcView = new MovableCasCalcView(Eval);
-                        movableCasCalcView.calcview.input.Text = metaItem.metastring;
-                        this.textviews.castextviews.Add(movableCasCalcView);
-                        */
-                    }
-                    else if (metaItem.type == typeof(MovableCasTextView))
-                    {
-                        this.textviews.InsertTextView(metaItem.metastring, metaItem.locked, -1);
-                        /*
-                        MovableCasTextView movableCasTextView = new MovableCasTextView(metaItem.metastring, true);
-                        this.textviews.castextviews.Add(movableCasTextView);
-                        */
-                    }
+                    this.textviews.InsertCalcView(metaItem.metastring);
                 }
+                else if (metaItem.type == typeof(MovableCasTextView))
+                {
+                   this.textviews.InsertTextView(metaItem.metastring, metaItem.locked, -1);
+                }
+            }
 
-                this.textviews.castextviews.Reverse();
+            this.textviews.castextviews.Reverse();
 
-                this.textviews.Clear();
-                this.textviews.Redraw();
-                this.textviews.Reevaluate();
-                this.textviews.ShowAll();
+            this.textviews.Clear();
+            this.textviews.Redraw();
+            this.textviews.Reevaluate();
+            this.textviews.ShowAll();
 
-                Destroy();
-            };
-
-            Grid grid = new Grid();
-            grid.Attach(label, 1, 1, 1, 1);
-            grid.Attach(entry, 2, 1, 1, 1);
-            grid.Attach(buttonCancel, 1, 2, 1, 1);
-            grid.Attach(buttonAssignment, 2, 2, 1, 1);
-
-            Add(grid);
-
-            ShowAll();
-
+            Destroy();
         }
     }
 }

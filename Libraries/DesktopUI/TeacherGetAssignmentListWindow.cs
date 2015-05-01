@@ -8,7 +8,7 @@ namespace DesktopUI
         User user;
         TextViewList textviews;
 
-        public TeacherGetAssignmentListWindow(ref User user, ref TextViewList textviews)
+        public TeacherGetAssignmentListWindow(User user, TextViewList textviews)
             : base("Assignment List")
         {
             this.user = user;
@@ -25,16 +25,16 @@ namespace DesktopUI
                 {
                     Label label = new Label(item);
 
-                    Button GetCompleted = new Button("Get Completed Assignments");
-                    GetCompleted.Clicked += (sender, e) => new TeacherGetCompletedListWindow(ref this.user, ref this.textviews, item);
+                    Button GetCompleted = new Button("Get Completed");
+                    GetCompleted.Clicked += (sender, e) => new TeacherGetCompletedListWindow(this.user, this.textviews, item);
 
-                    Button AddFeedback = new Button("Add Feedback on Assignment");
-                    AddFeedback.Clicked += (object sender, EventArgs e) => new TeacherAddFeedbackWindow(ref this.user, ref this.textviews, item);
+                    Button AddFeedback = new Button("Add Feedback");
+                    AddFeedback.Clicked += (sender, e) => new TeacherAddFeedbackWindow(this.user, this.textviews, item);
 
                     HBox hbox = new HBox(false, 2);
 
                     hbox.Add(label);
-                    hbox.Add(GetCompleted);      
+                    hbox.Add(GetCompleted);
                     hbox.Add(AddFeedback);
                     vbox.Add(hbox);
                 }

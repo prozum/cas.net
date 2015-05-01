@@ -11,7 +11,7 @@ namespace DesktopUI
         TextViewList textviews;
         string Filename;
 
-        public TeacherAddFeedbackWindow(ref User user, ref TextViewList textviews, string Filename)
+        public TeacherAddFeedbackWindow(User user, TextViewList textviews, string Filename)
             : base("Add Feedback")
         {
             this.user = user;

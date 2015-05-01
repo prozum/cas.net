@@ -13,7 +13,7 @@ namespace DesktopUI
         string Filename;
         string[] StudentList;
 
-        public TeacherGetCompletedListWindow(ref User user, ref TextViewList textviews, string Filename)
+        public TeacherGetCompletedListWindow(User user, TextViewList textviews, string Filename)
             : base("Get List of Completed Students")
         {
             this.user = user;
