@@ -48,9 +48,9 @@ namespace DesktopUI
                     output.Text += (data as ErrorData).err + "\n";
 //                    buffer.InsertWithTagsByName(ref insertIter, (data as ErrorData).err + "\n", "error");
                 }
-                else if (data is ExprData)
+                else if (data is DebugData)
                 {
-                    output.Text += (data as ExprData).expr.ToString() + "\n";
+                    output.Text += (data as DebugData).expr.ToString() + "\n";
 //                    buffer.Insert(ref insertIter, (data as ExprData).expr.ToString() + "\n");
                 }   
             }

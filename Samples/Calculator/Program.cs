@@ -54,7 +54,7 @@ public class MainWindow : Window
             {
                 buffer.InsertWithTagsByName(ref insertIter, data.ToString() + "\n", "error");
             }
-            else if (data is ExprData)
+            else if (data is DebugData)
             {
                 var debug = (Boolean)eval.GetVar("debug");
 

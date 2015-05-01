@@ -45,18 +45,20 @@ namespace Ast
         }
     }
 
-    public class ExprData : EvalData
+    public class DebugData : EvalData
     {
+        public string msg;
         public Expression expr;
 
-        public ExprData(Expression exp)
+        public DebugData(string msg, Expression expr)
         {
-            this.expr = exp;
+            this.msg = msg;
+            this.expr = expr;
         }
 
         public override string ToString()
         {
-            return expr.ToString();
+            return msg + expr.ToString();
         }
     }
 }

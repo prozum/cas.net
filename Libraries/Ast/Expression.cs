@@ -38,7 +38,7 @@ namespace Ast
             if (stepped)
                 return new DoneData();
             stepped =  !stepped;
-            return new ExprData(Evaluate());
+            return new DebugData("Evaluate: ", Evaluate());
         }
 
         public virtual Expression CurrectOperator()

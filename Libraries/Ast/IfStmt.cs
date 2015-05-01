@@ -54,7 +54,7 @@ namespace Ast
                 if (resCond != true)
                     curCond++;
 
-                return new ExprData(res);
+                return new DebugData("If condition " + curCond.ToString() + ": ", res);
             }
                 
             if (curCond < expressions.Count)
