@@ -13,20 +13,15 @@ namespace Ast
                     ArgKind.Expression
                 };
         }
-            
-        public override EvalData Step()
+
+        public override Expression Evaluate()
         {
-            if (!isArgsValid())
-                return new ErrorData(new ArgError(this));
+            var res = args[0].Evaluate();
 
-            if (!stepped)
-            {
-                stepped = true;
-                return new PrintData(args[0].GetType().Name);
-            }
-
-            stepped = false;
-            return new DoneData();
+            if (res is Error)
+                return res;
+            else
+                return new Text(args[0].Evaluate().GetType().Name);
         }
     }
 }

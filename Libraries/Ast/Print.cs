@@ -18,11 +18,12 @@ namespace Ast
         {
             if (!isArgsValid())
                 return new ErrorData(new ArgError(this));
+                
 
             if (!stepped)
             {
                 stepped = true;
-                return new PrintData(args[0].ToString());
+                return new PrintData(args[0].Evaluate().ToString());
             }
 
             stepped = false;
