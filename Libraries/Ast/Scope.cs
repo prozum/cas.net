@@ -152,7 +152,7 @@ namespace Ast
             if (locals.TryGetValue(@var, out expr))
             {
                 if (expr is Text)
-                    return (expr as Text).value;
+                    return (expr as Text).Value;
             }
 
             if (parent != null)

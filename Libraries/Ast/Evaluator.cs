@@ -7,24 +7,20 @@ namespace Ast
     {
         private Parser _parser = new Parser();
 
-        public Evaluator ()
+        public Evaluator () : this(null) {}
+        public Evaluator (string parseString)
         {
+            if (parseString != null)
+                Parse(parseString);
             SetVar("deg", new Boolean(true));
             SetVar("debug", new Boolean(true));
             SetVar("pi", new Irrational((decimal)Math.PI));
         }
 
-        public Expression Evaluation(string inputString)
-        {
-            Parse(inputString);
-
-            return Evaluate();
-        }
-
-        public void Parse(string inputString)
+        public void Parse(string parseString)
         {
             statements.Clear();
-            _parser.Parse(inputString, this);
+            _parser.Parse(parseString, this);
         }
 
     }

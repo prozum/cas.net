@@ -185,6 +185,9 @@
     <Compile Include="Type.cs">
       <DependentUpon>SysFunc.cs</DependentUpon>
     </Compile>
+    <Compile Include="Eval.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />

@@ -532,8 +532,10 @@ namespace Ast
                     return new Print(args, scope);
                 case "type":
                     return new Type(args, scope);
+                case "eval":
+                    return new Eval(args, scope);
                 default:
-                    return new UsrFunc(tok.value.ToLower(), args, scope);
+                    return new UsrFunc(sym.ToLower(), args, scope);
             }
         }
 
