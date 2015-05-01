@@ -82,7 +82,7 @@ namespace CAS.NET.Desktop
             menu.Append(teaGetComList);
             menu.Append(teaGetCom);
 
-            taskgenMenu.Append(taskGenMenuItem);
+            //taskgenMenu.Append(taskGenMenuItem);
 
             menubar.Append(server);
             menubar.Append(taskgenMenu);

@@ -11,7 +11,7 @@ namespace Ast
         {
             SetVar("deg", new Boolean(true));
             SetVar("debug", new Boolean(true));
-            SetVar("PI", new Irrational((decimal)Math.PI));
+            SetVar("pi", new Irrational((decimal)Math.PI));
         }
 
         public Expression Evaluation(string inputString)
