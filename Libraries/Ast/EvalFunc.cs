@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class Eval : SysFunc
+    public class EvalFunc : SysFunc
     {
-        public Eval(List<Expression> args, Scope scope)
+        public EvalFunc(List<Expression> args, Scope scope)
             : base("eval", args, scope)
         {
             validArgs = new List<ArgKind>()

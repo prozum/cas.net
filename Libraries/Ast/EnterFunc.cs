@@ -4,9 +4,9 @@ using System.Collections.Generic;
 namespace Ast
 {
 
-    public class Enter : SysFunc
+    public class EnterFunc : SysFunc
     {
-        public Enter(List<Expression> args, Scope scope)
+        public EnterFunc(List<Expression> args, Scope scope)
             : base("enter", args, scope)
         {
             validArgs = new List<ArgKind>()

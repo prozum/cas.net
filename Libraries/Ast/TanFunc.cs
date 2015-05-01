@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class Sin : SysFunc, IInvertable
+    public class TanFunc : SysFunc, IInvertable
     {
-        public Sin() : this(null, null) { }
-        public Sin(List<Expression> args, Scope scope)
-            : base("sin", args, scope)
+        public TanFunc() : this(null, null) { }
+        public TanFunc(List<Expression> args, Scope scope)
+            : base("tan", args, scope)
         {
             validArgs = new List<ArgKind>()
                 {
@@ -26,27 +26,27 @@ namespace Ast
 
             if (res is Real)
             {
-                return ReturnValue(new Irrational(Math.Sin((double) ((deg ? Constant.DegToRad.Value  : 1) * (res as Real).Value) ))).Evaluate();
+                return ReturnValue(new Irrational(Math.Tan((double) ((deg ? Constant.DegToRad.Value  : 1) * (res as Real).Value) ))).Evaluate();
             }
 
-            return new Error(this, "Could not take Sin of: " + args[0]);
+            return new Error(this, "Could not take Tan of: " + args[0]);
         }
 
         internal override Expression Reduce(Expression caller)
         {
-            return ReduceHelper<Sin>();
+            return ReduceHelper<TanFunc>();
         }
 
         public override Expression Clone()
         {
-            return MakeClone<Sin>();
+            return MakeClone<TanFunc>();
         }
 
         public Expression Inverted(Expression other)
         {
             List<Expression> newArgs = new List<Expression>();
             newArgs.Add(other);
-            return new ASin(newArgs, scope);
+            return new AtanFunc(newArgs, scope);
         }
     }
 }

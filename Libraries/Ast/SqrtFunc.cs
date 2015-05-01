@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class Sqrt : SysFunc, IInvertable
+    public class SqrtFunc : SysFunc, IInvertable
     {
-        public Sqrt() : this(null, null) { }
-        public Sqrt(List<Expression> args, Scope scope)
+        public SqrtFunc() : this(null, null) { }
+        public SqrtFunc(List<Expression> args, Scope scope)
             : base("sqrt", args, scope)
         {
             validArgs = new List<ArgKind>()
@@ -38,7 +38,7 @@ namespace Ast
             }
             else
             {
-                var simplified = ReduceHelper<Sqrt>();
+                var simplified = ReduceHelper<SqrtFunc>();
 
                 if (simplified.args[0] is Exp && (simplified.args[0] as Exp).Right.CompareTo(Constant.Two))
                 {
@@ -58,7 +58,7 @@ namespace Ast
 
         public override Expression Clone()
         {
-            return MakeClone<Sqrt>();
+            return MakeClone<SqrtFunc>();
         }
 
         public Expression Inverted(Expression other)

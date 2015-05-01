@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class Solve : SysFunc
+    public class SolveFunc : SysFunc
     {
         Equal equal;
         Symbol sym;
 
-        public Solve(List<Expression> args, Scope scope)
+        public SolveFunc(List<Expression> args, Scope scope)
             : base("solve", args, scope)
         {
             validArgs = new List<ArgKind>()

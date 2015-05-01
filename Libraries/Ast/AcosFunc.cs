@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class ATan : SysFunc, IInvertable
+    public class AcosFunc : SysFunc, IInvertable
     {
-        public ATan() : this(null, null) { }
-        public ATan(List<Expression> args, Scope scope)
-            : base("atan", args, scope)
+        public AcosFunc() : this(null, null) { }
+        public AcosFunc(List<Expression> args, Scope scope)
+            : base("acos", args, scope)
         {
             validArgs = new List<ArgKind>()
                 {
@@ -26,27 +26,27 @@ namespace Ast
 
             if (res is Real)
             {
-                return ReturnValue(new Irrational(Math.Atan((double) ((deg ? Constant.DegToRad.Value  : 1) * (res as Real).Value) ))).Evaluate();
+                return ReturnValue(new Irrational(Math.Acos((double) ((deg ? Constant.DegToRad.Value  : 1) * (res as Real).Value) ))).Evaluate();
             }
 
-            return new Error(this, "Could not take ATan of: " + args[0]);
+            return new Error(this, "Could not take ACos of: " + args[0]);
         }
 
         internal override Expression Reduce(Expression caller)
         {
-            return ReduceHelper<ATan>();
+            return ReduceHelper<AcosFunc>();
         }
 
         public override Expression Clone()
         {
-            return MakeClone<ATan>();
+            return MakeClone<AcosFunc>();
         }
 
         public Expression Inverted(Expression other)
         {
             List<Expression> newArgs = new List<Expression>();
             newArgs.Add(other);
-            return new Tan(newArgs, scope);
+            return new CosFunc(newArgs, scope);
         }
     }
 }

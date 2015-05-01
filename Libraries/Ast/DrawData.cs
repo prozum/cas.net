@@ -39,7 +39,7 @@ namespace Ast
         public Expression exp;
         public Symbol sym;
 
-        public PlotData(Plot plot)
+        public PlotData(PlotFunc plot)
         {
             this.sym = plot.sym;
             this.exp = plot.exp;

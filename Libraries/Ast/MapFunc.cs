@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class Map : SysFunc
+    public class MapFunc : SysFunc
     {
         public Func func;
         public List list;
 
-        public Map(List<Expression> args, Scope scope)
+        public MapFunc(List<Expression> args, Scope scope)
             : base("map", args, scope)
         {
             validArgs = new List<ArgKind>()

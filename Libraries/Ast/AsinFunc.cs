@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class ACos : SysFunc, IInvertable
+    public class AsinFunc : SysFunc, IInvertable
     {
-        public ACos() : this(null, null) { }
-        public ACos(List<Expression> args, Scope scope)
-            : base("acos", args, scope)
+        public AsinFunc() : this(null, null) { }
+        public AsinFunc(List<Expression> args, Scope scope)
+            : base("asin", args, scope)
         {
             validArgs = new List<ArgKind>()
                 {
@@ -26,27 +26,27 @@ namespace Ast
 
             if (res is Real)
             {
-                return ReturnValue(new Irrational(Math.Acos((double) ((deg ? Constant.DegToRad.Value  : 1) * (res as Real).Value) ))).Evaluate();
+                return ReturnValue(new Irrational(Math.Asin((double) ((deg ? Constant.DegToRad.Value  : 1) * (res as Real).Value) ))).Evaluate();
             }
 
-            return new Error(this, "Could not take ACos of: " + args[0]);
+            return new Error(this, "Could not take ASin of: " + args[0]);
         }
 
         internal override Expression Reduce(Expression caller)
         {
-            return ReduceHelper<ACos>();
+            return ReduceHelper<AsinFunc>();
         }
 
         public override Expression Clone()
         {
-            return MakeClone<ACos>();
+            return MakeClone<AsinFunc>();
         }
 
         public Expression Inverted(Expression other)
         {
             List<Expression> newArgs = new List<Expression>();
             newArgs.Add(other);
-            return new Cos(newArgs, scope);
+            return new SinFunc(newArgs, scope);
         }
     }
 }

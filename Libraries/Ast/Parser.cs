@@ -499,41 +499,41 @@ namespace Ast
             switch (sym.ToLower())
             {
                 case "sin":
-                    return new Sin(args, scope);
+                    return new SinFunc(args, scope);
                 case "cos":
-                    return new Cos(args, scope);
+                    return new CosFunc(args, scope);
                 case "tan":
-                    return new Tan(args, scope);
+                    return new TanFunc(args, scope);
                 case "asin":
-                    return new ASin(args, scope);
+                    return new AsinFunc(args, scope);
                 case "acos":
-                    return new ACos(args, scope);
+                    return new AcosFunc(args, scope);
                 case "atan":
-                    return new ATan(args, scope);
+                    return new AtanFunc(args, scope);
                 case "sqrt":
-                    return new Sqrt(args, scope);
+                    return new SqrtFunc(args, scope);
                 case "reduce":
-                    return new Reduce(args, scope);
+                    return new ReduceFunc(args, scope);
                 case "expand":
-                    return new Expand(args, scope);
+                    return new ExpandFunc(args, scope);
                 case "range":
-                    return new Range(args, scope);
+                    return new RangeFunc(args, scope);
                 case "map":
-                    return new Map(args, scope);
+                    return new MapFunc(args, scope);
                 case "plot":
-                    return new Plot(args, scope);
+                    return new PlotFunc(args, scope);
                 case "solve":
-                    return new Solve(args, scope);
+                    return new SolveFunc(args, scope);
                 case "enter":
-                    return new Enter(args, scope);
+                    return new EnterFunc(args, scope);
                 case "exit":
-                    return new Exit(args, scope);
+                    return new ExitFunc(args, scope);
                 case "print":
-                    return new Print(args, scope);
+                    return new PrintFunc(args, scope);
                 case "type":
-                    return new Type(args, scope);
+                    return new TypeFunc(args, scope);
                 case "eval":
-                    return new Eval(args, scope);
+                    return new EvalFunc(args, scope);
                 default:
                     return new UsrFunc(sym.ToLower(), args, scope);
             }

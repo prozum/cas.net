@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class Print : SysFunc
+    public class PrintFunc : SysFunc
     {
-        public Print(List<Expression> args, Scope scope)
+        public PrintFunc(List<Expression> args, Scope scope)
             : base("print", args, scope)
         {
             validArgs = new List<ArgKind>()

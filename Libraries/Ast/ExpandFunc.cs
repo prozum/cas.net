@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class Expand : SysFunc
+    public class ExpandFunc : SysFunc
     {
-        public Expand(List<Expression> args, Scope scope)
+        public ExpandFunc(List<Expression> args, Scope scope)
             : base("expand", args, scope)
         {
             validArgs = new List<ArgKind>()

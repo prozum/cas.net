@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class Plot : SysFunc
+    public class PlotFunc : SysFunc
     {
         public Expression exp;
         public Symbol sym;
 
-        public Plot(List<Expression> args, Scope scope)
+        public PlotFunc(List<Expression> args, Scope scope)
             : base("plot", args, scope)
         {
             validArgs = new List<ArgKind>()

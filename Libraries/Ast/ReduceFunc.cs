@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class Reduce : SysFunc
+    public class ReduceFunc : SysFunc
     {
-        public Reduce(List<Expression> args, Scope scope)
+        public ReduceFunc(List<Expression> args, Scope scope)
             : base("reduce", args, scope)
         {
             validArgs = new List<ArgKind>()

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class Range : SysFunc
+    public class RangeFunc : SysFunc
     {
-        public Range(List<Expression> args, Scope scope)
+        public RangeFunc(List<Expression> args, Scope scope)
             : base("range", args, scope)
         {
             validArgs = new List<ArgKind>()

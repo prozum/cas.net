@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class Cos : SysFunc, IInvertable
+    public class SinFunc : SysFunc, IInvertable
     {
-        public Cos() : this(null, null) { }
-        public Cos(List<Expression> args, Scope scope)
-            : base("cos", args, scope)
+        public SinFunc() : this(null, null) { }
+        public SinFunc(List<Expression> args, Scope scope)
+            : base("sin", args, scope)
         {
             validArgs = new List<ArgKind>()
                 {
@@ -26,27 +26,27 @@ namespace Ast
 
             if (res is Real)
             {
-                return ReturnValue(new Irrational(Math.Cos((double) ((deg ? Constant.DegToRad.Value  : 1) * (res as Real).Value) ))).Evaluate();
+                return ReturnValue(new Irrational(Math.Sin((double) ((deg ? Constant.DegToRad.Value  : 1) * (res as Real).Value) ))).Evaluate();
             }
 
-            return new Error(this, "Could not take Cos of: " + args[0]);
+            return new Error(this, "Could not take Sin of: " + args[0]);
         }
 
         internal override Expression Reduce(Expression caller)
         {
-            return ReduceHelper<Cos>();
+            return ReduceHelper<SinFunc>();
         }
 
         public override Expression Clone()
         {
-            return MakeClone<Cos>();
+            return MakeClone<SinFunc>();
         }
 
         public Expression Inverted(Expression other)
         {
             List<Expression> newArgs = new List<Expression>();
             newArgs.Add(other);
-            return new ACos(newArgs, scope);
+            return new AsinFunc(newArgs, scope);
         }
     }
 }

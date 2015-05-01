@@ -116,53 +116,8 @@
       <DependentUpon>Variable.cs</DependentUpon>
     </Compile>
     <Compile Include="SysFunc.cs" />
-    <Compile Include="Sin.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ASin.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Cos.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ACos.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Tan.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ATan.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Sqrt.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
     <Compile Include="Negation.cs">
       <DependentUpon>UnaryOperator.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Simplify.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Expand.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Range.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Map.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Plot.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Solve.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Enter.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Exit.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
     </Compile>
     <Compile Include="Text.cs" />
     <Compile Include="ForStmt.cs" />
@@ -175,17 +130,62 @@
     <Compile Include="DrawData.cs">
       <DependentUpon>Evaluator.cs</DependentUpon>
     </Compile>
-    <Compile Include="Print.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
     <Compile Include="Real.cs">
       <DependentUpon>Number.cs</DependentUpon>
     </Compile>
     <Compile Include="Number.cs" />
-    <Compile Include="Type.cs">
+    <Compile Include="AcosFunc.cs">
       <DependentUpon>SysFunc.cs</DependentUpon>
     </Compile>
-    <Compile Include="Eval.cs">
+    <Compile Include="AsinFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AtanFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CosFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EnterFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EvalFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ExitFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ExpandFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MapFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PlotFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PrintFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RangeFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SinFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ReduceFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SolveFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SqrtFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TanFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TypeFunc.cs">
       <DependentUpon>SysFunc.cs</DependentUpon>
     </Compile>
   </ItemGroup>
