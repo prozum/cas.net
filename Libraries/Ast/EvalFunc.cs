@@ -27,7 +27,7 @@ namespace Ast
             if (!(res is Text))
                 return new Error("Argument must be Text");
 
-            return  new Evaluator((res as Text)).Evaluate();
+            return Evaluator.Eval(res as Text);
         }
     }
 }
