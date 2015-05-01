@@ -32,7 +32,7 @@ namespace ImportExport
 
             #endregion
 
-            #region MeteType
+            #region MetaType
 
             List<MetaType> liTM = new List<MetaType>();
 

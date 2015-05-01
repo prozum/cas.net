@@ -38,7 +38,13 @@ namespace Ast
             if (stepped)
                 return new DoneData();
             stepped =  !stepped;
-            return new DebugData("Evaluate: ", Evaluate());
+
+            var res = Evaluate();
+
+            if (res is Error)
+                return new ErrorData(res as Error);
+            else
+                return new DebugData("Evaluate: " + this.ToString() + " = ", res);
         }
 
         public virtual Expression CurrectOperator()

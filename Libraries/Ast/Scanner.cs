@@ -9,12 +9,11 @@ namespace Ast
     {
         const char EOS = (char)0;
 
-        static bool Errors = false; 
-
-        static string tokenString;
         static char[] chars;
         static Pos pos;
 
+
+        static Error _error = null; 
 
         public static char CharNext(bool consume = true)
         {
@@ -31,24 +30,33 @@ namespace Ast
                 return EOS;
         }
 
-        public static Queue<Token> Tokenize(string str)
+        public static Queue<Token> Tokenize(string tokenString, out Error error)
         {
-            tokenString = str;
+            var res = new Queue<Token> ();
+
             chars = tokenString.ToCharArray();
             pos = new Pos();
+            error = null;
+            Token tok;
 
-            var tokens = new Queue<Token> ();
-
-            var tok = ScanNext();
-            while (tok.kind != TokenKind.END_OF_STRING)
+            do
             {
-                tokens.Enqueue(tok);
-                tok = ScanNext ();
+                tok = ScanNext();
+
+                if (_error != null)
+                {
+                    error = _error;
+                    _error = null;
+                    return null;
+                }
+
+                res.Enqueue(tok);
             }
+            while (tok.kind != TokenKind.END_OF_STRING);
 
-            tokens.Enqueue(new Token(TokenKind.END_OF_STRING, "EndOfString", pos));
+            res.Enqueue(new Token(TokenKind.END_OF_STRING, "EndOfString", pos));
 
-            return tokens;
+            return res;
         }
 
         private static Token ScanNext()
@@ -172,7 +180,11 @@ namespace Ast
                 if (cur == '.')
                 {
                     //More than one Seperator. Error!
-                    Errors |= kind == TokenKind.DECIMAL;
+                    if (kind == TokenKind.DECIMAL)
+                    {
+                        ReportSyntaxError("Decimal with more than one seperator");
+                        return null;
+                    }
                     kind = TokenKind.DECIMAL;
                 }
 
@@ -215,7 +227,7 @@ namespace Ast
                             res += subChar + ExtractSubText(cur) + subChar;
                         break;
                     case EOS:
-                        Errors = true;
+                        ReportSyntaxError("Missing end of string");
                         return "";
                     default:
                         res += cur;
@@ -282,6 +294,13 @@ namespace Ast
                 }
                 cur = CharNext(false);
             }
+        }
+
+        public static Error ReportSyntaxError(string msg)
+        {
+            _error = new Error("[" + pos.Column + ";" + pos.Line + "]Parser: " + msg);
+
+            return _error;
         }
     }
 }

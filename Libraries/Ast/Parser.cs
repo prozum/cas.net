@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Ast
 {
 
-    public enum Context
+    public enum ParseContext
     {
         List,
         Scope
@@ -16,24 +16,31 @@ namespace Ast
         Token tok;
         Error _error;
         //Pos pos;
-        Context cx = Context.Scope;
+        ParseContext cx = ParseContext.Scope;
 
         Queue<Token> tokens;
 
         readonly Token EOS = new Token(TokenKind.END_OF_STRING, "END_OF_STRING", new Pos());
 
-        public Scope Parse(string parseString)
+        public void Parse(string parseString)
         {
-            return Parse(parseString, new Scope());
+            Parse(parseString, new Scope());
         }
 
-        public Scope Parse(string parseString, Scope global)
+        public void Parse(string parseString, Scope global)
         {
             _error = null;
             scope = global;
-            tokens = Scanner.Tokenize(parseString);
+
+            tokens = Scanner.Tokenize(parseString, out _error);
+            if (_error != null)
+            {
+                scope.statements.Add(_error);
+                return;
+            }
+
             tok = tokens.Peek();
-            return ParseScope(TokenKind.END_OF_STRING, false);
+            ParseScope(TokenKind.END_OF_STRING, false);
         }
 
         public Scope ParseScope(TokenKind stopToken, bool newScope = false)
@@ -47,7 +54,7 @@ namespace Ast
                 res = scope;
 
             var lastCx = cx;
-            cx = Context.Scope;
+            cx = ParseContext.Scope;
 
             while (tokens.Count > 0)
             {
@@ -68,7 +75,7 @@ namespace Ast
 
                 if (_error != null)
                 {
-                    stmt = _error;
+                    scope.statements.Add(_error);
                     return res;
                 }
 
@@ -211,7 +218,7 @@ namespace Ast
             var list = new List();
 
             var lastCx = cx;
-            cx = Context.List;
+            cx = ParseContext.List;
 
             while (tokens.Count > 0)
             {
@@ -224,7 +231,7 @@ namespace Ast
                 list.items.Add(ParseExpr(TokenKind.SQUARE_END));
             }
 
-            ReportSyntaxError("Mssing ] bracket");
+            ReportSyntaxError("Missing ] bracket");
 
             return list;
         }
@@ -336,13 +343,13 @@ namespace Ast
                         expr = ParseScope(TokenKind.CURLY_END, true);
                         break;
                     case TokenKind.COMMA:
-                        if (cx == Context.Scope)
+                        if (cx == ParseContext.Scope)
                             ReportSyntaxError("Unexpected comma in scope");
                         else
                             return CreateAst(exprs, biops);
                         break;
                     case TokenKind.SEMICOLON:
-                        if (cx == Context.List)
+                        if (cx == ParseContext.List)
                             ReportSyntaxError("Unexpected semicolon in list");
                         else
                             return CreateAst(exprs, biops);
@@ -541,7 +548,8 @@ namespace Ast
 
         public Error ReportSyntaxError(string msg)
         {
-            _error = new Error("[" + tok.pos.Column + ";" + tok.pos.Line + "]Parser: " + msg);
+            _error = new Error("Parser: " + msg);
+            _error.pos = tok.pos;
 
             return _error;
         }

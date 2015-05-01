@@ -54,12 +54,9 @@ public class MainWindow : Window
             {
                 buffer.InsertWithTagsByName(ref insertIter, data.ToString() + "\n", "error");
             }
-            else if (data is DebugData)
+            else if (data is DebugData && eval.GetBool("debug"))
             {
-                var debug = (Boolean)eval.GetVar("debug");
-
-                if (debug)
-                    buffer.InsertWithTagsByName(ref insertIter, data.ToString() + "\n", "debug");
+                buffer.InsertWithTagsByName(ref insertIter, data.ToString() + "\n", "debug");
             }
         }
 
