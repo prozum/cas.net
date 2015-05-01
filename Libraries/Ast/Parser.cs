@@ -528,6 +528,10 @@ namespace Ast
                     return new Enter(args, scope);
                 case "exit":
                     return new Exit(args, scope);
+                case "print":
+                    return new Print(args, scope);
+                case "type":
+                    return new Type(args, scope);
                 default:
                     return new UsrFunc(tok.value.ToLower(), args, scope);
             }

@@ -3,17 +3,17 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class Print : SysFunc
+    public class Type : SysFunc
     {
-        public Print(List<Expression> args, Scope scope)
-            : base("print", args, scope)
+        public Type(List<Expression> args, Scope scope)
+            : base("type", args, scope)
         {
             validArgs = new List<ArgKind>()
-            {
-                ArgKind.Expression
-            };
+                {
+                    ArgKind.Expression
+                };
         }
-
+            
         public override EvalData Step()
         {
             if (!isArgsValid())
@@ -22,13 +22,12 @@ namespace Ast
             if (!stepped)
             {
                 stepped = true;
-                return new PrintData(args[0].ToString());
+                return new PrintData(args[0].GetType().Name);
             }
 
             stepped = false;
             return new DoneData();
         }
-
     }
 }
 

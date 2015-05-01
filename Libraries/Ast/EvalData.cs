@@ -38,6 +38,11 @@ namespace Ast
         {
             this.err = err.msg;
         }
+
+        public override string ToString()
+        {
+            return err;
+        }
     }
 
     public class ExprData : EvalData

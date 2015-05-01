@@ -182,6 +182,9 @@
       <DependentUpon>Number.cs</DependentUpon>
     </Compile>
     <Compile Include="Number.cs" />
+    <Compile Include="Type.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />

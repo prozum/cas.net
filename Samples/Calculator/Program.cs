@@ -40,7 +40,7 @@ public class MainWindow : Window
             output = eval.Step();
             dataList.Add(output);
 
-        } while (!(output is DoneData) || (output is ErrorData));
+        } while (!(output is DoneData || output is ErrorData));
 
         TextIter insertIter = buffer.StartIter;
 
