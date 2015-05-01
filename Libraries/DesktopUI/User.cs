@@ -48,19 +48,7 @@ namespace DesktopUI
 
                 if (privilege == 0)
                 {
-                    if (w.GetType() == typeof(StudentGetAssignmentMenuItem))
-                    {
-                        w.Show();
-                    }
-                    else if (w.GetType() == typeof(StudentGetAssignmentListMenuItem))
-                    {
-                        w.Show();
-                    }
-                    else if (w.GetType() == typeof(StudentGetFeedbackMenuItem))
-                    {
-                        w.Show();
-                    }
-                    else if (w.GetType() == typeof(StudentAddCompletedMenuItem))
+                    if (w.GetType() == typeof(StudentGetAssignmentListMenuItem))
                     {
                         w.Show();
                     }
@@ -71,22 +59,10 @@ namespace DesktopUI
                     {
                         w.Show();
                     }
-                    else if (w.GetType() == typeof(TeacherAddFeedbackMenuItem))
-                    {
-                        w.Show();
-                    }
                     else if (w.GetType() == typeof(TeacherGetAssignmentListMenuItem))
                     {
                         w.Show();
                     }
-                    else if (w.GetType() == typeof(TeacherGetCompletedListMenuItem))
-                    {
-                        w.Show();
-                    }
-					else if (w.GetType() == typeof(TeacherGetCompletedMenuItem))
-					{
-						w.Show();
-					}
                 }
             }
         }

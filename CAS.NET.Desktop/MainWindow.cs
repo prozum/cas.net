@@ -17,15 +17,9 @@ namespace CAS.NET.Desktop
         ServerMenuItem server;
         LoginMenuItem login;
         LogoutMenuItem logout;
-        StudentAddCompletedMenuItem stdAddCom;
-        StudentGetAssignmentMenuItem stdGetAsm;
         StudentGetAssignmentListMenuItem stdGetAsmList;
-        StudentGetFeedbackMenuItem stdGetFee;
         TeacherAddAssignmentMenuItem teaAddAsm;
-        TeacherAddFeedbackMenuItem teaAddFee;
         TeacherGetAssignmentListMenuItem teaGetAsmList;
-        TeacherGetCompletedListMenuItem teaGetComList;
-        TeacherGetCompletedMenuItem teaGetCom;
 
         Menu taskgenMenu;
         TaskGenMenuItem taskGenMenuItem;
@@ -56,15 +50,9 @@ namespace CAS.NET.Desktop
             server = new ServerMenuItem();
             login = new LoginMenuItem(ref user, menu);
             logout = new LogoutMenuItem(ref user, ref menu);
-            stdAddCom = new StudentAddCompletedMenuItem(ref user, ref textviews);
-            stdGetAsm = new StudentGetAssignmentMenuItem(ref user, ref textviews);
             stdGetAsmList = new StudentGetAssignmentListMenuItem(ref user, ref textviews);
-            stdGetFee = new StudentGetFeedbackMenuItem(ref user, ref textviews);
             teaAddAsm = new TeacherAddAssignmentMenuItem(ref user, ref textviews);
-            teaAddFee = new TeacherAddFeedbackMenuItem(ref user, ref textviews);
             teaGetAsmList = new TeacherGetAssignmentListMenuItem(ref user, ref textviews);
-            teaGetComList = new TeacherGetCompletedListMenuItem(ref user, ref textviews);
-            teaGetCom = new TeacherGetCompletedMenuItem(ref user, ref textviews);
 
                     taskGenMenuItem = new TaskGenMenuItem(textviews);
 
@@ -72,15 +60,9 @@ namespace CAS.NET.Desktop
             server.Submenu = menu;
             menu.Append(login);
             menu.Append(logout);
-            menu.Append(stdAddCom);
-            menu.Append(stdGetAsm);
             menu.Append(stdGetAsmList);
-            menu.Append(stdGetFee);
             menu.Append(teaAddAsm);
-            menu.Append(teaAddFee);
             menu.Append(teaGetAsmList);
-            menu.Append(teaGetComList);
-            menu.Append(teaGetCom);
 
             //taskgenMenu.Append(taskGenMenuItem);
 
@@ -135,15 +117,9 @@ namespace CAS.NET.Desktop
             // user is currently not logged in.
             foreach (Widget w in menu)
             {
-                if (w.GetType() == typeof(StudentAddCompletedMenuItem)
-                    || w.GetType() == typeof(StudentGetAssignmentListMenuItem)
-                    || w.GetType() == typeof(StudentGetAssignmentMenuItem)
-                    || w.GetType() == typeof(StudentGetFeedbackMenuItem)
+                if (w.GetType() == typeof(StudentGetAssignmentListMenuItem)
                     || w.GetType() == typeof(TeacherAddAssignmentMenuItem)
-                    || w.GetType() == typeof(TeacherAddFeedbackMenuItem)
                     || w.GetType() == typeof(TeacherGetAssignmentListMenuItem)
-                    || w.GetType() == typeof(TeacherGetCompletedListMenuItem)
-                    || w.GetType() == typeof(TeacherGetCompletedMenuItem)
                     || w.GetType() == typeof(LogoutMenuItem))
                 {
                     w.Hide();

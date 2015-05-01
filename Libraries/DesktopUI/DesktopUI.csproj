@@ -68,7 +68,6 @@
     <Compile Include="NewToolButton.cs" />
     <Compile Include="MovableCasTextView.cs" />
     <Compile Include="StudentGetAssignmentListMenuItem.cs" />
-    <Compile Include="StudentGetFeedbackMenuItem.cs" />
     <Compile Include="TeacherGetAssignmentListMenuItem.cs" />
     <Compile Include="CasCalcView.cs" />
     <Compile Include="MovableCasCalcView.cs" />
@@ -81,8 +80,6 @@
     <Compile Include="TeacherAddAssignmentWindow.cs" />
     <Compile Include="TeacherAddFeedbackWindow.cs" />
     <Compile Include="TeacherGetAssignmentListWindow.cs" />
-    <Compile Include="TeacherGetCompletedWindow.cs" />
-    <Compile Include="TeacherGetCompletedListMenuItem.cs" />
     <Compile Include="TeacherGetCompletedListWindow.cs" />
     <Compile Include="MovableLockedCasTextView.cs" />
     <Compile Include="DrawCanvas.cs" />
