@@ -90,6 +90,78 @@ namespace Ast
 
             return null;
         }
+
+        public decimal GetReal(string @var)
+        {
+            Expression expr;
+
+            if (locals.TryGetValue(@var, out expr))
+            {
+                if (expr is Real)
+                    return (expr as Real).Value;
+            }
+
+            if (parent != null)
+            {
+                return parent.GetReal(@var);
+            }
+
+            return 0;
+        }
+
+        public Int64 GetInt(string @var)
+        {
+            Expression expr;
+
+            if (locals.TryGetValue(@var, out expr))
+            {
+                if (expr is Integer)
+                    return (expr as Integer).@int;
+            }
+
+            if (parent != null)
+            {
+                return parent.GetInt(@var);
+            }
+
+            return 0;
+        }
+
+        public bool GetBool(string @var)
+        {
+            Expression expr;
+
+            if (locals.TryGetValue(@var, out expr))
+            {
+                if (expr is Boolean)
+                    return (expr as Boolean).@bool;
+            }
+
+            if (parent != null)
+            {
+                return parent.GetBool(@var);
+            }
+
+            return false;
+        }
+
+        public string GetText(string @var)
+        {
+            Expression expr;
+
+            if (locals.TryGetValue(@var, out expr))
+            {
+                if (expr is Text)
+                    return (expr as Text).value;
+            }
+
+            if (parent != null)
+            {
+                return parent.GetText(@var);
+            }
+
+            return "";
+        }
             
         public override string ToString()
         {

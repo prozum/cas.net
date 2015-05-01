@@ -22,13 +22,11 @@ namespace Ast
 
             var res = args[0].Evaluate();
 
-            var degrees = (Boolean)scope.GetVar("deg");
-            if (degrees == null)
-                degrees = new Boolean(false);
+            var deg = scope.GetBool("deg");
 
             if (res is Real)
             {
-                return ReturnValue(new Irrational(Math.Atan((double) ((degrees ? Constant.DegToRad.Value  : 1) * (res as Real).Value) ))).Evaluate();
+                return ReturnValue(new Irrational(Math.Atan((double) ((deg ? Constant.DegToRad.Value  : 1) * (res as Real).Value) ))).Evaluate();
             }
 
             return new Error(this, "Could not take ATan of: " + args[0]);
