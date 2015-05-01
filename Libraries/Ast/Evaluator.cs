@@ -7,6 +7,11 @@ namespace Ast
     {
         private Parser _parser = new Parser();
 
+        public static Expression Eval(string parseString)
+        {
+            return new Evaluator(parseString).Evaluate();
+        }
+
         public Evaluator () : this(null) {}
         public Evaluator (string parseString)
         {
