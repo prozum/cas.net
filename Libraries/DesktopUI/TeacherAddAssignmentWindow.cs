@@ -10,7 +10,7 @@ namespace DesktopUI
         User user;
         TextViewList textviews;
 
-        public TeacherAddAssignmentWindow(ref User user, ref TextViewList textviews)
+        public TeacherAddAssignmentWindow(User user, TextViewList textviews)
             : base("Add Assignment")
         {
             this.user = user;

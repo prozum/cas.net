@@ -12,7 +12,7 @@ namespace DesktopUI
         TextViewList textviews;
         string Filename;
 
-        public StudentGetAssignmentWindow(ref User user, ref TextViewList textviews, string Filename)
+        public StudentGetAssignmentWindow(User user, TextViewList textviews, string Filename)
             : base("Get Assignment")
         {
             this.user = user;

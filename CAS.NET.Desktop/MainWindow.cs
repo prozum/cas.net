@@ -48,13 +48,13 @@ namespace CAS.NET.Desktop
 
             // Initiating menu elements
             server = new ServerMenuItem();
-            login = new LoginMenuItem(ref user, menu);
-            logout = new LogoutMenuItem(ref user, ref menu);
-            stdGetAsmList = new StudentGetAssignmentListMenuItem(ref user, ref textviews);
-            teaAddAsm = new TeacherAddAssignmentMenuItem(ref user, ref textviews);
-            teaGetAsmList = new TeacherGetAssignmentListMenuItem(ref user, ref textviews);
+            login = new LoginMenuItem(user, menu);
+            logout = new LogoutMenuItem(user, menu);
+            stdGetAsmList = new StudentGetAssignmentListMenuItem(user, textviews);
+            teaAddAsm = new TeacherAddAssignmentMenuItem(user, textviews);
+            teaGetAsmList = new TeacherGetAssignmentListMenuItem(user, textviews);
 
-                    taskGenMenuItem = new TaskGenMenuItem(textviews);
+            taskGenMenuItem = new TaskGenMenuItem(textviews);
 
             // Adding elements to menu
             server.Submenu = menu;
@@ -108,12 +108,10 @@ namespace CAS.NET.Desktop
             vbox.Add(DefBox);
 
             Add(vbox);
-
             SetSizeRequest(600, 600);
-
             ShowAll();
 
-            // Rehiding elements not ment to be shown at boot, as the
+            // Rehiding elements not ment to be shown at start, as the
             // user is currently not logged in.
             foreach (Widget w in menu)
             {
