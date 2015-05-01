@@ -345,19 +345,19 @@ namespace Ast.Tests
             
             if (res is Integer)
             {
-                Assert.AreEqual(expected, (res as Integer).value);
+                Assert.AreEqual(expected, (res as Integer).@int);
             }
             else if (res is Rational)
             {
-                Assert.AreEqual(expected, (res as Rational).value.value);
+                Assert.AreEqual(expected, (res as Rational).value.@decimal);
             }
             else if (res is Irrational)
             {
-                Assert.AreEqual(expected, (res as Irrational).value);
+                Assert.AreEqual(expected, (res as Irrational).@decimal);
             }
             else if (res is Boolean)
             {
-                Assert.AreEqual(expected, (res as Boolean).value);
+                Assert.AreEqual(expected, (res as Boolean).@bool);
             }
             else if (res is Message)
             {

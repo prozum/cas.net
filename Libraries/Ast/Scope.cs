@@ -7,7 +7,7 @@ namespace Ast
     {
         public new Scope parent;
         public Dictionary<string,Expression> locals = new Dictionary<string,Expression>();
-        public List<Statement> statements = new List<Statement>();
+        public List<Expression> statements = new List<Expression>();
 
         public int curStep = 0;
 
@@ -50,34 +50,6 @@ namespace Ast
 
             curStep = 0;
             return new DoneData();
-            //            if (curStep < statements.Count)
-            //            {
-            //                var res = statements[curStep].Step();
-            //                if (res == DoneData)
-            //                {
-            //                    return res;
-            //                }
-            //                return stat;
-            //            }
-            //
-            //            EvalData res;
-            //            do
-            //            {
-            //                if (curStep < statements.Count)
-            //                    res = statements[curStep].Step();
-            //                else 
-            //                    res = null;
-            //
-            //                if (res is DoneData)
-            //                {
-            //                    return res;
-            //                }
-            //                return stat;
-            //            }
-            //            while (!(res is DoneData))
-            //
-            //            curStep = 0;
-            //            return new DoneData();
         }
 
         public override bool ContainsVariable(Variable other)

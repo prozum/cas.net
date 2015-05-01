@@ -19,22 +19,22 @@ namespace Ast2LaTeX
                 return AstLatex (op.Left) + op.sym + AstLatex (op.Right);
             } else if (ex is Symbol) {
                 return (ex as Symbol).identifier;
-            } else if (ex is Number) {
-                return ReturnNumberValue (ex as Number);
+            } else if (ex is Real) {
+                return ReturnNumberValue (ex as Real);
             } else {
                 return "";
             }       
         }
 
-        public static string ReturnNumberValue (Number num)
+        public static string ReturnNumberValue (Real num)
         {
-            if (num is Integer) {
-                return (num as Integer).value.ToString ();
+            if (num is Int64) {
+                return (num as Int64).@int.ToString ();
             } else if (num is Rational) {
                 Rational rat = (Rational)num;
-                return rat.numerator.value.ToString () + "/" + rat.denominator.value.ToString ();
+                return rat.num.@int.ToString () + "/" + rat.denominator.@int.ToString ();
             } else {
-                return (num as Irrational).value.ToString ();
+                return (num as Irrational).@decimal.ToString ();
             }
         }
     }

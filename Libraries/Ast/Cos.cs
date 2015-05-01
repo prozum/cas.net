@@ -26,19 +26,9 @@ namespace Ast
             if (degrees == null)
                 degrees = new Boolean(false);
 
-            if (res is Integer)
+            if (res is Real)
             {
-                return ReturnValue(new Irrational((decimal)Math.Cos((res as Integer).value * Math.Pow((Math.PI / 180), degrees ? 1 : 0)))).Evaluate();
-            }
-
-            if (res is Rational)
-            {
-                return ReturnValue(new Irrational((decimal)Math.Cos((double)(res as Rational).value.value * Math.Pow((Math.PI / 180), degrees ? 1 : 0)))).Evaluate();
-            }
-
-            if (res is Irrational)
-            {
-                return ReturnValue(new Irrational((decimal)Math.Cos((double)(res as Irrational).value * Math.Pow((Math.PI / 180), degrees ? 1 : 0)))).Evaluate();
+                return ReturnValue(new Irrational(Math.Cos((double) ((degrees ? Constant.DegToRad.Value  : 1) * (res as Real).Value) ))).Evaluate();
             }
 
             return new Error(this, "Could not take Cos of: " + args[0]);

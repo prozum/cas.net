@@ -22,19 +22,9 @@ namespace Ast
 
             var res = args[0].Evaluate();
 
-            if (res is Integer)
+            if (res is Real)
             {
-                return ReturnValue(new Irrational((decimal)Math.Sqrt((res as Integer).value))).Evaluate();
-            }
-
-            if (res is Rational)
-            {
-                return ReturnValue(new Irrational((decimal)Math.Sqrt((double)(res as Rational).value.value))).Evaluate();
-            }
-
-            if (res is Irrational)
-            {
-                return ReturnValue(new Irrational((decimal)Math.Sqrt((double)(res as Irrational).value))).Evaluate();
+                return ReturnValue(new Irrational(Math.Sqrt((double)(res as Real).Value))).Evaluate();
             }
 
             return new Error(this, "Could not take Sqrt of: " + args[0]);

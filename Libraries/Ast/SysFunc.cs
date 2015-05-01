@@ -61,7 +61,7 @@ namespace Ast
                             return false;
                         break;
                     case ArgKind.Number:
-                        if (!(args[i] is Number))
+                        if (!(args[i] is Real))
                             return false;
                         break;
                     case ArgKind.Symbol:

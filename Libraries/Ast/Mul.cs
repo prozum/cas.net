@@ -52,7 +52,7 @@ namespace Ast
 
         protected override Expression ReduceHelper(Expression left, Expression right)
         {
-            if (left is Number)
+            if (left is Real)
             {
                 if (left.CompareTo(Constant.Zero))
                 {
@@ -65,15 +65,15 @@ namespace Ast
                 else if (right is Variable)
                 {
                     var res = right.Clone();
-                    (res as Variable).prefix = ((res as Variable).prefix * left) as Number;
+                    (res as Variable).prefix = ((res as Variable).prefix * left) as Real;
                     return res;
                 }
-                else if (right is Number)
+                else if (right is Real)
                 {
                     return left * right;
                 }
             }
-            else if (right is Number)
+            else if (right is Real)
             {
                 if (right.CompareTo(Constant.Zero))
                 {
@@ -86,10 +86,10 @@ namespace Ast
                 else if (left is Variable)
                 {
                     var res = left.Clone();
-                    (res as Variable).prefix = ((res as Variable).prefix * right) as Number;
+                    (res as Variable).prefix = ((res as Variable).prefix * right) as Real;
                     return res;
                 }
-                else if (left is Number)
+                else if (left is Real)
                 {
                     return left * right;
                 }
@@ -136,7 +136,7 @@ namespace Ast
 
         private Expression ReduceMultiMul(dynamic other)
         {
-            if (other is Variable || other is Number)
+            if (other is Variable || other is Real)
             {
                 return ReduceMultiMul(other);
             }
@@ -157,7 +157,7 @@ namespace Ast
             }
         }
 
-        private Expression ReduceMultiMul(Number other)
+        private Expression ReduceMultiMul(Real other)
         {
             if (other.CompareTo(Constant.Zero))
             {
@@ -167,11 +167,11 @@ namespace Ast
             {
                 return this;
             }
-            else if (Left is Number)
+            else if (Left is Real)
             {
                 return new Mul(Left * other, Right);
             }
-            else if (Right is Number)
+            else if (Right is Real)
             {
                 return new Mul(Left, Right * other);
             }
@@ -231,8 +231,8 @@ namespace Ast
         {
             var res = left.Clone() as Variable;
 
-            res.prefix = (left.prefix * right.prefix) as Number;
-            res.exponent = (left.exponent + right.exponent) as Number;
+            res.prefix = (left.prefix * right.prefix) as Real;
+            res.exponent = (left.exponent + right.exponent) as Real;
 
             return res;
         }

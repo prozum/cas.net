@@ -2,22 +2,23 @@
 
 namespace Ast
 {
-    public class Rational : Number, INegative
+    public class Rational : Real, INegative
     {
-        public Integer numerator;
-        public Integer denominator;
-        public Irrational value;
+        public Int64 numerator;
+        public Int64 denominator;
 
-        public Rational(Integer num, Integer denom)
+        public Rational(Int64 num, Int64 denom)
         {
             numerator = num;
             denominator = denom;
-            value = new Irrational((decimal)num.value / denom.value);
         }
 
-        public override string ToString()
+        public override decimal Value
         {
-            return value.ToString ();
+            get
+            {
+                return ((decimal)numerator) / denominator;
+            }
         }
 
         public void Reduce(Integer num, Integer denom)
@@ -30,48 +31,14 @@ namespace Ast
             throw new NotImplementedException ();
         }
 
-        public override bool CompareTo(Expression other)
-        {
-            Expression evaluatedOther;
-
-            if (!((evaluatedOther = other.Evaluate()) is Error))
-            {
-                if (evaluatedOther is Integer)
-                {
-                    return value.value == (evaluatedOther as Integer).value;
-                }
-
-                if (evaluatedOther is Rational)
-                {
-                    return value.value == (evaluatedOther as Rational).value.value;
-                }
-
-                if (evaluatedOther is Irrational)
-                {
-                    return value.value == (evaluatedOther as Irrational).value;
-                }
-
-                return false;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
         public override Expression Clone()
         {
-            return new Rational(numerator.Clone() as Integer, denominator.Clone() as Integer);
-        }
-
-        public bool IsNegative()
-        {
-            return value.IsNegative();
+            return new Rational(numerator, denominator);
         }
 
         public Expression ToNegative()
         {
-            return new Rational(numerator.ToNegative() as Integer, denominator);
+            return new Rational(numerator * -1, denominator);
         }
 
         #region AddWith
@@ -85,12 +52,7 @@ namespace Ast
             var newNumerator = numerator * other.denominator;
             var otherNewNumerator = denominator * other.numerator;
 
-            return new Rational((newNumerator + otherNewNumerator) as Integer, (denominator * other.denominator) as Integer);
-        }
-
-        public override Expression AddWith(Irrational other)
-        {
-            return value + other;
+            return new Rational(newNumerator + otherNewNumerator, denominator * other.denominator);
         }
 
         #endregion
@@ -106,12 +68,7 @@ namespace Ast
             var leftNumerator = numerator * other.denominator;
             var rightNumerator = denominator * other.numerator;
 
-            return new Rational((leftNumerator - rightNumerator) as Integer, (denominator * other.denominator) as Integer);
-        }
-
-        public override Expression SubWith(Irrational other)
-        {
-            return value - other;
+            return new Rational(leftNumerator - rightNumerator, denominator * other.denominator);
         }
 
         #endregion
@@ -124,12 +81,7 @@ namespace Ast
 
         public override Expression MulWith(Rational other)
         {
-            return new Rational((numerator * other.numerator) as Integer, (denominator * other.denominator) as Integer);
-        }
-
-        public override Expression MulWith(Irrational other)
-        {
-            return value * other;
+            return new Rational(numerator * other.numerator, denominator * other.denominator);
         }
 
         #endregion
@@ -145,99 +97,12 @@ namespace Ast
             return this * new Rational(other.denominator, other.numerator);
         }
 
-        public override Expression DivWith(Irrational other)
-        {
-            return value * other;
-        }
-
         #endregion
 
         #region ExpWith
         public override Expression ExpWith(Integer other)
         {
-            return (numerator ^ other) / (denominator ^ other);
-        }
-
-        public override Expression ExpWith(Rational other)
-        {
-            return this ^ other.value;
-        }
-
-        public override Expression ExpWith(Irrational other)
-        {
-            return (numerator ^ other)/(denominator ^ other);
-        }
-
-        #endregion
-
-        #region GreaterThan
-        public override Expression GreaterThan(Integer other)
-        {
-            return value > new Rational(other, new Integer(1));
-        }
-
-        public override Expression GreaterThan(Rational other)
-        {
-            return numerator * other.denominator > other.numerator * denominator;
-        }
-
-        public override Expression GreaterThan(Irrational other)
-        {
-            return value > other;
-        }
-
-        #endregion
-
-        #region LesserThan
-        public override Expression LesserThan(Integer other)
-        {
-            return value < new Rational(other, new Integer(1));
-        }
-
-        public override Expression LesserThan(Rational other)
-        {
-            return numerator * other.denominator < other.numerator * denominator;
-        }
-
-        public override Expression LesserThan(Irrational other)
-        {
-            return value < other;
-        }
-
-        #endregion
-
-        #region GreaterThanOrEqualTo
-        public override Expression GreaterThanOrEqualTo(Integer other)
-        {
-            return value >= new Rational(other, new Integer(1));
-        }
-
-        public override Expression GreaterThanOrEqualTo(Rational other)
-        {
-            return numerator * other.denominator >= other.numerator * denominator;
-        }
-
-        public override Expression GreaterThanOrEqualTo(Irrational other)
-        {
-            return value >= other;
-        }
-
-        #endregion
-
-        #region LesserThanOrEqualTo
-        public override Expression LesserThanOrEqualTo(Integer other)
-        {
-            return value <= new Rational(other, new Integer(1));
-        }
-
-        public override Expression LesserThanOrEqualTo(Rational other)
-        {
-            return numerator * other.denominator <= other.numerator * denominator;
-        }
-
-        public override Expression LesserThanOrEqualTo(Irrational other)
-        {
-            return value <= other;
+            return new Rational(numerator ^ other.@int, denominator ^ other.@int);
         }
 
         #endregion
@@ -253,12 +118,7 @@ namespace Ast
             var newNumerator = numerator * other.denominator;
             var otherNewNumerator = denominator * other.numerator;
 
-            return new Rational((newNumerator % otherNewNumerator) as Integer, (denominator * other.denominator) as Integer);
-        }
-
-        public override Expression ModuloWith(Irrational other)
-        {
-            return value % other;
+            return new Rational(newNumerator % otherNewNumerator, denominator * other.denominator);
         }
 
         #endregion

@@ -9,7 +9,7 @@ namespace Ast
     public abstract class Variable : Expression, INegative
     {
         public string identifier;
-        public Number prefix, exponent;
+        public Real prefix, exponent;
 
         protected Variable(string identifier) : this(identifier, null) { }
         protected Variable(string identifier, Scope scope)
@@ -25,8 +25,8 @@ namespace Ast
         {
             T res = new T();
             res.identifier = identifier;
-            res.prefix = prefix.Clone() as Number;
-            res.exponent = exponent.Clone() as Number;
+            res.prefix = prefix.Clone() as Real;
+            res.exponent = exponent.Clone() as Real;
             res.scope = scope;
 
             return res;
@@ -102,7 +102,7 @@ namespace Ast
         public Expression ToNegative()
         {
             var res = Clone();
-            (res as Variable).prefix = (prefix as INegative).ToNegative() as Number;
+            (res as Variable).prefix = (prefix as INegative).ToNegative() as Real;
 
             return res;
         }

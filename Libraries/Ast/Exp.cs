@@ -46,31 +46,31 @@ namespace Ast
 
         protected override Expression ReduceHelper(Expression left, Expression right)
         {
-            if (left is Number && left.CompareTo(Constant.One))
+            if (left is Real && left.CompareTo(Constant.One))
             {
                 return new Integer(1);
             }
-            else if (right is Number && left.CompareTo(Constant.Zero))
+            else if (right is Real && left.CompareTo(Constant.Zero))
             {
                 return new Integer(1);
             }
-            else if (left is Number && right is Number)
+            else if (left is Real && right is Real)
             {
                 return left ^ right;
             }
-            else if (left is Variable && right is Number)
+            else if (left is Variable && right is Real)
             {
-                return VariableOperation(left as Variable, right as Number);
+                return VariableOperation(left as Variable, right as Real);
             }
 
             return new Exp(left, right);
         }
 
-        private Variable VariableOperation(Variable left, Number right)
+        private Variable VariableOperation(Variable left, Real right)
         {
             Variable res = left.Clone() as Variable;
 
-            res.exponent = (left.exponent * right) as Number;
+            res.exponent = (left.exponent * right) as Real;
 
             return res;
         }

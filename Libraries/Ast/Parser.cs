@@ -39,7 +39,7 @@ namespace Ast
         public Scope ParseScope(TokenKind stopToken, bool newScope = false)
         {
             Scope res;
-            Statement stmt;
+            Expression stmt;
 
             if (newScope)
                 res = scope = new Scope(scope);
@@ -64,11 +64,11 @@ namespace Ast
                 else if (Eat(TokenKind.FOR))
                     stmt = ParseForStmt();
                 else
-                    stmt = new ExprStmt(ParseExpr(stopToken));
+                    stmt = ParseExpr(stopToken);
 
                 if (_error != null)
                 {
-                    stmt = new ExprStmt(_error);
+                    stmt = _error;
                     return res;
                 }
 

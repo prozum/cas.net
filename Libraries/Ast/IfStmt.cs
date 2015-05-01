@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class IfStmt : Statement
+    public class IfStmt : Expression
     {
         public List<Expression> conditions = new List<Expression>();
         public List<Expression> expressions = new List<Expression>();
@@ -23,7 +23,7 @@ namespace Ast
 
                 if (res is Boolean)
                 {
-                    if ((res as Boolean).value)
+                    if ((res as Boolean).@bool)
                         return expressions[i].Evaluate();
 
                     continue;
@@ -48,7 +48,7 @@ namespace Ast
 
                 if (res is Boolean)
                 {
-                    resCond = (res as Boolean).value;
+                    resCond = (res as Boolean).@bool;
                 }
 
                 if (resCond != true)
@@ -80,6 +80,11 @@ namespace Ast
                 str += "else" + expressions[i].ToString();
 
             return str;
+        }
+
+        public override bool ContainsVariable(Variable other)
+        {
+            throw new NotImplementedException();
         }
     }
 }

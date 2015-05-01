@@ -52,7 +52,7 @@ namespace Ast
                 if (args.Count != 1 || !(args[0] is Integer))
                     return new Error(list, "Valid args: [Integer]");
 
-                var @long = (args[0] as Integer).value;
+                var @long = (args[0] as Integer).@int;
                 int @int;
 
                 if (@long > int.MaxValue)

@@ -52,11 +52,11 @@ namespace Ast
 
         protected override Expression ReduceHelper(Expression left, Expression right)
         {
-            if (right is Number && right.CompareTo(Constant.One))
+            if (right is Real && right.CompareTo(Constant.One))
             {
                 return left;
             }
-            else if (left is Number && right is Number)
+            else if (left is Real && right is Real)
             {
                 return left / right;
             }
@@ -89,18 +89,18 @@ namespace Ast
         {
             Expression res;
 
-            if (((left.exponent < right.exponent) as Boolean).value)
+            if (((left.exponent < right.exponent) as Boolean).@bool)
             {
                 var symbol = right.Clone();
 
-                (symbol as Variable).exponent = (right.exponent - left.exponent) as Number;
+                (symbol as Variable).exponent = (right.exponent - left.exponent) as Real;
                 res = new Div(left.prefix, symbol);
             }
-            else if (((left.exponent > right.exponent) as Boolean).value)
+            else if (((left.exponent > right.exponent) as Boolean).@bool)
             {
                 var symbol = right.Clone();
 
-                (symbol as Variable).exponent = (left.exponent - right.exponent) as Number;
+                (symbol as Variable).exponent = (left.exponent - right.exponent) as Real;
                 res = new Div(symbol, right.prefix);
             }
             else

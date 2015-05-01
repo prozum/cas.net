@@ -19,15 +19,15 @@ namespace Ast
 
         protected override Expression ReduceHelper(Expression left, Expression right)
         {
-            if (left is Number && left.CompareTo(Constant.Zero))
+            if (left is Real && left.CompareTo(Constant.Zero))
             {
                 return right;
             }
-            else if (right is Number && right.CompareTo(Constant.Zero))
+            else if (right is Real && right.CompareTo(Constant.Zero))
             {
                 return left;
             }
-            else if (left is Number && right is Number)
+            else if (left is Real && right is Real)
             {
                 return left + right;
             }
@@ -60,7 +60,7 @@ namespace Ast
 
         private Expression ReduceMultiAdd(dynamic other)
         {
-            if (other is Variable || other is Number)
+            if (other is Variable || other is Real)
             {
                 return ReduceMultiAdd(other);
             }
@@ -81,13 +81,13 @@ namespace Ast
             }
         }
 
-        private Expression ReduceMultiAdd(Number other)
+        private Expression ReduceMultiAdd(Real other)
         {
-            if (Left is Number)
+            if (Left is Real)
             {
                 return new Add(Left + other, Right);
             }
-            else if (Right is Number)
+            else if (Right is Real)
             {
                 return new Add(Left, Right + other);
             }
@@ -139,7 +139,7 @@ namespace Ast
         {
             var res = left.Clone();
 
-            (res as Variable).prefix = (left.prefix + right.prefix) as Number;
+            (res as Variable).prefix = (left.prefix + right.prefix) as Real;
 
             return res;
         }

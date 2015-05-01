@@ -2,12 +2,10 @@
 
 namespace Ast
 {
-    public class ForStmt : Statement
+    public class ForStmt : Expression
     {
         public Symbol sym;
         public Expression list;
-
-        public Scope scope;
 
         public ForStmt()
         {
@@ -19,6 +17,11 @@ namespace Ast
         }
 
         public override EvalData Step()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool ContainsVariable(Variable other)
         {
             throw new NotImplementedException();
         }
