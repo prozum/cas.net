@@ -54,6 +54,8 @@ namespace Account
 					{
 						return this.GetAssignmentList();
 					}
+
+					i++;
 				}
 
 				return filelist.ToArray();

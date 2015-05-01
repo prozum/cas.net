@@ -26,7 +26,7 @@ namespace DesktopUI
         void OnActivated()
         {
             Console.WriteLine("Clicked");
-            textviews.InsertTextView("", false);
+            textviews.InsertTextView("", false, -1);
         }
 
         void SetIcon()

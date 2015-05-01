@@ -32,11 +32,6 @@ namespace Ast
         {
             return false;
         }
-
-        public override bool ContainsVariable(Variable other)
-        {
-            return false;
-        }
     }
 
     public class Info: Message

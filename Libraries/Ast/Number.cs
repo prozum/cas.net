@@ -12,11 +12,6 @@ namespace Ast
         {
             return this;
         }
-
-        public override bool ContainsVariable(Variable other)
-        {
-            return false;
-        }
     }
 }
 

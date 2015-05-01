@@ -24,7 +24,7 @@ namespace DesktopUI
 
         void OnClicked()
         {
-            TeacherAddFeedbackWindow window = new TeacherAddFeedbackWindow(ref user, ref textviews);
+            //TeacherAddFeedbackWindow window = new TeacherAddFeedbackWindow(ref user, ref textviews);
         }
     }
 }

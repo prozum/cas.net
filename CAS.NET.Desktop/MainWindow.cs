@@ -1,18 +1,15 @@
 ﻿using System;
 using Gtk;
-
-//using TaskGenLib;
-//using System.Collections.Generic;
-//using ImEx;
-//using System.Net;
-//using System.Text;
 using DesktopUI;
+using Ast;
 
 namespace CAS.NET.Desktop
 {
     class MainWindow : Window
     {
         User user = new User();
+        Evaluator Eval = new Evaluator();
+        DefinitionBox DefBox;
 
         TextViewList textviews;
         MenuBar menubar = new MenuBar();
@@ -29,6 +26,9 @@ namespace CAS.NET.Desktop
         TeacherGetAssignmentListMenuItem teaGetAsmList;
         TeacherGetCompletedListMenuItem teaGetComList;
         TeacherGetCompletedMenuItem teaGetCom;
+
+        Menu taskgenMenu;
+        TaskGenMenuItem taskGenMenuItem;
 
         Toolbar toolbar = new Toolbar();
         OpenToolButton open;
@@ -47,9 +47,10 @@ namespace CAS.NET.Desktop
         public MainWindow()
             : base("CAS.NET")
         {
-            DeleteEvent += (o, a) => Application.Quit();
+            DeleteEvent += (o, a) => Gtk.Application.Quit();
 
-            textviews = new TextViewList(ref user);
+            textviews = new TextViewList(ref user, Eval);
+            DefBox = new DefinitionBox(Eval);
 
             // Initiating menu elements
             server = new ServerMenuItem();
@@ -65,6 +66,8 @@ namespace CAS.NET.Desktop
             teaGetComList = new TeacherGetCompletedListMenuItem(ref user, ref textviews);
             teaGetCom = new TeacherGetCompletedMenuItem(ref user, ref textviews);
 
+                    taskGenMenuItem = new TaskGenMenuItem(textviews);
+
             // Adding elements to menu
             server.Submenu = menu;
             menu.Append(login);
@@ -79,7 +82,10 @@ namespace CAS.NET.Desktop
             menu.Append(teaGetComList);
             menu.Append(teaGetCom);
 
+            //taskgenMenu.Append(taskGenMenuItem);
+
             menubar.Append(server);
+            menubar.Append(taskgenMenu);
 
             open = new OpenToolButton(textviews, ref user);
             save = new SaveToolButton(textviews);
@@ -117,6 +123,7 @@ namespace CAS.NET.Desktop
             vbox.PackStart(toolbar, false, false, 2);
             scrolledWindow.Add(textviews);
             vbox.Add(scrolledWindow);
+            vbox.Add(DefBox);
 
             Add(vbox);
 
@@ -146,6 +153,14 @@ namespace CAS.NET.Desktop
                     w.Show();
                 }
             }
+
+            GLib.Timeout.Add (2000, new GLib.TimeoutHandler (DefBoxUpdate));
+        }
+
+        public bool DefBoxUpdate()
+        {
+            DefBox.Update();
+            return true;
         }
     }
 }

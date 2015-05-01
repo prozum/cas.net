@@ -153,7 +153,7 @@ namespace TaskGenLib
 
             answer = val.ToString ();
 
-            var task = new Task (taskS, answer);
+            var task = new Task (taskS, GetAnswer (answer));
 
             return task;
         }
@@ -214,10 +214,10 @@ namespace TaskGenLib
             return task;
         }
 
-        static string GetAnswer (string task)
+        static Expression GetAnswer (string task)
         {
-            Parser parser = new Parser (new Evaluator());
-            string answer = parser.Parse (task).Evaluate ().ToString ();
+            Evaluator eval = new Evaluator();
+            Expression answer = eval.Evaluation(task);
 
             return answer;
         }

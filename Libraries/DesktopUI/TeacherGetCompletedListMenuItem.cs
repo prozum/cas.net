@@ -22,7 +22,7 @@ namespace DesktopUI
 
         void OnClicked()
         {
-            TeacherGetCompletedListWindow window = new TeacherGetCompletedListWindow(ref user, ref textviews);
+            //TeacherGetCompletedListWindow window = new TeacherGetCompletedListWindow(ref user, ref textviews);
         }
     }
 }

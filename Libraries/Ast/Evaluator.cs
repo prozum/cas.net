@@ -11,13 +11,14 @@ namespace Ast
         {
             SetVar("deg", new Boolean(true));
             SetVar("debug", new Boolean(true));
+            SetVar("pi", new Irrational((decimal)Math.PI));
         }
 
-        public EvalData Evaluation(string inputString)
+        public Expression Evaluation(string inputString)
         {
             Parse(inputString);
 
-            return new ExprData(Evaluate());
+            return Evaluate();
         }
 
         public void Parse(string inputString)
@@ -25,5 +26,6 @@ namespace Ast
             statements.Clear();
             _parser.Parse(inputString, this);
         }
+
     }
 }

@@ -9,22 +9,20 @@ namespace DesktopUI
     public class TeacherGetCompletedListWindow : Window
     {
         User user;
-        TextViewList textviews;
+        readonly TextViewList textviews;
+        string Filename;
         string[] StudentList;
 
-        public TeacherGetCompletedListWindow(ref User user, ref TextViewList textviews)
+        public TeacherGetCompletedListWindow(ref User user, ref TextViewList textviews, string Filename)
             : base("Get List of Completed Students")
         {
             this.user = user;
             this.textviews = textviews;
+            this.Filename = Filename;
 
             SetSizeRequest(300, 300);
 
             Grid grid = new Grid();
-
-            Label FileNameLabel = new Label("Filename:");
-            Entry FileNameEntry = new Entry();
-            FileNameEntry.WidthRequest = 200;
 
             Label GradeLabel = new Label("Grade:");
             Entry GradeEntry = new Entry();
@@ -37,38 +35,30 @@ namespace DesktopUI
             };
 
             Button DownloadButton = new Button("List of Completed Students");
-            DownloadButton.Clicked += delegate
+            DownloadButton.Clicked += (sender, e) =>
             {
-                StudentList = this.user.teacher.GetCompletedList(FileNameEntry.Text, GradeEntry.Text);
-
+                StudentList = this.user.teacher.GetCompletedList(this.Filename, GradeEntry.Text);
                 foreach (Widget widget in grid)
                 {
                     grid.Remove(widget);
                 }
-
                 for (int i = 0; i < StudentList.Length / 2; i++)
                 {
                     Button button = new Button(StudentList[2 * i]);
                     button.TooltipText = StudentList[2 * i];
                     button.HasTooltip = false;
                     Label label = new Label(StudentList[(2 * i) + 1]);
-					
                     button.Clicked += delegate
                     {
-                        string completed = this.user.teacher.GetCompleted(button.TooltipText, FileNameEntry.Text, GradeEntry.Text);
+                        string completed = this.user.teacher.GetCompleted(button.TooltipText, this.Filename, GradeEntry.Text);
                         LoadWorkspace(completed);
                     };
-
                     grid.Attach(button, 1, 1 + i, 1, 1);
                     grid.Attach(label, 2, 1 + i, 1, 1);
-					
-                    ShowAll();				
+                    ShowAll();
                 }
             };
-
-            grid.Attach(FileNameLabel, 1, 1, 1, 1);
-            grid.Attach(FileNameEntry, 1, 2, 1, 1);
-
+             
             grid.Attach(GradeLabel, 2, 1, 1, 1);
             grid.Attach(GradeEntry, 2, 2, 1, 1);
 
@@ -93,7 +83,7 @@ namespace DesktopUI
                 }
                 else if (metaItem.type == typeof(MovableCasTextView))
                 {
-                    textviews.InsertTextView(metaItem.metastring, metaItem.locked);
+                    textviews.InsertTextView(metaItem.metastring, metaItem.locked, -1);
                 }
             }
 

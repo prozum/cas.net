@@ -25,7 +25,7 @@ namespace DesktopUI
 
         void OnActivated()
         {
-            textviews.InsertCalcView();
+            textviews.InsertCalcView(-1);
         }
 
         void SetIcon()
