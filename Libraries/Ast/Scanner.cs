@@ -75,7 +75,8 @@ namespace Ast
                     return ScanNumber(@char);
                 
                 case '"':
-                    return ScanText();
+                case '\'':
+                    return ScanText(@char);
                 
                 case '+':
                     return new Token(TokenKind.ADD, "+", pos);
@@ -161,6 +162,7 @@ namespace Ast
             string number = @char.ToString();
             Pos startPos = pos;
 
+
             var cur = CharNext(false);
             while (char.IsDigit(cur) || cur == '.')
             {
@@ -185,29 +187,48 @@ namespace Ast
 
             return new Token(kind, number, startPos);
         }
-
-        private static Token ScanText()
+        enum TextContext
         {
-            string text = "";
-            Pos startPos = pos;
 
-            char cur;
+        }
+
+        private static string ExtractSubText(char endChar)
+        {
+            string res = "";
+
+            char subChar;
+            if (endChar == '"')
+                subChar = '\'';
+            else
+                subChar = '"';
+                
             do
             {
-                cur = CharNext(false);
-                if (cur == '"')
-                    break;
-                text += cur;
-                CharNext(true);
+                var cur = CharNext(true);
+                switch (cur)
+                {
+                    case '"':
+                    case '\'':
+                        if (cur == endChar)
+                            return res;
+                        else
+                            res += subChar + ExtractSubText(cur) + subChar;
+                        break;
+                    case EOS:
+                        Errors = true;
+                        return "";
+                    default:
+                        res += cur;
+                        break;
+                }
             }
-            while (cur != EOS);
+            while (true);
+        }
 
-            if (cur != '"')
-                Errors = true;
-            else
-                CharNext(true);
-
-            return new Token(TokenKind.TEXT, text, startPos);
+        private static Token ScanText(char @char)
+        {
+            var startPos = pos;
+            return new Token(TokenKind.TEXT, ExtractSubText(@char), startPos);
         }
 
         private static Token ScanIdentifier(char @char)
