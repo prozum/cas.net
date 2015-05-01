@@ -67,14 +67,9 @@
     <Compile Include="LoginScreen.cs" />
     <Compile Include="NewToolButton.cs" />
     <Compile Include="MovableCasTextView.cs" />
-    <Compile Include="StudentGetAssignmentMenuItem.cs" />
     <Compile Include="StudentGetAssignmentListMenuItem.cs" />
     <Compile Include="StudentGetFeedbackMenuItem.cs" />
-    <Compile Include="TeacherAddAssignmentMenuItem.cs" />
-    <Compile Include="TeacherAddFeedbackMenuItem.cs" />
     <Compile Include="TeacherGetAssignmentListMenuItem.cs" />
-    <Compile Include="TeacherGetCompletedMenuItem.cs" />
-    <Compile Include="StudentAddCompletedMenuItem.cs" />
     <Compile Include="CasCalcView.cs" />
     <Compile Include="MovableCasCalcView.cs" />
     <Compile Include="DefinitionBox.cs" />
@@ -103,6 +98,7 @@
     <Compile Include="CasResult.cs" />
     <Compile Include="MovableCasResult.cs" />
     <Compile Include="MovableResultToolButton.cs" />
+    <Compile Include="TeacherAddAssignmentMenuItem.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\GtkSharp.3.1.2\build\net45\GtkSharp.targets" Condition="Exists('..\..\packages\GtkSharp.3.1.2\build\net45\GtkSharp.targets')" />
@@ -127,7 +123,7 @@
       <Name>Account</Name>
     </ProjectReference>
     <ProjectReference Include="..\TaskGenLib\TaskGenLib.csproj">
-      <Project>{882174f5-0b72-4df3-997f-bd2eb16c6e6c}</Project>
+      <Project>{882174F5-0B72-4DF3-997F-BD2EB16C6E6C}</Project>
       <Name>TaskGenLib</Name>
     </ProjectReference>
   </ItemGroup>
