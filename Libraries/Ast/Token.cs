@@ -48,6 +48,7 @@ namespace Ast
         SEMICOLON,
         DOT,
 
+        NEW_LINE,
         END_OF_STRING,
         NONE,
         UNKNOWN

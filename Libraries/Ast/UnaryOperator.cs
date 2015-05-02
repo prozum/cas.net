@@ -2,7 +2,7 @@
 
 namespace Ast
 {
-    public abstract class UnaryOperator : Expression
+    public abstract class UnaryOperator : Operator
     {
         public string sym;
         public Expression child;

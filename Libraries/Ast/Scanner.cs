@@ -54,8 +54,6 @@ namespace Ast
             }
             while (tok.kind != TokenKind.END_OF_STRING);
 
-            res.Enqueue(new Token(TokenKind.END_OF_STRING, "EndOfString", pos));
-
             return res;
         }
 
@@ -68,7 +66,12 @@ namespace Ast
             switch (@char)
             {
                 case EOS:
-                    return new Token(TokenKind.END_OF_STRING, @char, pos);
+                    return new Token(TokenKind.END_OF_STRING, "END_OF_STRING", pos);
+                
+                case '\n':
+                    pos.Line++;
+                    pos.Column = 0;
+                    return new Token(TokenKind.NEW_LINE, "NEW_LINE", pos);
 
                 case '0':
                 case '1':
@@ -283,22 +286,16 @@ namespace Ast
 
         private static void SkipWhitespace()
         {
-            var cur = CharNext(false);
-            while (char.IsWhiteSpace (cur) || cur == '\n') 
+            while (char.IsWhiteSpace (CharNext(false)) && CharNext(false) != '\n') 
             {
                 CharNext(true);
-                if (cur == '\n')
-                {
-                    pos.Line++;
-                    pos.Column = 0;
-                }
-                cur = CharNext(false);
             }
         }
 
         public static Error ReportSyntaxError(string msg)
         {
-            _error = new Error("[" + pos.Column + ";" + pos.Line + "]Parser: " + msg);
+            _error = new Error("Scanner: " + msg);
+            _error.pos = pos;
 
             return _error;
         }

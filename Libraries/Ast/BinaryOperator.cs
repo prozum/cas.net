@@ -9,7 +9,7 @@ namespace Ast
         BinaryOperator Transform();
     }
 
-    public abstract class BinaryOperator : Expression
+    public abstract class BinaryOperator : Operator
     {
         public string sym;
         public int priority;

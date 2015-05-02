@@ -25,8 +25,7 @@ namespace Ast
 
         public virtual Expression Evaluate() 
         {
-            var simplified = Reduce();
-            return simplified.Evaluate(this); 
+            return Reduce().Evaluate(this); 
         }
         protected virtual Expression Evaluate(Expression caller)
         {
@@ -116,7 +115,7 @@ namespace Ast
             return this + other.Evaluate();
         }
 
-        public virtual Expression AddWith(BinaryOperator other)
+        public virtual Expression AddWith(Operator other)
         {
             return this + other.Evaluate();
         }
@@ -174,7 +173,7 @@ namespace Ast
             return this - other.Evaluate();
         }
 
-        public virtual Expression SubWith(BinaryOperator other)
+        public virtual Expression SubWith(Operator other)
         {
             return this - other.Evaluate();
         }
@@ -232,7 +231,7 @@ namespace Ast
             return this * other.Evaluate();
         }
 
-        public virtual Expression MulWith(BinaryOperator other)
+        public virtual Expression MulWith(Operator other)
         {
             return this * other.Evaluate();
         }
@@ -290,7 +289,7 @@ namespace Ast
             return this / other.Evaluate();
         }
 
-        public virtual Expression DivWith(BinaryOperator other)
+        public virtual Expression DivWith(Operator other)
         {
             return this / other.Evaluate();
         }
@@ -348,7 +347,7 @@ namespace Ast
             return this / other.Evaluate();
         }
 
-        public virtual Expression ExpWith(BinaryOperator other)
+        public virtual Expression ExpWith(Operator other)
         {
             return this / other.Evaluate();
         }
@@ -406,7 +405,7 @@ namespace Ast
             return this > other.Evaluate();
         }
 
-        public virtual Expression GreaterThan(BinaryOperator other)
+        public virtual Expression GreaterThan(Operator other)
         {
             return this > other.Evaluate();
         }
@@ -464,7 +463,7 @@ namespace Ast
             return this < other.Evaluate();
         }
 
-        public virtual Expression LesserThan(BinaryOperator other)
+        public virtual Expression LesserThan(Operator other)
         {
             return this < other.Evaluate();
         }
@@ -522,7 +521,7 @@ namespace Ast
             return this >= other.Evaluate();
         }
 
-        public virtual Expression GreaterThanOrEqualTo(BinaryOperator other)
+        public virtual Expression GreaterThanOrEqualTo(Operator other)
         {
             return this >= other.Evaluate();
         }
@@ -580,7 +579,7 @@ namespace Ast
             return this <= other.Evaluate();
         }
 
-        public virtual Expression LesserThanOrEqualTo(BinaryOperator other)
+        public virtual Expression LesserThanOrEqualTo(Operator other)
         {
             return this <= other.Evaluate();
         }
@@ -638,7 +637,7 @@ namespace Ast
             return this + other.Evaluate();
         }
 
-        public virtual Expression ModuloWith(BinaryOperator other)
+        public virtual Expression ModuloWith(Operator other)
         {
             return this + other.Evaluate();
         }

@@ -188,6 +188,7 @@
     <Compile Include="TypeFunc.cs">
       <DependentUpon>SysFunc.cs</DependentUpon>
     </Compile>
+    <Compile Include="Operator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />
