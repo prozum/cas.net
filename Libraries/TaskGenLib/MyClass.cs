@@ -219,7 +219,7 @@ namespace TaskGenLib
             Evaluator eval = new Evaluator();
             Expression answer = eval.Evaluation(task);
 
-            return answer;
+            return null;
         }
 
     }

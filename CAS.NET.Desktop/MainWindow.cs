@@ -48,8 +48,8 @@ namespace CAS.NET.Desktop
 
             // Initiating menu elements
             server = new ServerMenuItem();
-            login = new LoginMenuItem(user, menu);
-            logout = new LogoutMenuItem(user, menu);
+            login = new LoginMenuItem(ref user, ref menu);
+            logout = new LogoutMenuItem(ref user, ref menu);
             stdGetAsmList = new StudentGetAssignmentListMenuItem(user, ref textviews);
             teaAddAsm = new TeacherAddAssignmentMenuItem(user, textviews);
             teaGetAsmList = new TeacherGetAssignmentListMenuItem(user, ref textviews);
