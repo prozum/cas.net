@@ -86,7 +86,8 @@ namespace Ast
                 else if (left is Variable)
                 {
                     var res = left.Clone();
-                    (res as Variable).prefix = ((res as Variable).prefix * right) as Real;
+                    if (res is Variable)
+                        (res as Variable).prefix = ((res as Variable).prefix * right) as Real;
                     return res;
                 }
                 else if (left is Real)

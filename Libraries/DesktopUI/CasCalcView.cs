@@ -45,7 +45,7 @@ namespace DesktopUI
                 }
                 else if (data is ErrorData)
                 {
-                    output.Text += (data as ErrorData).err + "\n";
+                    output.Text += (data as ErrorData).msg + "\n";
 //                    buffer.InsertWithTagsByName(ref insertIter, (data as ErrorData).err + "\n", "error");
                 }
                 else if (data is DebugData)

@@ -19,15 +19,21 @@ namespace Ast
             if (!isArgsValid())
                 return new ArgError(this);
 
-            var res = args[0].Evaluate();
+            var arg = args[0].Evaluate();
 
-            if (res is Error)
-                return res;
+            if (arg is Error)
+                return arg;
 
-            if (!(res is Text))
+            if (!(arg is Text))
                 return new Error("Argument must be Text");
 
-            return Evaluator.Eval(res as Text);
+            var res = Evaluator.Eval(arg as Text);
+
+            res.pos.i += args[0].pos.i;
+            res.pos.Line += args[0].pos.Line - 1;
+            res.pos.Column += args[0].pos.Column;
+
+            return res;
         }
     }
 }
