@@ -11,7 +11,7 @@ namespace DesktopUI
         User user;
         TextViewList textviews;
 
-        public StudentGetAssignmentListWindow(ref User user, ref TextViewList textviews)
+        public StudentGetAssignmentListWindow(User user, ref TextViewList textviews)
             : base("Get Assignment List")
         {
             this.user = user;
@@ -26,54 +26,24 @@ namespace DesktopUI
             {
                 if (!string.IsNullOrEmpty(assignment))
                 {
+                    HBox hbox = new HBox(false, 2);
+
                     Label label = new Label(assignment);
 
                     Button GetAssignment = new Button("Get Assignment");
-                    GetAssignment.Clicked += (sender, e) => new StudentGetAssignmentWindow(ref this.user, ref this.textviews, assignment);
+                    GetAssignment.Clicked += (sender, e) => new StudentGetAssignmentWindow(this.user, ref this.textviews, assignment);
 
                     Button AddCompleted = new Button("Add Completed");
-                    Button GetFeedback = new Button("Get Feedback");                 
+                    AddCompleted.Clicked += (sender, e) => new StudentAddCompletedWindow(this.user, this.textviews, assignment);
 
-                    /*
-                    Button button = new Button(item);
-                    button.Clicked += delegate
-                    {
-                        string assignment = this.user.student.GetAssignment(item);
+                    Button GetFeedback = new Button("Get Feedback");
+                    GetFeedback.Clicked += (sender, e) => new StudentGetFeedbackWindow(this.user, ref this.textviews, assignment);
 
-                        List<MetaType> metaTypeList = new List<MetaType>();
-
-                        metaTypeList = ImEx.Import.DeserializeString<List<MetaType>>(assignment);
-
-                        this.textviews.castextviews.Clear();
-
-                        foreach (var metaItem in metaTypeList)
-                        {
-                            if (metaItem.type == typeof(MovableCasCalcView))
-                            {
-                                Evaluator Eval = new Evaluator();
-                                MovableCasCalcView movableCasCalcView = new MovableCasCalcView(Eval);
-                                movableCasCalcView.calcview.input.Text = metaItem.metastring;
-                                this.textviews.castextviews.Add(movableCasCalcView);
-                            }
-                            else if (metaItem.type == typeof(MovableCasTextView))
-                            {
-                                MovableCasTextView movableCasTextView = new MovableCasTextView(metaItem.metastring, true);
-                                this.textviews.castextviews.Add(movableCasTextView);
-                            }
-                        }
-
-                        this.textviews.castextviews.Reverse();
-                        
-                        this.textviews.Clear();
-                        this.textviews.Redraw();
-                        this.textviews.Reevaluate();
-                        this.textviews.ShowAll();
-
-                        Destroy();
-                    };
-                    */
-                    
-                    //vbox.Add(button);
+                    hbox.Add(label);
+                    hbox.Add(GetAssignment);
+                    hbox.Add(AddCompleted);
+                    hbox.Add(GetFeedback);
+                    vbox.Add(hbox);
                 }
             }
 

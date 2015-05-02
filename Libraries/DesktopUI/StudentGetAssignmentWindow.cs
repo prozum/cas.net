@@ -12,7 +12,7 @@ namespace DesktopUI
         TextViewList textviews;
         string Filename;
 
-        public StudentGetAssignmentWindow(User user, TextViewList textviews, string Filename)
+        public StudentGetAssignmentWindow(User user, ref TextViewList textviews, string Filename)
             : base("Get Assignment")
         {
             this.user = user;
@@ -30,10 +30,12 @@ namespace DesktopUI
             {
                 if (metaItem.type == typeof(MovableCasCalcView))
                 {
+                    Console.WriteLine("MovableCasCalcView");
                     this.textviews.InsertCalcView(metaItem.metastring);
                 }
                 else if (metaItem.type == typeof(MovableCasTextView))
                 {
+                    Console.WriteLine("MovableCasTextView");
                    this.textviews.InsertTextView(metaItem.metastring, metaItem.locked, -1);
                 }
             }

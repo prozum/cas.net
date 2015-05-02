@@ -8,7 +8,7 @@ namespace DesktopUI
         User user;
         Menu menu;
 
-        public LoginMenuItem(ref User user, Menu menu)
+        public LoginMenuItem(User user, Menu menu)
             : base("Login")
         {
             this.user = user;
@@ -22,7 +22,7 @@ namespace DesktopUI
 
         void LoginScreenWrapper()
         {
-            LoginScreen screen = new LoginScreen(ref user, menu);
+            LoginScreen screen = new LoginScreen(user, menu);
         }
     }
 }

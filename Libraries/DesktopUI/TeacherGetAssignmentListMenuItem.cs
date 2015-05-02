@@ -8,7 +8,7 @@ namespace DesktopUI
         User user;
         TextViewList textviews;
 
-        public TeacherGetAssignmentListMenuItem(User user, TextViewList textviews)
+        public TeacherGetAssignmentListMenuItem(User user, ref TextViewList textviews)
             : base("Get List Of Assignments")
         {
             this.user = user;
@@ -21,7 +21,7 @@ namespace DesktopUI
 
         void OnClicked()
         {
-            TeacherGetAssignmentListWindow window = new TeacherGetAssignmentListWindow(user, textviews);
+            TeacherGetAssignmentListWindow window = new TeacherGetAssignmentListWindow(user, ref textviews);
         }
     }
 }
