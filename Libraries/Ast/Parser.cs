@@ -242,7 +242,8 @@ namespace Ast
                     return list;
                 }
 
-                list.items.Add(ParseExpr(TokenKind.SQUARE_END));
+                if (!(Eat(TokenKind.COMMA) || Eat(TokenKind.NEW_LINE)))
+                    list.items.Add(ParseExpr(TokenKind.SQUARE_END));
             }
 
             ReportSyntaxError("Missing ] bracket");
@@ -264,27 +265,26 @@ namespace Ast
             {
                 if (Peek(stopToken))
                     break;
-                    
-                if (Peek(TokenKind.SEMICOLON) || Peek(TokenKind.NEW_LINE))
-                {
-                    if (cx == ParseContext.Scope)
-                        break;
-                    else
-                        return ReportSyntaxError("Unexpected semicolon in list");
-                }
-
-                if (Peek(TokenKind.COMMA))
-                {
-                    if (cx == ParseContext.List)
-                        break;
-                    else
-                        return ReportSyntaxError("Unexpected comma in scope");
-                }
 
                 Eat(); // Get switch token
 
                 switch (tok.kind)
                 {
+                    case TokenKind.SEMICOLON:
+                        if (cx == ParseContext.Scope)
+                            return CreateAst(exprs, biops);
+                        else
+                            return ReportSyntaxError("Unexpected semicolon in list");
+                    
+                    case TokenKind.COMMA:
+                        if (cx == ParseContext.List)
+                            return CreateAst(exprs, biops);
+                        else
+                            return ReportSyntaxError("Unexpected comma in scope");
+
+                    case TokenKind.NEW_LINE:
+                        return CreateAst(exprs, biops);
+
                     case TokenKind.INTEGER:
                     case TokenKind.DECIMAL:
                     case TokenKind.IMAG_INT:
@@ -414,47 +414,47 @@ namespace Ast
                     return _error;
             }
 
-            if (biops.Count >= exprs.Count)
-                return ReportSyntaxError("Missing operand");
-
             return CreateAst(exprs, biops);
         }
 
-        public Expression CreateAst(Queue<Expression> exs, Queue<BinaryOperator> ops)
+        public Expression CreateAst(Queue<Expression> exprs, Queue<BinaryOperator> biops)
         {
             Expression left, right;
             BinaryOperator curOp, nextOp, top;
 
-            if (exs.Count == 0)
+            if (exprs.Count == 0)
                 throw new Exception("No expressions");
 
-            if (exs.Count == 1 && ops.Count == 0)
-                return exs.Dequeue();
-
-            if (exs.Count != 1 + ops.Count)
+            if (exprs.Count != 1 + biops.Count)
                 throw new Exception("Expressions != Binary Operators + 1");
+
+            if (biops.Count >= exprs.Count)
+                return ReportSyntaxError("Missing operand");
+
+            if (exprs.Count == 1 && biops.Count == 0)
+                return exprs.Dequeue();
                 
                 
-            if (ops.Count > 0)
-                top = ops.Peek();
+            if (biops.Count > 0)
+                top = biops.Peek();
             else
                 return ReportSyntaxError("Missing operator");
 
 
-            left = exs.Dequeue();
+            left = exprs.Dequeue();
 
-            while (ops.Count > 0)
+            while (biops.Count > 0)
             {
-                curOp = ops.Dequeue();
+                curOp = biops.Dequeue();
                 curOp.Left = left;
 
-                if (ops.Count > 0)
+                if (biops.Count > 0)
                 {
-                    nextOp = ops.Peek();
+                    nextOp = biops.Peek();
 
                     if (curOp.priority >= nextOp.priority)
                     {
-                        right = exs.Dequeue();
+                        right = exprs.Dequeue();
                         curOp.Right = right;
 
                         if (top.priority >= nextOp.priority)
@@ -470,7 +470,7 @@ namespace Ast
                     }
                     else
                     {
-                        left = exs.Dequeue();
+                        left = exprs.Dequeue();
 
                         right = nextOp;
                         curOp.Right = right;
@@ -478,7 +478,7 @@ namespace Ast
                 }
                 else
                 {
-                    right = exs.Dequeue();
+                    right = exprs.Dequeue();
                     curOp.Right = right;
                 }
             }
