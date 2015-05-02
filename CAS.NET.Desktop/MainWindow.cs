@@ -50,9 +50,9 @@ namespace CAS.NET.Desktop
             server = new ServerMenuItem();
             login = new LoginMenuItem(user, menu);
             logout = new LogoutMenuItem(user, menu);
-            stdGetAsmList = new StudentGetAssignmentListMenuItem(user, textviews);
+            stdGetAsmList = new StudentGetAssignmentListMenuItem(user, ref textviews);
             teaAddAsm = new TeacherAddAssignmentMenuItem(user, textviews);
-            teaGetAsmList = new TeacherGetAssignmentListMenuItem(user, textviews);
+            teaGetAsmList = new TeacherGetAssignmentListMenuItem(user, ref textviews);
 
             taskGenMenuItem = new TaskGenMenuItem(textviews);
 
