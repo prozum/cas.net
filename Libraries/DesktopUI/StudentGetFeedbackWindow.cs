@@ -6,13 +6,13 @@ using Ast;
 
 namespace DesktopUI
 {
-    public class StudentGetFeedbackWindow : Window
+    public sealed class StudentGetFeedbackWindow : Window
     {
         User user;
         TextViewList textviews;
         string Filename;
 
-        public StudentGetFeedbackWindow(User user, TextViewList textviews, string Filename)
+        public StudentGetFeedbackWindow(User user, ref TextViewList textviews, string Filename)
             : base("Feedback")
         {
             this.user = user;
@@ -43,8 +43,6 @@ namespace DesktopUI
             this.textviews.Redraw();
             this.textviews.Reevaluate();
             this.textviews.ShowAll();
-
-            Destroy();
         }
     }
 }
