@@ -34,6 +34,11 @@ namespace Ast
             return new Integer(@int * -1);
         }
 
+        public override Expression Minus()
+        {
+            return ToNegative();
+        }
+
         #region AddWith
         public override Expression AddWith(Integer other)
         {
@@ -118,6 +123,7 @@ namespace Ast
         }
 
         #endregion
+
     }
 }
 

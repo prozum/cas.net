@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Ast
 {
 
-    public enum Context
+    public enum ParseContext
     {
         List,
         Scope
@@ -16,30 +16,36 @@ namespace Ast
         Token tok;
         Error _error;
         //Pos pos;
-        Context cx = Context.Scope;
+        ParseContext cx = ParseContext.Scope;
 
         Queue<Token> tokens;
 
         readonly Token EOS = new Token(TokenKind.END_OF_STRING, "END_OF_STRING", new Pos());
 
-        public Scope Parse(string parseString)
+        public void Parse(string parseString)
         {
-            return Parse(parseString, new Scope());
+            Parse(parseString, new Scope());
         }
 
-        public Scope Parse(string parseString, Scope global)
+        public void Parse(string parseString, Scope global)
         {
             _error = null;
             scope = global;
-            tokens = Scanner.Tokenize(parseString);
+
+            tokens = Scanner.Tokenize(parseString, out _error);
+            if (_error != null)
+            {
+                scope.statements.Add(_error);
+                return;
+            }
+
             tok = tokens.Peek();
-            return ParseScope(TokenKind.END_OF_STRING, false);
+            ParseScope(TokenKind.END_OF_STRING);
         }
 
         public Scope ParseScope(TokenKind stopToken, bool newScope = false)
         {
             Scope res;
-            Expression stmt;
 
             if (newScope)
                 res = scope = new Scope(scope);
@@ -47,7 +53,7 @@ namespace Ast
                 res = scope;
 
             var lastCx = cx;
-            cx = Context.Scope;
+            cx = ParseContext.Scope;
 
             while (tokens.Count > 0)
             {
@@ -59,20 +65,31 @@ namespace Ast
                     return res;
                 }
 
-                if (Eat(TokenKind.IF))
-                    stmt = ParseIfStmt();
-                else if (Eat(TokenKind.FOR))
-                    stmt = ParseForStmt();
-                else
-                    stmt = ParseExpr(stopToken);
+                Peek();
+                switch (tok.kind)
+                {
+                    case TokenKind.IF:
+                        Eat();
+                        scope.statements.Add(ParseIfStmt());
+                        break;
+                    case TokenKind.FOR:
+                        Eat();
+                        scope.statements.Add(ParseForStmt());
+                        break;
+                    case TokenKind.SEMICOLON:
+                    case TokenKind.NEW_LINE:
+                        Eat();
+                        break;
+                    default:
+                        scope.statements.Add(ParseExpr(stopToken));
+                        break;
+                }
 
                 if (_error != null)
                 {
-                    stmt = _error;
+                    scope.statements.Add(_error);
                     return res;
                 }
-
-                scope.statements.Add(stmt);
             }
 
             ReportSyntaxError("Missing " + stopToken.ToString());
@@ -85,18 +102,23 @@ namespace Ast
         public bool Peek()
         {
             if (tokens.Count > 0)
-                return false;
-
-            tok = tokens.Peek();
+            {
+                tok = tokens.Peek();
+                return true;
+            }
+                
             return true;
         }
 
         public bool Peek(TokenKind kind)
         {
-            if (tokens.Count > 0)
+            if (tokens.Count > 0 && tokens.Peek().kind == kind)
+            {
                 tok = tokens.Peek();
+                return true;
+            }
                 
-            return tok.kind == kind;
+            return false;
         }
 
         public bool Eat()
@@ -105,7 +127,6 @@ namespace Ast
                 tok = tokens.Dequeue();
 
             return tokens.Count > 0;
-            //return tok.kind != TokenKind.END_OF_STRING;
         }
 
         public bool Eat(TokenKind kind)
@@ -211,7 +232,7 @@ namespace Ast
             var list = new List();
 
             var lastCx = cx;
-            cx = Context.List;
+            cx = ParseContext.List;
 
             while (tokens.Count > 0)
             {
@@ -224,7 +245,7 @@ namespace Ast
                 list.items.Add(ParseExpr(TokenKind.SQUARE_END));
             }
 
-            ReportSyntaxError("Mssing ] bracket");
+            ReportSyntaxError("Missing ] bracket");
 
             return list;
         }
@@ -243,6 +264,22 @@ namespace Ast
             {
                 if (Peek(stopToken))
                     break;
+                    
+                if (Peek(TokenKind.SEMICOLON) || Peek(TokenKind.NEW_LINE))
+                {
+                    if (cx == ParseContext.Scope)
+                        break;
+                    else
+                        return ReportSyntaxError("Unexpected semicolon in list");
+                }
+
+                if (Peek(TokenKind.COMMA))
+                {
+                    if (cx == ParseContext.List)
+                        break;
+                    else
+                        return ReportSyntaxError("Unexpected comma in scope");
+                }
 
                 Eat(); // Get switch token
 
@@ -335,32 +372,18 @@ namespace Ast
                     case TokenKind.CURLY_START:
                         expr = ParseScope(TokenKind.CURLY_END, true);
                         break;
-                    case TokenKind.COMMA:
-                        if (cx == Context.Scope)
-                            ReportSyntaxError("Unexpected comma in scope");
-                        else
-                            return CreateAst(exprs, biops);
-                        break;
-                    case TokenKind.SEMICOLON:
-                        if (cx == Context.List)
-                            ReportSyntaxError("Unexpected semicolon in list");
-                        else
-                            return CreateAst(exprs, biops);
-                        break;
+
 
                     case TokenKind.PARENT_END:
                     case TokenKind.SQUARE_END:
                     case TokenKind.CURLY_END:
-                        ReportSyntaxError("Unexpected end bracket");
-                        break;
+                        return ReportSyntaxError("Unexpected end bracket");
 
                     case TokenKind.UNKNOWN:
-                        ReportSyntaxError("Unknown token");
-                        break;
+                        return ReportSyntaxError("Unknown token");
                 }
                 
                 isUnaryAllowed = true;
-
 
                 if (expr != null)
                 {
@@ -369,9 +392,7 @@ namespace Ast
                     while (unops.Count > 0)
                     {
                         var unop = unops.Dequeue();
-
                         unop.child = expr;
-
                         expr = unop;
                     }
 
@@ -381,9 +402,20 @@ namespace Ast
                     expr = null;
                 }
 
+                if (exprs.Count != biops.Count && exprs.Count != biops.Count + 1)
+                {
+                    if (biops.Count > exprs.Count)
+                        return ReportSyntaxError("Missing operand");
+                    else
+                        return ReportSyntaxError("Missing operator");
+                }
+
                 if (_error != null)
                     return _error;
             }
+
+            if (biops.Count >= exprs.Count)
+                return ReportSyntaxError("Missing operand");
 
             return CreateAst(exprs, biops);
         }
@@ -394,10 +426,14 @@ namespace Ast
             BinaryOperator curOp, nextOp, top;
 
             if (exs.Count == 0)
-                return new List();
+                throw new Exception("No expressions");
 
             if (exs.Count == 1 && ops.Count == 0)
                 return exs.Dequeue();
+
+            if (exs.Count != 1 + ops.Count)
+                throw new Exception("Expressions != Binary Operators + 1");
+                
                 
             if (ops.Count > 0)
                 top = ops.Peek();
@@ -442,15 +478,10 @@ namespace Ast
                 }
                 else
                 {
-                    if (exs.Count == 0)
-                        return ReportSyntaxError("Missing right operand");
                     right = exs.Dequeue();
                     curOp.Right = right;
                 }
             }
-
-            if (exs.Count != 0)
-                return ReportSyntaxError("The operators cannot use all the operands");
 
             return top;
         }
@@ -541,7 +572,8 @@ namespace Ast
 
         public Error ReportSyntaxError(string msg)
         {
-            _error = new Error("[" + tok.pos.Column + ";" + tok.pos.Line + "]Parser: " + msg);
+            _error = new Error("Parser: " + msg);
+            _error.pos = tok.pos;
 
             return _error;
         }

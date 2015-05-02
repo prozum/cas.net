@@ -27,21 +27,29 @@ namespace Ast
 
     public class ErrorData : EvalData
     {
-        public string err;
+        public string msg;
+        public Pos pos;
 
         public ErrorData(string err)
         {
-            this.err = err;
+            this.msg = err;
         }
 
         public ErrorData(Error err)
         {
-            this.err = err.msg;
+            this.msg = err.msg;
+            this.pos = err.pos;
         }
 
         public override string ToString()
         {
-            return err;
+            var str = "";
+
+            str += "[" + pos.Column;
+            str += ";" + pos.Line + "]";
+            str += msg;
+
+            return str;
         }
     }
 

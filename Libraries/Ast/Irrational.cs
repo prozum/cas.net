@@ -29,6 +29,11 @@ namespace Ast
         {
             return new Irrational(@decimal *= -1);
         }
+
+        public override Expression Minus()
+        {
+            return ToNegative();
+        }
     }
 }
 

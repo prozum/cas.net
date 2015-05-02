@@ -41,6 +41,11 @@ namespace Ast
             return new Rational(numerator * -1, denominator);
         }
 
+        public override Expression Minus()
+        {
+            return ToNegative();
+        }
+
         #region AddWith
         public override Expression AddWith(Integer other)
         {
