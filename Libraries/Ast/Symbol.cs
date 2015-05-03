@@ -45,7 +45,10 @@ namespace Ast
             if (value == null)
                 return new Error(this, identifier + " is not defined");
 
-            return prefix * value ^ exponent;
+            if (value is Boolean)
+                return value;
+            else
+                return prefix * value ^ exponent;
         }
 
         public override bool CompareTo(Expression other)
