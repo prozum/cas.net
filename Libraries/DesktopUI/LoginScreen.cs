@@ -11,7 +11,7 @@ namespace DesktopUI
         Entry entryUsername = new Entry();
         Entry entryPassword = new Entry();
 
-        public LoginScreen(ref User user, Menu menu)
+        public LoginScreen(ref User user, ref Menu menu)
             : base("Login to CAS.NET")
         {
             this.user = user;

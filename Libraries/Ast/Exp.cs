@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Ast
 {
-    public class Exp : Operator, IInvertable
+    public class Exp : BinaryOperator, IInvertable
     {
         public Exp() : base("^", 60) { }
-        public Exp(Expression left, Expression right) : base(left, right, "^", 40) { }
+        public Exp(Expression left, Expression right) : base(left, right, "^", 60) { }
 
         protected override Expression Evaluate(Expression caller)
         {
@@ -14,23 +15,23 @@ namespace Ast
 
         protected override Expression ExpandHelper(Expression left, Expression right)
         {
-            if (left is Operator && (left as Operator).priority < priority)
+            if (left is BinaryOperator && (left as BinaryOperator).priority < priority)
             {
                 if (left is Add)
                 {
-                    return new Add(new Add(new Exp((left as Operator).Left, right).Simplify(), new Exp((left as Operator).Right, right).Simplify()), new Mul(new Integer(2), new Mul((left as Operator).Left, (left as Operator).Right)).Simplify());
+                    return new Add(new Add(new Exp((left as BinaryOperator).Left, right).Reduce(), new Exp((left as BinaryOperator).Right, right).Reduce()), new Mul(new Integer(2), new Mul((left as BinaryOperator).Left, (left as BinaryOperator).Right)).Reduce());
                 }
                 else if (left is Sub)
                 {
-                    return new Sub(new Add(new Exp((left as Operator).Left, right).Simplify(), new Exp((left as Operator).Right, right).Simplify()), new Mul(new Integer(2), new Mul((left as Operator).Left, (left as Operator).Right)).Simplify());
+                    return new Sub(new Add(new Exp((left as BinaryOperator).Left, right).Reduce(), new Exp((left as BinaryOperator).Right, right).Reduce()), new Mul(new Integer(2), new Mul((left as BinaryOperator).Left, (left as BinaryOperator).Right)).Reduce());
                 }
                 else if (left is Mul)
                 {
-                    return new Mul(new Exp((left as Operator).Left, right).Simplify(), new Exp((left as Operator).Right, right).Simplify());
+                    return new Mul(new Exp((left as BinaryOperator).Left, right).Reduce(), new Exp((left as BinaryOperator).Right, right).Reduce());
                 }
                 else if (left is Div)
                 {
-                    return new Div(new Exp((left as Operator).Left, right).Simplify(), new Exp((left as Operator).Right, right).Simplify());
+                    return new Div(new Exp((left as BinaryOperator).Left, right).Reduce(), new Exp((left as BinaryOperator).Right, right).Reduce());
                 }
                 else
                 {
@@ -43,33 +44,33 @@ namespace Ast
             }
         }
 
-        protected override Expression SimplifyHelper(Expression left, Expression right)
+        protected override Expression ReduceHelper(Expression left, Expression right)
         {
-            if (left is Number && left.CompareTo(Constant.One))
+            if (left is Real && left.CompareTo(Constant.One))
             {
                 return new Integer(1);
             }
-            else if (right is Number && left.CompareTo(Constant.Zero))
+            else if (right is Real && left.CompareTo(Constant.Zero))
             {
                 return new Integer(1);
             }
-            else if (left is Number && right is Number)
+            else if (left is Real && right is Real)
             {
                 return left ^ right;
             }
-            else if (left is Variable && right is Number)
+            else if (left is Variable && right is Real)
             {
-                return VariableOperation(left as Variable, right as Number);
+                return VariableOperation(left as Variable, right as Real);
             }
 
             return new Exp(left, right);
         }
 
-        private Variable VariableOperation(Variable left, Number right)
+        private Variable VariableOperation(Variable left, Real right)
         {
             Variable res = left.Clone() as Variable;
 
-            res.exponent = (left.exponent * right) as Number;
+            res.exponent = (left.exponent * right) as Real;
 
             return res;
         }
@@ -81,7 +82,22 @@ namespace Ast
 
         public Expression Inverted(Expression other)
         {
-            throw new NotImplementedException();
+            if (Right.CompareTo(Constant.Two))
+            {
+                var args = new List<Expression>();
+                args.Add(other);
+
+                var answer = new SqrtFunc(args, other.scope);
+                var answers = new Ast.List();
+
+                answers.items.Add(answer);
+                answers.items.Add(new Mul(new Integer(-1), answer).Reduce());
+                return answers;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public override Expression CurrectOperator()

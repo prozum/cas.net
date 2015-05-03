@@ -10,7 +10,7 @@ namespace DesktopUI
         User user;
         TextViewList textviews;
 
-        public TeacherAddAssignmentWindow(ref User user, ref TextViewList textviews)
+        public TeacherAddAssignmentWindow(User user, TextViewList textviews)
             : base("Add Assignment")
         {
             this.user = user;
@@ -45,6 +45,14 @@ namespace DesktopUI
                         metaType.metastring = calcView.calcview.input.Text;
                         metaTypeList.Add(metaType);
                     }
+                    else if (w.GetType() == typeof(MovableLockedCasTextView))
+                    {
+                        MetaType metaType = new MetaType();
+                        MovableCasTextView textView = (MovableLockedCasTextView)w;
+                        metaType.type = typeof(MovableLockedCasTextView);
+                        metaType.metastring = textView.textview.SerializeCasTextView();
+                        metaTypeList.Add(metaType);
+                    }
                     else if (w.GetType() == typeof(MovableCasTextView))
                     {
                         MetaType metaType = new MetaType();
@@ -54,11 +62,10 @@ namespace DesktopUI
                         metaTypeList.Add(metaType);
                     }
                 }
-
-
+                
                 if (metaTypeList.Count != 0
-                    && string.IsNullOrEmpty(name.Text) == false
-                    && string.IsNullOrEmpty(grad.Text) == false)
+                    && !string.IsNullOrEmpty(name.Text)
+                    && !string.IsNullOrEmpty(grad.Text))
                 {
                     string Assignment = Export.Serialize(metaTypeList);
                     this.user.teacher.AddAssignment(Assignment, name.Text, grad.Text);
@@ -90,4 +97,3 @@ namespace DesktopUI
         }
     }
 }
-

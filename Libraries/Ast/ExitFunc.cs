@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class Exit : SysFunc
+    public class ExitFunc : SysFunc
     {
-        public Exit(List<Expression> args, Scope scope)
+        public ExitFunc(List<Expression> args, Scope scope)
             : base("exit", args, scope)
         {
             validArgs = new List<ArgKind>()

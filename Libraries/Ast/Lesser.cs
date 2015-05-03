@@ -2,7 +2,7 @@
 
 namespace Ast
 {
-    public class Lesser : Operator
+    public class Lesser : BinaryOperator
     {
         public Lesser() : base("<", 10) { }
         public Lesser(Expression left, Expression right) : base(left, right, "<", 10) { }
@@ -22,9 +22,9 @@ namespace Ast
             return new Lesser(Left.CurrectOperator(), Right.CurrectOperator());
         }
 
-        protected override Expression SimplifyHelper(Expression left, Expression right)
+        protected override Expression ReduceHelper(Expression left, Expression right)
         {
-            return new Lesser(left.Simplify(this), right.Simplify(this));
+            return new Lesser(left.Reduce(this), right.Reduce(this));
         }
 
         protected override Expression ExpandHelper(Expression left, Expression right)

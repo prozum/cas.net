@@ -244,8 +244,8 @@ namespace TaskGen
 
         static string GetAnswer (string task)
         {
-            //Parser parser = new Parser (new Evaluator());
-            //string answer = parser.Parse (task).Evaluate ().ToString ();
+            Parser parser = new Parser ();
+            string answer = parser.Parse (task).Evaluate ().ToString ();
 
             return "";
         }

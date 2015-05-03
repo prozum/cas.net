@@ -1,4 +1,5 @@
 ﻿using System;
+using Ast;
 
 namespace TaskGenLib
 {
@@ -11,14 +12,14 @@ namespace TaskGenLib
             private set;
         }
 
-        public string Solution {
+        public Expression Solution {
             get;
             private set;
         }
 
         #endregion
 
-        public Task (string taskDescription, string solution)
+        public Task (string taskDescription, Expression solution)
         {
             TaskDescription = taskDescription;
             Solution = solution;

@@ -11,20 +11,12 @@ namespace DesktopUI
         TextViewList textviews;
         User user;
 
-        public StudentGetAssignmentListMenuItem(ref User user, ref TextViewList textviews)
+        public StudentGetAssignmentListMenuItem(User user, ref TextViewList textviews)
             : base("Get List of Assignments")
         {
             this.textviews = textviews;
             this.user = user;
-            this.Activated += delegate
-            {
-                Onclicked();
-            };
-        }
-
-        void Onclicked()
-        {
-            StudentGetAssignmentListWindow window = new StudentGetAssignmentListWindow(ref user, ref textviews);
+            Activated += (sender, e) => new StudentGetAssignmentListWindow(user, ref textviews);
         }
     }
 }

@@ -20,11 +20,11 @@ public class MainWindow : Window
         };
 
         // Setup ui
-        Evaluator eval = new Evaluator();
-        eval.Evaluation("x:=range(-5,5,0.1)");
-
-        var plot = eval.Evaluation("plot(x*2,x)");
-        graphView = new GraphView((plot as PlotData));
+//        Evaluator eval = new Evaluator();
+//        eval.Evaluation("x:=range(-5,5,0.1)");
+//
+//        var plot = eval.Evaluation("plot(x*2,x)");
+//        graphView = new GraphView((plot as PlotData));
         Add (graphView);
         ShowAll ();
     }

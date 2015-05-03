@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class Solve : SysFunc
+    public class SolveFunc : SysFunc
     {
         Equal equal;
         Symbol sym;
 
-        public Solve(List<Expression> args, Scope scope)
+        public SolveFunc(List<Expression> args, Scope scope)
             : base("solve", args, scope)
         {
             validArgs = new List<ArgKind>()
@@ -30,7 +30,7 @@ namespace Ast
 
             if (equal.Right.ContainsVariable(sym))
             {
-                solved = new Equal(new Sub(equal.Left, equal.Right).Simplify().Expand(), new Integer(0));
+                solved = new Equal(new Sub(equal.Left, equal.Right).Reduce().Expand(), new Integer(0));
             }
             else
             {
@@ -44,7 +44,7 @@ namespace Ast
             {
                 if (solved.Left is IInvertable)
                 {
-                    if (solved.Left is Operator)
+                    if (solved.Left is BinaryOperator)
                     {
                         solved = InvertOperator(solved.Left, solved.Right);
 
@@ -77,12 +77,12 @@ namespace Ast
                 System.Diagnostics.Debug.WriteLine(solved);
             }
 
-            return solved.Simplify();
+            return solved.Reduce();
         }
 
         private Equal InvertOperator(Expression left, Expression right)
         {
-            Operator op = left as Operator;
+            BinaryOperator op = left as BinaryOperator;
 
             if (op.Right.ContainsVariable(sym) && op.Left.ContainsVariable(sym))
             {
@@ -90,7 +90,12 @@ namespace Ast
             }
             else if (op.Left.ContainsVariable(sym))
             {
-                return new Equal(op.Left, (op as IInvertable).Inverted(right));
+                var inverted = (op as IInvertable).Inverted(right);
+
+                if (inverted == null)
+                    return null;
+
+                return new Equal(op.Left, inverted);
             }
             else if (op.Right.ContainsVariable(sym))
             {
@@ -112,10 +117,16 @@ namespace Ast
 
         private Equal BothSideSymbolSolver(Expression left, Expression right)
         {
-            var leftSimplified = left.Simplify();
+            var leftSimplified = left.Reduce();
 
-            if (leftSimplified is Operator && ((leftSimplified as Operator).Left.ContainsVariable(sym) && (leftSimplified as Operator).Right.ContainsVariable(sym)))
+            if (leftSimplified is BinaryOperator && ((leftSimplified as BinaryOperator).Left.ContainsVariable(sym) && (leftSimplified as BinaryOperator).Right.ContainsVariable(sym)))
             {
+                if (true)
+                {
+                    
+                }
+
+
                 throw new NotImplementedException();
                 return null;
             }

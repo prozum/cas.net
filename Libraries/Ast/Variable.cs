@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Ast
 {
-    public abstract class Variable : Expression
+    public abstract class Variable : Expression, INegative
     {
         public string identifier;
-        public Number prefix, exponent;
+        public Real prefix, exponent;
 
         protected Variable(string identifier) : this(identifier, null) { }
         protected Variable(string identifier, Scope scope)
@@ -25,8 +25,8 @@ namespace Ast
         {
             T res = new T();
             res.identifier = identifier;
-            res.prefix = prefix.Clone() as Number;
-            res.exponent = exponent.Clone() as Number;
+            res.prefix = prefix.Clone() as Real;
+            res.exponent = exponent.Clone() as Real;
             res.scope = scope;
 
             return res;
@@ -94,31 +94,18 @@ namespace Ast
             return ReturnValue(thisClone);
         }
 
-        //public override Expression Expand()
-        //{
-        //    Expression res;
-        //    var variable = Clone();
+        public bool IsNegative()
+        {
+            return prefix is INegative && (prefix as INegative).IsNegative();
+        }
 
-        //    (variable as Variable).prefix = new Integer(1);
-        //    (variable as Variable).exponent = new Integer(1);
+        public Expression ToNegative()
+        {
+            var res = Clone();
+            (res as Variable).prefix = (prefix as INegative).ToNegative() as Real;
 
-        //    if (!exponent.CompareTo(Constant.One))
-        //    {
-        //        res = new Exp(variable, exponent);
-        //    } 
-        //    else
-        //    {
-        //        res = variable;
-        //    }
-
-        //    if (!prefix.CompareTo(Constant.One))
-        //    {
-        //        res = new Mul(prefix, res);
-        //    }
-
-        //    return res;
-
-        //}
+            return res;
+        }
 
         #region AddWith
         public override Expression AddWith(Integer other)

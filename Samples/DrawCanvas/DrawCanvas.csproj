@@ -54,11 +54,11 @@
     <Reference Include="glib-sharp">
       <HintPath>..\..\packages\GtkSharp.3.1.2\lib\net45\glib-sharp.dll</HintPath>
     </Reference>
-    <Reference Include="gtk-sharp">
-      <HintPath>..\..\packages\GtkSharp.3.1.2\lib\net45\gtk-sharp.dll</HintPath>
-    </Reference>
     <Reference Include="pango-sharp">
       <HintPath>..\..\packages\GtkSharp.3.1.2\lib\net45\pango-sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="gtk-sharp, Version=3.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <HintPath>..\..\packages\GtkSharp.3.1.2\lib\net45\gtk-sharp.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

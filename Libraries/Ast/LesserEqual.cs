@@ -2,7 +2,7 @@
 
 namespace Ast
 {
-    public class LesserEqual : Operator
+    public class LesserEqual : BinaryOperator
     {
         public LesserEqual() : base("<=", 10) { }
         public LesserEqual(Expression left, Expression right) : base(left, right, "<=", 10) { }
@@ -22,9 +22,9 @@ namespace Ast
             return new LesserEqual(Left.CurrectOperator(), Right.CurrectOperator());
         }
 
-        protected override Expression SimplifyHelper(Expression left, Expression right)
+        protected override Expression ReduceHelper(Expression left, Expression right)
         {
-            return new LesserEqual(left.Simplify(this), right.Simplify(this));
+            return new LesserEqual(left.Reduce(this), right.Reduce(this));
         }
 
         protected override Expression ExpandHelper(Expression left, Expression right)

@@ -7,16 +7,24 @@ namespace Ast
     {
         public List<Expression> items;
 
-        const int MaxElementPrint = 10;
+        const int MaxItemPrint = 10;
 
-        public List()
+        public List() : this(new List<Expression> ()) {}
+        public List(List<Expression> items)
         {
-            items = new List<Expression> ();
+            this.items = items;
         }
 
         protected override Expression Evaluate(Expression caller)
         {
-            return this;
+            var res = new List();
+
+            foreach (var item in items)
+            {
+                res.items.Add(item.Evaluate());
+            }
+
+            return res;
         }
 
         public override string ToString()
@@ -25,7 +33,7 @@ namespace Ast
 
             for (int i = 0; i < items.Count; i++) 
             {
-                if (i >= MaxElementPrint - 1)
+                if (i >= MaxItemPrint - 1)
                 {
                     str += "..." + items[items.Count - 1].ToString();
                     break;

@@ -4,11 +4,16 @@ namespace Ast
 {
     public class Text : Expression
     {
-        public string value;
+        public string Value;
 
         public Text(string value = "")
         {
-            this.value = value;
+            this.Value = value;
+        }
+
+        public static implicit operator string(Text t)
+        {
+            return t.Value;
         }
 
         public override bool ContainsVariable(Variable other)
@@ -23,32 +28,32 @@ namespace Ast
 
         public override string ToString()
         {
-            return value;
+            return Value;
         }
 
         public override Expression AddWith(Text other)
         {
-            return new Text(this.value + other.value);
+            return new Text(this.Value + other);
         }
 
         public override Expression AddWith(Integer other)
         {
-            return new Text(this.value + other.ToString());
+            return new Text(this.Value + other.ToString());
         }
 
         public override Expression AddWith(Rational other)
         {
-            return new Text(this.value + other.ToString());
+            return new Text(this.Value + other.ToString());
         }
 
         public override Expression AddWith(Irrational other)
         {
-            return new Text(this.value + other.ToString());
+            return new Text(this.Value + other.ToString());
         }
 
         public override Expression AddWith(Complex other)
         {
-            return new Text(this.value + other.ToString());
+            return new Text(this.Value + other.ToString());
         }
     }
 }

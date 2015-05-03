@@ -6,74 +6,43 @@ using Ast;
 
 namespace DesktopUI
 {
-    public class StudentGetFeedbackWindow : Window
+    public sealed class StudentGetFeedbackWindow : Window
     {
         User user;
         TextViewList textviews;
+        string Filename;
 
-        public StudentGetFeedbackWindow(ref User user, ref TextViewList textviews)
+        public StudentGetFeedbackWindow(User user, ref TextViewList textviews, string Filename)
             : base("Feedback")
         {
-            throw new NotImplementedException();
-
             this.user = user;
             this.textviews = textviews;
+            this.Filename = Filename;
 
-            Label label = new Label("Name of the file you wish\nto get feedback on:");
-            Entry entry = new Entry();
+            string assignment = this.user.student.GetFeedback(this.Filename);
 
-            Button buttonCancel = new Button("Cancel");
-            buttonCancel.Clicked += delegate
+            List<MetaType> metaTypeList = ImEx.Import.DeserializeString<List<MetaType>>(assignment);
+
+            this.textviews.castextviews.Clear();
+
+            foreach (var metaItem in metaTypeList)
             {
-                Destroy();
-            };
-
-            Button buttonFeedback = new Button("Feedback");
-            buttonFeedback.Clicked += delegate
-            {
-                string assignment = this.user.student.GetFeedback(entry.Text);
-
-                List<MetaType> metaTypeList = ImEx.Import.DeserializeString<List<MetaType>>(assignment);
-
-                this.textviews.castextviews.Clear();
-
-                foreach (var metaItem in metaTypeList)
+                if (metaItem.type == typeof(MovableCasCalcView))
                 {
-                    if (metaItem.type == typeof(MovableCasCalcView))
-                    {
-                        Evaluator Eval = new Evaluator();
-                        MovableCasCalcView movableCasCalcView = new MovableCasCalcView(Eval);
-                        movableCasCalcView.calcview.input.Text = metaItem.metastring;
-                        this.textviews.castextviews.Add(movableCasCalcView);
-                    }
-                    else if (metaItem.type == typeof(MovableCasTextView))
-                    {
-                        MovableCasTextView movableCasTextView = new MovableCasTextView(metaItem.metastring, true);
-                        this.textviews.castextviews.Add(movableCasTextView);
-                    }
+                    this.textviews.InsertCalcView(metaItem.metastring);
                 }
+                else if (metaItem.type == typeof(MovableCasTextView))
+                {
+                    this.textviews.InsertTextView(metaItem.metastring, metaItem.locked, -1);
+                }
+            }
 
-                this.textviews.castextviews.Reverse();
+            this.textviews.castextviews.Reverse();
 
-                this.textviews.Clear();
-                this.textviews.Redraw();
-                this.textviews.Reevaluate();
-                this.textviews.ShowAll();
-
-                Destroy();
-            };
-
-            Grid grid = new Grid();
-            grid.Attach(label, 1, 1, 1, 1);
-            grid.Attach(entry, 2, 1, 1, 1);
-            grid.Attach(buttonCancel, 1, 2, 1, 1);
-            grid.Attach(buttonFeedback, 2, 2, 1, 1);
-
-            Add(grid);
-
-            ShowAll();
-
-
+            this.textviews.Clear();
+            this.textviews.Redraw();
+            this.textviews.Reevaluate();
+            this.textviews.ShowAll();
         }
     }
 }

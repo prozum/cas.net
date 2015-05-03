@@ -2,7 +2,7 @@
 
 namespace Ast
 {
-    public class BooleanEqual : Operator
+    public class BooleanEqual : BinaryOperator
     {
         public BooleanEqual() : base("==", 10) { }
         public BooleanEqual(Expression left, Expression right) : base(left, right, "==", 10) { }
@@ -22,9 +22,9 @@ namespace Ast
             return new BooleanEqual(Left.CurrectOperator(), Right.CurrectOperator());
         }
 
-        protected override Expression SimplifyHelper(Expression left, Expression right)
+        protected override Expression ReduceHelper(Expression left, Expression right)
         {
-            return new BooleanEqual(left.Simplify(this), right.Simplify(this));
+            return new BooleanEqual(left.Reduce(this), right.Reduce(this));
         }
 
         protected override Expression ExpandHelper(Expression left, Expression right)

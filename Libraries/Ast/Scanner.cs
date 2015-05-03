@@ -8,34 +8,12 @@ namespace Ast
     public static class Scanner
     {
         const char EOS = (char)0;
-        static readonly char[] opChars = {'=', '<', '>', '+', '-', '*', '/', '^', ':'};
 
-        static bool Errors = false; 
-
-        static string tokenString;
         static char[] chars;
         static Pos pos;
 
-//        static char cur
-//        {
-//            get
-//            {
-//                if (pos.i < chars.Length)
-//                    return chars[pos.i++];
-//                else
-//                    return EOS;
-//            }
-//        }
-//        static char cur
-//        {
-//            get
-//            {
-//                if (pos.i < chars.Length)
-//                    return chars[pos.i];
-//                else
-//                    return EOS;
-//            }
-//        }
+
+        static Error _error = null; 
 
         public static char CharNext(bool consume = true)
         {
@@ -52,24 +30,31 @@ namespace Ast
                 return EOS;
         }
 
-        public static Queue<Token> Tokenize(string str)
+        public static Queue<Token> Tokenize(string tokenString, out Error error)
         {
-            tokenString = str;
+            var res = new Queue<Token> ();
+
             chars = tokenString.ToCharArray();
             pos = new Pos();
+            error = null;
+            Token tok;
 
-            var tokens = new Queue<Token> ();
-
-            var tok = ScanNext();
-            while (tok.kind != TokenKind.END_OF_STRING)
+            do
             {
-                tokens.Enqueue(tok);
-                tok = ScanNext ();
+                tok = ScanNext();
+
+                if (_error != null)
+                {
+                    error = _error;
+                    _error = null;
+                    return null;
+                }
+
+                res.Enqueue(tok);
             }
+            while (tok.kind != TokenKind.END_OF_STRING);
 
-            tokens.Enqueue(new Token(TokenKind.END_OF_STRING, "EndOfString", pos));
-
-            return tokens;
+            return res;
         }
 
         private static Token ScanNext()
@@ -81,7 +66,13 @@ namespace Ast
             switch (@char)
             {
                 case EOS:
-                    return new Token(TokenKind.END_OF_STRING, @char, pos);
+                    return new Token(TokenKind.END_OF_STRING, "END_OF_STRING", pos);
+                
+                case '\n':
+                    pos.Line++;
+                    pos.Column = 0;
+                    return new Token(TokenKind.NEW_LINE, "NEW_LINE", pos);
+
                 case '0':
                 case '1':
                 case '2':
@@ -95,57 +86,79 @@ namespace Ast
                     return ScanNumber(@char);
                 
                 case '"':
-                    return ScanText();
+                case '\'':
+                    return ScanText(@char);
                 
                 case '+':
-                    return new Token(TokenKind.ADD, @char.ToString(), pos);
+                    return new Token(TokenKind.ADD, "+", pos);
                 case '-':
-                    return new Token(TokenKind.SUB, @char.ToString(), pos);
+                    return new Token(TokenKind.SUB, "-", pos);
                 case '*':
-                    return new Token(TokenKind.MUL, @char.ToString(), pos);
+                    return new Token(TokenKind.MUL, "*", pos);
                 case '/':
-                    return new Token(TokenKind.DIV, @char.ToString(), pos);
+                    return new Token(TokenKind.DIV, "/", pos);
                 case '^':
-                    return new Token(TokenKind.EXP, @char.ToString(), pos);
+                    return new Token(TokenKind.EXP, "^", pos);
                 case '=':
                     if (CharNext(false) == '=')
-                        return new Token(TokenKind.BOOL_EQUAL, @char.ToString() + CharNext(), pos);
+                    {
+                        CharNext(true);
+                        return new Token(TokenKind.BOOL_EQUAL, "==", pos);
+                    }
                     else
-                        return new Token(TokenKind.EQUAL, @char.ToString(), pos);
+                        return new Token(TokenKind.EQUAL, "=", pos);
                 case '<':
                     if (CharNext(false) == '=')
-                        return new Token(TokenKind.LESS_EQUAL, @char.ToString() + CharNext(), pos);
+                    {
+                        CharNext(true);
+                        return new Token(TokenKind.LESS_EQUAL, "<=", pos);
+                    }
                     else
-                        return new Token(TokenKind.LESS, @char.ToString(), pos);
+                        return new Token(TokenKind.LESS, "<", pos);
                 case '>':
                     if (CharNext(false) == '=')
-                        return new Token(TokenKind.GREAT_EQUAL, @char.ToString() + CharNext(), pos);
+                    {
+                        CharNext(true);
+                        return new Token(TokenKind.GREAT_EQUAL, ">=", pos);
+                    }
                     else
-                        return new Token(TokenKind.GREAT, @char.ToString(), pos);
+                        return new Token(TokenKind.GREAT, ">", pos);
                 case ':':
                     if (CharNext(false) == '=')
-                        return new Token(TokenKind.ASSIGN, @char.ToString() + CharNext(), pos);
+                    {
+                        CharNext(true);
+                        return new Token(TokenKind.ASSIGN, ":=", pos);
+                    }
                     else
-                        return new Token(TokenKind.COLON, @char.ToString(), pos);
+                        return new Token(TokenKind.COLON, ":", pos);
+                case '!':
+                    if (CharNext(false) == '=')
+                    {
+                        CharNext(true);
+                        return new Token(TokenKind.NOT_EQUAL, "!=", pos);
+                    }
+                    else
+                        return new Token(TokenKind.NEG, "!", pos);
 
                 case '(':
-                    return new Token(TokenKind.PARENT_START, @char, pos);
+                    return new Token(TokenKind.PARENT_START, "(", pos);
                 case ')':
-                    return new Token(TokenKind.PARENT_END, @char, pos);
+                    return new Token(TokenKind.PARENT_END, ")", pos);
                 case '[':
-                    return new Token(TokenKind.SQUARE_START, @char, pos);
+                    return new Token(TokenKind.SQUARE_START, "[", pos);
                 case ']':
-                    return new Token(TokenKind.SQUARE_END, @char, pos);
+                    return new Token(TokenKind.SQUARE_END, "]", pos);
                 case '{':
-                    return new Token(TokenKind.CURLY_START, @char, pos);
+                    return new Token(TokenKind.CURLY_START, "{", pos);
                 case '}':
-                    return new Token(TokenKind.CURLY_END, @char, pos);
+                    return new Token(TokenKind.CURLY_END, "}", pos);
                 case ',':
-                    return new Token(TokenKind.COMMA, @char, pos);
+                    return new Token(TokenKind.COMMA, ",", pos);
                 case ';':
-                    return new Token(TokenKind.SEMICOLON, @char, pos);
+                    return new Token(TokenKind.SEMICOLON, ";", pos);
                 case '.':
-                    return new Token(TokenKind.DOT, @char, pos);
+                    return new Token(TokenKind.DOT, ".", pos);
+                
                 default:
                     if (char.IsLetter(@char))
                         return ScanIdentifier(@char);
@@ -160,6 +173,7 @@ namespace Ast
             string number = @char.ToString();
             Pos startPos = pos;
 
+
             var cur = CharNext(false);
             while (char.IsDigit(cur) || cur == '.')
             {
@@ -169,7 +183,11 @@ namespace Ast
                 if (cur == '.')
                 {
                     //More than one Seperator. Error!
-                    Errors |= kind == TokenKind.DECIMAL;
+                    if (kind == TokenKind.DECIMAL)
+                    {
+                        ReportSyntaxError("Decimal with more than one seperator");
+                        return null;
+                    }
                     kind = TokenKind.DECIMAL;
                 }
 
@@ -184,29 +202,48 @@ namespace Ast
 
             return new Token(kind, number, startPos);
         }
-
-        private static Token ScanText()
+        enum TextContext
         {
-            string text = "";
-            Pos startPos = pos;
 
-            char cur;
+        }
+
+        private static string ExtractSubText(char endChar)
+        {
+            string res = "";
+
+            char subChar;
+            if (endChar == '"')
+                subChar = '\'';
+            else
+                subChar = '"';
+                
             do
             {
-                cur = CharNext(false);
-                if (cur == '"')
-                    break;
-                text += cur;
-                CharNext(true);
+                var cur = CharNext(true);
+                switch (cur)
+                {
+                    case '"':
+                    case '\'':
+                        if (cur == endChar)
+                            return res;
+                        else
+                            res += subChar + ExtractSubText(cur) + subChar;
+                        break;
+                    case EOS:
+                        ReportSyntaxError("Missing end of string");
+                        return "";
+                    default:
+                        res += cur;
+                        break;
+                }
             }
-            while (cur != EOS);
+            while (true);
+        }
 
-            if (cur != '"')
-                Errors = true;
-            else
-                CharNext(true);
-
-            return new Token(TokenKind.TEXT, text, startPos);
+        private static Token ScanText(char @char)
+        {
+            var startPos = pos;
+            return new Token(TokenKind.TEXT, ExtractSubText(@char), startPos);
         }
 
         private static Token ScanIdentifier(char @char)
@@ -238,6 +275,10 @@ namespace Ast
                     return new Token(TokenKind.ELSE, identifier, startPos);
                 case "return":
                     return new Token(TokenKind.RETURN, identifier, startPos);
+                case "for":
+                    return new Token(TokenKind.FOR, identifier, startPos);
+                case "in":
+                    return new Token(TokenKind.IN, identifier, startPos);
                 default:
                     return new Token(TokenKind.IDENTIFIER, identifier, startPos);
             }
@@ -245,17 +286,18 @@ namespace Ast
 
         private static void SkipWhitespace()
         {
-            var cur = CharNext(false);
-            while (char.IsWhiteSpace (cur) || cur == '\n') 
+            while (char.IsWhiteSpace (CharNext(false)) && CharNext(false) != '\n') 
             {
                 CharNext(true);
-                if (cur == '\n')
-                {
-                    pos.Line++;
-                    pos.Column = 0;
-                }
-                cur = CharNext(false);
             }
+        }
+
+        public static Error ReportSyntaxError(string msg)
+        {
+            _error = new Error("Scanner: " + msg);
+            _error.pos = pos;
+
+            return _error;
         }
     }
 }

@@ -18,17 +18,17 @@ namespace Ast
             return msg;
         }
 
+
+        public override Expression Evaluate()
+        {
+            return this;
+        }
         protected override Expression Evaluate(Expression caller)
         {
             return this;
         }
 
         public override bool CompareTo(Expression other)
-        {
-            return false;
-        }
-
-        public override bool ContainsVariable(Variable other)
         {
             return false;
         }
@@ -49,38 +49,33 @@ namespace Ast
     public class Error: Message
     {
         public Error(string msg) : base(msg) { }
-        public Error(object obj, string msg)
+        public Error(Expression expr, string msg)
         {
-            var str = "";
+            pos = expr.pos;
 
-            if (obj is Expression)
-            {
-                str += obj.GetType().Name;
-                str += " at [" +(obj as Expression).pos.Column;
-                str += ";" +(obj as Expression).pos.Line + "]: ";
-                str += msg;
-            }
-
-            this.msg = str;
+            if (expr is Variable)
+                this.msg = (expr as Variable).identifier + ": " + msg;
+            else
+                this.msg = expr.GetType().Name + ": " + msg;
         }
 
         public override Expression Clone()
         {
-            return new Error(msg);
+            return new Error(this, msg);
         }
     }
 
     public class ArgError: Error
     {
         public ArgError(string msg) : base(msg) { }
-        public ArgError(SysFunc obj) : base(obj, "Valid args: ")
+        public ArgError(SysFunc func) : base(func, "Valid args: ")
         {
             msg += "[";
-            for(int i = 0; i < obj.validArgs.Count; i++)
+            for(int i = 0; i < func.validArgs.Count; i++)
             {
-                msg += obj.validArgs[i].ToString();
+                msg += func.validArgs[i].ToString();
 
-                if (i < obj.validArgs.Count -1) 
+                if (i < func.validArgs.Count -1) 
                 {
                     msg += ',';
                 }

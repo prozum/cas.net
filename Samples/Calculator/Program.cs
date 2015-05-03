@@ -40,30 +40,23 @@ public class MainWindow : Window
             output = eval.Step();
             dataList.Add(output);
 
-        } while (!(output is DoneData));
+        } while (!(output is DoneData || output is ErrorData));
 
         TextIter insertIter = buffer.StartIter;
 
         foreach(var data in dataList)
         {
-            if (data is MsgData)
+            if (data is PrintData)
             {
-                switch ((data as MsgData).type)
-                {
-                    case MsgType.Print:
-                        buffer.Insert(ref insertIter, (data as MsgData).msg + "\n");
-                        break;
-                    case MsgType.Error:
-                        buffer.InsertWithTagsByName(ref insertIter, (data as MsgData).msg + "\n", "error");
-                        break;
-                    case MsgType.Info:
-                        buffer.InsertWithTagsByName(ref insertIter, (data as MsgData).msg + "\n", "info");
-                        break;
-                }
+                buffer.Insert(ref insertIter, data.ToString() + "\n");
             }
-            else if (data is ExprData)
+            else if (data is ErrorData)
             {
-                buffer.Insert(ref insertIter, (data as ExprData).expr.ToString() + "\n");
+                buffer.InsertWithTagsByName(ref insertIter, data.ToString() + "\n", "error");
+            }
+            else if (data is DebugData && eval.GetBool("debug"))
+            {
+                buffer.InsertWithTagsByName(ref insertIter, data.ToString() + "\n", "debug");
             }
         }
 
@@ -79,16 +72,16 @@ public class MainWindow : Window
         defTree.Expand = true;
 
         renderer = new CellRendererText();
-        defTree.AppendColumn("Variable", renderer, "text",0);
+        defTree.AppendColumn("Variable", renderer, "text", 0);
         renderer = new CellRendererText();
-        defTree.AppendColumn("Value", renderer, "text",1);
+        defTree.AppendColumn("Value", renderer, "text", 1);
     }
 
     public void UpdateDefinitions()
     {
         defStore.Clear();
 
-        foreach (var def in eval.scope.locals)
+        foreach (var def in eval.locals)
         {
             if (def.Value is SysFunc)
             {
@@ -131,7 +124,7 @@ public class MainWindow : Window
         buffer = textView.Buffer;
 
 
-        var infoTag = new TextTag ("info");
+        var infoTag = new TextTag ("debug");
         infoTag.Foreground = "blue";
         var errorTag = new TextTag ("error");
         errorTag.Foreground = "red";

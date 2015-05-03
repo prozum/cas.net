@@ -2,7 +2,7 @@
 
 namespace Ast
 {
-    public class Add : Operator, ISwappable, IInvertable
+    public class Add : BinaryOperator, ISwappable, IInvertable
     {
         public Add() : base("+", 20) { }
         public Add(Expression left, Expression right) : base(left, right, "+", 20) { }
@@ -17,27 +17,27 @@ namespace Ast
             return new Add(left.Expand(), right.Expand());
         }
 
-        protected override Expression SimplifyHelper(Expression left, Expression right)
+        protected override Expression ReduceHelper(Expression left, Expression right)
         {
-            if (left is Number && left.CompareTo(Constant.Zero))
+            if (left is Real && left.CompareTo(Constant.Zero))
             {
                 return right;
             }
-            else if (right is Number && right.CompareTo(Constant.Zero))
+            else if (right is Real && right.CompareTo(Constant.Zero))
             {
                 return left;
             }
-            else if (left is Number && right is Number)
+            else if (left is Real && right is Real)
             {
                 return left + right;
             }
             else if (left is Add)
             {
-                return (left as Add).SimplifyMultiAdd(right);
+                return (left as Add).ReduceMultiAdd(right);
             }
             else if (right is Add)
             {
-                return (right as Add).SimplifyMultiAdd(left);
+                return (right as Add).ReduceMultiAdd(left);
             }
             else if ((left is Variable && right is Variable) && CompareVariables(left as Variable, right as Variable))
             {
@@ -58,11 +58,11 @@ namespace Ast
             return left.identifier == right.identifier && left.exponent.CompareTo(right.exponent) && left.GetType() == right.GetType();
         }
 
-        private Expression SimplifyMultiAdd(dynamic other)
+        private Expression ReduceMultiAdd(dynamic other)
         {
-            if (other is Variable || other is Number)
+            if (other is Variable || other is Real)
             {
-                return SimplifyMultiAdd(other);
+                return ReduceMultiAdd(other);
             }
             else
             {
@@ -81,13 +81,13 @@ namespace Ast
             }
         }
 
-        private Expression SimplifyMultiAdd(Number other)
+        private Expression ReduceMultiAdd(Real other)
         {
-            if (Left is Number)
+            if (Left is Real)
             {
                 return new Add(Left + other, Right);
             }
-            else if (Right is Number)
+            else if (Right is Real)
             {
                 return new Add(Left, Right + other);
             }
@@ -97,7 +97,7 @@ namespace Ast
             }
         }
 
-        private Expression SimplifyMultiAdd(Variable other)
+        private Expression ReduceMultiAdd(Variable other)
         {
             if (Left is Variable && CompareVariables(Left as Variable, other))
             {
@@ -109,7 +109,7 @@ namespace Ast
             }
             else if (Left is Add)
             {
-                var res = new Add((Left as Add).SimplifyMultiAdd(other), Right);
+                var res = new Add((Left as Add).ReduceMultiAdd(other), Right);
 
                 if (res.ToString() == new Add(new Add(Left, other), Right).ToString())
                 {
@@ -120,7 +120,7 @@ namespace Ast
             }
             else if (Right is Add)
             {
-                var res = new Add(Left, (Right as Add).SimplifyMultiAdd(other));
+                var res = new Add(Left, (Right as Add).ReduceMultiAdd(other));
 
                 if (res.ToString() == new Add(Left, new Add(Right, other)).ToString())
                 {
@@ -139,23 +139,16 @@ namespace Ast
         {
             var res = left.Clone();
 
-            (res as Variable).prefix = (left.prefix + right.prefix) as Number;
+            (res as Variable).prefix = (left.prefix + right.prefix) as Real;
 
             return res;
         }
 
         public override Expression CurrectOperator()
         {
-            if (Right is Number && (Right as Number).IsNegative())
+            if (Right is INegative && (Right as INegative).IsNegative())
             {
-                return new Sub(Left.CurrectOperator(), (Right as Number).ToNegative());
-            }
-            else if (Right is Variable && (Right as Variable).prefix.IsNegative())
-            {
-                var newRight = Right.Clone();
-                (newRight as Symbol).prefix = (newRight as Symbol).prefix.ToNegative();
-
-                return new Sub(Left.CurrectOperator(), newRight);
+                return new Sub(Left.CurrectOperator(), (Right as INegative).ToNegative());
             }
 
             return new Add(Left.CurrectOperator(), Right.CurrectOperator());
@@ -171,12 +164,12 @@ namespace Ast
             return new Sub(other, Right);
         }
 
-        public Operator Swap()
+        public BinaryOperator Swap()
         {
             return new Add(Right, Left);
         }
 
-        public Operator Transform()
+        public BinaryOperator Transform()
         {
             if (Left is Add)
             {
@@ -185,14 +178,6 @@ namespace Ast
             else if (Right is Add)
             {
                 return new Add(new Add(Left, (Right as Add).Left), (Right as Add).Right);
-            }
-            else if (Left is Sub)
-            {
-                return new Sub((Left as Sub).Left, new Add((Left as Sub).Right, Right));
-            }
-            else if (Right is Sub)
-            {
-                return new Sub(new Add(Left, (Right as Sub).Left), (Right as Sub).Right);
             }
             else
             {

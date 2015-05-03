@@ -9,20 +9,21 @@ namespace DesktopUI
     {
         User user;
         TextViewList textviews;
+        string Filename;
 
-        public TeacherAddFeedbackWindow(ref User user, ref TextViewList textviews)
+        public TeacherAddFeedbackWindow(User user, TextViewList textviews, string Filename)
             : base("Add Feedback")
         {
             this.user = user;
             this.textviews = textviews;
+            this.Filename = Filename;
 
             SetSizeRequest(300, 300);
 
-            Label labClass = new Label("Class:");
-            Label labFilename = new Label("Filename:");
+			Grid grid = new Grid();
 
+            Label labClass = new Label("Class:");
             Entry entClass = new Entry();
-            Entry entFilename = new Entry();
 
             Button buttonCancel = new Button("Cancel");
             buttonCancel.Clicked += delegate
@@ -33,53 +34,65 @@ namespace DesktopUI
             Button buttonFeedback = new Button("Feedback");
             buttonFeedback.Clicked += delegate
             {
-                List<MetaType> metaTypeList = new List<MetaType>();
+				string feedbackString = String.Empty;
+				List<MetaType> metaTypeList = new List<MetaType>();
 
-                foreach (Widget w in this.textviews)
-                {
-                    if (w.GetType() == typeof(MovableCasCalcView))
-                    {
-                        MetaType metaType = new MetaType();
-                        MovableCasCalcView calcView = (MovableCasCalcView)w;
-                        metaType.type = typeof(MovableCasCalcView);
-                        metaType.metastring = calcView.calcview.input.Text;
-                        metaTypeList.Add(metaType);
-                    }
-                    else if (w.GetType() == typeof(MovableCasTextView))
-                    {
-                        MetaType metaType = new MetaType();
-                        MovableCasTextView textView = (MovableCasTextView)w;
-                        metaType.type = typeof(MovableCasTextView);
-                        metaType.metastring = textView.textview.SerializeCasTextView();
-                        metaTypeList.Add(metaType);
-                    }
-                }
+				foreach (Widget w in this.textviews)
+				{
+					if (w.GetType() == typeof(MovableCasCalcView))
+					{
+						MetaType metaType = new MetaType();
+						MovableCasCalcView calcView = (MovableCasCalcView)w;
+						metaType.type = typeof(MovableCasCalcView);
+						metaType.metastring = calcView.calcview.input.Text;
+						metaTypeList.Add(metaType);
+					}
+					else if (w.GetType() == typeof(MovableCasTextView))
+					{
+						MetaType metaType = new MetaType();
+						MovableCasTextView textView = (MovableCasTextView)w;
+						metaType.type = typeof(MovableCasTextView);
+						metaType.metastring = textView.textview.SerializeCasTextView();
+						metaTypeList.Add(metaType);
+					}
+				}
 
+				if (metaTypeList.Count != 0
+					&& string.IsNullOrEmpty(entClass.Text) == false
+                    && string.IsNullOrEmpty(this.Filename) == false)
+				{
+					feedbackString = Export.Serialize(metaTypeList);           
+				}
 
-                if (metaTypeList.Count != 0
-                    && string.IsNullOrEmpty(entClass.Text) == false
-                    && string.IsNullOrEmpty(entFilename.Text) == false)
-                {
-                    string feedbackString = Export.Serialize(metaTypeList);
-                    this.user.teacher.AddFeedback(feedbackString, entFilename.Text, this.user.username, entClass.Text);
-                }
+                    string[] StudentList = this.user.teacher.GetCompletedList(this.Filename, entClass.Text);
 
-                Destroy();
+				grid.Destroy();
+				grid = new Grid();
+
+				for (int i = 0; i < StudentList.Length/2; i++)
+				{
+						int j = 2*i;
+						Button button = new Button(StudentList[j]);
+						button.Clicked += delegate
+							{
+                                this.user.teacher.AddFeedback(feedbackString, this.Filename, StudentList[j], entClass.Text);
+								Destroy();
+							};
+						grid.Attach(button, 1, 1+i, 1, 1);
+				}          
+				
+				Add(grid);
+                ShowAll();
             };
-
-            Grid grid = new Grid();
 
             grid.Attach(labClass, 1, 1, 1, 1);
             grid.Attach(entClass, 2, 1, 1, 1);
-            grid.Attach(labFilename, 1, 2, 1, 1);
-            grid.Attach(entFilename, 2, 2, 1, 1);
             grid.Attach(buttonCancel, 1, 3, 1, 1);
             grid.Attach(buttonFeedback, 2, 3, 1, 1);
 
             Add(grid);
 
             ShowAll();
-
         }
     }
 }

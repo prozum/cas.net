@@ -2,7 +2,7 @@
 
 namespace Ast
 {
-    public class Assign : Operator
+    public class Assign : BinaryOperator
     {
         public Assign() : base(":=", 0) { }
         public Assign(Expression left, Expression right) : base(left, right, ":=", 0) { }
@@ -48,9 +48,9 @@ namespace Ast
             return new Assign(Left.Expand(), Right.Expand());
         }
 
-        protected override Expression SimplifyHelper(Expression left, Expression right)
+        protected override Expression ReduceHelper(Expression left, Expression right)
         {
-            return new Assign(Left.Simplify(this), Right.Simplify(this));
+            return new Assign(Left.Reduce(this), Right.Reduce(this));
         }
 
         public override Expression Clone()

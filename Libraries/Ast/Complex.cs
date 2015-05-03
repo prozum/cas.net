@@ -2,12 +2,12 @@
 
 namespace Ast
 {
-    public class Complex : Number 
+    public class Complex : Number
     {
-        public Number real;
-        public Number imag;
+        public Real real;
+        public Real imag;
 
-        public Complex(Number real, Number imag)
+        public Complex(Real real, Real imag)
         {
             this.real = real;
             this.imag = imag;
@@ -24,7 +24,7 @@ namespace Ast
 
             if (res)
             {
-                if (!real.CompareTo((other as Complex).real) || !imag.CompareTo((imag as Complex).imag))
+                if (real.CompareTo((other as Complex).real) || imag.CompareTo((other as Complex).imag))
                 {
                     res = false;
                 }
@@ -34,16 +34,6 @@ namespace Ast
         }
 
         public override Expression Clone()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override bool IsNegative()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override Number ToNegative()
         {
             throw new NotImplementedException();
         }

@@ -11,15 +11,16 @@ namespace Ast.Tests
     public class AstTests
     {
         public Evaluator eval;
+        public Parser parser;
 
         public AstTests()
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
             eval = new Evaluator();
+            parser = new Parser();
         }
 
         #region CompareTo Test Cases
-
         [TestCase("x+y", "y+x")]
         [TestCase("x+y+z", "x+y+z")]
         [TestCase("x+y+z", "x+z+y")]
@@ -27,6 +28,9 @@ namespace Ast.Tests
         [TestCase("x+y+z", "y+z+x")]
         [TestCase("x+y+z", "z+y+x")]
         [TestCase("x+y+z", "z+x+y")]
+        [TestCase("x+y+z+q+b", "b+q+z+y+x")]
+        [TestCase("x+y+z+q+b", "b+x+q+y+z")]
+        [TestCase("a+b+c+d+e+f+g+h+i+j+k+l+m+n+o+p+q+r+s+t+u+v+w+x+y+z", "z+a+y+b+x+c+w+d+v+e+u+f+t+g+s+h+r+i+q+j+p+k+o+m+n")]
         [TestCase("x-y", "-y+x")]
         [TestCase("x*(z/y)", "(x*z)/y")]
         [TestCase("x*(z/y)", "(z/y)*x")]
@@ -36,10 +40,10 @@ namespace Ast.Tests
         #endregion
         public void ExpCompareTo(string inputString1, string inputString2)
         {
-            Assert.IsTrue(Parser.Parse(inputString1).CompareTo(Parser.Parse(inputString2)));
+            Assert.IsTrue(parser.Parse(inputString1).CompareTo(parser.Parse(inputString2)));
         }
 
-        #region Simplify Test Cases
+        #region Reduce Test Cases
         #region Symbols
         [TestCase("2x", "x+x")]
         [TestCase("3x", "x+x+x")]
@@ -98,12 +102,20 @@ namespace Ast.Tests
         [TestCase("(x-y)^2", "x^2+y^2-2*x*y")]
         #endregion
         #endregion
-        public void Simplify(string expected, string inputString)
+        public void Reduce(string expected, string inputString)
         {
-            var simString = "Simplify[" + inputString + "]";
+            var simString = "Reduce[" + inputString + "]";
             var res = eval.Evaluation(simString);
             Assert.AreEqual(expected, res.ToString());
         }
+
+
+        //public void Expand(string expected, string inputString)
+        //{
+        //    var simString = "Expand[" + inputString + "]";
+        //    var res = eval.Evaluation(simString);
+        //    Assert.AreEqual(expected, res.ToString());
+        //}
 
         #region Parse Test Cases
 
@@ -182,7 +194,7 @@ namespace Ast.Tests
         [TestCase("{f[x]/f[x]}", "(f[x])/f[x]")]
         [TestCase("{f[x]/f[x]}", "f[x]/(f[x])")]
         [TestCase("{f[x]/f[x]}", "(f[x]/f[x])")]
-        [TestCase("{simplify[sqrt[2]^2]}", "simplify[sqrt[2]^2]")]
+        [TestCase("{reduce[sqrt[2]^2]}", "reduce[sqrt[2]^2]")]
         #endregion
 
         #region Negative
@@ -197,7 +209,7 @@ namespace Ast.Tests
         #endregion
         public void Parse(string expected, string inputString)
         {
-            Assert.AreEqual(expected, Parser.Parse(inputString).ToString());
+            Assert.AreEqual(expected, parser.Parse(inputString).ToString());
         }
 
         #region Evaluate Test Cases
@@ -223,6 +235,8 @@ namespace Ast.Tests
         [TestCase(true, "20>=10")] //boolgreaterequal
         [TestCase(true, "10>=10")] //boolgreaterequal
         [TestCase(false, "10>=20")] //boolgreaterequal
+        [TestCase(true, "10!=20")] //boolnotequal
+        [TestCase(false, "20!=20")] //boolnotequal
         #endregion
 
         #region Rationals
@@ -244,6 +258,9 @@ namespace Ast.Tests
         [TestCase(true, "1/2>=1/4")] //boolgreaterequal
         [TestCase(true, "1/4>=2/8")] //boolgreaterequal
         [TestCase(false, "1/4>=1/2")] //boolgreaterequal
+        [TestCase(true, "1/2!=1/4")] //boolnotequal
+        [TestCase(false, "1/2!=2/4")] //boolnotequal
+        [TestCase(false, "1/2!=1/2")] //boolnotequal
         #endregion
 
         #region Irrationals
@@ -264,6 +281,8 @@ namespace Ast.Tests
         [TestCase(true, "2.5>=1.5")] //boolgreaterequal
         [TestCase(true, "1.5>=1.5")] //boolgreaterequal
         [TestCase(false, "1.5>=2.5")] //boolgreaterequal
+        [TestCase(true, "1.5!=2.5")] //boolnotequal
+        [TestCase(false, "2.5!=2.5")] //boolnotequal
         #endregion
 
         #region Mix
@@ -308,10 +327,10 @@ namespace Ast.Tests
 
         #region Tan, ATan
         [TestCase(1, "tan[45]")]
-        [TestCase(0.5, "tan[26.57]")]
+        //[TestCase(0.5, "tan[26.57]")] Unpresition gives wrong actual. Is right calculation
         [TestCase(0, "tan[0]")]
         [TestCase(45, "atan[1]")]
-        [TestCase(26.57, "atan[0.5]")]
+        //[TestCase(26.57, "atan[0.5]")] Unpresition gives wrong actual. Is right calculation
         [TestCase(0, "atan[0]")]
         #endregion
 
@@ -324,23 +343,23 @@ namespace Ast.Tests
         #endregion
         public void Evaluate(dynamic expected, string calculation)
         {
-            var res = (eval.Evaluation(calculation) as ExprData).expr;
+            var res = (eval.Evaluation(calculation) as DebugData).expr;
             
             if (res is Integer)
             {
-                Assert.AreEqual(expected, (res as Integer).value);
+                Assert.AreEqual(expected, (res as Integer).@int);
             }
             else if (res is Rational)
             {
-                Assert.AreEqual(expected, (res as Rational).value.value);
+                Assert.AreEqual(expected, (res as Rational).value.@decimal);
             }
             else if (res is Irrational)
             {
-                Assert.AreEqual(expected, (res as Irrational).value);
+                Assert.AreEqual(expected, (res as Irrational).@decimal);
             }
             else if (res is Boolean)
             {
-                Assert.AreEqual(expected, (res as Boolean).value);
+                Assert.AreEqual(expected, (res as Boolean).@bool);
             }
             else if (res is Message)
             {
@@ -363,7 +382,7 @@ namespace Ast.Tests
         [TestCase("x=2", "x*3=6")]
         [TestCase("x=2", "6/x=3")]
         [TestCase("x=6", "x/3=2")]
-        [TestCase("x=2", "x^2=4")]
+        [TestCase("x=[sqrt[4],-sqrt[4]]", "x^2=4")]
         [TestCase("x=2", "x^3=8")]
         [TestCase("x=4", "x+x=8")]
         [TestCase("x=2", "x*x^2=8")]

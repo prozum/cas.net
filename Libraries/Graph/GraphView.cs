@@ -1,6 +1,7 @@
 ﻿using Gtk;
 using Cairo;
 using Ast;
+using System.Collections.Generic;
 
 namespace Graph
 {
@@ -63,7 +64,6 @@ namespace Graph
 
         private void CalcYCords()
         {
-            tempDefinitions = new Dictionary<string, Expression>(sym.evaluator.symDefs);
 
         }
 
@@ -71,20 +71,20 @@ namespace Graph
         {
             double x, y;
 
-            // Move context to first iteration
-            x = -0.5 * scale;
-            y = a * x*x + b * x + c;
-            ct.MoveTo ((x/scale + 0.5) * w, (-y/scale + 0.5) * h);
-
-            
-            for (int i = 1; i <= iter; i++) 
-            {
-                x = ((double)i / iter - 0.5) * scale;
-                y = a * x*x + b * x + c;
-
-                ct.LineTo ((x/scale + 0.5) * w, (-y/scale + 0.5) * h);
-            }
-            ct.Stroke ();
+//            // Move context to first iteration
+//            x = -0.5 * scale;
+//            y = a * x*x + b * x + c;
+//            ct.MoveTo ((x/scale + 0.5) * w, (-y/scale + 0.5) * h);
+//
+//            
+//            for (int i = 1; i <= iter; i++) 
+//            {
+//                x = ((double)i / iter - 0.5) * scale;
+//                y = a * x*x + b * x + c;
+//
+//                ct.LineTo ((x/scale + 0.5) * w, (-y/scale + 0.5) * h);
+//            }
+//            ct.Stroke ();
         }
 
         protected override bool OnDrawn (Context ct)

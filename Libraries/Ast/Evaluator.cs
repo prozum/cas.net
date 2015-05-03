@@ -3,33 +3,30 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class Evaluator
+    public class Evaluator : Scope
     {
-        public Scope scope;
+        private Parser _parser = new Parser();
 
-        public Evaluator ()
+        public static Expression Eval(string parseString)
         {
-            scope = new Scope();
-            scope.SetVar("deg", new Boolean(true));
+            return new Evaluator(parseString).Evaluate();
         }
 
-        public EvalData Evaluation(string inputString)
+        public Evaluator () : this(null) {}
+        public Evaluator (string parseString)
         {
-            Parse(inputString);
-
-            return new ExprData(scope.Evaluate());
+            if (parseString != null)
+                Parse(parseString);
+            SetVar("deg", new Boolean(true));
+            SetVar("debug", new Boolean(true));
+            SetVar("pi", new Irrational((decimal)Math.PI));
         }
 
-        public void Parse(string inputString)
+        public void Parse(string parseString)
         {
-            scope.statements.Clear();
-            Parser.Parse(inputString, scope);
+            statements.Clear();
+            _parser.Parse(parseString, this);
         }
 
-        public EvalData Step()
-        {
-            return scope.Step();
-        }
     }
 }
-

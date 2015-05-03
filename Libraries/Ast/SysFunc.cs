@@ -14,7 +14,11 @@ namespace Ast
         {
             string str = "";
 
-            if (((prefix is Integer) && (prefix as Integer).value != 1) || ((prefix is Rational) && (prefix as Rational).value.value != 1) || ((prefix is Irrational) && (prefix as Irrational).value != 1))
+            if (prefix.CompareTo(Constant.MinusOne))
+            {
+                str += "-" + identifier + '[';
+            }
+            else if (!prefix.CompareTo(Constant.One))
             {
                 str += prefix.ToString() + identifier + '[';
             }
@@ -25,9 +29,9 @@ namespace Ast
 
             for (int i = 0; i < validArgs.Count; i++) 
             {
-                str += validArgs[i].ToString ();
+                str += args[i].ToString ();
 
-                if (i < validArgs.Count - 1) 
+                if (i < args.Count - 1) 
                 {
                     str += ',';
                 }
@@ -35,7 +39,7 @@ namespace Ast
 
             str += ']';
 
-            if (((exponent is Integer) && (exponent as Integer).value != 1) || ((exponent is Rational) && (exponent as Rational).value.value != 1) || ((exponent is Irrational) && (exponent as Irrational).value != 1))
+            if (!exponent.CompareTo(Constant.One))
             {
                 str += '^' + exponent.ToString();
             }
@@ -57,7 +61,7 @@ namespace Ast
                             return false;
                         break;
                     case ArgKind.Number:
-                        if (!(args[i] is Number))
+                        if (!(args[i] is Real))
                             return false;
                         break;
                     case ArgKind.Symbol:

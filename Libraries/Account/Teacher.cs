@@ -74,8 +74,8 @@ namespace Account
 
 				while (client.ResponseHeaders["File" + i.ToString()] != null)
 				{
-					filelist[i] = client.ResponseHeaders["File" + i.ToString()];
-					checksumlist[i] = client.ResponseHeaders["Checksum" + i.ToString()];
+					filelist.Add(client.ResponseHeaders["File" + i.ToString()]);
+					checksumlist.Add(client.ResponseHeaders["Checksum" + i.ToString()]);
 
 					if (Checksum.GetMd5Hash(filelist[i]) != checksumlist[i])
 					{

@@ -1,0 +1,92 @@
+﻿using System;
+using Gtk;
+
+namespace DesktopUI
+{
+    public class CasResult : Grid
+    {
+        public Entry entryFasitSet;
+        public Entry entryFasitGet;
+
+        Label labelFacitSet;
+        Label labelFacitGet;
+
+        CheckButton checkShowCorrect;
+        Label labelCorrect;
+
+        User user;
+
+        public FacitContainer facitContainer = new FacitContainer();
+
+        public bool correct = false;
+
+        public class FacitContainer
+        {
+
+            public string facit;
+            public string answer;
+
+            public FacitContainer()
+            {
+                facit = "";
+                answer = "";
+            }
+
+        }
+
+        public CasResult(User user, string answer, string facit)
+            : base()
+        {
+            this.user = user;
+            this.facitContainer.answer = answer;
+            this.facitContainer.facit = facit;
+
+            entryFasitGet = new Entry();
+            entryFasitSet = new Entry();
+
+            entryFasitGet.Text = answer;
+            entryFasitSet.Text = facit;
+
+            labelFacitGet = new Label("Result:");
+            labelFacitSet = new Label("Set result:");
+
+            checkShowCorrect = new CheckButton();
+            labelCorrect = new Label("");
+
+            entryFasitGet.Changed += delegate
+            {
+                Console.WriteLine("Got setting change...");
+
+                facitContainer.answer = entryFasitGet.Text;
+
+                labelCorrect.Text = entryFasitGet.Text.Equals(facitContainer.facit) ? "Correct" : "Wrong";
+            };
+
+            entryFasitSet.Changed += delegate
+            {
+                Console.WriteLine("Got setting change...");
+                facitContainer.facit = entryFasitSet.Text;
+            };
+
+            checkShowCorrect.Toggled += delegate
+            {
+                correct = !correct;
+            };
+
+            if (user.privilege == 1)
+            {
+                Attach(labelFacitSet, 1, 1, 1, 1);
+                Attach(entryFasitSet, 2, 1, 1, 1);
+                Attach(checkShowCorrect, 1, 2, 2, 1);
+            }
+            if (user.privilege == 0)
+            {
+                Attach(labelFacitGet, 1, 1, 1, 1);
+                Attach(entryFasitGet, 2, 1, 1, 1);
+
+                Attach(labelCorrect, 1, 2, 2, 1);
+            }
+        }
+    }
+}
+

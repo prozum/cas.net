@@ -3,181 +3,293 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public static class Parser
+
+    public enum ParseContext
     {
-        static Scope scope;
-        static Error error;
-        static Pos pos;
+        List,
+        Scope
+    }
 
-        public static Scope Parse(string parseString)
+    public class Parser
+    {
+        Scope scope;
+        Token tok;
+        Error _error;
+        //Pos pos;
+        ParseContext cx = ParseContext.Scope;
+
+        Queue<Token> tokens;
+
+        readonly Token EOS = new Token(TokenKind.END_OF_STRING, "END_OF_STRING", new Pos());
+
+        public void Parse(string parseString)
         {
-            return Parse(parseString, new Scope());
+            Parse(parseString, new Scope());
         }
 
-        public static Scope Parse(string parseString, Scope globalScope)
+        public void Parse(string parseString, Scope global)
         {
-            error = null;
-            scope = globalScope;
-            return ParseScope(Scanner.Tokenize(parseString), TokenKind.END_OF_STRING, false);
+            _error = null;
+            scope = global;
+
+            tokens = Scanner.Tokenize(parseString, out _error);
+            if (_error != null)
+            {
+                scope.statements.Add(_error);
+                return;
+            }
+
+            tok = tokens.Peek();
+            ParseScope(TokenKind.END_OF_STRING);
         }
 
-        public static Scope ParseScope(Queue<Token> tokens, TokenKind stopToken, bool newScope = false)
+        public Scope ParseScope(TokenKind stopToken, bool newScope = false)
         {
             Scope res;
-            State state;
-
-            Token tok;
 
             if (newScope)
                 res = scope = new Scope(scope);
             else
                 res = scope;
 
+            var lastCx = cx;
+            cx = ParseContext.Scope;
+
             while (tokens.Count > 0)
             {
-                tok = tokens.Peek();
-
-                if (tok.kind == stopToken)
+                if (Eat(stopToken))
                 {
-                    break;
+                    if (newScope)
+                        scope = scope.parent;
+                    cx = lastCx;
+                    return res;
                 }
 
-                if (tok.kind == TokenKind.IF)
+                Peek();
+                switch (tok.kind)
                 {
-                    state = ParseIfState(tokens);
-                }
-                else
-                {
-                    state = ParseExprState(tokens, stopToken);
+                    case TokenKind.IF:
+                        Eat();
+                        scope.statements.Add(ParseIfStmt());
+                        break;
+                    case TokenKind.FOR:
+                        Eat();
+                        scope.statements.Add(ParseForStmt());
+                        break;
+                    case TokenKind.SEMICOLON:
+                    case TokenKind.NEW_LINE:
+                        Eat();
+                        break;
+                    default:
+                        scope.statements.Add(ParseExpr(stopToken));
+                        break;
                 }
 
-                if (error != null)
-                    state = new ExprState(error);
-
-                scope.statements.Add(state);
+                if (_error != null)
+                {
+                    scope.statements.Add(_error);
+                    return res;
+                }
             }
 
-            if (newScope)
-                scope = scope.parent;
+            ReportSyntaxError("Missing " + stopToken.ToString());
 
             return res;
         }
 
-        public static ExprState ParseExprState(Queue<Token> tokens, TokenKind stopToken)
+        #region Peek Eat
+
+        public bool Peek()
         {
-            return new ExprState(ParseExpr(tokens, stopToken));
+            if (tokens.Count > 0)
+            {
+                tok = tokens.Peek();
+                return true;
+            }
+                
+            return true;
         }
 
-        public static IfState ParseIfState(Queue<Token> tokens)
+        public bool Peek(TokenKind kind)
         {
-            var state = new IfState();
-
-            tokens.Dequeue(); // Skip 'if'
-
-            state.conditions.Add(ParseExpr(tokens, TokenKind.COLON));
-
-
-            if (tokens.Count == 0)
+            if (tokens.Count > 0 && tokens.Peek().kind == kind)
             {
-                ErrorHandler("If syntax: if bool expr: {}");
+                tok = tokens.Peek();
+                return true;
+            }
+                
+            return false;
+        }
+
+        public bool Eat()
+        {
+            if (tokens.Count > 0)
+                tok = tokens.Dequeue();
+
+            return tokens.Count > 0;
+        }
+
+        public bool Eat(TokenKind kind)
+        {
+            if (tokens.Count > 0 && tokens.Peek().kind == kind)
+            {
+                tok = tokens.Dequeue();
+                return true;
+            }
+                
+            return false;
+        }
+
+        #endregion
+
+        public IfStmt ParseIfStmt()
+        {
+            var stmt = new IfStmt();
+
+            stmt.conditions.Add(ParseExpr(TokenKind.COLON));
+
+            if (!Eat(TokenKind.COLON))
+            {
+                ReportSyntaxError("If syntax: if bool: {}");
                 return null;
             }
+
+            if (Eat(TokenKind.CURLY_START))
+                stmt.expressions.Add(ParseScope(TokenKind.CURLY_END, true));
             else
             {
-                tokens.Dequeue(); // Skip ':'
-            }
+                stmt.expressions.Add(ParseScope(TokenKind.SEMICOLON, true));
 
-            if (tokens.Peek().kind == TokenKind.CURLY_START)
-            {
-                tokens.Dequeue(); // Skip '{'
-                state.expressions.Add(ParseScope(tokens, TokenKind.CURLY_END, true));
-            }
-            else
-                state.expressions.Add(ParseScope(tokens, TokenKind.SEMICOLON, true));
-
-            if (tokens.Count == 0)
-            {
-                ErrorHandler("If syntax: if bool expr: {}");
-                return null;
-            }
-            else
-            {
-                tokens.Dequeue(); // Skip '}' or ';'
-            }
-
-            while (tokens.Count > 0 && tokens.Peek().kind == TokenKind.ELIF)
-            {
-                tokens.Dequeue(); // Skip 'elif'
-
-                state.conditions.Add(ParseExpr(tokens, TokenKind.COLON));
-
-                if (tokens.Count == 0)
+                if (!Eat(TokenKind.SEMICOLON))
                 {
-                    ErrorHandler("If syntax: if bool expr: {}");
+                    ReportSyntaxError("If syntax: if bool: {}");
                     return null;
                 }
-                else
-                {
-                    tokens.Dequeue(); // Skip ':'
-                }
-
-                if (tokens.Peek().kind == TokenKind.CURLY_START)
-                {
-                    tokens.Dequeue(); // Skip '{'
-                    state.expressions.Add(ParseScope(tokens, TokenKind.CURLY_END, true));
-                }
-                else
-                    state.expressions.Add(ParseScope(tokens, TokenKind.SEMICOLON, true));
-                tokens.Dequeue(); // Skip '}' or ';'
             }
 
-            if (tokens.Count > 0 && tokens.Peek().kind == TokenKind.ELSE)
+//            if (Eat())
+//            {
+//                ReportSyntaxError("If syntax: if bool: {}");
+//                return null;
+//            }
+
+            while (Eat(TokenKind.ELIF))
             {
-                tokens.Dequeue(); // Skip 'else'
+                stmt.conditions.Add(ParseExpr(TokenKind.COLON));
 
-                if (tokens.Peek().kind == TokenKind.CURLY_START)
-                {
-                    tokens.Dequeue(); // Skip '{'
-                    state.expressions.Add(ParseScope(tokens, TokenKind.CURLY_END, true));
-                }
+                if (Eat(TokenKind.COLON))
+                    stmt.conditions.Add(ParseExpr(TokenKind.COLON));
                 else
-                    state.expressions.Add(ParseScope(tokens, TokenKind.SEMICOLON, true));
-                tokens.Dequeue(); // Skip '}' or ';'
+                {
+                    ReportSyntaxError("If syntax: if bool: {}");
+                    return null;
+                }
+
+                if (Eat(TokenKind.CURLY_START))
+                    stmt.expressions.Add(ParseScope(TokenKind.CURLY_END, true));
+                else
+                    stmt.expressions.Add(ParseScope(TokenKind.SEMICOLON, true));
+                //tokens.Dequeue(); // Skip '}' or ';'
             }
 
-            return state;
+            if (Eat(TokenKind.ELSE))
+            {
+
+                if (Eat(TokenKind.CURLY_START))
+                    stmt.expressions.Add(ParseScope(TokenKind.CURLY_END, true));
+                else
+                    stmt.expressions.Add(ParseScope(TokenKind.SEMICOLON, true));
+                //tokens.Dequeue(); // Skip '}' or ';'
+            }
+
+            return stmt;
         }
 
-        public static Expression ParseExpr(Queue<Token> tokens, TokenKind stopToken, bool list = false)
+        public ForStmt ParseForStmt()
         {
-            Token tok;
-            List resList = null;
+            var stmt = new ForStmt();
 
-            Expression expr = null;
+//            if (!Eat(TokenKind.IDENTIFIER))
+//            {
+//                ReportSyntaxError("If syntax: for symbol in list:");
+//                return null;
+//            }
+//
+//            if (!Eat(TokenKind.IN))
+//            {
+//                ReportSyntaxError("If syntax: for symbol in list:");
+//                return null;
+//            }
+//
+//            stmt.list = ParseExpr(TokenKind.COLON);
 
-            var exs = new Queue<Expression> ();
-            var ops = new Queue<Operator> ();
+            throw new NotImplementedException();
 
-            bool first = true;
+        }
 
-            if (list)
-                resList = new List();
+        public List ParseList()
+        {
+            var list = new List();
+
+            var lastCx = cx;
+            cx = ParseContext.List;
 
             while (tokens.Count > 0)
             {
-                if (tokens.Peek().kind == stopToken)
+                if (Eat(TokenKind.SQUARE_END))
+                {
+                    cx = lastCx;
+                    return list;
+                }
+
+                if (!(Eat(TokenKind.COMMA) || Eat(TokenKind.NEW_LINE)))
+                    list.items.Add(ParseExpr(TokenKind.SQUARE_END));
+            }
+
+            ReportSyntaxError("Missing ] bracket");
+
+            return list;
+        }
+
+        public Expression ParseExpr(TokenKind stopToken)
+        {
+            Expression expr = null;
+
+            var exprs = new Queue<Expression>();
+            var biops = new Queue<BinaryOperator>();
+            var unops = new Queue<UnaryOperator>();
+
+            bool isUnaryAllowed = true;
+
+            while (tokens.Count > 0)
+            {
+                if (Peek(stopToken))
                     break;
 
-                tok = tokens.Dequeue();
-                pos = tok.pos;
+                Eat(); // Get switch token
 
                 switch (tok.kind)
                 {
+                    case TokenKind.SEMICOLON:
+                        if (cx == ParseContext.Scope)
+                            return CreateAst(exprs, biops);
+                        else
+                            return ReportSyntaxError("Unexpected ';' in list");
+                    
+                    case TokenKind.COMMA:
+                        if (cx == ParseContext.List)
+                            return CreateAst(exprs, biops);
+                        else
+                            return ReportSyntaxError("Unexpected ',' in scope");
+
+                    case TokenKind.NEW_LINE:
+                        return CreateAst(exprs, biops);
+
                     case TokenKind.INTEGER:
                     case TokenKind.DECIMAL:
                     case TokenKind.IMAG_INT:
                     case TokenKind.IMAG_DEC:
-                        expr = ParseNumber(tok);
+                        expr = ParseNumber();
                         break;
                     
                     case TokenKind.TEXT:
@@ -185,15 +297,13 @@ namespace Ast
                         break;
                     
                     case TokenKind.IDENTIFIER:
-                        if (tokens.Count > 0 && tokens.Peek().kind == TokenKind.SQUARE_START)
-                        {
-                            expr = ParseFunction(tok, tokens);
-                        }
+                        var sym = tok.value;
+                        if (Eat(TokenKind.SQUARE_START))
+                            expr = ParseFunction(sym);
                         else
-                        {
-                            expr = new Symbol(tok.value, scope);
-                        }
+                            expr = new Symbol(sym, scope);
                         break;
+
                     case TokenKind.TRUE:
                         expr = new Boolean(true);
                         break;
@@ -202,142 +312,143 @@ namespace Ast
                         break;
 
                     case TokenKind.ASSIGN:
-                        ops.Enqueue(new Assign());
+                        biops.Enqueue(new Assign());
                         break;
                     case TokenKind.EQUAL:
-                        ops.Enqueue(new Equal());
+                        biops.Enqueue(new Equal());
                         break;
                     case TokenKind.BOOL_EQUAL:
-                        ops.Enqueue(new BooleanEqual());
+                        biops.Enqueue(new BooleanEqual());
+                        break;
+                    case TokenKind.NOT_EQUAL:
+                        biops.Enqueue(new NotEqual());
                         break;
                     case TokenKind.LESS_EQUAL:
-                        ops.Enqueue(new LesserEqual());
+                        biops.Enqueue(new LesserEqual());
                         break;
                     case TokenKind.GREAT_EQUAL:
-                        ops.Enqueue(new GreaterEqual());
+                        biops.Enqueue(new GreaterEqual());
                         break;
                     case TokenKind.LESS:
-                        ops.Enqueue(new Lesser());
+                        biops.Enqueue(new Lesser());
                         break;
                     case TokenKind.GREAT:
-                        ops.Enqueue(new Greater());
+                        biops.Enqueue(new Greater());
                         break;
+
                     case TokenKind.ADD:
-                        ops.Enqueue(new Add());
+                        if (!isUnaryAllowed) // Ignore Unary +
+                            biops.Enqueue(new Add());
                         break;
                     case TokenKind.SUB:
-                        if (first)
-                            expr = ParseNumber(tokens.Dequeue(), true);
+                        if (isUnaryAllowed)
+                            unops.Enqueue(new Minus());
                         else
-                            ops.Enqueue(new Sub());
+                            biops.Enqueue(new Sub());
                         break;
+
                     case TokenKind.MUL:
-                        ops.Enqueue(new Mul());
+                        biops.Enqueue(new Mul());
                         break;
                     case TokenKind.DIV:
-                        ops.Enqueue(new Div());
+                        biops.Enqueue(new Div());
                         break;
                     case TokenKind.EXP:
-                        ops.Enqueue(new Exp());
+                        biops.Enqueue(new Exp());
                         break;
-                    
-                    case TokenKind.PARENT_START:
-                        expr = ParseExpr(tokens, TokenKind.PARENT_END);
-                        if (tokens.Count > 0)
-                            tokens.Dequeue();
+                    case TokenKind.NEG:
+                        if (isUnaryAllowed)
+                            unops.Enqueue(new Negation());
                         else
-                            expr = ErrorHandler("Missing ) bracket");
+                            ReportSyntaxError("Unexpected: '!'");
+                        break;
+
+                    case TokenKind.PARENT_START:
+                        expr = ParseExpr(TokenKind.PARENT_END);
                         break;
                     case TokenKind.SQUARE_START:
-                        expr = ParseExpr(tokens, TokenKind.SQUARE_END, true);
-                        if (tokens.Count > 0)
-                            tokens.Dequeue();
-                        else
-                            expr = ErrorHandler("Missing ] bracket");
+                        expr = ParseList();
                         break;
                     case TokenKind.CURLY_START:
-                        exs.Enqueue(ParseScope(tokens, TokenKind.CURLY_END, true));
-                        if (tokens.Count > 0)
-                            tokens.Dequeue();
-                        else
-                            expr = ErrorHandler("Missing } bracket");
-                        break;
-                    case TokenKind.COMMA:
-                        if (list)
-                            resList.items.Add(CreateAst(exs, ops));
-                        else
-                            expr = ErrorHandler("Invalid comma");
-                        break;
-                    case TokenKind.SEMICOLON:
-                        if (!list)
-                            return CreateAst(exs, ops);
-                        else
-                            expr = ErrorHandler("Unexpected semicolon in list");
+                        expr = ParseScope(TokenKind.CURLY_END, true);
                         break;
 
-                    case TokenKind.PARENT_END:
-                    case TokenKind.SQUARE_END:
-                    case TokenKind.CURLY_END:
-                        expr = ErrorHandler("Unexpected end bracket");
-                        break;
-                    case TokenKind.UNKNOWN:
-                        expr = ErrorHandler("Unknown token");
-                        break;
+                    default:
+                        return ReportSyntaxError("Unexpected '" + tok.ToString() + "'");
                 }
                 
-                first = false;
-
+                isUnaryAllowed = true;
 
                 if (expr != null)
                 {
-                    pos = expr.pos = tok.pos;
-                    exs.Enqueue(expr);
-                    if (expr is Error)
-                        return expr;
+                    expr.pos = tok.pos;
+
+                    while (unops.Count > 0)
+                    {
+                        var unop = unops.Dequeue();
+                        unop.child = expr;
+                        expr = unop;
+                    }
+
+                    exprs.Enqueue(expr);
+                    isUnaryAllowed = false;
+
                     expr = null;
                 }
+
+                if (exprs.Count != biops.Count && exprs.Count != biops.Count + 1)
+                {
+                    if (biops.Count > exprs.Count)
+                        return ReportSyntaxError("Missing operand");
+                    else
+                        return ReportSyntaxError("Missing operator");
+                }
+
+                if (_error != null)
+                    return _error;
             }
 
-            if (list)
-            {
-                if (exs.Count > 0)
-                    resList.items.Add(CreateAst(exs, ops));
-                return resList;
-            }
-
-            return CreateAst(exs, ops);
+            return CreateAst(exprs, biops);
         }
 
-        public static Expression CreateAst(Queue<Expression> exs, Queue<Operator> ops)
+        public Expression CreateAst(Queue<Expression> exprs, Queue<BinaryOperator> biops)
         {
             Expression left, right;
-            Operator curOp, nextOp, top;
+            BinaryOperator curOp, nextOp, top;
 
-            if (exs.Count == 0)
-                return ErrorHandler("No expressions");
-            if (exs.Count == 1 && ops.Count == 0)
-                return exs.Dequeue();
+            if (exprs.Count == 0)
+                throw new Exception("No expressions");
+
+            if (exprs.Count != 1 + biops.Count)
+                throw new Exception("Expressions != Binary Operators + 1");
+
+            if (biops.Count >= exprs.Count)
+                return ReportSyntaxError("Missing operand");
+
+            if (exprs.Count == 1 && biops.Count == 0)
+                return exprs.Dequeue();
                 
-            if (ops.Count > 0)
-                top = ops.Peek();
+                
+            if (biops.Count > 0)
+                top = biops.Peek();
             else
-                return ErrorHandler("Missing operator");
+                return ReportSyntaxError("Missing operator");
 
 
-            left = exs.Dequeue();
+            left = exprs.Dequeue();
 
-            while (ops.Count > 0)
+            while (biops.Count > 0)
             {
-                curOp = ops.Dequeue();
+                curOp = biops.Dequeue();
                 curOp.Left = left;
 
-                if (ops.Count > 0)
+                if (biops.Count > 0)
                 {
-                    nextOp = ops.Peek();
+                    nextOp = biops.Peek();
 
                     if (curOp.priority >= nextOp.priority)
                     {
-                        right = exs.Dequeue();
+                        right = exprs.Dequeue();
                         curOp.Right = right;
 
                         if (top.priority >= nextOp.priority)
@@ -353,7 +464,7 @@ namespace Ast
                     }
                     else
                     {
-                        left = exs.Dequeue();
+                        left = exprs.Dequeue();
 
                         right = nextOp;
                         curOp.Right = right;
@@ -361,20 +472,15 @@ namespace Ast
                 }
                 else
                 {
-                    if (exs.Count <= 0)
-                        return ErrorHandler("Missing right operand");
-                    right = exs.Dequeue();
+                    right = exprs.Dequeue();
                     curOp.Right = right;
                 }
             }
 
-            if (exs.Count != 0)
-                return ErrorHandler("The operators cannot use all the operands");
-
             return top;
         }
 
-        public static Expression ParseNumber(Token tok, bool negative = false)
+        public Expression ParseNumber()
         {
             Int64 intRes;
             decimal decRes;
@@ -383,107 +489,87 @@ namespace Ast
             {
                 case TokenKind.INTEGER:
                     if (Int64.TryParse(tok.value, out intRes))
-                    {
-                        if (negative)
-                            return new Integer(-intRes);
-                        else
-                            return new Integer(intRes);
-                    }
+                        return new Integer(intRes);
                     else
-                        return ErrorHandler("Int overflow");
+                        return ReportSyntaxError("Int overflow");
+                
                 case TokenKind.DECIMAL:
                     if (decimal.TryParse(tok.value, out decRes))
-                    {
-                        if (negative)
-                            return new Irrational(-decRes);
-                        else
-                            return new Irrational(decRes);
-                    }
+                        return new Irrational(decRes);
                     else
-                        return ErrorHandler("Decimal overflow");
+                        return ReportSyntaxError("Decimal overflow");
+                
                 case TokenKind.IMAG_INT:
                     if (Int64.TryParse(tok.value, out intRes))
-                    {
-                        if (negative)
-                            return new Complex(new Integer(0), new Integer(-intRes));
-                        else
-                            return new Complex(new Integer(0), new Integer(intRes));
-                    }
+                        return new Complex(new Integer(0), new Integer(intRes));
                     else
-                        return ErrorHandler("Imaginary int overflow");
+                        return ReportSyntaxError("Imaginary int overflow");
+                
                 case TokenKind.IMAG_DEC:
                     if (decimal.TryParse(tok.value, out decRes))
-                    {
-                        if (negative)
-                            return new Complex(new Integer(0), new Irrational(-decRes));
-                        else
-                            return new Complex(new Integer(0), new Irrational(decRes));
-                    }
+                        return new Complex(new Integer(0), new Irrational(decRes));
                     else
-                        return ErrorHandler("Imaginary decimal overflow");
+                        return ReportSyntaxError("Imaginary decimal overflow");
+                
                 default:
                     throw new Exception("Wrong number token");
             }
         }
-
-
-        public static Expression ParseFunction(Token tok, Queue<Token> tokens)
+            
+        public Expression ParseFunction(string sym)
         {
-            List<Expression> args;
-
-            tokens.Dequeue(); // Eat start parentheses
-            Expression res = ParseExpr(tokens, TokenKind.SQUARE_END, true);
-            if (tokens.Count > 0)
-                tokens.Dequeue();
-            else
-                ErrorHandler("Missing ] bracket");
-
-            if (res is List)
-                args = (res as List).items;
-            else
-                return res;
+            List res = ParseList();
+            var args = res.items;
                 
-            switch (tok.value.ToLower())
+            switch (sym.ToLower())
             {
                 case "sin":
-                    return new Sin(args, scope);
+                    return new SinFunc(args, scope);
                 case "cos":
-                    return new Cos(args, scope);
+                    return new CosFunc(args, scope);
                 case "tan":
-                    return new Tan(args, scope);
+                    return new TanFunc(args, scope);
                 case "asin":
-                    return new ASin(args, scope);
+                    return new AsinFunc(args, scope);
                 case "acos":
-                    return new ACos(args, scope);
+                    return new AcosFunc(args, scope);
                 case "atan":
-                    return new ATan(args, scope);
+                    return new AtanFunc(args, scope);
                 case "sqrt":
-                    return new Sqrt(args, scope);
-                case "simplify":
-                    return new Simplify(args, scope);
+                    return new SqrtFunc(args, scope);
+                case "reduce":
+                    return new ReduceFunc(args, scope);
                 case "expand":
-                    return new Expand(args, scope);
+                    return new ExpandFunc(args, scope);
                 case "range":
-                    return new Range(args, scope);
+                    return new RangeFunc(args, scope);
                 case "map":
-                    return new Map(args, scope);
+                    return new MapFunc(args, scope);
                 case "plot":
-                    return new Plot(args, scope);
+                    return new PlotFunc(args, scope);
                 case "solve":
-                    return new Solve(args, scope);
+                    return new SolveFunc(args, scope);
                 case "enter":
-                    return new Enter(args, scope);
-                case "Exit":
-                    return new Exit(args, scope);
+                    return new EnterFunc(args, scope);
+                case "exit":
+                    return new ExitFunc(args, scope);
+                case "print":
+                    return new PrintFunc(args, scope);
+                case "type":
+                    return new TypeFunc(args, scope);
+                case "eval":
+                    return new EvalFunc(args, scope);
                 default:
-                    return new UsrFunc(tok.value.ToLower(), args, scope);
+                    return new UsrFunc(sym.ToLower(), args, scope);
             }
         }
-        public static Error ErrorHandler(string msg)
-        {
-            error = new Error("Parser at [" + pos.Column + ";" + pos.Line + "]: " + msg);
 
-            return error;
+        public Error ReportSyntaxError(string msg)
+        {
+            _error = new Error("Parser: " + msg);
+            _error.pos = tok.pos;
+
+            return _error;
         }
     }
 }

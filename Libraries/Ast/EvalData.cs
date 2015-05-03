@@ -2,9 +2,6 @@
 
 namespace Ast
 {
-    public enum MsgType {Print, Info, Error};
-
-
     public abstract class EvalData
     {
     }
@@ -13,14 +10,12 @@ namespace Ast
     {
     }
 
-    public class MsgData : EvalData
+    public class PrintData : EvalData
     {
-        public MsgType type;
         public string msg;
 
-        public MsgData(MsgType type, string msg)
+        public PrintData(string msg)
         {
-            this.type = type;
             this.msg = msg;
         }
 
@@ -30,30 +25,48 @@ namespace Ast
         }
     }
 
-    public class PlotData : EvalData
+    public class ErrorData : EvalData
     {
-        public Expression exp;
-        public Symbol sym;
+        public string msg;
+        public Pos pos;
 
-        public PlotData(Plot plot)
+        public ErrorData(string err)
         {
-            this.sym = plot.sym;
-            this.exp = plot.exp;
+            this.msg = err;
         }
-    }
 
-    public class ExprData : EvalData
-    {
-        public Expression expr;
-
-        public ExprData(Expression exp)
+        public ErrorData(Error err)
         {
-            this.expr = exp;
+            this.msg = err.msg;
+            this.pos = err.pos;
         }
 
         public override string ToString()
         {
-            return expr.ToString();
+            var str = "";
+
+            str += "[" + pos.Column;
+            str += ";" + pos.Line + "]";
+            str += msg;
+
+            return str;
+        }
+    }
+
+    public class DebugData : EvalData
+    {
+        public string msg;
+        public Expression expr;
+
+        public DebugData(string msg, Expression expr)
+        {
+            this.msg = msg;
+            this.expr = expr;
+        }
+
+        public override string ToString()
+        {
+            return msg + expr.ToString();
         }
     }
 }

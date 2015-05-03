@@ -1,18 +1,15 @@
 ﻿using System;
 using Gtk;
-
-//using TaskGenLib;
-//using System.Collections.Generic;
-//using ImEx;
-//using System.Net;
-//using System.Text;
 using DesktopUI;
+using Ast;
 
 namespace CAS.NET.Desktop
 {
     class MainWindow : Window
     {
         User user = new User();
+        Evaluator Eval = new Evaluator();
+        DefinitionBox DefBox;
 
         TextViewList textviews;
         MenuBar menubar = new MenuBar();
@@ -20,15 +17,12 @@ namespace CAS.NET.Desktop
         ServerMenuItem server;
         LoginMenuItem login;
         LogoutMenuItem logout;
-        StudentAddCompletedMenuItem stdAddCom;
-        StudentGetAssignmentMenuItem stdGetAsm;
         StudentGetAssignmentListMenuItem stdGetAsmList;
-        StudentGetFeedbackMenuItem stdGetFee;
         TeacherAddAssignmentMenuItem teaAddAsm;
-        TeacherAddFeedbackMenuItem teaAddFee;
         TeacherGetAssignmentListMenuItem teaGetAsmList;
-        TeacherGetCompletedListMenuItem teaGetComList;
-        TeacherGetCompletedMenuItem teaGetCom;
+
+        Menu taskgenMenu;
+        TaskGenMenuItem taskGenMenuItem;
 
         Toolbar toolbar = new Toolbar();
         OpenToolButton open;
@@ -40,45 +34,40 @@ namespace CAS.NET.Desktop
         MovableTextViewToolButton movabletextview;
         MovableCalcViewToolButton movablecalcview;
         MovableDrawCanvasToolButton movabledrawcanvas;
+        MovableResultToolButton movablecasresult;
 
         ScrolledWindow scrolledWindow = new ScrolledWindow();
 
         public MainWindow()
             : base("CAS.NET")
         {
-            DeleteEvent += (o, a) => Application.Quit();
+            DeleteEvent += (o, a) => Gtk.Application.Quit();
 
-            textviews = new TextViewList(ref user);
+            textviews = new TextViewList(ref user, Eval);
+            DefBox = new DefinitionBox(Eval);
 
             // Initiating menu elements
             server = new ServerMenuItem();
-            login = new LoginMenuItem(ref user, menu);
+            login = new LoginMenuItem(ref user, ref menu);
             logout = new LogoutMenuItem(ref user, ref menu);
-            stdAddCom = new StudentAddCompletedMenuItem(ref user, ref textviews);
-            stdGetAsm = new StudentGetAssignmentMenuItem(ref user, ref textviews);
-            stdGetAsmList = new StudentGetAssignmentListMenuItem(ref user, ref textviews);
-            stdGetFee = new StudentGetFeedbackMenuItem(ref user, ref textviews);
-            teaAddAsm = new TeacherAddAssignmentMenuItem(ref user, ref textviews);
-            teaAddFee = new TeacherAddFeedbackMenuItem(ref user, ref textviews);
-            teaGetAsmList = new TeacherGetAssignmentListMenuItem(ref user, ref textviews);
-            teaGetComList = new TeacherGetCompletedListMenuItem(ref user, ref textviews);
-            teaGetCom = new TeacherGetCompletedMenuItem(ref user, ref textviews);
+            stdGetAsmList = new StudentGetAssignmentListMenuItem(user, ref textviews);
+            teaAddAsm = new TeacherAddAssignmentMenuItem(user, textviews);
+            teaGetAsmList = new TeacherGetAssignmentListMenuItem(user, ref textviews);
+
+            taskGenMenuItem = new TaskGenMenuItem(textviews);
 
             // Adding elements to menu
             server.Submenu = menu;
             menu.Append(login);
             menu.Append(logout);
-            menu.Append(stdAddCom);
-            menu.Append(stdGetAsm);
             menu.Append(stdGetAsmList);
-            menu.Append(stdGetFee);
             menu.Append(teaAddAsm);
-            menu.Append(teaAddFee);
             menu.Append(teaGetAsmList);
-            menu.Append(teaGetComList);
-            menu.Append(teaGetCom);
+
+            //taskgenMenu.Append(taskGenMenuItem);
 
             menubar.Append(server);
+            menubar.Append(taskgenMenu);
 
             open = new OpenToolButton(textviews, ref user);
             save = new SaveToolButton(textviews);
@@ -95,6 +84,7 @@ namespace CAS.NET.Desktop
             movabletextview = new MovableTextViewToolButton(ref textviews);
             movablecalcview = new MovableCalcViewToolButton(ref textviews);
             movabledrawcanvas = new MovableDrawCanvasToolButton(ref textviews);
+            movablecasresult = new MovableResultToolButton(ref textviews);
 
             toolbar.Add(open);
             toolbar.Add(save);
@@ -107,6 +97,7 @@ namespace CAS.NET.Desktop
             toolbar.Add(movabletextview);
             toolbar.Add(movablecalcview);
             toolbar.Add(movabledrawcanvas);
+            toolbar.Add(movablecasresult);
 
             VBox vbox = new VBox();
 
@@ -114,26 +105,19 @@ namespace CAS.NET.Desktop
             vbox.PackStart(toolbar, false, false, 2);
             scrolledWindow.Add(textviews);
             vbox.Add(scrolledWindow);
+            vbox.Add(DefBox);
 
             Add(vbox);
-
             SetSizeRequest(600, 600);
-
             ShowAll();
 
-            // Rehiding elements not ment to be shown at boot, as the
+            // Rehiding elements not ment to be shown at start, as the
             // user is currently not logged in.
             foreach (Widget w in menu)
             {
-                if (w.GetType() == typeof(StudentAddCompletedMenuItem)
-                    || w.GetType() == typeof(StudentGetAssignmentListMenuItem)
-                    || w.GetType() == typeof(StudentGetAssignmentMenuItem)
-                    || w.GetType() == typeof(StudentGetFeedbackMenuItem)
+                if (w.GetType() == typeof(StudentGetAssignmentListMenuItem)
                     || w.GetType() == typeof(TeacherAddAssignmentMenuItem)
-                    || w.GetType() == typeof(TeacherAddFeedbackMenuItem)
                     || w.GetType() == typeof(TeacherGetAssignmentListMenuItem)
-                    || w.GetType() == typeof(TeacherGetCompletedListMenuItem)
-                    || w.GetType() == typeof(TeacherGetCompletedMenuItem)
                     || w.GetType() == typeof(LogoutMenuItem))
                 {
                     w.Hide();
@@ -143,6 +127,14 @@ namespace CAS.NET.Desktop
                     w.Show();
                 }
             }
+
+            GLib.Timeout.Add (2000, new GLib.TimeoutHandler (DefBoxUpdate));
+        }
+
+        public bool DefBoxUpdate()
+        {
+            DefBox.Update();
+            return true;
         }
     }
 }

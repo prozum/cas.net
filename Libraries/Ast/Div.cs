@@ -2,10 +2,10 @@
 
 namespace Ast
 {
-    public class Div : Operator, IInvertable
+    public class Div : BinaryOperator, IInvertable
     {
         public Div() : base("/", 50) { }
-        public Div(Expression left, Expression right) : base(left, right, "/", 40) { }
+        public Div(Expression left, Expression right) : base(left, right, "/", 50) { }
 
         protected override Expression Evaluate(Expression caller)
         {
@@ -14,30 +14,30 @@ namespace Ast
 
         protected override Expression ExpandHelper(Expression left, Expression right)
         {
-            if (left is Operator && (left as Operator).priority < priority)
+            if (left is BinaryOperator && (left as BinaryOperator).priority < priority)
             {
                 if (left is Add)
                 {
-                    return new Add(new Div((left as Operator).Left, right).Simplify(), new Div((left as Operator).Right, right).Simplify());
+                    return new Add(new Div((left as BinaryOperator).Left, right).Reduce(), new Div((left as BinaryOperator).Right, right).Reduce());
                 }
                 else if (left is Sub)
                 {
-                    return new Sub(new Div((left as Operator).Left, right).Simplify(), new Div((left as Operator).Right, right).Simplify());
+                    return new Sub(new Div((left as BinaryOperator).Left, right).Reduce(), new Div((left as BinaryOperator).Right, right).Reduce());
                 }
                 else
                 {
                     return new Div(left.Expand(), right.Expand());
                 }
             }
-            else if (right is Operator && (right as Operator).priority < priority)
+            else if (right is BinaryOperator && (right as BinaryOperator).priority < priority)
             {
                 if (right is Add)
                 {
-                    return new Add(new Div((right as Operator).Left, left).Simplify(), new Div((right as Operator).Right, Left).Simplify());
+                    return new Add(new Div((right as BinaryOperator).Left, left).Reduce(), new Div((right as BinaryOperator).Right, Left).Reduce());
                 }
                 else if (right is Sub)
                 {
-                    return new Sub(new Div((right as Operator).Left, left).Simplify(), new Div((right as Operator).Right, Left).Simplify());
+                    return new Sub(new Div((right as BinaryOperator).Left, left).Reduce(), new Div((right as BinaryOperator).Right, Left).Reduce());
                 }
                 else
                 {
@@ -50,13 +50,13 @@ namespace Ast
             }
         }
 
-        protected override Expression SimplifyHelper(Expression left, Expression right)
+        protected override Expression ReduceHelper(Expression left, Expression right)
         {
-            if (right is Number && right.CompareTo(Constant.One))
+            if (right is Real && right.CompareTo(Constant.One))
             {
                 return left;
             }
-            else if (left is Number && right is Number)
+            else if (left is Real && right is Real)
             {
                 return left / right;
             }
@@ -89,18 +89,18 @@ namespace Ast
         {
             Expression res;
 
-            if (((left.exponent < right.exponent) as Boolean).value)
+            if (((left.exponent < right.exponent) as Boolean).@bool)
             {
                 var symbol = right.Clone();
 
-                (symbol as Variable).exponent = (right.exponent - left.exponent) as Number;
+                (symbol as Variable).exponent = (right.exponent - left.exponent) as Real;
                 res = new Div(left.prefix, symbol);
             }
-            else if (((left.exponent > right.exponent) as Boolean).value)
+            else if (((left.exponent > right.exponent) as Boolean).@bool)
             {
                 var symbol = right.Clone();
 
-                (symbol as Variable).exponent = (left.exponent - right.exponent) as Number;
+                (symbol as Variable).exponent = (left.exponent - right.exponent) as Real;
                 res = new Div(symbol, right.prefix);
             }
             else

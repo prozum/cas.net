@@ -25,7 +25,7 @@ namespace DesktopUI
 
         void OnActivated()
         {
-            textviews.InsertDrawCanvas();
+            textviews.InsertDrawCanvas(-1);
         }
 
         void SetIcon()
