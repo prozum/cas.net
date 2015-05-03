@@ -16,15 +16,7 @@ namespace DesktopUI
         {
             this.textviews = textviews;
             this.user = user;
-            this.Activated += delegate
-            {
-                Onclicked();
-            };
-        }
-
-        void Onclicked()
-        {
-            StudentGetAssignmentListWindow window = new StudentGetAssignmentListWindow(user, ref textviews);
+            Activated += (sender, e) => new StudentGetAssignmentListWindow(user, ref textviews);
         }
     }
 }
