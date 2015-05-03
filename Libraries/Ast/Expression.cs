@@ -27,6 +27,7 @@ namespace Ast
         {
             return Reduce().Evaluate(this); 
         }
+
         protected virtual Expression Evaluate(Expression caller)
         {
             return new Error(this, "This type cannot evaluate");

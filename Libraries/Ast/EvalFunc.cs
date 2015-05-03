@@ -5,6 +5,7 @@ namespace Ast
 {
     public class EvalFunc : SysFunc
     {
+        public EvalFunc() : this(null, null) { }
         public EvalFunc(List<Expression> args, Scope scope)
             : base("eval", args, scope)
         {
@@ -14,7 +15,7 @@ namespace Ast
                 };
         }
 
-        public override Expression Evaluate()
+        protected override Expression Evaluate(Expression caller)
         {
             if (!isArgsValid())
                 return new ArgError(this);
@@ -35,6 +36,12 @@ namespace Ast
 
             return res;
         }
+    
+        public override Expression Clone()
+        {
+            return MakeClone<EvalFunc>();
+        }
     }
+        
 }
 
