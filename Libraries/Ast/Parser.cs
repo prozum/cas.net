@@ -274,13 +274,13 @@ namespace Ast
                         if (cx == ParseContext.Scope)
                             return CreateAst(exprs, biops);
                         else
-                            return ReportSyntaxError("Unexpected semicolon in list");
+                            return ReportSyntaxError("Unexpected ';' in list");
                     
                     case TokenKind.COMMA:
                         if (cx == ParseContext.List)
                             return CreateAst(exprs, biops);
                         else
-                            return ReportSyntaxError("Unexpected comma in scope");
+                            return ReportSyntaxError("Unexpected ',' in scope");
 
                     case TokenKind.NEW_LINE:
                         return CreateAst(exprs, biops);
@@ -360,7 +360,7 @@ namespace Ast
                         if (isUnaryAllowed)
                             unops.Enqueue(new Negation());
                         else
-                            ReportSyntaxError("Unexpected unary operator");
+                            ReportSyntaxError("Unexpected: '!'");
                         break;
 
                     case TokenKind.PARENT_START:
@@ -373,14 +373,8 @@ namespace Ast
                         expr = ParseScope(TokenKind.CURLY_END, true);
                         break;
 
-
-                    case TokenKind.PARENT_END:
-                    case TokenKind.SQUARE_END:
-                    case TokenKind.CURLY_END:
-                        return ReportSyntaxError("Unexpected end bracket");
-
-                    case TokenKind.UNKNOWN:
-                        return ReportSyntaxError("Unknown token");
+                    default:
+                        return ReportSyntaxError("Unexpected '" + tok.ToString() + "'");
                 }
                 
                 isUnaryAllowed = true;
