@@ -31,12 +31,15 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="nunit.core">
       <HintPath>..\..\packages\NUnitTestAdapter.2.0.0\lib\nunit.core.dll</HintPath>
+      <Package>nunit</Package>
     </Reference>
     <Reference Include="nunit.core.interfaces">
       <HintPath>..\..\packages\NUnitTestAdapter.2.0.0\lib\nunit.core.interfaces.dll</HintPath>
+      <Package>nunit</Package>
     </Reference>
     <Reference Include="nunit.util">
       <HintPath>..\..\packages\NUnitTestAdapter.2.0.0\lib\nunit.util.dll</HintPath>
+      <Package>nunit</Package>
     </Reference>
     <Reference Include="NUnit.VisualStudio.TestAdapter">
       <HintPath>..\..\packages\NUnitTestAdapter.2.0.0\lib\NUnit.VisualStudio.TestAdapter.dll</HintPath>

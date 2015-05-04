@@ -14,7 +14,7 @@ namespace DesktopUI
         User user;
 
 
-        public TextViewList(ref User user, Evaluator Eval)
+        public TextViewList(User user, Evaluator Eval)
             : base()
         {
             this.Eval = Eval;
@@ -294,7 +294,7 @@ namespace DesktopUI
             Button ButtonDelete = new Button("X");
             Button ButtonAddNew = new Button("+");
 
-            MovableCasResult MovableCasResult = new MovableCasResult(ref user, answer, facit);
+            MovableCasResult MovableCasResult = new MovableCasResult(user, answer, facit);
 
             ButtonMoveUp.Clicked += delegate
             {

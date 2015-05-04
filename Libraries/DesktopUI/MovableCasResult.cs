@@ -7,7 +7,7 @@ namespace DesktopUI
         public CasResult casresult;
         User user;
 
-        public MovableCasResult(ref User user, string answer, string facit)
+        public MovableCasResult(User user, string answer, string facit)
             : base("", false)
         {
             this.user = user;

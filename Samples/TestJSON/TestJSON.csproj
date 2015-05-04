@@ -1,12 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{882174F5-0B72-4DF3-997F-BD2EB16C6E6C}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>TaskGenLib</RootNamespace>
-    <AssemblyName>TaskGenLib</AssemblyName>
+    <ProjectGuid>{B82945E5-1F3A-4087-96EE-9E45BC27AE4C}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>TestJSON</RootNamespace>
+    <AssemblyName>TestJSON</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -17,7 +17,7 @@
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
+    <Externalconsole>true</Externalconsole>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -25,27 +25,20 @@
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
+    <Externalconsole>true</Externalconsole>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MyClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Task.cs" />
-    <Compile Include="ITaskItem.cs" />
-    <Compile Include="TaskGen.cs" />
+    <Compile Include="Main.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\Ast\Ast.csproj">
-      <Project>{82C03E10-075F-411C-A1F1-D5506C62BE1C}</Project>
-      <Name>Ast</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Samples\TaskGen\TaskGen.csproj">
-      <Project>{0B05C9EA-1DD4-4526-80C6-EF7F98B9F27F}</Project>
-      <Name>TaskGen</Name>
+    <ProjectReference Include="..\..\Libraries\ImEx\ImEx.csproj">
+      <Project>{5150E825-D811-4D68-8C0E-86A1F8573561}</Project>
+      <Name>ImEx</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>
