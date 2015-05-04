@@ -1,31 +1,73 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
-//using Gtk;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Gtk;
 
-//namespace DesktopUI
-//{
-//    class TaskGenWindow : Window
-//    {
-//        TextViewList textviews;
+namespace DesktopUI
+{
+    class TaskGenWindow : Window
+    {
+        TextViewList textviews;
 
-//        public TaskGenWindow(TextViewList textviews) : base("Task Gen Window")
-//        {
-//            this.textviews = textviews;
+        public TaskGenWindow(TextViewList textviews) : base("Task Gen Window")
+        {
+            this.textviews = textviews;
 
-//            SpinButton spinbuttonMinimum = new SpinButton(1, 100, 1);
-//            SpinButton spinbuttonMaximum = new SpinButton(1, 100, 1);
-//            SpinButton spinbuttonVariables = new SpinButton(2, 5, 1);
-//            VBox vbox = new VBox(false,5);
+            Table table = new Table(5, 2, true);
+                       
+            Label labelMinimum = new Label("Minimum:");
+            Label labelMaximum = new Label("Maximum:");
+            Label labelVariables = new Label("Number of variables: ");
+            Label labelNoT = new Label("Number of tasks:");
 
-//            vbox.Add(spinbuttonMinimum);
-//            vbox.Add(spinbuttonMaximum);
-//            vbox.Add(spinbuttonVariables);
-//            Add(vbox);
+            SpinButton spinbuttonMinimum = new SpinButton(1, 100, 1);
+            SpinButton spinbuttonMaximum = new SpinButton(1, 100, 1);
+            SpinButton spinbuttonVariables = new SpinButton(2, 5, 1);
+            SpinButton spinbuttonNumberOfTasks = new SpinButton(1, 5, 1);       
 
-//            ShowAll();
-//        }
-//    }
-//}
+            Button buttonOk = new Button("Ok");
+            Button buttonCancel = new Button("Cancel");
+
+            //Sets the table
+            table.Attach(labelMinimum, 0, 1, 0, 1);
+            table.Attach(spinbuttonMinimum, 1, 2, 0, 1);
+            table.Attach(labelMaximum, 0, 1, 1, 2);
+            table.Attach(spinbuttonMaximum, 1, 2, 1, 2);
+            table.Attach(labelVariables, 0, 1, 2, 3);
+            table.Attach(spinbuttonVariables, 1, 2, 2, 3);
+            table.Attach(labelNoT, 0, 1, 3, 4);
+            table.Attach(spinbuttonNumberOfTasks, 1, 2, 3, 4);
+            table.Attach(buttonCancel,0,1,4,5);
+            table.Attach(buttonOk, 1, 2, 4, 5);
+
+            buttonCancel.Clicked += (sender, e) =>
+            {
+                this.Destroy();
+            };
+
+            buttonOk.Clicked += (sender, e) =>
+            {
+
+                TaskGenLib.Task t = TaskGenLib.TaskGen.MakeCalcTask((int)spinbuttonMinimum.Value, (int)spinbuttonMaximum.Value, (int)spinbuttonVariables.Value);
+                string sTask = t.TaskDescription;
+
+                
+
+                //textviews.InsertTextView()
+
+
+                textviews.Clear();
+                textviews.Redraw();
+                textviews.Reevaluate();
+                textviews.ShowAll();
+            };
+            
+            Add(table);
+            ShowAll();
+        }
+
+
+    }
+}

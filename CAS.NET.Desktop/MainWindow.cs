@@ -21,8 +21,8 @@ namespace CAS.NET.Desktop
         TeacherAddAssignmentMenuItem teaAddAsm;
         TeacherGetAssignmentListMenuItem teaGetAsmList;
 
-        //Menu taskgenMenu;
-        //TaskGenMenuItem taskGenMenuItem;
+        Menu taskgenMenu = new Menu();
+        TaskGenMenuItem taskGenMenuItem;
 
         Toolbar toolbar = new Toolbar();
         OpenToolButton open;
@@ -54,7 +54,7 @@ namespace CAS.NET.Desktop
             teaAddAsm = new TeacherAddAssignmentMenuItem(user, textviews);
             teaGetAsmList = new TeacherGetAssignmentListMenuItem(user, textviews);
 
-            //taskGenMenuItem = new TaskGenMenuItem(textviews);
+            taskGenMenuItem = new TaskGenMenuItem(textviews);
 
             // Adding elements to menu
             server.Submenu = menu;
@@ -64,10 +64,11 @@ namespace CAS.NET.Desktop
             menu.Append(teaAddAsm);
             menu.Append(teaGetAsmList);
 
-            //taskgenMenu.Append(taskGenMenuItem);
+            taskGenMenuItem.Submenu = taskgenMenu;
 
+            //menubar.Append(testMenuItem);
             menubar.Append(server);
-            //menubar.Append(taskgenMenu);
+            menubar.Append(taskGenMenuItem);
 
             open = new OpenToolButton(textviews, ref user);
             save = new SaveToolButton(textviews);
