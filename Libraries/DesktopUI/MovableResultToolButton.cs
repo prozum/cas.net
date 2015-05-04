@@ -12,6 +12,8 @@ namespace DesktopUI
         {
             this.textviews = textviews;
 
+            this.TooltipText = "";
+
             this.Clicked += delegate
             {
                 OnActivated();
