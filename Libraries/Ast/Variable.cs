@@ -28,6 +28,7 @@ namespace Ast
             res.prefix = prefix.Clone() as Real;
             res.exponent = exponent.Clone() as Real;
             res.scope = scope;
+            res.pos = pos;
 
             return res;
         }

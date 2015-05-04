@@ -42,7 +42,7 @@ namespace Ast
             {
                 var res = statements[curStep].Step();
 
-                if (res is DoneData)
+                if (res is DoneData data)
                     curStep++;
                 else
                     return res;

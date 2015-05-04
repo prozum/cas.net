@@ -189,6 +189,7 @@
       <DependentUpon>SysFunc.cs</DependentUpon>
     </Compile>
     <Compile Include="Operator.cs" />
+    <Compile Include="RetStmt.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ProjectExtensions>

@@ -15,10 +15,15 @@ namespace Ast
         Scope scope;
         Token tok;
         Error _error;
-        //Pos pos;
         ParseContext cx = ParseContext.Scope;
+        bool isUnaryAllowed = true;
 
         Queue<Token> tokens;
+
+        Queue<Expression> exprs;
+        Queue<UnaryOperator> unops;
+        Queue<BinaryOperator> biops;
+
 
         readonly Token EOS = new Token(TokenKind.END_OF_STRING, "END_OF_STRING", new Pos());
 
@@ -76,6 +81,9 @@ namespace Ast
                         Eat();
                         scope.statements.Add(ParseForStmt());
                         break;
+                    case TokenKind.RET:
+                        Eat();
+                        scope.statements.Add(new RetStmt(ParseExpr(stopToken)));
                     case TokenKind.SEMICOLON:
                     case TokenKind.NEW_LINE:
                         Eat();
@@ -253,62 +261,112 @@ namespace Ast
 
         public Expression ParseExpr(TokenKind stopToken)
         {
-            Expression expr = null;
+            Expression res;
 
-            var exprs = new Queue<Expression>();
-            var biops = new Queue<BinaryOperator>();
-            var unops = new Queue<UnaryOperator>();
+            bool done = false;
 
-            bool isUnaryAllowed = true;
+            var lastExprs = exprs;
+            var lastUnops = unops;
+            var lastBiops = biops;
 
-            while (tokens.Count > 0)
+            exprs = new Queue<Expression>();
+            unops = new Queue<UnaryOperator>();
+            biops = new Queue<BinaryOperator>();
+
+            isUnaryAllowed = true;
+
+            while (!done)
             {
                 if (Peek(stopToken))
-                    break;
+                    done = true;
 
                 Eat(); // Get switch token
 
                 switch (tok.kind)
                 {
+                    case TokenKind.END_OF_STRING:
+                        done = true;
+                        break;
+
                     case TokenKind.SEMICOLON:
                         if (cx == ParseContext.Scope)
-                            return CreateAst(exprs, biops);
+                            done = true;
                         else
                             return ReportSyntaxError("Unexpected ';' in list");
+                        break;
                     
                     case TokenKind.COMMA:
                         if (cx == ParseContext.List)
-                            return CreateAst(exprs, biops);
+                            done = true;
                         else
                             return ReportSyntaxError("Unexpected ',' in scope");
+                        break;
 
                     case TokenKind.NEW_LINE:
-                        return CreateAst(exprs, biops);
+                        done = true;
+                        break;
 
                     case TokenKind.INTEGER:
                     case TokenKind.DECIMAL:
                     case TokenKind.IMAG_INT:
                     case TokenKind.IMAG_DEC:
-                        expr = ParseNumber();
+                        SetupExpr(ParseNumber());
                         break;
                     
                     case TokenKind.TEXT:
-                        expr = new Text(tok.value);
+                        SetupExpr(new Text(tok.value));
                         break;
                     
                     case TokenKind.IDENTIFIER:
-                        var sym = tok.value;
+                        var curTok = tok;
                         if (Eat(TokenKind.SQUARE_START))
-                            expr = ParseFunction(sym);
+                            SetupExpr(ParseFunction(curTok.value), curTok);
                         else
-                            expr = new Symbol(sym, scope);
+                            SetupExpr(new Symbol(curTok.value, scope));
                         break;
 
                     case TokenKind.TRUE:
-                        expr = new Boolean(true);
+                        SetupExpr(new Boolean(true));
                         break;
                     case TokenKind.FALSE:
-                        expr = new Boolean(false);
+                        SetupExpr(new Boolean(false));
+                        break;
+
+                    case TokenKind.PARENT_START:
+                        SetupExpr(ParseExpr(TokenKind.PARENT_END));
+                        break;
+                    case TokenKind.SQUARE_START:
+                        SetupExpr(ParseList());
+                        break;
+                    case TokenKind.CURLY_START:
+                        SetupExpr(ParseScope(TokenKind.CURLY_END, true));
+                        break;
+
+                    case TokenKind.ADD:
+                        if (!isUnaryAllowed) // Ignore Unary +
+                            biops.Enqueue(new Add());
+                        break;
+                    case TokenKind.SUB:
+                        if (isUnaryAllowed)
+                            unops.Enqueue(new Minus());
+                        else
+                            biops.Enqueue(new Sub());
+                        break;
+                    case TokenKind.NEG:
+                        if (isUnaryAllowed)
+                            unops.Enqueue(new Negation());
+                        else
+                            return ReportSyntaxError("Unexpected: '!'");
+                        break;
+
+                    case TokenKind.MUL:
+                        biops.Enqueue(new Mul());
+                        break;
+                    case TokenKind.DIV:
+                        biops.Enqueue(new Div());
+                        break;
+                    case TokenKind.EXP:
+                        biops.Enqueue(new Exp());
                         break;
 
                     case TokenKind.ASSIGN:
@@ -336,65 +394,11 @@ namespace Ast
                         biops.Enqueue(new Greater());
                         break;
 
-                    case TokenKind.ADD:
-                        if (!isUnaryAllowed) // Ignore Unary +
-                            biops.Enqueue(new Add());
-                        break;
-                    case TokenKind.SUB:
-                        if (isUnaryAllowed)
-                            unops.Enqueue(new Minus());
-                        else
-                            biops.Enqueue(new Sub());
-                        break;
-
-                    case TokenKind.MUL:
-                        biops.Enqueue(new Mul());
-                        break;
-                    case TokenKind.DIV:
-                        biops.Enqueue(new Div());
-                        break;
-                    case TokenKind.EXP:
-                        biops.Enqueue(new Exp());
-                        break;
-                    case TokenKind.NEG:
-                        if (isUnaryAllowed)
-                            unops.Enqueue(new Negation());
-                        else
-                            ReportSyntaxError("Unexpected: '!'");
-                        break;
-
-                    case TokenKind.PARENT_START:
-                        expr = ParseExpr(TokenKind.PARENT_END);
-                        break;
-                    case TokenKind.SQUARE_START:
-                        expr = ParseList();
-                        break;
-                    case TokenKind.CURLY_START:
-                        expr = ParseScope(TokenKind.CURLY_END, true);
-                        break;
-
                     default:
                         return ReportSyntaxError("Unexpected '" + tok.ToString() + "'");
                 }
                 
                 isUnaryAllowed = true;
-
-                if (expr != null)
-                {
-                    expr.pos = tok.pos;
-
-                    while (unops.Count > 0)
-                    {
-                        var unop = unops.Dequeue();
-                        unop.child = expr;
-                        expr = unop;
-                    }
-
-                    exprs.Enqueue(expr);
-                    isUnaryAllowed = false;
-
-                    expr = null;
-                }
 
                 if (exprs.Count != biops.Count && exprs.Count != biops.Count + 1)
                 {
@@ -408,7 +412,34 @@ namespace Ast
                     return _error;
             }
 
-            return CreateAst(exprs, biops);
+            res = CreateAst(exprs, biops);
+
+            if (lastExprs != null)
+            {
+                exprs = lastExprs;
+                unops = lastUnops;
+                biops = lastBiops;
+            }
+
+            return res;
+        }
+
+        public void SetupExpr(Expression expr, Token curTok = null)
+        {
+            if (curTok == null)
+                curTok = tok;
+
+            expr.pos = curTok.pos;
+
+            while (unops.Count > 0)
+            {
+                var unop = unops.Dequeue();
+                unop.child = expr;
+                expr = unop;
+            }
+
+            exprs.Enqueue(expr);
+            isUnaryAllowed = false;
         }
 
         public Expression CreateAst(Queue<Expression> exprs, Queue<BinaryOperator> biops)
@@ -428,13 +459,8 @@ namespace Ast
             if (exprs.Count == 1 && biops.Count == 0)
                 return exprs.Dequeue();
                 
-                
-            if (biops.Count > 0)
-                top = biops.Peek();
-            else
-                return ReportSyntaxError("Missing operator");
 
-
+            top = biops.Peek();
             left = exprs.Dequeue();
 
             while (biops.Count > 0)

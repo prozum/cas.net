@@ -43,7 +43,7 @@ namespace Ast
             var value = scope.GetVar(identifier);
 
             if (value == null)
-                return new Error(this, identifier + " is not defined");
+                return new Error(this, "has no definition");
 
             if (value is Boolean)
                 return value;

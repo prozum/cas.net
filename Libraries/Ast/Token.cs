@@ -10,7 +10,7 @@ namespace Ast
         IF,
         ELIF,
         ELSE,
-        RETURN,
+        RET,
         FOR,
         IN,
 

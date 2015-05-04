@@ -2,8 +2,10 @@
 
 namespace Ast
 {
-    public class RetStmt
+    public class RetStmt : Expression
     {
+        public Expression expr;
+
         public RetStmt()
         {
         }

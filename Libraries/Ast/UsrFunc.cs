@@ -22,7 +22,7 @@ namespace Ast
             @var = scope.GetVar(identifier);
 
             if (@var == null)
-                return new Error(identifier + "> has no definition");
+                return new Error(this,"has no definition");
 
             if (@var is UsrFunc)
             {
