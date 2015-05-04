@@ -398,7 +398,7 @@ namespace DesktopUI
         {
             foreach (Widget widget in castextviews)
             {
-                if (widget.GetType() == typeof(MovableCasCalcView))
+                if(widget is MovableCasCalcView)
                 {
                     (widget as MovableCasCalcView).calcview.Evaluate();
                 }

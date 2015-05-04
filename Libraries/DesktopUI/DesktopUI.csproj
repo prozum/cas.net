@@ -119,6 +119,10 @@
       <Project>{926EE758-EDA5-4B92-BFE8-419C54909810}</Project>
       <Name>Account</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TaskGenLib\TaskGenLib.csproj">
+      <Project>{882174f5-0b72-4df3-997f-bd2eb16c6e6c}</Project>
+      <Name>TaskGenLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
