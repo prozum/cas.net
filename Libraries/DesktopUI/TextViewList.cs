@@ -71,7 +71,7 @@ namespace DesktopUI
                     castextviews.Insert(pos, movableLockedCasTextView);
                 }
             }
-            else if (user.privilege == 0)
+            else if (user.privilege <= 0)
             {
                 MovableCasTextView movableCasTextView = new MovableCasTextView(serializedString, locked);
                 movableCasTextView.textview.LockTextView(locked);
