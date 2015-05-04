@@ -15,6 +15,8 @@ namespace DesktopUI
         {
             this.textviews = textviews;
 
+            this.TooltipText = "Casculator";
+
             SetIcon();
 
             this.Clicked += delegate
