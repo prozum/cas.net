@@ -56,11 +56,11 @@ namespace ImEx
 
 			GZipStream decompressingStream = new GZipStream(sourceFileStream, 
 				CompressionMode.Decompress);
-				int byteRead;
-				while((byteRead = decompressingStream.ReadByte()) != -1) 
-				{
-					destFileStream.WriteByte((byte)byteRead);
-				}
+			int byteRead;
+			while((byteRead = decompressingStream.ReadByte()) != -1) 
+			{
+				destFileStream.WriteByte((byte)byteRead);
+			}
 				
 			decompressingStream.Close();
 			sourceFileStream.Close();
