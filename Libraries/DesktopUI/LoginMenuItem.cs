@@ -8,7 +8,7 @@ namespace DesktopUI
         User user;
         Menu menu;
 
-        public LoginMenuItem(ref User user, ref Menu menu)
+        public LoginMenuItem(User user, Menu menu)
             : base("Login")
         {
             this.user = user;
