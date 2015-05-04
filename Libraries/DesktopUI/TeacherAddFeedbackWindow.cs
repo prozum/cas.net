@@ -10,6 +10,7 @@ namespace DesktopUI
         User user;
         TextViewList textviews;
         string Filename;
+        string className;
 
         public TeacherAddFeedbackWindow(User user, TextViewList textviews, string Filename)
             : base("Add Feedback")
@@ -24,6 +25,8 @@ namespace DesktopUI
 
             Label labClass = new Label("Class:");
             Entry entClass = new Entry();
+
+            entClass.Changed += (e, arg) => { className = entClass.Text; };
 
             Button buttonCancel = new Button("Cancel");
             buttonCancel.Clicked += delegate
@@ -47,7 +50,7 @@ namespace DesktopUI
 						metaType.metastring = calcView.calcview.input.Text;
 						metaTypeList.Add(metaType);
 					}
-					else if (w.GetType() == typeof(MovableCasTextView))
+					else if (w.GetType() == typeof(MovableCasTextView) || (w is MovableLockedCasTextView))
 					{
 						MetaType metaType = new MetaType();
 						MovableCasTextView textView = (MovableCasTextView)w;
@@ -58,13 +61,13 @@ namespace DesktopUI
 				}
 
 				if (metaTypeList.Count != 0
-					&& string.IsNullOrEmpty(entClass.Text) == false
+                    && string.IsNullOrEmpty(className) == false
                     && string.IsNullOrEmpty(this.Filename) == false)
 				{
 					feedbackString = Export.Serialize(metaTypeList);           
 				}
 
-                    string[] StudentList = this.user.teacher.GetCompletedList(this.Filename, entClass.Text);
+                string[] StudentList = this.user.teacher.GetCompletedList(this.Filename, className);
 
 				grid.Destroy();
 				grid = new Grid();
@@ -75,7 +78,7 @@ namespace DesktopUI
 						Button button = new Button(StudentList[j]);
 						button.Clicked += delegate
 							{
-                                this.user.teacher.AddFeedback(feedbackString, this.Filename, StudentList[j], entClass.Text);
+                                this.user.teacher.AddFeedback(feedbackString, this.Filename, StudentList[j], className);
 								Destroy();
 							};
 						grid.Attach(button, 1, 1+i, 1, 1);
