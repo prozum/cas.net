@@ -17,6 +17,8 @@ namespace DesktopUI
         {
             this.textviews = textviews;
 
+            this.TooltipText = "Italic";
+
             SetIcon();
 
             Clicked += delegate

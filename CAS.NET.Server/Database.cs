@@ -414,15 +414,13 @@ namespace CAS.NET.Server
 			using (conn = new MySqlConnection(db))
 			{
 				conn.Open();
-				const string stm = "SELECT VERSION()";
-
+				const string stm = "SELECT * FROM Feedback WHERE Username = @username AND FileName = @filename AND Grade = @grade";
 				var cmd = new MySqlCommand(stm, conn);
-				cmd.CommandText = "SELECT * FROM Feedback WHERE Username = @username AND FileName = @filename AND Grade = @grade";
 				cmd.Parameters.AddWithValue ("@username", username);
 				cmd.Parameters.AddWithValue("@filename", filename);
 				cmd.Parameters.AddWithValue("@grade", grade);
 
-				var rdr = cmd.ExecuteReader();
+                var rdr = cmd.ExecuteReader();
 
 				if (rdr.HasRows)
 				{

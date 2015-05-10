@@ -21,6 +21,8 @@ namespace DesktopUI
 
             string assignment = this.user.student.GetFeedback(this.Filename);
 
+            Console.WriteLine("Feedback assignment: " + assignment);
+
             List<MetaType> metaTypeList = ImEx.Import.DeserializeString<List<MetaType>>(assignment);
 
             this.textviews.castextviews.Clear();

@@ -19,6 +19,8 @@ namespace DesktopUI
 
             SetIcon();
 
+            this.TooltipText = "Underline";
+
             Clicked += delegate
             {
                 OnUnderlineClicked();

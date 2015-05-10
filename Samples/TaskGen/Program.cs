@@ -245,9 +245,9 @@ namespace TaskGen
         static string GetAnswer (string task)
         {
             Parser parser = new Parser ();
-            string answer = parser.Parse (task).Evaluate ().ToString ();
+            //string answer = parser.Parse (task).Evaluate ().ToString ();
 
-            return answer;
+            return "";
         }
 
         public static void Main ()

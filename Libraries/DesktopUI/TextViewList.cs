@@ -14,7 +14,7 @@ namespace DesktopUI
         User user;
 
 
-        public TextViewList(ref User user, Evaluator Eval)
+        public TextViewList(User user, Evaluator Eval)
             : base()
         {
             this.Eval = Eval;
@@ -71,7 +71,7 @@ namespace DesktopUI
                     castextviews.Insert(pos, movableLockedCasTextView);
                 }
             }
-            else if (user.privilege == 0)
+            else if (user.privilege <= 0)
             {
                 MovableCasTextView movableCasTextView = new MovableCasTextView(serializedString, locked);
                 movableCasTextView.textview.LockTextView(locked);
@@ -294,7 +294,7 @@ namespace DesktopUI
             Button ButtonDelete = new Button("X");
             Button ButtonAddNew = new Button("+");
 
-            MovableCasResult MovableCasResult = new MovableCasResult(ref user, answer, facit);
+            MovableCasResult MovableCasResult = new MovableCasResult(user, answer, facit);
 
             ButtonMoveUp.Clicked += delegate
             {
@@ -398,7 +398,7 @@ namespace DesktopUI
         {
             foreach (Widget widget in castextviews)
             {
-                if (widget.GetType() == typeof(MovableCasCalcView))
+                if(widget is MovableCasCalcView)
                 {
                     (widget as MovableCasCalcView).calcview.Evaluate();
                 }

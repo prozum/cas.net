@@ -314,6 +314,10 @@ namespace CAS.NET.Server
 				string grade = db.GetGrade(username);
 				string filename = request.Headers ["Filename"];
 
+				Console.WriteLine(username);
+				Console.WriteLine(filename);
+				Console.WriteLine(grade);
+
 				string file = db.GetFeedback(username, filename, grade);
 				string checksum = Checksum.GetMd5Hash(file);
 

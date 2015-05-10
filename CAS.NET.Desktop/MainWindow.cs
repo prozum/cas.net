@@ -21,7 +21,7 @@ namespace CAS.NET.Desktop
         TeacherAddAssignmentMenuItem teaAddAsm;
         TeacherGetAssignmentListMenuItem teaGetAsmList;
 
-        Menu taskgenMenu;
+        Menu taskgenMenu = new Menu();
         TaskGenMenuItem taskGenMenuItem;
 
         Toolbar toolbar = new Toolbar();
@@ -43,16 +43,16 @@ namespace CAS.NET.Desktop
         {
             DeleteEvent += (o, a) => Gtk.Application.Quit();
 
-            textviews = new TextViewList(ref user, Eval);
+            textviews = new TextViewList(user, Eval);
             DefBox = new DefinitionBox(Eval);
 
             // Initiating menu elements
             server = new ServerMenuItem();
-            login = new LoginMenuItem(ref user, ref menu);
-            logout = new LogoutMenuItem(ref user, ref menu);
-            stdGetAsmList = new StudentGetAssignmentListMenuItem(user, ref textviews);
+            login = new LoginMenuItem(user, menu);
+            logout = new LogoutMenuItem(user, menu);
+            stdGetAsmList = new StudentGetAssignmentListMenuItem(user, textviews);
             teaAddAsm = new TeacherAddAssignmentMenuItem(user, textviews);
-            teaGetAsmList = new TeacherGetAssignmentListMenuItem(user, ref textviews);
+            teaGetAsmList = new TeacherGetAssignmentListMenuItem(user, textviews);
 
             taskGenMenuItem = new TaskGenMenuItem(textviews);
 
@@ -64,10 +64,11 @@ namespace CAS.NET.Desktop
             menu.Append(teaAddAsm);
             menu.Append(teaGetAsmList);
 
-            //taskgenMenu.Append(taskGenMenuItem);
+            taskGenMenuItem.Submenu = taskgenMenu;
 
+            //menubar.Append(testMenuItem);
             menubar.Append(server);
-            menubar.Append(taskgenMenu);
+            menubar.Append(taskGenMenuItem);
 
             open = new OpenToolButton(textviews, ref user);
             save = new SaveToolButton(textviews);

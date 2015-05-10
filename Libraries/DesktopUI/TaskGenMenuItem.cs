@@ -12,9 +12,9 @@ namespace DesktopUI
         {
             this.textviews = textviews;
             this.Activated += delegate
-       {
-           OnActivated();
-       };
+            {
+                OnActivated();
+            };
         }
    
         void OnActivated()
