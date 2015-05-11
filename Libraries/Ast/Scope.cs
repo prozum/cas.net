@@ -57,21 +57,27 @@ namespace Ast
                     return res;
                 }
 
-                if (res is DebugData)
-                    return res;
-
                 if (res is DoneData)
                 {
                     curStep++;
+                }
+                else
+                {
+                    return res;
                 }
             }
             while (curStep < Statements.Count);
                 
             Reset();
-            if (ReturnExpr.items.Count == 1)
-                return new ReturnData(ReturnExpr.items[0]);
-            else
-                return new ReturnData(ReturnExpr);
+            switch (ReturnExpr.items.Count)
+            {
+                case 0:
+                    return new DoneData();
+                case 1:
+                    return new ReturnData(ReturnExpr.items[0]);
+                default:
+                    return new ReturnData(ReturnExpr);
+            }
         }
 
         private void Reset()

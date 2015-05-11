@@ -57,10 +57,10 @@ namespace Ast
                 return;
 
             tok = tokens.Peek();
-            ParseScope(TokenKind.END_OF_STRING);
+            ParseScope(TokenKind.END_OF_STRING, false);
         }
 
-        public Scope ParseScope(TokenKind stopToken, bool newScope = false)
+        public Scope ParseScope(TokenKind stopToken, bool newScope = true)
         {
             Scope res;
 
@@ -161,7 +161,7 @@ namespace Ast
 
         #endregion
 
-        public IfStmt ParseIfStmt()
+        public Expression ParseIfStmt()
         {
             var stmt = new IfStmt();
 
@@ -169,20 +169,18 @@ namespace Ast
 
             if (!Eat(TokenKind.COLON))
             {
-                ReportSyntaxError("If syntax: if bool: {}");
-                return null;
+                return ReportSyntaxError("If syntax: if bool: {}");
             }
 
             if (Eat(TokenKind.CURLY_START))
-                stmt.expressions.Add(ParseScope(TokenKind.CURLY_END, true));
+                stmt.expressions.Add(ParseScope(TokenKind.CURLY_END));
             else
             {
-                stmt.expressions.Add(ParseScope(TokenKind.SEMICOLON, true));
+                stmt.expressions.Add(ParseScope(TokenKind.SEMICOLON));
 
                 if (!Eat(TokenKind.SEMICOLON))
                 {
-                    ReportSyntaxError("If syntax: if bool: {}");
-                    return null;
+                    return ReportSyntaxError("If syntax: if bool: {}");
                 }
             }
 
@@ -200,14 +198,13 @@ namespace Ast
                     stmt.conditions.Add(ParseExpr(TokenKind.COLON));
                 else
                 {
-                    ReportSyntaxError("If syntax: if bool: {}");
-                    return null;
+                    return ReportSyntaxError("If syntax: if bool: {}");
                 }
 
                 if (Eat(TokenKind.CURLY_START))
-                    stmt.expressions.Add(ParseScope(TokenKind.CURLY_END, true));
+                    stmt.expressions.Add(ParseScope(TokenKind.CURLY_END));
                 else
-                    stmt.expressions.Add(ParseScope(TokenKind.SEMICOLON, true));
+                    stmt.expressions.Add(ParseScope(TokenKind.SEMICOLON));
                 //tokens.Dequeue(); // Skip '}' or ';'
             }
 
@@ -215,9 +212,9 @@ namespace Ast
             {
 
                 if (Eat(TokenKind.CURLY_START))
-                    stmt.expressions.Add(ParseScope(TokenKind.CURLY_END, true));
+                    stmt.expressions.Add(ParseScope(TokenKind.CURLY_END));
                 else
-                    stmt.expressions.Add(ParseScope(TokenKind.SEMICOLON, true));
+                    stmt.expressions.Add(ParseScope(TokenKind.SEMICOLON));
                 //tokens.Dequeue(); // Skip '}' or ';'
             }
 
@@ -271,8 +268,6 @@ namespace Ast
 
         public Expression ParseExpr(TokenKind stopToken)
         {
-            Expression res;
-
             bool done = false;
 
             exprStack.Push(new Queue<Expression>());
@@ -450,9 +445,7 @@ namespace Ast
             }
 
             unaryStack.Pop();
-            res = CreateAst(exprStack.Pop(), binaryStack.Pop());
-
-            return res;
+            return CreateAst(exprStack.Pop(), binaryStack.Pop());
         }
 
         public void SetupExpr(Expression expr, Token curTok = null)

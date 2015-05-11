@@ -55,7 +55,7 @@ public class MainWindow : Window
                 buffer.InsertWithTagsByName(ref insertIter, data.ToString() + "\n", "debug");
             }
         }
-        while (!(data is ReturnData || data is ErrorData));
+        while (!(data is DoneData || data is ErrorData));
     }
 
     public void CreateDefTree()
