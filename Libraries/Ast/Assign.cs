@@ -12,7 +12,13 @@ namespace Ast
             if (Left is Symbol)
             {
                 var sym = (Symbol)Left;
-                sym.Scope.SetVar(sym.identifier, Right);
+
+                var res = Right.Evaluate();
+
+                if (res is Error)
+                    return res;
+
+                sym.Scope.SetVar(sym.identifier, res);
                 return new Info(sym.identifier + ":=" + Right.ToString());
             }
 
