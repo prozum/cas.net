@@ -14,16 +14,30 @@ namespace Ast
     {
         Stack<Scope> scopeStack = new Stack<Scope>();
         Stack<ParseContext> contextStack = new Stack<ParseContext>();
-        Token tok;
-        Error _error;
-        bool expectUnary = true;
-
-        Queue<Token> tokens;
 
         Stack<Queue<Expression>> exprStack = new Stack<Queue<Expression>>();
         Stack<Queue<UnaryOperator>> unaryStack = new Stack<Queue<UnaryOperator>>();
         Stack<Queue<BinaryOperator>> binaryStack = new Stack<Queue<BinaryOperator>>();
 
+        Queue<Token> tokens;
+        Token tok;
+        bool expectUnary = true;
+
+        Scope curScope
+        {
+            get
+            {
+                return scopeStack.Peek();
+            }
+        }
+
+        ParseContext curContext
+        {
+            get
+            {
+                return contextStack.Peek();
+            }
+        }
 
         readonly Token EOS = new Token(TokenKind.END_OF_STRING, "END_OF_STRING", new Pos());
 
@@ -34,16 +48,13 @@ namespace Ast
 
         public void Parse(string parseString, Scope global)
         {
-            _error = null;
+            global.ScopeError = null;
             scopeStack.Push(global);
             contextStack.Push(ParseContext.Scope);
 
-            tokens = Scanner.Tokenize(parseString, out _error);
-            if (_error != null)
-            {
-                scopeStack.Peek().Statements.Add(_error);
+            tokens = Scanner.Tokenize(parseString, out global.ScopeError);
+            if (global.ScopeError != null)
                 return;
-            }
 
             tok = tokens.Peek();
             ParseScope(TokenKind.END_OF_STRING);
@@ -96,11 +107,8 @@ namespace Ast
                         break;
                 }
 
-                if (_error != null)
-                {
-                    res.Statements.Add(_error);
+                if (res.ScopeError != null)
                     return res;
-                }
             }
 
             ReportSyntaxError("Missing " + stopToken.ToString());
@@ -287,14 +295,14 @@ namespace Ast
                         break;
 
                     case TokenKind.SEMICOLON:
-                        if (contextStack.Peek() == ParseContext.Scope)
+                        if (curContext == ParseContext.Scope)
                             done = true;
                         else
                             return ReportSyntaxError("Unexpected ';' in list");
                         break;
                     
                     case TokenKind.COMMA:
-                        if (contextStack.Peek() == ParseContext.List)
+                        if (curContext == ParseContext.List)
                             done = true;
                         else
                             return ReportSyntaxError("Unexpected ',' in scope");
@@ -358,38 +366,71 @@ namespace Ast
                         break;
 
                     case TokenKind.MUL:
-                        SetupBiOp(new Mul());
+                        if (expectUnary)
+                            ReportSyntaxError(tok + " is not supported as unary operator");
+                        else
+                            SetupBiOp(new Mul());
                         break;
                     case TokenKind.DIV:
-                        SetupBiOp(new Div());
+                        if (expectUnary)
+                            ReportSyntaxError(tok + " is not supported as unary operator");
+                        else
+                            SetupBiOp(new Div());
                         break;
                     case TokenKind.EXP:
-                        SetupBiOp(new Exp());
+                        if (expectUnary)
+                            ReportSyntaxError(tok + " is not supported as unary operator");
+                        else
+                            SetupBiOp(new Exp());
                         break;
 
                     case TokenKind.ASSIGN:
-                        SetupBiOp(new Assign());
+                        if (expectUnary)
+                            ReportSyntaxError(tok + " is not supported as unary operator");
+                        else
+                            SetupBiOp(new Assign());
                         break;
                     case TokenKind.EQUAL:
-                        SetupBiOp(new Equal());
+                        if (expectUnary)
+                            ReportSyntaxError(tok + " is not supported as unary operator");
+                        else
+                            SetupBiOp(new Equal());
                         break;
                     case TokenKind.BOOL_EQUAL:
-                        SetupBiOp(new BooleanEqual());
+                        if (expectUnary)
+                            ReportSyntaxError(tok + " is not supported as unary operator");
+                        else
+                            SetupBiOp(new BooleanEqual());
                         break;
                     case TokenKind.NOT_EQUAL:
-                        SetupBiOp(new NotEqual());
+                        if (expectUnary)
+                            ReportSyntaxError(tok + " is not supported as unary operator");
+                        else
+                            SetupBiOp(new NotEqual());
                         break;
                     case TokenKind.LESS_EQUAL:
-                        SetupBiOp(new LesserEqual());
+                        if (expectUnary)
+                            ReportSyntaxError(tok + " is not supported as unary operator");
+                        else
+                            SetupBiOp(new LesserEqual());
                         break;
                     case TokenKind.GREAT_EQUAL:
-                        SetupBiOp(new GreaterEqual());
+                        if (expectUnary)
+                            ReportSyntaxError(tok + " is not supported as unary operator");
+                        else
+                            SetupBiOp(new GreaterEqual());
                         break;
                     case TokenKind.LESS:
-                        SetupBiOp(new Lesser());
+                        if (expectUnary)
+                            ReportSyntaxError(tok + " is not supported as unary operator");
+                        else
+                            SetupBiOp(new Lesser());
                         break;
                     case TokenKind.GREAT:
-                        SetupBiOp(new Greater());
+                        if (expectUnary)
+                            ReportSyntaxError(tok + " is not supported as unary operator");
+                        else
+                            SetupBiOp(new Greater());
                         break;
 
                     default:
@@ -404,8 +445,8 @@ namespace Ast
                         return ReportSyntaxError("Missing operator");
                 }
 
-                if (_error != null)
-                    return _error;
+                if (curScope.ScopeError != null)
+                    return curScope.ScopeError;
             }
 
             unaryStack.Pop();
@@ -599,10 +640,10 @@ namespace Ast
 
         public Error ReportSyntaxError(string msg)
         {
-            _error = new Error("Parser: " + msg);
-            _error.pos = tok.pos;
+            curScope.ScopeError = new Error("Parser: " + msg);
+            curScope.ScopeError.pos = tok.pos;
 
-            return _error;
+            return curScope.ScopeError;
         }
     }
 }

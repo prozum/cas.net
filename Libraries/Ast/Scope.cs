@@ -9,7 +9,7 @@ namespace Ast
         public List<Expression> Statements = new List<Expression>();
 
         int curStep = -1;
-
+        public Error ScopeError;
         public List ReturnExpr = new List();
 
         const int MaxStatementPrint = 5;
