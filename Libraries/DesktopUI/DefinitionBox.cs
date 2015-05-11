@@ -23,14 +23,14 @@ namespace DesktopUI
             Model = list;
 
             this.Eval = Eval;
-            this.Eval.locals.Clear();
+            this.Eval.Locals.Clear();
 		}
 
 		public void Update()
 		{
             list.Clear();
 
-            foreach (var def in Eval.locals)
+            foreach (var def in Eval.Locals)
             {
                 list.AppendValues(def.Key, def.Value.ToString());
             }

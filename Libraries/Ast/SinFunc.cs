@@ -22,7 +22,7 @@ namespace Ast
 
             var res = args[0].Evaluate();
 
-            var deg = scope.GetBool("deg");
+            var deg = Scope.GetBool("deg");
 
             if (res is Real)
             {
@@ -46,7 +46,7 @@ namespace Ast
         {
             List<Expression> newArgs = new List<Expression>();
             newArgs.Add(other);
-            return new AsinFunc(newArgs, scope);
+            return new AsinFunc(newArgs, Scope);
         }
     }
 }

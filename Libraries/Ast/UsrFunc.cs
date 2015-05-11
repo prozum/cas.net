@@ -19,7 +19,7 @@ namespace Ast
         {
             Expression @var;
 
-            @var = scope.GetVar(identifier);
+            @var = Scope.GetVar(identifier);
 
             if (@var == null)
                 return new Error(this,"has no definition");
@@ -31,13 +31,13 @@ namespace Ast
                 if (args.Count != usrFuncDef.args.Count)
                     return new Error(identifier + " takes " + usrFuncDef.args.Count.ToString() + " arguments. Not " + args.Count.ToString() + ".");
 
-                scope = new Scope(scope);
+                Scope = new Scope(Scope);
 
                 for (int i = 0; i < args.Count; i++)
                 {
                     var arg = (Symbol)usrFuncDef.args[i];
 
-                    scope.SetVar(arg.identifier, args[i]);
+                    Scope.SetVar(arg.identifier, args[i]);
                 }
 
                 expr = usrFuncDef.expr;

@@ -87,7 +87,7 @@ namespace Ast
                 var args = new List<Expression>();
                 args.Add(other);
 
-                var answer = new SqrtFunc(args, other.scope);
+                var answer = new SqrtFunc(args, other.Scope);
                 var answers = new Ast.List();
 
                 answers.items.Add(answer);

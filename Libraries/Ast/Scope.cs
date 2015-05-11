@@ -5,51 +5,78 @@ namespace Ast
 {
     public class Scope : Expression
     {
-        public new Scope parent;
-        public Dictionary<string,Expression> locals = new Dictionary<string,Expression>();
-        public List<Expression> statements = new List<Expression>();
+        public Dictionary<string,Expression> Locals = new Dictionary<string,Expression>();
+        public List<Expression> Statements = new List<Expression>();
 
-        public int curStep = 0;
+        int curStep = -1;
+
+        public List ReturnExpr = new List();
 
         const int MaxStatementPrint = 5;
 
+        public Scope() : this(null) { }
+        public Scope(Scope parent)
+        {
+            this.parent = parent;
+        }
+
         public override Expression Evaluate()
         {
-            if (statements.Count == 1)
-                return statements[0].Evaluate();
-
-            List res = new List();
-
-            foreach (var statement in statements)
-            {
-                var exp = statement.Evaluate();
-
-                if (exp is Error)
-                {
-                    statements.Clear();
-                    return exp;
-                }
-
-                res.items.Add(exp);
-            }
-
-            return res;
+            return this;
         }
 
         public override EvalData Step()
         {
-            while (curStep < statements.Count)
-            {
-                var res = statements[curStep].Step();
+            EvalData res;
 
-                if (res is DoneData data)
-                    curStep++;
-                else
-                    return res;
+            if (curStep == -1)
+            {
+                curStep = 0;
+                ReturnExpr.items.Clear();
             }
 
-            curStep = 0;
-            return new DoneData();
+            do
+            {
+                res = Statements[curStep].Step();
+
+                if (res is ReturnData)
+                {
+                    Reset();
+                    return new ReturnData((res as ReturnData).expr);
+                }
+
+                if (res is ExprData)
+                {
+                    ReturnExpr.items.Add((res as ExprData).expr);
+                    return new DebugData("Evaluate: ", (res as ExprData).expr);
+                }
+
+                if (res is ErrorData)
+                {
+                    Reset();
+                    return res;
+                }
+
+                if (res is DebugData)
+                    return res;
+
+                if (res is DoneData)
+                {
+                    curStep++;
+                }
+            }
+            while (curStep < Statements.Count);
+                
+            Reset();
+            if (ReturnExpr.items.Count == 1)
+                return new ReturnData(ReturnExpr.items[0]);
+            else
+                return new ReturnData(ReturnExpr);
+        }
+
+        private void Reset()
+        {
+            curStep = -1;
         }
 
         public override bool ContainsVariable(Variable other)
@@ -58,34 +85,28 @@ namespace Ast
             return false;
         }
 
-        public Scope() : this(null) { }
-        public Scope(Scope parent)
-        {
-            this.parent = parent;
-        }
-
         public void SetVar(string @var, Expression exp)
         {
-            if (locals.ContainsKey(@var))
+            if (Locals.ContainsKey(@var))
             {
-                locals.Remove(@var);
+                Locals.Remove(@var);
             }
 
-            locals.Add(@var, exp);
+            Locals.Add(@var, exp);
         }
 
         public Expression GetVar(string @var)
         {
             Expression exp;
 
-            if (locals.TryGetValue(@var, out exp))
+            if (Locals.TryGetValue(@var, out exp))
             {
                 return exp;
             }
 
             if (parent != null)
             {
-                return parent.GetVar(@var);
+                return Scope.GetVar(@var);
             }
 
             return null;
@@ -95,7 +116,7 @@ namespace Ast
         {
             Expression expr;
 
-            if (locals.TryGetValue(@var, out expr))
+            if (Locals.TryGetValue(@var, out expr))
             {
                 if (expr is Real)
                     return (expr as Real).Value;
@@ -103,7 +124,7 @@ namespace Ast
 
             if (parent != null)
             {
-                return parent.GetReal(@var);
+                return Scope.GetReal(@var);
             }
 
             return 0;
@@ -113,7 +134,7 @@ namespace Ast
         {
             Expression expr;
 
-            if (locals.TryGetValue(@var, out expr))
+            if (Locals.TryGetValue(@var, out expr))
             {
                 if (expr is Integer)
                     return (expr as Integer).@int;
@@ -121,7 +142,7 @@ namespace Ast
 
             if (parent != null)
             {
-                return parent.GetInt(@var);
+                return Scope.GetInt(@var);
             }
 
             return 0;
@@ -131,7 +152,7 @@ namespace Ast
         {
             Expression expr;
 
-            if (locals.TryGetValue(@var, out expr))
+            if (Locals.TryGetValue(@var, out expr))
             {
                 if (expr is Boolean)
                     return (expr as Boolean).@bool;
@@ -139,7 +160,7 @@ namespace Ast
 
             if (parent != null)
             {
-                return parent.GetBool(@var);
+                return Scope.GetBool(@var);
             }
 
             return false;
@@ -149,7 +170,7 @@ namespace Ast
         {
             Expression expr;
 
-            if (locals.TryGetValue(@var, out expr))
+            if (Locals.TryGetValue(@var, out expr))
             {
                 if (expr is Text)
                     return (expr as Text).Value;
@@ -157,7 +178,7 @@ namespace Ast
 
             if (parent != null)
             {
-                return parent.GetText(@var);
+                return Scope.GetText(@var);
             }
 
             return "";
@@ -167,7 +188,7 @@ namespace Ast
         {
             string str = "{";
 
-            for (int i = 0; i < statements.Count; i++) 
+            for (int i = 0; i < Statements.Count; i++) 
             {
                 if (i >= MaxStatementPrint)
                 {
@@ -176,9 +197,9 @@ namespace Ast
                 }
                 else
                 {
-                    str += statements[i].ToString ();
+                    str += Statements[i].ToString ();
 
-                    if (i < statements.Count - 1) 
+                    if (i < Statements.Count - 1) 
                     {
                         str += ';';
                     }

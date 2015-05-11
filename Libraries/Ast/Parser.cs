@@ -12,17 +12,17 @@ namespace Ast
 
     public class Parser
     {
-        Scope scope;
+        Stack<Scope> scopeStack = new Stack<Scope>();
+        Stack<ParseContext> contextStack = new Stack<ParseContext>();
         Token tok;
         Error _error;
-        ParseContext cx = ParseContext.Scope;
-        bool isUnaryAllowed = true;
+        bool expectUnary = true;
 
         Queue<Token> tokens;
 
-        Queue<Expression> exprs;
-        Queue<UnaryOperator> unops;
-        Queue<BinaryOperator> biops;
+        Stack<Queue<Expression>> exprStack = new Stack<Queue<Expression>>();
+        Stack<Queue<UnaryOperator>> unaryStack = new Stack<Queue<UnaryOperator>>();
+        Stack<Queue<BinaryOperator>> binaryStack = new Stack<Queue<BinaryOperator>>();
 
 
         readonly Token EOS = new Token(TokenKind.END_OF_STRING, "END_OF_STRING", new Pos());
@@ -35,12 +35,13 @@ namespace Ast
         public void Parse(string parseString, Scope global)
         {
             _error = null;
-            scope = global;
+            scopeStack.Push(global);
+            contextStack.Push(ParseContext.Scope);
 
             tokens = Scanner.Tokenize(parseString, out _error);
             if (_error != null)
             {
-                scope.statements.Add(_error);
+                scopeStack.Peek().Statements.Add(_error);
                 return;
             }
 
@@ -53,20 +54,21 @@ namespace Ast
             Scope res;
 
             if (newScope)
-                res = scope = new Scope(scope);
-            else
-                res = scope;
+                scopeStack.Push(new Scope());
 
-            var lastCx = cx;
-            cx = ParseContext.Scope;
+            res = scopeStack.Peek();
+
+            contextStack.Push(ParseContext.Scope);
 
             while (tokens.Count > 0)
             {
                 if (Eat(stopToken))
                 {
                     if (newScope)
-                        scope = scope.parent;
-                    cx = lastCx;
+                        scopeStack.Pop();
+
+                    contextStack.Pop();
+
                     return res;
                 }
 
@@ -75,27 +77,28 @@ namespace Ast
                 {
                     case TokenKind.IF:
                         Eat();
-                        scope.statements.Add(ParseIfStmt());
+                        res.Statements.Add(ParseIfStmt());
                         break;
                     case TokenKind.FOR:
                         Eat();
-                        scope.statements.Add(ParseForStmt());
+                        res.Statements.Add(ParseForStmt());
                         break;
                     case TokenKind.RET:
                         Eat();
-                        scope.statements.Add(new RetStmt(ParseExpr(stopToken)));
+                        res.Statements.Add(new RetStmt(ParseExpr(stopToken)));
+                        break;
                     case TokenKind.SEMICOLON:
                     case TokenKind.NEW_LINE:
                         Eat();
                         break;
                     default:
-                        scope.statements.Add(ParseExpr(stopToken));
+                        res.Statements.Add(ParseExpr(stopToken));
                         break;
                 }
 
                 if (_error != null)
                 {
-                    scope.statements.Add(_error);
+                    res.Statements.Add(_error);
                     return res;
                 }
             }
@@ -239,14 +242,13 @@ namespace Ast
         {
             var list = new List();
 
-            var lastCx = cx;
-            cx = ParseContext.List;
+            contextStack.Push(ParseContext.List);
 
             while (tokens.Count > 0)
             {
                 if (Eat(TokenKind.SQUARE_END))
                 {
-                    cx = lastCx;
+                    contextStack.Pop();
                     return list;
                 }
 
@@ -265,20 +267,16 @@ namespace Ast
 
             bool done = false;
 
-            var lastExprs = exprs;
-            var lastUnops = unops;
-            var lastBiops = biops;
+            exprStack.Push(new Queue<Expression>());
+            unaryStack.Push(new Queue<UnaryOperator>());
+            binaryStack.Push(new Queue<BinaryOperator>());
 
-            exprs = new Queue<Expression>();
-            unops = new Queue<UnaryOperator>();
-            biops = new Queue<BinaryOperator>();
-
-            isUnaryAllowed = true;
+            expectUnary = true;
 
             while (!done)
             {
                 if (Peek(stopToken))
-                    done = true;
+                    break;
 
                 Eat(); // Get switch token
 
@@ -289,14 +287,14 @@ namespace Ast
                         break;
 
                     case TokenKind.SEMICOLON:
-                        if (cx == ParseContext.Scope)
+                        if (contextStack.Peek() == ParseContext.Scope)
                             done = true;
                         else
                             return ReportSyntaxError("Unexpected ';' in list");
                         break;
                     
                     case TokenKind.COMMA:
-                        if (cx == ParseContext.List)
+                        if (contextStack.Peek() == ParseContext.List)
                             done = true;
                         else
                             return ReportSyntaxError("Unexpected ',' in scope");
@@ -322,7 +320,7 @@ namespace Ast
                         if (Eat(TokenKind.SQUARE_START))
                             SetupExpr(ParseFunction(curTok.value), curTok);
                         else
-                            SetupExpr(new Symbol(curTok.value, scope));
+                            SetupExpr(new Symbol(curTok.value, scopeStack.Peek()));
                         break;
 
                     case TokenKind.TRUE:
@@ -343,66 +341,64 @@ namespace Ast
                         break;
 
                     case TokenKind.ADD:
-                        if (!isUnaryAllowed) // Ignore Unary +
-                            biops.Enqueue(new Add());
+                        if (!expectUnary) // Ignore Unary +
+                            SetupBiOp(new Add());
                         break;
                     case TokenKind.SUB:
-                        if (isUnaryAllowed)
-                            unops.Enqueue(new Minus());
+                        if (expectUnary)
+                            SetupUnOp(new Minus());
                         else
-                            biops.Enqueue(new Sub());
+                            SetupBiOp(new Sub());
                         break;
                     case TokenKind.NEG:
-                        if (isUnaryAllowed)
-                            unops.Enqueue(new Negation());
+                        if (expectUnary)
+                            SetupUnOp(new Negation());
                         else
                             return ReportSyntaxError("Unexpected: '!'");
                         break;
 
                     case TokenKind.MUL:
-                        biops.Enqueue(new Mul());
+                        SetupBiOp(new Mul());
                         break;
                     case TokenKind.DIV:
-                        biops.Enqueue(new Div());
+                        SetupBiOp(new Div());
                         break;
                     case TokenKind.EXP:
-                        biops.Enqueue(new Exp());
+                        SetupBiOp(new Exp());
                         break;
 
                     case TokenKind.ASSIGN:
-                        biops.Enqueue(new Assign());
+                        SetupBiOp(new Assign());
                         break;
                     case TokenKind.EQUAL:
-                        biops.Enqueue(new Equal());
+                        SetupBiOp(new Equal());
                         break;
                     case TokenKind.BOOL_EQUAL:
-                        biops.Enqueue(new BooleanEqual());
+                        SetupBiOp(new BooleanEqual());
                         break;
                     case TokenKind.NOT_EQUAL:
-                        biops.Enqueue(new NotEqual());
+                        SetupBiOp(new NotEqual());
                         break;
                     case TokenKind.LESS_EQUAL:
-                        biops.Enqueue(new LesserEqual());
+                        SetupBiOp(new LesserEqual());
                         break;
                     case TokenKind.GREAT_EQUAL:
-                        biops.Enqueue(new GreaterEqual());
+                        SetupBiOp(new GreaterEqual());
                         break;
                     case TokenKind.LESS:
-                        biops.Enqueue(new Lesser());
+                        SetupBiOp(new Lesser());
                         break;
                     case TokenKind.GREAT:
-                        biops.Enqueue(new Greater());
+                        SetupBiOp(new Greater());
                         break;
 
                     default:
                         return ReportSyntaxError("Unexpected '" + tok.ToString() + "'");
                 }
-                
-                isUnaryAllowed = true;
 
-                if (exprs.Count != biops.Count && exprs.Count != biops.Count + 1)
+                if (exprStack.Count != binaryStack.Count && exprStack.Count != binaryStack.Count + 1)
                 {
-                    if (biops.Count > exprs.Count)
+                    if (binaryStack.Count > exprStack.Count)
                         return ReportSyntaxError("Missing operand");
                     else
                         return ReportSyntaxError("Missing operator");
@@ -412,14 +408,8 @@ namespace Ast
                     return _error;
             }
 
-            res = CreateAst(exprs, biops);
-
-            if (lastExprs != null)
-            {
-                exprs = lastExprs;
-                unops = lastUnops;
-                biops = lastBiops;
-            }
+            unaryStack.Pop();
+            res = CreateAst(exprStack.Pop(), binaryStack.Pop());
 
             return res;
         }
@@ -431,6 +421,8 @@ namespace Ast
 
             expr.pos = curTok.pos;
 
+            var unops = unaryStack.Peek();
+
             while (unops.Count > 0)
             {
                 var unop = unops.Dequeue();
@@ -438,8 +430,23 @@ namespace Ast
                 expr = unop;
             }
 
-            exprs.Enqueue(expr);
-            isUnaryAllowed = false;
+            exprStack.Peek().Enqueue(expr);
+            expectUnary = false;
+        }
+
+        public void SetupUnOp(UnaryOperator op)
+        {
+            op.pos = tok.pos;
+
+            unaryStack.Peek().Enqueue(op);
+        }
+
+        public void SetupBiOp(BinaryOperator op)
+        {
+            op.pos = tok.pos;
+
+            binaryStack.Peek().Enqueue(op);
+            expectUnary = true;
         }
 
         public Expression CreateAst(Queue<Expression> exprs, Queue<BinaryOperator> biops)
@@ -550,43 +557,43 @@ namespace Ast
             switch (sym.ToLower())
             {
                 case "sin":
-                    return new SinFunc(args, scope);
+                    return new SinFunc(args, scopeStack.Peek());
                 case "cos":
-                    return new CosFunc(args, scope);
+                    return new CosFunc(args, scopeStack.Peek());
                 case "tan":
-                    return new TanFunc(args, scope);
+                    return new TanFunc(args, scopeStack.Peek());
                 case "asin":
-                    return new AsinFunc(args, scope);
+                    return new AsinFunc(args, scopeStack.Peek());
                 case "acos":
-                    return new AcosFunc(args, scope);
+                    return new AcosFunc(args, scopeStack.Peek());
                 case "atan":
-                    return new AtanFunc(args, scope);
+                    return new AtanFunc(args, scopeStack.Peek());
                 case "sqrt":
-                    return new SqrtFunc(args, scope);
+                    return new SqrtFunc(args, scopeStack.Peek());
                 case "reduce":
-                    return new ReduceFunc(args, scope);
+                    return new ReduceFunc(args, scopeStack.Peek());
                 case "expand":
-                    return new ExpandFunc(args, scope);
+                    return new ExpandFunc(args, scopeStack.Peek());
                 case "range":
-                    return new RangeFunc(args, scope);
+                    return new RangeFunc(args, scopeStack.Peek());
                 case "map":
-                    return new MapFunc(args, scope);
+                    return new MapFunc(args, scopeStack.Peek());
                 case "plot":
-                    return new PlotFunc(args, scope);
+                    return new PlotFunc(args, scopeStack.Peek());
                 case "solve":
-                    return new SolveFunc(args, scope);
+                    return new SolveFunc(args, scopeStack.Peek());
                 case "enter":
-                    return new EnterFunc(args, scope);
+                    return new EnterFunc(args, scopeStack.Peek());
                 case "exit":
-                    return new ExitFunc(args, scope);
+                    return new ExitFunc(args, scopeStack.Peek());
                 case "print":
-                    return new PrintFunc(args, scope);
+                    return new PrintFunc(args, scopeStack.Peek());
                 case "type":
-                    return new TypeFunc(args, scope);
+                    return new TypeFunc(args, scopeStack.Peek());
                 case "eval":
-                    return new EvalFunc(args, scope);
+                    return new EvalFunc(args, scopeStack.Peek());
                 default:
-                    return new UsrFunc(sym.ToLower(), args, scope);
+                    return new UsrFunc(sym.ToLower(), args, scopeStack.Peek());
             }
         }
 

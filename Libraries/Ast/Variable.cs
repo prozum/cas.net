@@ -15,7 +15,7 @@ namespace Ast
         protected Variable(string identifier, Scope scope)
         {
             this.identifier = identifier;
-            this.scope = scope;
+            this.Scope = scope;
 
             this.exponent = new Integer(1);
             this.prefix = new Integer(1);
@@ -27,7 +27,7 @@ namespace Ast
             res.identifier = identifier;
             res.prefix = prefix.Clone() as Real;
             res.exponent = exponent.Clone() as Real;
-            res.scope = scope;
+            res.Scope = Scope;
             res.pos = pos;
 
             return res;

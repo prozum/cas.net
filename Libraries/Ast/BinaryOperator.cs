@@ -62,14 +62,12 @@ namespace Ast
 
         public override string ToString()
         {
-            if (parent == null || priority >= parent.priority)
+            if (parent is BinaryOperator && priority < (parent as BinaryOperator).priority)
             {
-                return Left.ToString () + sym + Right.ToString ();
+                return '(' + Left.ToString() + sym + Right.ToString() + ')';
             } 
-            else 
-            {
-                return '(' + Left.ToString () + sym + Right.ToString () + ')';
-            }
+                
+            return Left.ToString() + sym + Right.ToString();
         }
 
         public override bool CompareTo(Expression other)

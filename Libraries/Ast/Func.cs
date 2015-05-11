@@ -96,7 +96,7 @@ namespace Ast
 
             res.args = newArgs;
             res.identifier = identifier;
-            res.scope = scope;
+            res.Scope = Scope;
             res.prefix = prefix.Clone() as Real;
             res.exponent = exponent.Clone() as Real;
 

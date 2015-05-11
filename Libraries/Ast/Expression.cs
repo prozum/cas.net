@@ -17,8 +17,8 @@ namespace Ast
 
     public abstract class Expression
     {
-        public BinaryOperator parent;
-        public Scope scope;
+        public Expression parent;
+        public Scope Scope;
         public Pos pos;
 
         public bool stepped = false;
@@ -44,7 +44,7 @@ namespace Ast
             if (res is Error)
                 return new ErrorData(res as Error);
             else
-                return new DebugData("Evaluate: " + this.ToString() + " = ", res);
+                return new ExprData(res);
         }
 
         public virtual Expression CurrectOperator()
@@ -70,14 +70,7 @@ namespace Ast
 
         public virtual bool CompareTo(Expression other)
         {
-            if (this.GetType() == other.GetType())
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return this.GetType() == other.GetType();
         }
 
         public virtual bool ContainsVariable(Variable other)

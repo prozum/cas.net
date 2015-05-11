@@ -12,7 +12,7 @@ namespace Ast
             if (Left is Symbol)
             {
                 var sym = (Symbol)Left;
-                sym.scope.SetVar(sym.identifier, Right);
+                sym.Scope.SetVar(sym.identifier, Right);
                 return new Info(sym.identifier + ":=" + Right.ToString());
             }
 
@@ -26,11 +26,11 @@ namespace Ast
                         return new Error(this, "All arguments must be symbols");
                 }
 
-                var defFunc = new UsrFunc(usrFunc.identifier, usrFunc.args, usrFunc.scope);
+                var defFunc = new UsrFunc(usrFunc.identifier, usrFunc.args, usrFunc.Scope);
 
                 defFunc.expr = Right;
 
-                usrFunc.scope.SetVar(usrFunc.identifier, defFunc);
+                usrFunc.Scope.SetVar(usrFunc.identifier, defFunc);
 
                 return new Info(usrFunc.ToString() + ":=" + Right.ToString());
             }

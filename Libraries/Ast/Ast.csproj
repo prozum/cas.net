@@ -120,8 +120,6 @@
       <DependentUpon>UnaryOperator.cs</DependentUpon>
     </Compile>
     <Compile Include="Text.cs" />
-    <Compile Include="ForStmt.cs" />
-    <Compile Include="IfStmt.cs" />
     <Compile Include="UnaryOperator.cs" />
     <Compile Include="BinaryOperator.cs" />
     <Compile Include="Minus.cs">
@@ -189,7 +187,9 @@
       <DependentUpon>SysFunc.cs</DependentUpon>
     </Compile>
     <Compile Include="Operator.cs" />
-    <Compile Include="RetStmt.cs" />
+    <Compile Include="Stmt\RetStmt.cs" />
+    <Compile Include="Stmt\ForStmt.cs" />
+    <Compile Include="Stmt\IfStmt.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ProjectExtensions>
@@ -202,4 +202,7 @@
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
+  <ItemGroup>
+    <Folder Include="Stmt\" />
+  </ItemGroup>
 </Project>

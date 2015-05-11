@@ -131,7 +131,7 @@ namespace DesktopUI
             MovableCasCalcView MovCasCalcView = new MovableCasCalcView(Eval);
             MovCasCalcView.calcview.input.Activated += delegate
             {
-                MovCasCalcView.calcview.Eval.locals.Clear();
+                MovCasCalcView.calcview.Eval.Locals.Clear();
                 MovCasCalcView.calcview.Evaluate();
                 Reevaluate();
                 MovCasCalcView.ShowAll();
@@ -139,13 +139,13 @@ namespace DesktopUI
 
             ButtonMoveUp.Clicked += delegate
             {
-                MovCasCalcView.calcview.Eval.locals.Clear();
+                MovCasCalcView.calcview.Eval.Locals.Clear();
                 Move(MovCasCalcView.id_, -1);
             };
 
             ButtonMoveDown.Clicked += delegate
             {
-                MovCasCalcView.calcview.Eval.locals.Clear();
+                MovCasCalcView.calcview.Eval.Locals.Clear();
                 Move(MovCasCalcView.id_, 1);
             };
 
@@ -193,23 +193,23 @@ namespace DesktopUI
 
             MovCasCalcView.calcview.input.Activated += delegate
             {
-                MovCasCalcView.calcview.Eval.scope.locals.Clear();
+                MovCasCalcView.calcview.Eval.Scope.Locals.Clear();
                 MovCasCalcView.calcview.Evaluate();
                 MovCasCalcView.ShowAll();
             };
 
             ButtonMoveUp.Clicked += delegate
             {
-                MovCasCalcView.calcview.Eval.scope.locals.Clear();
+                MovCasCalcView.calcview.Eval.Scope.Locals.Clear();
                 Move(MovCasCalcView.id_, -1);
-                MovCasCalcView.calcview.Eval.scope.locals.Clear();
+                MovCasCalcView.calcview.Eval.Scope.Locals.Clear();
             };
 
             ButtonMoveDown.Clicked += delegate
             {
-                MovCasCalcView.calcview.Eval.scope.locals.Clear();
+                MovCasCalcView.calcview.Eval.Scope.Locals.Clear();
                 Move(MovCasCalcView.id_, 1);
-                MovCasCalcView.calcview.Eval.scope.locals.Clear();
+                MovCasCalcView.calcview.Eval.Scope.Locals.Clear();
             };
 
             ButtonDelete.Clicked += delegate

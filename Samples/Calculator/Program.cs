@@ -7,8 +7,6 @@ using System.Globalization;
 public class MainWindow : Window
 {
     Evaluator eval;
-    EvalData output;
-    List<EvalData> dataList;
 
     Grid grid;
 
@@ -33,20 +31,18 @@ public class MainWindow : Window
 
     public void EvaluateInput()
     {
-        eval.Parse(input.Buffer.Text);
+        EvalData data;
+        TextIter insertIter;
 
+        eval.Parse(input.Buffer.Text);
+       
         do
         {
-            output = eval.Step();
-            dataList.Add(output);
+            data = eval.Step();
 
-        } while (!(output is DoneData || output is ErrorData));
+            insertIter = buffer.StartIter;
 
-        TextIter insertIter = buffer.StartIter;
-
-        foreach(var data in dataList)
-        {
-            if (data is PrintData)
+            if (data is PrintData || data is ReturnData)
             {
                 buffer.Insert(ref insertIter, data.ToString() + "\n");
             }
@@ -59,8 +55,7 @@ public class MainWindow : Window
                 buffer.InsertWithTagsByName(ref insertIter, data.ToString() + "\n", "debug");
             }
         }
-
-        dataList.Clear();
+        while (!(data is ReturnData || data is ErrorData));
     }
 
     public void CreateDefTree()
@@ -81,7 +76,7 @@ public class MainWindow : Window
     {
         defStore.Clear();
 
-        foreach (var def in eval.locals)
+        foreach (var def in eval.Locals)
         {
             if (def.Value is SysFunc)
             {
@@ -136,7 +131,6 @@ public class MainWindow : Window
         grid.Attach(defTree, 1, 0, 1, 3);
 
         eval = new Evaluator ();
-        dataList = new List<EvalData>();
         UpdateDefinitions();
 
         ShowAll ();

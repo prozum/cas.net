@@ -10,6 +10,21 @@ namespace Ast
     {
     }
 
+    public class ReturnData : EvalData
+    {
+        public Expression expr;
+
+        public ReturnData(Expression expr)
+        {
+            this.expr = expr;
+        }
+
+        public override string ToString()
+        {
+            return expr.ToString();
+        }
+    }
+
     public class PrintData : EvalData
     {
         public string msg;
@@ -52,6 +67,22 @@ namespace Ast
             return str;
         }
     }
+
+    public class ExprData : EvalData
+    {
+        public Expression expr;
+
+        public ExprData(Expression expr)
+        {
+            this.expr = expr;
+        }
+
+        public override string ToString()
+        {
+            return expr.ToString();
+        }
+    }
+
 
     public class DebugData : EvalData
     {

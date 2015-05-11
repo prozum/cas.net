@@ -121,7 +121,7 @@
       <Name>Account</Name>
     </ProjectReference>
     <ProjectReference Include="..\TaskGenLib\TaskGenLib.csproj">
-      <Project>{882174f5-0b72-4df3-997f-bd2eb16c6e6c}</Project>
+      <Project>{882174F5-0B72-4DF3-997F-BD2EB16C6E6C}</Project>
       <Name>TaskGenLib</Name>
     </ProjectReference>
   </ItemGroup>
