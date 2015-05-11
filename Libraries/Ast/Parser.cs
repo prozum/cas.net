@@ -7,7 +7,8 @@ namespace Ast
     public enum ParseContext
     {
         List,
-        Scope
+        Scope,
+        Parenthesis
     }
 
     public class Parser
@@ -293,18 +294,18 @@ namespace Ast
                         if (curContext == ParseContext.Scope)
                             done = true;
                         else
-                            return ReportSyntaxError("Unexpected ';' in list");
+                            return ReportSyntaxError("Unexpected ';' in " + contextStack.Peek());
                         break;
                     
                     case TokenKind.COMMA:
                         if (curContext == ParseContext.List)
                             done = true;
                         else
-                            return ReportSyntaxError("Unexpected ',' in scope");
+                            return ReportSyntaxError("Unexpected ',' in " + contextStack.Peek());
                         break;
 
                     case TokenKind.NEW_LINE:
-                        done = true;
+                        done |= curContext != ParseContext.Parenthesis;
                         break;
 
                     case TokenKind.INTEGER:
@@ -334,7 +335,11 @@ namespace Ast
                         break;
 
                     case TokenKind.PARENT_START:
+                        contextStack.Push(ParseContext.Parenthesis);
                         SetupExpr(ParseExpr(TokenKind.PARENT_END));
+                        contextStack.Pop();
+                        if (!Eat(TokenKind.PARENT_END))
+                            return ReportSyntaxError("Missing )");
                         break;
                     case TokenKind.SQUARE_START:
                         SetupExpr(ParseList());
