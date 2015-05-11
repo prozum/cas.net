@@ -19,7 +19,8 @@ namespace Ast
                     return res;
 
                 sym.Scope.SetVar(sym.identifier, res);
-                return new Info(sym.identifier + ":=" + Right.ToString());
+
+                return res;
             }
 
             if (Left is UsrFunc)
