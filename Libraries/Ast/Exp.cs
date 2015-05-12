@@ -15,7 +15,7 @@ namespace Ast
 
         protected override Expression ExpandHelper(Expression left, Expression right)
         {
-            if (left is BinaryOperator && (left as BinaryOperator).priority < priority)
+            if (left is BinaryOperator && (left as BinaryOperator).Priority < Priority)
             {
                 if (left is Add)
                 {

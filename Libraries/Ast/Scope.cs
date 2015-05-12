@@ -17,7 +17,7 @@ namespace Ast
         public Scope() : this(null) { }
         public Scope(Scope parent)
         {
-            this.parent = parent;
+            this.Parent = parent;
         }
 
         public override Expression Evaluate()
@@ -27,6 +27,10 @@ namespace Ast
                 if (stmt is Assign)
                 {
                     stmt.Evaluate();
+                }
+                else if (stmt is RetStmt)
+                {
+                    return stmt.Evaluate();
                 }
             }
             return this;
@@ -42,7 +46,7 @@ namespace Ast
                 ReturnExpr.items.Clear();
             }
 
-            do
+            if (curStep < Statements.Count)
             {
                 res = Statements[curStep].Step();
 
@@ -58,22 +62,14 @@ namespace Ast
                     return new DebugData("Evaluate: ", (res as ExprData).expr);
                 }
 
-                if (res is ErrorData)
-                {
-                    Reset();
-                    return res;
-                }
-
                 if (res is DoneData)
-                {
                     curStep++;
-                }
-                else
-                {
-                    return res;
-                }
+
+                if (res is ErrorData)
+                    Reset();
+
+                return res;
             }
-            while (curStep < Statements.Count);
                 
             Reset();
             switch (ReturnExpr.items.Count)

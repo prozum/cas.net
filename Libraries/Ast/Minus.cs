@@ -8,7 +8,7 @@ namespace Ast
 
         public override Expression Evaluate()
         {
-            return child.Evaluate().Minus();
+            return Child.Evaluate().Minus();
         }
     }
 }

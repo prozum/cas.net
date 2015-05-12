@@ -435,18 +435,10 @@ namespace Ast
                         break;
                 }
 
-                if (curExprStack.Count != curBinaryStack.Count && curExprStack.Count != curBinaryStack.Count + 1)
-                {
-                    if (binaryStack.Count > exprStack.Count)
-                        ReportSyntaxError("Missing operand");
-                    else
-                        ReportSyntaxError("Missing operator");
-                }
-
                 if (curScope.Error != null)
                     return curScope.Error;
             }
-
+                
             unaryStack.Pop();
             return CreateAst(exprStack.Pop(), binaryStack.Pop());
         }
@@ -454,21 +446,22 @@ namespace Ast
         public void SetupExpr(Expression expr, Token curTok = null)
         {
             if (curTok == null)
-                curTok = tok;
+                expr.pos = tok.pos;
+            else
+                expr.pos = curTok.pos; 
 
-            expr.pos = curTok.pos;
-
-            var unops = unaryStack.Peek();
-
-            while (unops.Count > 0)
+            while (curUnaryStack.Count > 0)
             {
-                var unop = unops.Dequeue();
-                unop.child = expr;
+                var unop = curUnaryStack.Dequeue();
+                unop.Child = expr;
                 expr = unop;
             }
 
-            exprStack.Peek().Enqueue(expr);
+            curExprStack.Enqueue(expr);
             expectUnary = false;
+
+            if (curExprStack.Count != curBinaryStack.Count + 1)
+                ReportSyntaxError("Missing operator");
         }
 
         public void SetupUnOp(UnaryOperator op)
@@ -484,6 +477,9 @@ namespace Ast
 
             binaryStack.Peek().Enqueue(op);
             expectUnary = true;
+
+            if (curExprStack.Count != curBinaryStack.Count)
+                ReportSyntaxError("Missing operand");
         }
 
         public Expression CreateAst(Queue<Expression> exprs, Queue<BinaryOperator> biops)
@@ -495,9 +491,6 @@ namespace Ast
                 throw new Exception("No expressions");
 
             if (exprs.Count != 1 + biops.Count)
-                throw new Exception("Expressions != Binary Operators + 1");
-
-            if (biops.Count >= exprs.Count)
                 return ReportSyntaxError("Missing operand");
 
             if (exprs.Count == 1 && biops.Count == 0)
@@ -516,12 +509,12 @@ namespace Ast
                 {
                     nextOp = biops.Peek();
 
-                    if (curOp.priority >= nextOp.priority)
+                    if (curOp.Priority >= nextOp.Priority)
                     {
                         right = exprs.Dequeue();
                         curOp.Right = right;
 
-                        if (top.priority >= nextOp.priority)
+                        if (top.Priority >= nextOp.Priority)
                         {
                             left = top;
                             top = nextOp;

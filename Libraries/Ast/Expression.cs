@@ -17,7 +17,7 @@ namespace Ast
 
     public abstract class Expression
     {
-        public Expression parent;
+        public Expression Parent;
         public Scope Scope;
         public Pos pos;
 

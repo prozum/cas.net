@@ -14,6 +14,9 @@ namespace Ast
 
             Expression res;
 
+            if (Left is Error)
+                return Left;
+
             if (Left is Dot)
             {
                 var dot = Left as Dot;
@@ -33,11 +36,13 @@ namespace Ast
                 else
                     return new Error(res, " is not a scope");
             }
-            else
+            else if (Left is Variable)
             {
                 sym = (Variable)Left;
                 scope = Left.Scope;
             }
+            else
+                return new Error(Left, " is not a symbol");
 
 
             if (sym is Symbol)

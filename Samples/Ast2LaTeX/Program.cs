@@ -16,7 +16,7 @@ namespace Ast2LaTeX
         {
             if (ex is BinaryOperator) {
                 BinaryOperator op = (BinaryOperator)ex;
-                return AstLatex (op.Left) + op.identifier + AstLatex (op.Right);
+                return AstLatex (op.Left) + op.Identifier + AstLatex (op.Right);
             } else if (ex is Symbol) {
                 return (ex as Symbol).identifier;
             } else if (ex is Real) {

@@ -11,8 +11,10 @@ namespace Ast
 
     public abstract class BinaryOperator : Operator
     {
-        public string identifier;
-        public int priority;
+        public string Identifier;
+        public int Priority;
+
+        private int curStep = 0;
 
         private Expression _left;
         public Expression Left
@@ -26,7 +28,7 @@ namespace Ast
                 _left = value;
 
                 if (_left != null)
-                    _left.parent = this;
+                    _left.Parent = this;
             }
         }
 
@@ -42,7 +44,7 @@ namespace Ast
                 _right = value;
 
                 if (_right != null)
-                    _right.parent = this;
+                    _right.Parent = this;
             }
         }
 
@@ -51,8 +53,8 @@ namespace Ast
         {
             Left = left;
             Right = right;
-            this.identifier = identifier;
-            this.priority = priority;
+            Identifier = identifier;
+            Priority = priority;
         }
 
         protected override Expression Evaluate(Expression caller)
@@ -62,12 +64,12 @@ namespace Ast
 
         public override string ToString()
         {
-            if (parent is BinaryOperator && priority < (parent as BinaryOperator).priority)
+            if (Parent is BinaryOperator && Priority < (Parent as BinaryOperator).Priority)
             {
-                return '(' + Left.ToString() + identifier + Right.ToString() + ')';
+                return '(' + Left.ToString() + Identifier + Right.ToString() + ')';
             } 
                 
-            return Left.ToString() + identifier + Right.ToString();
+            return Left.ToString() + Identifier + Right.ToString();
         }
 
         public override bool CompareTo(Expression other)

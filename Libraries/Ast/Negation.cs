@@ -9,7 +9,7 @@ namespace Ast
 
         protected override Expression Evaluate(Expression caller)
         {
-            return child.Evaluate().Negation();
+            return Child.Evaluate().Negation();
         }
     }
 }

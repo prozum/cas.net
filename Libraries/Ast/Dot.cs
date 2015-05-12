@@ -13,13 +13,7 @@ namespace Ast
             Scope scope;
 
             if (Right is Symbol)
-            {
-                sym = Right as Symbol;
-            }
-            else if (Right is UsrFunc)
-            {
-                sym = Right as UsrFunc;
-            }
+                sym = Right as Variable;
             else
                 return new Error(this, "right operator must be Symbol/UsrFunc");
 

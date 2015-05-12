@@ -11,9 +11,14 @@ namespace Ast
             this.expr = expr;
         }
 
+        public override Expression Evaluate()
+        {
+            return expr.Evaluate();
+        }
+
         public override EvalData Step()
         {
-            return new ReturnData(expr.Evaluate());
+            return new ReturnData(Evaluate());
         }
 
         public override string ToString()
