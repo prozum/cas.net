@@ -11,7 +11,7 @@ namespace Ast
 
     public abstract class BinaryOperator : Operator
     {
-        public string sym;
+        public string identifier;
         public int priority;
 
         private Expression _left;
@@ -46,12 +46,12 @@ namespace Ast
             }
         }
 
-        public BinaryOperator(string symbol, int priority) : this(null, null, symbol, priority) { }
-        public BinaryOperator(Expression left, Expression right, string symbol, int priority)
+        internal BinaryOperator(string symbol, int priority) : this(null, null, symbol, priority) { }
+        internal BinaryOperator(Expression left, Expression right, string identifier, int priority)
         {
             Left = left;
             Right = right;
-            this.sym = symbol;
+            this.identifier = identifier;
             this.priority = priority;
         }
 
@@ -64,10 +64,10 @@ namespace Ast
         {
             if (parent is BinaryOperator && priority < (parent as BinaryOperator).priority)
             {
-                return '(' + Left.ToString() + sym + Right.ToString() + ')';
+                return '(' + Left.ToString() + identifier + Right.ToString() + ')';
             } 
                 
-            return Left.ToString() + sym + Right.ToString();
+            return Left.ToString() + identifier + Right.ToString();
         }
 
         public override bool CompareTo(Expression other)
@@ -359,37 +359,5 @@ namespace Ast
         }
 
         #endregion
-    }
-
-    //Pleace do your magic Niclas. Put this in a file under BinaryOperator. Don't know how to do it in VS.
-    public class NotEqual : BinaryOperator
-    {
-        public NotEqual() : base("!=", 10) { }
-        public NotEqual(Expression left, Expression right) : base(left, right, "==", 10) { }
-
-        protected override Expression Evaluate(Expression caller)
-        {
-            return new Boolean(!Left.CompareTo(Right));
-        }
-
-        public override Expression Clone()
-        {
-            return new NotEqual(Left.Clone(), Right.Clone());
-        }
-
-        public override Expression CurrectOperator()
-        {
-            return new NotEqual(Left.CurrectOperator(), Right.CurrectOperator());
-        }
-
-        protected override Expression ReduceHelper(Expression left, Expression right)
-        {
-            return new NotEqual(left.Reduce(this), right.Reduce(this));
-        }
-
-        protected override Expression ExpandHelper(Expression left, Expression right)
-        {
-            return new NotEqual(left.Expand(), right.Expand());
-        }
     }
 }

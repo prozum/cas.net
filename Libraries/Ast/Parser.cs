@@ -31,8 +31,6 @@ namespace Ast
         Queue<UnaryOperator> curUnaryStack { get { return unaryStack.Peek(); } }
         Queue<BinaryOperator> curBinaryStack { get { return binaryStack.Peek(); } }
 
-        readonly Token EOS = new Token(TokenKind.END_OF_STRING, "END_OF_STRING", new Pos());
-
         public void Parse(string parseString)
         {
             Parse(parseString, new Scope());

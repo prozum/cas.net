@@ -128,7 +128,6 @@ namespace Ast
 
 
                 throw new NotImplementedException();
-                return null;
             }
             else
             {
