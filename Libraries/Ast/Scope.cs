@@ -22,6 +22,13 @@ namespace Ast
 
         public override Expression Evaluate()
         {
+            foreach (var stmt in Statements)
+            {
+                if (stmt is Assign)
+                {
+                    stmt.Evaluate();
+                }
+            }
             return this;
         }
 
@@ -94,9 +101,7 @@ namespace Ast
         public void SetVar(string @var, Expression exp)
         {
             if (Locals.ContainsKey(@var))
-            {
                 Locals.Remove(@var);
-            }
 
             Locals.Add(@var, exp);
         }
@@ -106,16 +111,12 @@ namespace Ast
             Expression exp;
 
             if (Locals.TryGetValue(@var, out exp))
-            {
                 return exp;
-            }
 
-            if (parent != null)
-            {
+            if (Scope != null)
                 return Scope.GetVar(@var);
-            }
 
-            return null;
+            return new Error(this, @var + " has no definition");
         }
 
         public decimal GetReal(string @var)
@@ -128,10 +129,8 @@ namespace Ast
                     return (expr as Real).Value;
             }
 
-            if (parent != null)
-            {
+            if (Scope != null)
                 return Scope.GetReal(@var);
-            }
 
             return 0;
         }
@@ -146,10 +145,8 @@ namespace Ast
                     return (expr as Integer).@int;
             }
 
-            if (parent != null)
-            {
+            if (Scope != null)
                 return Scope.GetInt(@var);
-            }
 
             return 0;
         }
@@ -164,10 +161,8 @@ namespace Ast
                     return (expr as Boolean).@bool;
             }
 
-            if (parent != null)
-            {
+            if (Scope != null)
                 return Scope.GetBool(@var);
-            }
 
             return false;
         }
@@ -182,7 +177,7 @@ namespace Ast
                     return (expr as Text).Value;
             }
 
-            if (parent != null)
+            if (Scope != null)
             {
                 return Scope.GetText(@var);
             }

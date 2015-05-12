@@ -42,9 +42,6 @@ namespace Ast
         {
             var value = Scope.GetVar(identifier);
 
-            if (value == null)
-                return new Error(this, "has no definition");
-
             if (value is Real)
                 return prefix * value ^ exponent;
             else

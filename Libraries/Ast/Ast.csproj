@@ -190,6 +190,9 @@
     <Compile Include="Stmt\RetStmt.cs" />
     <Compile Include="Stmt\ForStmt.cs" />
     <Compile Include="Stmt\IfStmt.cs" />
+    <Compile Include="Dot.cs">
+      <DependentUpon>BinaryOperator.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ProjectExtensions>

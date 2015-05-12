@@ -24,21 +24,12 @@ namespace Ast
         Token tok;
         bool expectUnary = true;
 
-        Scope curScope
-        {
-            get
-            {
-                return scopeStack.Peek();
-            }
-        }
+        Scope curScope { get { return scopeStack.Peek(); } }
+        ParseContext curContext { get { return contextStack.Peek(); } }
 
-        ParseContext curContext
-        {
-            get
-            {
-                return contextStack.Peek();
-            }
-        }
+        Queue<Expression> curExprStack { get { return exprStack.Peek(); } }
+        Queue<UnaryOperator> curUnaryStack { get { return unaryStack.Peek(); } }
+        Queue<BinaryOperator> curBinaryStack { get { return binaryStack.Peek(); } }
 
         readonly Token EOS = new Token(TokenKind.END_OF_STRING, "END_OF_STRING", new Pos());
 
@@ -434,12 +425,19 @@ namespace Ast
                             SetupBiOp(new Greater());
                         break;
 
+                    case TokenKind.DOT:
+                        if (expectUnary)
+                            ReportSyntaxError(tok + " is not supported as unary operator");
+                        else
+                            SetupBiOp(new Dot());
+                        break;
+
                     default:
                         ReportSyntaxError("Unexpected '" + tok.ToString() + "'");
                         break;
                 }
 
-                if (exprStack.Count != binaryStack.Count && exprStack.Count != binaryStack.Count + 1)
+                if (curExprStack.Count != curBinaryStack.Count && curExprStack.Count != curBinaryStack.Count + 1)
                 {
                     if (binaryStack.Count > exprStack.Count)
                         ReportSyntaxError("Missing operand");
