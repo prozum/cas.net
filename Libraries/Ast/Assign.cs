@@ -9,21 +9,50 @@ namespace Ast
 
         protected override Expression Evaluate(Expression caller)
         {
-            if (Left is Symbol)
-            {
-                var sym = (Symbol)Left;
+            Variable sym;
+            Scope scope;
 
-                var res = Right.Evaluate();
+            Expression res;
+
+            if (Left is Dot)
+            {
+                var dot = Left as Dot;
+
+                if (dot.Right is Variable)
+                    sym = dot.Right as Variable;
+                else
+                    return new Error(dot.Right, " is not a symbol");
+
+                res = dot.Left.Evaluate();
 
                 if (res is Error)
                     return res;
 
-                sym.Scope.SetVar(sym.identifier, res);
+                if (res is Scope)
+                    scope = res as Scope;
+                else
+                    return new Error(res, " is not a scope");
+            }
+            else
+            {
+                sym = (Variable)Left;
+                scope = Left.Scope;
+            }
+
+
+            if (sym is Symbol)
+            {
+                res = Right.Evaluate();
+
+                if (res is Error)
+                    return res;
+
+                scope.SetVar(sym.identifier, res);
 
                 return res;
             }
 
-            if (Left is UsrFunc)
+            if (sym is UsrFunc)
             {
                 var usrFunc = (UsrFunc)Left;
 
