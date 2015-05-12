@@ -4,7 +4,7 @@ namespace Ast
 {
     public abstract class UnaryOperator : Operator
     {
-        public string identifier;
+        public string Identifier;
 
         private Expression _child;
         public Expression Child
@@ -24,7 +24,7 @@ namespace Ast
 
         protected UnaryOperator(string sym)
         {
-            this.identifier = sym;
+            this.Identifier = sym;
         }
             
         public override bool ContainsVariable(Variable other)
@@ -34,7 +34,7 @@ namespace Ast
 
         public override string ToString()
         {
-            return identifier + Child.ToString();
+            return Identifier + Child.ToString();
         }
     }
 }

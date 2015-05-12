@@ -15,9 +15,9 @@ namespace Ast
         const int MaxStatementPrint = 5;
 
         public Scope() : this(null) { }
-        public Scope(Scope parent)
+        public Scope(Scope Scope)
         {
-            this.Parent = parent;
+            this.Scope = Scope;
         }
 
         public override Expression Evaluate()
@@ -46,7 +46,7 @@ namespace Ast
                 ReturnExpr.items.Clear();
             }
 
-            if (curStep < Statements.Count)
+            while (curStep < Statements.Count)
             {
                 res = Statements[curStep].Step();
 
@@ -62,13 +62,13 @@ namespace Ast
                     return new DebugData("Evaluate: ", (res as ExprData).expr);
                 }
 
-                if (res is DoneData)
-                    curStep++;
-
                 if (res is ErrorData)
                     Reset();
 
-                return res;
+                if (res is DoneData)
+                    curStep++;
+                else
+                    return res;
             }
                 
             Reset();
@@ -77,9 +77,9 @@ namespace Ast
                 case 0:
                     return new DoneData();
                 case 1:
-                    return new ReturnData(ReturnExpr.items[0]);
+                    return new DoneData(ReturnExpr.items[0]);
                 default:
-                    return new ReturnData(ReturnExpr);
+                    return new DoneData(ReturnExpr);
             }
         }
 

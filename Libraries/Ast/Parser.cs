@@ -55,7 +55,7 @@ namespace Ast
             Scope res;
 
             if (newScope)
-                scopeStack.Push(new Scope());
+                scopeStack.Push(new Scope(scopeStack.Peek()));
 
             res = scopeStack.Peek();
 
@@ -211,26 +211,44 @@ namespace Ast
             return stmt;
         }
 
-        public ForStmt ParseForStmt()
+        public Expression ParseForStmt()
         {
             var stmt = new ForStmt();
 
-//            if (!Eat(TokenKind.IDENTIFIER))
-//            {
-//                ReportSyntaxError("If syntax: for symbol in list:");
-//                return null;
-//            }
-//
-//            if (!Eat(TokenKind.IN))
-//            {
-//                ReportSyntaxError("If syntax: for symbol in list:");
-//                return null;
-//            }
-//
-//            stmt.list = ParseExpr(TokenKind.COLON);
+            if (Peek(TokenKind.IDENTIFIER))
+            {
+                stmt.sym = tok.value;
+                Eat();
+            }
+            else
+                return ReportSyntaxError("If syntax: for symbol in list:");
 
-            throw new NotImplementedException();
+            if (!Eat(TokenKind.IN))
+                return ReportSyntaxError("If syntax: for symbol in list:");
 
+            var list = ParseExpr(TokenKind.COLON);
+
+            if (!Eat(TokenKind.COLON))
+                return ReportSyntaxError("If syntax: for symbol in list:", true);
+
+            if (list is Error)
+                return stmt.list;
+
+            if (list is Variable)
+                list = curScope.GetVar((list as Variable).identifier);
+
+            if (list != null || list is List)
+                stmt.list = list as List;
+            else
+                return ReportSyntaxError("For: list argument is not a list");
+                   
+
+            if (Eat(TokenKind.CURLY_START))
+                stmt.expr = ParseScope(TokenKind.CURLY_END);
+            else
+                stmt.expr = ParseScope(TokenKind.SEMICOLON);
+
+            return stmt;
         }
 
         public List ParseList()
@@ -449,6 +467,7 @@ namespace Ast
                 expr.pos = tok.pos;
             else
                 expr.pos = curTok.pos; 
+            expr.Scope = curScope;
 
             while (curUnaryStack.Count > 0)
             {
@@ -467,15 +486,17 @@ namespace Ast
         public void SetupUnOp(UnaryOperator op)
         {
             op.pos = tok.pos;
+            op.Scope = curScope;
 
-            unaryStack.Peek().Enqueue(op);
+            curUnaryStack.Enqueue(op);
         }
 
         public void SetupBiOp(BinaryOperator op)
         {
             op.pos = tok.pos;
+            op.Scope = curScope;
 
-            binaryStack.Peek().Enqueue(op);
+            curBinaryStack.Enqueue(op);
             expectUnary = true;
 
             if (curExprStack.Count != curBinaryStack.Count)
@@ -488,7 +509,7 @@ namespace Ast
             BinaryOperator curOp, nextOp, top;
 
             if (exprs.Count == 0)
-                throw new Exception("No expressions");
+                return ReportSyntaxError("Missing expression");
 
             if (exprs.Count != 1 + biops.Count)
                 return ReportSyntaxError("Missing operand");
@@ -627,9 +648,9 @@ namespace Ast
             }
         }
 
-        public Error ReportSyntaxError(string msg)
+        public Error ReportSyntaxError(string msg, bool overwrite = false)
         {
-            if (curScope.Error == null)
+            if (curScope.Error == null || overwrite)
             {
                 curScope.Error = new Error("Parser: " + msg);
                 curScope.Error.pos = tok.pos;

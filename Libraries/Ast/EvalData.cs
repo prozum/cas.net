@@ -8,6 +8,12 @@ namespace Ast
 
     public class DoneData : EvalData
     {
+        public Expression expr;
+
+        public DoneData(Expression expr = null)
+        {
+            this.expr = expr;
+        }
     }
 
     public class ReturnData : EvalData

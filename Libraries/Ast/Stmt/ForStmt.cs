@@ -4,12 +4,11 @@ namespace Ast
 {
     public class ForStmt : Expression
     {
-        public Symbol sym;
-        public Expression list;
+        public string sym;
+        public List list;
+        public Scope expr;
 
-        public ForStmt()
-        {
-        }
+        private int curItem = 0;
 
         public override Expression Evaluate()
         {
@@ -18,7 +17,29 @@ namespace Ast
 
         public override EvalData Step()
         {
-            throw new NotImplementedException();
+            EvalData res;
+
+            while (curItem < list.items.Count)
+            {
+                expr.SetVar(sym, list.items[curItem]);
+                res = expr.Step();
+
+                if (res is ReturnData || res is ErrorData)
+                    Reset();
+
+                if (res is DoneData)
+                    curItem++;
+                else
+                    return res;
+            }
+
+            Reset();
+            return new DoneData();
+        }
+
+        public void Reset()
+        {
+            curItem = 0;
         }
 
         public override bool ContainsVariable(Variable other)
