@@ -49,12 +49,12 @@ namespace Ast
 
         public void Parse(string parseString, Scope global)
         {
-            global.ScopeError = null;
+            global.Error = null;
             scopeStack.Push(global);
             contextStack.Push(ParseContext.Scope);
 
-            tokens = Scanner.Tokenize(parseString, out global.ScopeError);
-            if (global.ScopeError != null)
+            tokens = Scanner.Tokenize(parseString, out global.Error);
+            if (global.Error != null)
                 return;
 
             tok = tokens.Peek();
@@ -108,7 +108,7 @@ namespace Ast
                         break;
                 }
 
-                if (res.ScopeError != null)
+                if (res.Error != null)
                     return res;
             }
 
@@ -294,14 +294,14 @@ namespace Ast
                         if (curContext == ParseContext.Scope)
                             done = true;
                         else
-                            return ReportSyntaxError("Unexpected ';' in " + contextStack.Peek());
+                            ReportSyntaxError("Unexpected ';' in " + contextStack.Peek());
                         break;
                     
                     case TokenKind.COMMA:
                         if (curContext == ParseContext.List)
                             done = true;
                         else
-                            return ReportSyntaxError("Unexpected ',' in " + contextStack.Peek());
+                            ReportSyntaxError("Unexpected ',' in " + contextStack.Peek());
                         break;
 
                     case TokenKind.NEW_LINE:
@@ -338,8 +338,9 @@ namespace Ast
                         contextStack.Push(ParseContext.Parenthesis);
                         SetupExpr(ParseExpr(TokenKind.PARENT_END));
                         contextStack.Pop();
+ 
                         if (!Eat(TokenKind.PARENT_END))
-                            return ReportSyntaxError("Missing )");
+                            ReportSyntaxError("Missing )");
                         break;
                     case TokenKind.SQUARE_START:
                         SetupExpr(ParseList());
@@ -362,7 +363,7 @@ namespace Ast
                         if (expectUnary)
                             SetupUnOp(new Negation());
                         else
-                            return ReportSyntaxError("Unexpected: '!'");
+                            ReportSyntaxError("Unexpected: '!'");
                         break;
 
                     case TokenKind.MUL:
@@ -434,19 +435,20 @@ namespace Ast
                         break;
 
                     default:
-                        return ReportSyntaxError("Unexpected '" + tok.ToString() + "'");
+                        ReportSyntaxError("Unexpected '" + tok.ToString() + "'");
+                        break;
                 }
 
                 if (exprStack.Count != binaryStack.Count && exprStack.Count != binaryStack.Count + 1)
                 {
                     if (binaryStack.Count > exprStack.Count)
-                        return ReportSyntaxError("Missing operand");
+                        ReportSyntaxError("Missing operand");
                     else
-                        return ReportSyntaxError("Missing operator");
+                        ReportSyntaxError("Missing operator");
                 }
 
-                if (curScope.ScopeError != null)
-                    return curScope.ScopeError;
+                if (curScope.Error != null)
+                    return curScope.Error;
             }
 
             unaryStack.Pop();
@@ -638,10 +640,13 @@ namespace Ast
 
         public Error ReportSyntaxError(string msg)
         {
-            curScope.ScopeError = new Error("Parser: " + msg);
-            curScope.ScopeError.pos = tok.pos;
+            if (curScope.Error == null)
+            {
+                curScope.Error = new Error("Parser: " + msg);
+                curScope.Error.pos = tok.pos;
+            }
 
-            return curScope.ScopeError;
+            return curScope.Error;
         }
     }
 }
