@@ -12,13 +12,33 @@ namespace DesktopUI
         Grid ButtonGrid = new Grid();
         Evaluator Eval;
         User user;
+        Window window;
 
-
-        public TextViewList(User user, Evaluator Eval)
+        public TextViewList(User user, Evaluator Eval, Window window)
             : base()
         {
             this.Eval = Eval;
             this.user = user;
+            this.window = window;
+
+            window.ResizeChecked += delegate
+            {
+                foreach (Widget widget in castextviews)
+                {
+                    if(widget is MovableCasCalcView)
+                    {
+                        (widget as MovableCasCalcView).calcview.input.WidthRequest = window.Window.Width - 60; 
+                    }
+                    else if (widget is MovableDrawCanvas)
+                    {
+                        (widget as MovableDrawCanvas).canvas.WidthRequest = window.Window.Width - 60;
+                    }
+                    else if(widget is MovableCasTextView) // <- This shall always be last as all other widgets inherit from it, but not all use it.
+                    {
+                        (widget as MovableCasTextView).textview.WidthRequest = window.Window.Width - 60;
+                    }
+                }
+            };
 
             ShowAll();
         }

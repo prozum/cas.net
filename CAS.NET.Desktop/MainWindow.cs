@@ -43,7 +43,7 @@ namespace CAS.NET.Desktop
         {
             DeleteEvent += (o, a) => Gtk.Application.Quit();
 
-            textviews = new TextViewList(user, Eval);
+            textviews = new TextViewList(user, Eval, this);
             DefBox = new DefinitionBox(Eval);
 
             // Initiating menu elements
