@@ -105,6 +105,17 @@ namespace DesktopUI
                     vbox.PackStart(ButtonAddNew, false, false, 2);
                     movableCasTextView.Attach(vbox, 2, 1, 1, 2);
                 }
+                else
+                {
+                    ButtonAddNew.Clicked += delegate
+                    {
+                        AddNew(movableCasTextView);
+                    };
+
+                    VBox vbox = new VBox();
+                    vbox.PackStart(ButtonAddNew, false, false, 2);
+                    movableCasTextView.Attach(vbox, 2, 1, 1, 2);
+                }
 
                 if (pos == -1)
                 {

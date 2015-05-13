@@ -96,7 +96,7 @@ namespace DesktopUI
 
                         if (filechooser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                         {
-                            System.IO.File.WriteAllText(filechooser.FileName, "file");
+                            System.IO.File.WriteAllText(filechooser.FileName, s);
                         }
 
                         break;
