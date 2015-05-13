@@ -57,10 +57,10 @@ namespace DesktopUI
 
                 textviews.InsertTaskGenTextView("Test");
                 
-                textviews.Clear();
-                textviews.Redraw();
-                textviews.Reevaluate();
-                textviews.ShowAll();
+                //textviews.Clear();
+                //textviews.Redraw();
+                //textviews.Reevaluate();
+                //textviews.ShowAll();
                 this.Destroy();
             };
             

@@ -59,7 +59,6 @@
     <Compile Include="CasTextView.cs" />
     <Compile Include="OpenToolButton.cs" />
     <Compile Include="SaveToolButton.cs" />
-    <Compile Include="TaskGenWidget.cs" />
     <Compile Include="TaskGenWindow.cs" />
     <Compile Include="TextViewList.cs" />
     <Compile Include="ServerMenuItem.cs" />

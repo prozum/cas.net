@@ -140,6 +140,7 @@ namespace DesktopUI
             Button ButtonAddNew = new Button("+");
 
             MovableCasTextView movableCasTextView = new MovableCasTextView(TaskString);
+            movableCasTextView.textview.LockTextView(true);
 
             ButtonDelete.Clicked += delegate
             {
@@ -158,8 +159,8 @@ namespace DesktopUI
             vbox.PackStart(ButtonAddNew, false, false, 2);
             movableCasTextView.Attach(vbox, 2, 1, 1, 2);
 
-            
-           
+            castextviews.Add(movableCasTextView);
+
             Clear();
             Redraw();
             ShowAll();

@@ -36,7 +36,6 @@ namespace DesktopUI
         public CasTextView(string TaskString)
             : base()
         {
-            this.locked = true;
             Buffer.Text = TaskString;
             ShowAll();
         }
