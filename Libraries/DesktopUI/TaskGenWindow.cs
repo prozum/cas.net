@@ -25,7 +25,9 @@ namespace DesktopUI
             SpinButton spinbuttonMinimum = new SpinButton(1, 100, 1);
             SpinButton spinbuttonMaximum = new SpinButton(1, 100, 1);
             SpinButton spinbuttonVariables = new SpinButton(2, 5, 1);
-            SpinButton spinbuttonNumberOfTasks = new SpinButton(1, 5, 1);       
+            SpinButton spinbuttonNumberOfTasks = new SpinButton(1, 5, 1);
+
+            spinbuttonMaximum.Value = 20;
 
             Button buttonOk = new Button("Ok");
             Button buttonCancel = new Button("Cancel");
@@ -53,15 +55,13 @@ namespace DesktopUI
                 TaskGenLib.Task t = TaskGenLib.TaskGen.MakeCalcTask((int)spinbuttonMinimum.Value, (int)spinbuttonMaximum.Value, (int)spinbuttonVariables.Value);
                 string sTask = t.TaskDescription;
 
+                textviews.InsertTaskGenTextView("Test");
                 
-
-                //textviews.InsertTextView()
-
-
                 textviews.Clear();
                 textviews.Redraw();
                 textviews.Reevaluate();
                 textviews.ShowAll();
+                this.Destroy();
             };
             
             Add(table);

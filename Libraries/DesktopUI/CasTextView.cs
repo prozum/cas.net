@@ -31,7 +31,14 @@ namespace DesktopUI
             this.locked = locked;
 
             ShowAll();
+        }
 
+        public CasTextView(string TaskString)
+            : base()
+        {
+            this.locked = true;
+            Buffer.Text = TaskString;
+            ShowAll();
         }
 
         public string SerializeCasTextView()

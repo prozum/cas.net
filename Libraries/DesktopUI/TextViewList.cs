@@ -132,6 +132,39 @@ namespace DesktopUI
             ShowAll();
         }
 
+        public void InsertTaskGenTextView(string TaskString)
+        {
+            //Button ButtonMoveUp = new Button("↑");
+            //Button ButtonMoveDown = new Button("↓");
+            Button ButtonDelete = new Button("X");
+            Button ButtonAddNew = new Button("+");
+
+            MovableCasTextView movableCasTextView = new MovableCasTextView(TaskString);
+
+            ButtonDelete.Clicked += delegate
+            {
+                Delete(movableCasTextView.id_);
+            };
+
+            ButtonAddNew.Clicked += delegate
+            {
+                AddNew(movableCasTextView);
+            };
+
+            VBox vbox = new VBox();
+            //vbox.PackStart(ButtonMoveUp, false, false, 2);
+            //vbox.PackEnd(ButtonMoveDown, false, false, 2);
+            vbox.PackStart(ButtonDelete, false, false, 2);
+            vbox.PackStart(ButtonAddNew, false, false, 2);
+            movableCasTextView.Attach(vbox, 2, 1, 1, 2);
+
+            
+           
+            Clear();
+            Redraw();
+            ShowAll();
+        }
+
         public void InsertCalcView(int pos)
         {
             Button ButtonMoveUp = new Button("↑");
