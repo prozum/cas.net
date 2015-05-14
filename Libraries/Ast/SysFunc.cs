@@ -5,7 +5,7 @@ namespace Ast
 {
     public abstract class SysFunc : Func
     {
-        public List<ArgKind> validArgs;
+        public List<ArgKind> ValidArguments;
 
         public SysFunc(string identifier, List<Expression> args, Scope scope)
             : base(identifier, args, scope) { }
@@ -27,7 +27,7 @@ namespace Ast
                 str += identifier + '[';
             }
 
-            for (int i = 0; i < validArgs.Count; i++) 
+            for (int i = 0; i < ValidArguments.Count; i++) 
             {
                 str += args[i].ToString ();
 
@@ -49,12 +49,12 @@ namespace Ast
 
         public bool isArgsValid()
         {
-            if (args.Count != validArgs.Count)
+            if (args.Count != ValidArguments.Count)
                 return false;
 
             for (int i = 0; i < args.Count; i++)
             {
-                switch (validArgs[i])
+                switch (ValidArguments[i])
                 {
                     case ArgKind.Expression:
                         if (!(args[i] is Expression))

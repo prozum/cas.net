@@ -31,31 +31,23 @@ public class MainWindow : Window
 
     public void EvaluateInput()
     {
-        EvalData data;
-        TextIter insertIter;
+        TextIter insertIter = buffer.StartIter;
 
         eval.Parse(input.Buffer.Text);
        
-        do
+
+        buffer.Insert(ref insertIter, eval.Evaluate().ToString() + "\n");
+
+        foreach(var data in eval.SideEffects)
         {
-            data = eval.Step();
 
-            insertIter = buffer.StartIter;
-
-            if (data is PrintData || data is ReturnData)
-            {
+            if (data is PrintData)
                 buffer.Insert(ref insertIter, data.ToString() + "\n");
-            }
             else if (data is ErrorData)
-            {
                 buffer.InsertWithTagsByName(ref insertIter, data.ToString() + "\n", "error");
-            }
             else if (data is DebugData && eval.GetBool("debug"))
-            {
                 buffer.InsertWithTagsByName(ref insertIter, data.ToString() + "\n", "debug");
-            }
         }
-        while (!(data is DoneData || data is ReturnData || data is ErrorData));
     }
 
     public void CreateDefTree()

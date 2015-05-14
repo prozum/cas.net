@@ -2,6 +2,9 @@
 
 namespace Ast
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Equal : BinaryOperator
     {
         public Equal() : base("=", 0) { }
@@ -22,7 +25,7 @@ namespace Ast
             return new Equal(Left.Clone(), Right.Clone());
         }
 
-        public override Expression CurrectOperator()
+        internal override Expression CurrectOperator()
         {
             return new Equal(Left.CurrectOperator(), Right.CurrectOperator());
         }

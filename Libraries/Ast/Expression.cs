@@ -4,25 +4,54 @@ using System.Text.RegularExpressions;
 
 namespace Ast
 {
+    /// <summary>
+    /// A Expression which has a Inverted form. Invertable Expression are used to solve equations.
+    /// </summary>
     public interface IInvertable
     {
-        Expression Inverted(Expression other);
+        /// <summary>
+        /// Does the inverted Expression on the parameter.
+        /// </summary>
+        /// <remarks> 
+        /// Example 1: "x + y" would be inverted to "other - y".
+        /// Example 2: "Sin(x) would be inverted to "ASin(other)".
+        /// </remarks> 
+        Expression InvertOn(Expression other);
     }
 
+    /// <summary>
+    /// A Expression which can be negative.
+    /// </summary>
     public interface INegative
     {
+        /// <summary>
+        /// Determins wether or not the Expression is negative.
+        /// </summary>
         bool IsNegative();
+
+        /// <summary>
+        /// Returns the negative version of this Expression. 
+        /// </summary>
+        /// <remarks> 
+        /// ToNegative should return the positive version of the Expression if it's allready negative.
+        /// </remarks> 
         Expression ToNegative();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public abstract class Expression
     {
         public Expression Parent;
         public Scope Scope;
-        public Pos pos;
+        public Pos Position;
 
         public bool stepped = false;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual Expression Evaluate() 
         {
             return Reduce().Evaluate(this); 
@@ -33,46 +62,50 @@ namespace Ast
             return new Error(this, "This type cannot evaluate");
         }
 
-        public virtual EvalData Step()
-        {
-            if (stepped)
-                return new DoneData();
-            stepped =  !stepped;
-
-            var res = Evaluate();
-
-            if (res is Error)
-                return new ErrorData(res as Error);
-            else
-                return new ExprData(res);
-        }
-
-        public virtual Expression CurrectOperator()
+        /// <summary>
+        /// 
+        /// </summary>
+        internal virtual Expression CurrectOperator()
         {
             return this;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual Expression Expand()
         {
             return this;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual Expression Reduce() { return this.Reduce(this).CurrectOperator(); }
         internal virtual Expression Reduce(Expression caller)
         {
             return this;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual Expression Clone()
         {
             return new Error(this, "Cannot clone");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool CompareTo(Expression other)
         {
             return this.GetType() == other.GetType();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool ContainsVariable(Variable other)
         {
             return false;
@@ -114,7 +147,7 @@ namespace Ast
             return this + other.Evaluate();
         }
 
-        public virtual Expression AddWith(Message other)
+        public virtual Expression AddWith(Error other)
         {
             return new Error(this, "Don't support adding " + other.GetType().Name);
         }
@@ -172,7 +205,7 @@ namespace Ast
             return this - other.Evaluate();
         }
 
-        public virtual Expression SubWith(Message other)
+        public virtual Expression SubWith(Error other)
         {
             return new Error(this, "Don't support subbing " + other.GetType().Name);
         }
@@ -230,7 +263,7 @@ namespace Ast
             return this * other.Evaluate();
         }
 
-        public virtual Expression MulWith(Message other)
+        public virtual Expression MulWith(Error other)
         {
             return new Error(this, "Don't support multipying " + other.GetType().Name);
         }
@@ -288,7 +321,7 @@ namespace Ast
             return this / other.Evaluate();
         }
 
-        public virtual Expression DivWith(Message other)
+        public virtual Expression DivWith(Error other)
         {
             return new Error(this, "Don't support diving " + other.GetType().Name);
         }
@@ -346,7 +379,7 @@ namespace Ast
             return this / other.Evaluate();
         }
 
-        public virtual Expression ExpWith(Message other)
+        public virtual Expression ExpWith(Error other)
         {
             return new Error(this, "Don't support powering " + other.GetType().Name);
         }
@@ -404,7 +437,7 @@ namespace Ast
             return this > other.Evaluate();
         }
 
-        public virtual Expression GreaterThan(Message other)
+        public virtual Expression GreaterThan(Error other)
         {
             return new Error(this, "Don't support greater than " + other.GetType().Name);
         }
@@ -462,7 +495,7 @@ namespace Ast
             return this < other.Evaluate();
         }
 
-        public virtual Expression LesserThan(Message other)
+        public virtual Expression LesserThan(Error other)
         {
             return new Error(this, "Don't support lesser than " + other.GetType().Name);
         }
@@ -520,7 +553,7 @@ namespace Ast
             return this >= other.Evaluate();
         }
 
-        public virtual Expression GreaterThanOrEqualTo(Message other)
+        public virtual Expression GreaterThanOrEqualTo(Error other)
         {
             return new Error(this, "Don't support greater than or equal to " + other.GetType().Name);
         }
@@ -578,7 +611,7 @@ namespace Ast
             return this <= other.Evaluate();
         }
 
-        public virtual Expression LesserThanOrEqualTo(Message other)
+        public virtual Expression LesserThanOrEqualTo(Error other)
         {
             return new Error(this, "Don't support lesser than or equal " + other.GetType().Name);
         }
@@ -636,7 +669,7 @@ namespace Ast
             return this + other.Evaluate();
         }
 
-        public virtual Expression ModuloWith(Message other)
+        public virtual Expression ModuloWith(Error other)
         {
             return new Error(this, "Don't support modulo " + other.GetType().Name);
         }
@@ -671,9 +704,9 @@ namespace Ast
         #region Binary Operator Overload
         public static Expression operator +(Expression left, dynamic right)
         {
-            if (left is Message)
+            if (left is Error)
                 return left;
-            else if (right is Message)
+            else if (right is Error)
                 return right;
 
             return left.AddWith(right);
@@ -681,9 +714,9 @@ namespace Ast
 
         public static Expression operator -(Expression left, dynamic right)
         {
-            if (left is Message)
+            if (left is Error)
                 return left;
-            else if (right is Message)
+            else if (right is Error)
                 return right;
 
             return left.SubWith(right);
@@ -691,9 +724,9 @@ namespace Ast
 
         public static Expression operator *(Expression left, dynamic right)
         {
-            if (left is Message)
+            if (left is Error)
                 return left;
-            else if (right is Message)
+            else if (right is Error)
                 return right;
 
             return left.MulWith(right);
@@ -701,9 +734,9 @@ namespace Ast
 
         public static Expression operator /(Expression left, dynamic right)
         {
-            if (left is Message)
+            if (left is Error)
                 return left;
-            else if (right is Message)
+            else if (right is Error)
                 return right;
 
             if (right.CompareTo(Constant.Zero))
@@ -716,9 +749,9 @@ namespace Ast
 
         public static Expression operator ^(Expression left, dynamic right)
         {
-            if (left is Message)
+            if (left is Error)
                 return left;
-            else if (right is Message)
+            else if (right is Error)
                 return right;
 
             return left.ExpWith(right);
@@ -726,9 +759,9 @@ namespace Ast
 
         public static Expression operator >(Expression left, dynamic right)
         {
-            if (left is Message)
+            if (left is Error)
                 return left;
-            else if (right is Message)
+            else if (right is Error)
                 return right;
 
             return left.GreaterThan(right);
@@ -736,9 +769,9 @@ namespace Ast
 
         public static Expression operator <(Expression left, dynamic right)
         {
-            if (left is Message)
+            if (left is Error)
                 return left;
-            else if (right is Message)
+            else if (right is Error)
                 return right;
 
             return left.LesserThan(right);
@@ -746,9 +779,9 @@ namespace Ast
 
         public static Expression operator >=(Expression left, dynamic right)
         {
-            if (left is Message)
+            if (left is Error)
                 return left;
-            else if (right is Message)
+            else if (right is Error)
                 return right;
 
             return left.GreaterThanOrEqualTo(right);
@@ -756,9 +789,9 @@ namespace Ast
 
         public static Expression operator <=(Expression left, dynamic right)
         {
-            if (left is Message)
+            if (left is Error)
                 return left;
-            else if (right is Message)
+            else if (right is Error)
                 return right;
 
             return left.LesserThanOrEqualTo(right);
@@ -766,9 +799,9 @@ namespace Ast
 
         public static Expression operator %(Expression left, dynamic right)
         {
-            if (left is Message)
+            if (left is Error)
                 return left;
-            else if (right is Message)
+            else if (right is Error)
                 return right;
 
             return left.ModuloWith(right);

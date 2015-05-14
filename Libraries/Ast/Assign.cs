@@ -2,6 +2,9 @@
 
 namespace Ast
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Assign : BinaryOperator
     {
         public Assign() : base(":=", 0) { }
@@ -73,7 +76,7 @@ namespace Ast
 
                 usrFunc.Scope.SetVar(usrFunc.identifier, defFunc);
 
-                return new Info(usrFunc.ToString() + ":=" + Right.ToString());
+                return this;
             }
 
             if (Left is SysFunc)
@@ -99,7 +102,7 @@ namespace Ast
             return new Assign(Left.Clone(), Right.Clone());
         }
 
-        public override Expression CurrectOperator()
+        internal override Expression CurrectOperator()
         {
             return new Assign(Left.CurrectOperator(), Right.CurrectOperator());
         }

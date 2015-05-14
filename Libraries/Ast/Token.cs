@@ -13,6 +13,8 @@ namespace Ast
         RET,
         FOR,
         IN,
+        PRINT,
+        PLOT,
 
         TEXT,
 
@@ -77,22 +79,22 @@ namespace Ast
 
     public class Token
     {
-        public TokenKind kind;
-        public string value;
-        public Pos pos;
+        public TokenKind Kind;
+        public string Value;
+        public Pos Position;
 
         public Token(TokenKind kind, char value, Pos pos) : this(kind, value.ToString(), pos) {}
         public Token(TokenKind kind, string value, Pos pos)
         {
-            this.kind = kind;
-            this.value = value;
-            this.pos = pos;
-            this.pos.i++;
+            this.Kind = kind;
+            this.Value = value;
+            this.Position = pos;
+            this.Position.i++;
         }
 
         public override string ToString()
         {
-            return value;
+            return Value;
         }
     }
 }

@@ -28,7 +28,7 @@ namespace Ast
             return new Sub(Left.Clone(), Right.Clone());
         }
 
-        public Expression Inverted(Expression other)
+        public Expression InvertOn(Expression other)
         {
             return new Add(other, Right);
         }
@@ -54,7 +54,7 @@ namespace Ast
             }
         }
 
-        public override Expression CurrectOperator()
+        internal override Expression CurrectOperator()
         {
             if (Right is INegative && (Right as INegative).IsNegative())
             {
