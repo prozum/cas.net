@@ -50,7 +50,7 @@ namespace DesktopUI
 						metaType.metastring = calcView.calcview.input.Text;
 						metaTypeList.Add(metaType);
 					}
-					else if (w is MovableLockedCasTextView)
+					else if (w is MovableCasTextView)
 					{
 						MetaType metaType = new MetaType();
 						MovableCasTextView textView = (MovableCasTextView)w;

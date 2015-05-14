@@ -48,25 +48,6 @@ namespace DesktopUI
                     {
                         buffer.ApplyTag((item as MovableCasTextView).textview.boldTag, startIter, endIter);
                     }
-
-                }
-                else if (item.GetType() == typeof(MovableLockedCasTextView))
-                {
-                    TextBuffer buffer = (item as MovableLockedCasTextView).textview.Buffer;
-                    TextIter startIter, endIter;
-                    buffer.GetSelectionBounds(out startIter, out endIter);
-
-                    byte[] byteTextView = buffer.Serialize(buffer, buffer.RegisterSerializeTagset(null), startIter, endIter);
-                    string s = Encoding.UTF8.GetString(byteTextView);
-
-                    if (s.Contains("<attr name=\"weight\" type=\"gint\" value=\"700\" />"))
-                    {
-                        buffer.RemoveTag((item as MovableCasTextView).textview.boldTag, startIter, endIter);                
-                    }
-                    else
-                    {
-                        buffer.ApplyTag((item as MovableCasTextView).textview.boldTag, startIter, endIter);
-                    }
                 }
             }
         }
