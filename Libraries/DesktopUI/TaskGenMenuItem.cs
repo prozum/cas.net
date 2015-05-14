@@ -13,13 +13,8 @@ namespace DesktopUI
             this.textviews = textviews;
             this.Activated += delegate
             {
-                OnActivated();
+                TaskGenWindow window = new TaskGenWindow(this.textviews);
             };
-        }
-   
-        void OnActivated()
-        {
-            TaskGenWindow window = new TaskGenWindow(textviews);
         }
     }
 }

@@ -15,7 +15,6 @@ namespace DesktopUI
             casresult = new CasResult(user, answer, facit);
 
             Remove(textview);
-            textview = null;
             Attach(casresult, 1, 1, 1, 1);
         }
     }
