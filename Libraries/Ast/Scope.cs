@@ -6,86 +6,68 @@ namespace Ast
     public class Scope : Expression
     {
         public Dictionary<string,Expression> Locals = new Dictionary<string,Expression>();
-        public List<Expression> Statements = new List<Expression>();
+        public List<Statement> Statements = new List<Statement>();
+        public List<EvalData> SideEffects = new List<EvalData>();
 
-        int curStep = -1;
-        public Error Error;
+        public ErrorExpr Error;
         public List ReturnExpr = new List();
 
         const int MaxStatementPrint = 5;
 
-        public Scope() : this(null) { }
+        public Scope()
+        {
+            SideEffects = new List<EvalData>();
+        }
+
         public Scope(Scope Scope)
         {
             this.Scope = Scope;
+            SideEffects = Scope.SideEffects;
         }
 
         public override Expression Evaluate()
         {
+            var list = new List();
+
+            if (Error != null)
+            {
+                SideEffects.Add(new ErrorData(Error));
+                return Error;
+            }
+
             foreach (var stmt in Statements)
             {
-                if (stmt is Assign)
+                var data = stmt.Evaluate();
+
+                if (data is ExprData)
                 {
-                    stmt.Evaluate();
+                    list.items.Add((data as ExprData).expr);
+                    if (GetBool("debug"))
+                        SideEffects.Add(stmt.GetDebugData());
+                    continue;
                 }
-                else if (stmt is RetStmt)
+
+                if (data is ReturnData)
+                    return (data as ReturnData).expr;
+
+                if (data is ErrorData)
                 {
-                    return stmt.Evaluate();
-                }
+                    SideEffects.Add(data);
+                    break;
+                }  
+
+                SideEffects.Add(data);
             }
-            return this;
-        }
 
-        public override EvalData Step()
-        {
-            EvalData res;
-
-            if (curStep == -1)
-            {
-                curStep = 0;
-                ReturnExpr.items.Clear();
-            }
-
-            while (curStep < Statements.Count)
-            {
-                res = Statements[curStep].Step();
-
-                if (res is ReturnData)
-                {
-                    Reset();
-                    return new ReturnData((res as ReturnData).expr);
-                }
-
-                if (res is ExprData)
-                {
-                    ReturnExpr.items.Add((res as ExprData).expr);
-                    return new DebugData("Evaluate: ", (res as ExprData).expr);
-                }
-
-                if (res is ErrorData)
-                    Reset();
-
-                if (res is DoneData)
-                    curStep++;
-                else
-                    return res;
-            }
-                
-            Reset();
-            switch (ReturnExpr.items.Count)
+            switch (list.items.Count)
             {
                 case 0:
-                    return new DoneData();
+                    return this;
                 case 1:
-                    return new DoneData(ReturnExpr.items[0]);
+                    return list.items[0];
                 default:
-                    return new DoneData(ReturnExpr);
+                    return list;
             }
-        }
-
-        private void Reset()
-        {
-            curStep = -1;
         }
 
         public override bool ContainsVariable(Variable other)
@@ -112,7 +94,7 @@ namespace Ast
             if (Scope != null)
                 return Scope.GetVar(@var);
 
-            return new Error(this, @var + " has no definition");
+            return new ErrorExpr(this, @var + " has no definition");
         }
 
         public decimal GetReal(string @var)

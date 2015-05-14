@@ -8,7 +8,7 @@ namespace Ast
         public RangeFunc(List<Expression> args, Scope scope)
             : base("range", args, scope)
         {
-            validArgs = new List<ArgKind>()
+            ValidArguments = new List<ArgKind>()
                 {
                     ArgKind.Number,
                     ArgKind.Number,
@@ -19,7 +19,7 @@ namespace Ast
         protected override Expression Evaluate(Expression caller)
         {
             if (!isArgsValid())
-                return new ArgError(this);
+                return new ArgumentError(this);
 
             Decimal start;
             Decimal end;
@@ -30,21 +30,21 @@ namespace Ast
             else if (args[0] is Irrational)
                 start = (args[0] as Irrational).@decimal;
             else
-                return new Error(this, "argument 1 cannot be: " + args[0].GetType().Name);
+                return new ErrorExpr(this, "argument 1 cannot be: " + args[0].GetType().Name);
 
             if (args[1] is Integer)
                 end = (args[1] as Integer).@int;
             else if (args[1] is Irrational)
                 end = (args[1] as Irrational).@decimal;
             else
-                return new Error(this, "argument 2 cannot be: " + args[1].GetType().Name);
+                return new ErrorExpr(this, "argument 2 cannot be: " + args[1].GetType().Name);
 
             if (args[2] is Integer)
                 step = (args[2] as Integer).@int;
             else if (args[2] is Irrational)
                 step = (args[2] as Irrational).@decimal;
             else
-                return new Error(this, "argument 3 cannot be: " + args[2].GetType().Name);
+                return new ErrorExpr(this, "argument 3 cannot be: " + args[2].GetType().Name);
 
             var list = new Ast.List ();
             for (Decimal i = start; i < end; i += step)

@@ -9,7 +9,7 @@ namespace Ast
         public AcosFunc(List<Expression> args, Scope scope)
             : base("acos", args, scope)
         {
-            validArgs = new List<ArgKind>()
+            ValidArguments = new List<ArgKind>()
                 {
                     ArgKind.Expression
                 };
@@ -18,7 +18,7 @@ namespace Ast
         protected override Expression Evaluate(Expression caller)
         {
             if (!isArgsValid())
-                return new ArgError(this);
+                return new ArgumentError(this);
 
             var res = args[0].Evaluate();
 
@@ -29,7 +29,7 @@ namespace Ast
                 return ReturnValue(new Irrational(Math.Acos((double) ((deg ? Constant.DegToRad.Value  : 1) * (res as Real).Value) ))).Evaluate();
             }
 
-            return new Error(this, "Could not take ACos of: " + args[0]);
+            return new ErrorExpr(this, "Could not take ACos of: " + args[0]);
         }
 
         internal override Expression Reduce(Expression caller)

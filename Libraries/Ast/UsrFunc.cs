@@ -22,14 +22,14 @@ namespace Ast
             @var = Scope.GetVar(identifier);
 
             if (@var == null)
-                return new Error(this,"has no definition");
+                return new ErrorExpr(this,"has no definition");
 
             if (@var is UsrFunc)
             {
                 var usrFuncDef = (UsrFunc)@var;
 
                 if (args.Count != usrFuncDef.args.Count)
-                    return new Error(identifier + " takes " + usrFuncDef.args.Count.ToString() + " arguments. Not " + args.Count.ToString() + ".");
+                    return new ErrorExpr(identifier + " takes " + usrFuncDef.args.Count.ToString() + " arguments. Not " + args.Count.ToString() + ".");
 
                 Scope = new Scope(Scope);
 
@@ -50,27 +50,27 @@ namespace Ast
                 var list = (List)@var;
 
                 if (args.Count != 1 || !(args[0] is Integer))
-                    return new Error(list, "Valid args: [Integer]");
+                    return new ErrorExpr(list, "Valid args: [Integer]");
 
                 var @long = (args[0] as Integer).@int;
                 int @int;
 
                 if (@long > int.MaxValue)
-                    return new Error(list, "Integer is too big");
+                    return new ErrorExpr(list, "Integer is too big");
                 else
                     @int = (int)@long;
 
                 if (@int < 0)
-                    return new Error(list, "Cannot access with negative integer");
+                    return new ErrorExpr(list, "Cannot access with negative integer");
 
                 if (@int > list.items.Count - 1)
-                    return new Error(list, "Cannot access item " + (@int+1).ToString() + " in list with " + list.items.Count + " items");
+                    return new ErrorExpr(list, "Cannot access item " + (@int+1).ToString() + " in list with " + list.items.Count + " items");
                 else
                     return list.items[@int];
 
             }
 
-            return new Error(this, "Variable is not a function or list");
+            return new ErrorExpr(this, "Variable is not a function or list");
 
 
             //            if (def.ContainsVariable(this))

@@ -361,7 +361,7 @@ namespace Ast.Tests
             {
                 Assert.AreEqual(expected, (res as Boolean).@bool);
             }
-            else if (res is Message)
+            else if (res is ErrorExpr)
             {
                 Assert.Fail(res.ToString());
             }

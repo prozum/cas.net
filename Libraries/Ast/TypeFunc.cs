@@ -8,7 +8,7 @@ namespace Ast
         public TypeFunc(List<Expression> args, Scope scope)
             : base("type", args, scope)
         {
-            validArgs = new List<ArgKind>()
+            ValidArguments = new List<ArgKind>()
                 {
                     ArgKind.Expression
                 };
@@ -18,7 +18,7 @@ namespace Ast
         {
             var res = args[0].Evaluate();
 
-            if (res is Error)
+            if (res is ErrorExpr)
                 return res;
             else
                 return new Text(args[0].Evaluate().GetType().Name);

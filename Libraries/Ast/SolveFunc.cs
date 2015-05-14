@@ -11,7 +11,7 @@ namespace Ast
         public SolveFunc(List<Expression> args, Scope scope)
             : base("solve", args, scope)
         {
-            validArgs = new List<ArgKind>()
+            ValidArguments = new List<ArgKind>()
                 {
                     ArgKind.Equation,
                     ArgKind.Symbol
@@ -23,7 +23,7 @@ namespace Ast
             Equal solved;
 
             if (!isArgsValid())
-                return new ArgError(this);
+                return new ArgumentError(this);
 
             equal = (Equal)args[0];
             sym = (Symbol)args[1];
@@ -49,18 +49,18 @@ namespace Ast
                         solved = InvertOperator(solved.Left, solved.Right);
 
                         if (solved == null)
-                            return new Error(this, " could not solve " + sym.ToString() + ": " + solved.ToString());
+                            return new ErrorExpr(this, " could not solve " + sym.ToString() + ": " + solved.ToString());
                     }
                     else if (solved.Left is Func)
                     {
                         solved = InvertFunction(solved.Left, solved.Right);
 
                         if (solved == null)
-                            return new Error(this, " could not solve " + sym.ToString() + ": " + solved.ToString());
+                            return new ErrorExpr(this, " could not solve " + sym.ToString() + ": " + solved.ToString());
                     }
                     else
                     {
-                        return new Error(this, " could not solve " + sym.ToString() + ": " + solved.ToString());
+                        return new ErrorExpr(this, " could not solve " + sym.ToString() + ": " + solved.ToString());
                     }
                 }
                 else if (solved.Left is Symbol)
@@ -71,7 +71,7 @@ namespace Ast
                 }
                 else
                 {
-                    return new Error(this, " could not solve " + sym.ToString() + ": " + solved.ToString());
+                    return new ErrorExpr(this, " could not solve " + sym.ToString() + ": " + solved.ToString());
                 }
 
                 System.Diagnostics.Debug.WriteLine(solved);

@@ -56,10 +56,22 @@ namespace Ast
             this.msg = err;
         }
 
-        public ErrorData(Error err)
+        public ErrorData(ErrorExpr err)
         {
-            this.msg = err.msg;
-            this.pos = err.pos;
+            this.msg = err.ErrorMessage;
+            this.pos = err.Position;
+        }
+
+        public ErrorData(Expression expr, string err)
+        {
+            this.msg = err;
+            this.pos = expr.Position;
+        }
+
+        public ErrorData(Statement stmt, string err)
+        {
+            this.msg = err;
+            this.pos = stmt.Position;
         }
 
         public override string ToString()
@@ -93,17 +105,15 @@ namespace Ast
     public class DebugData : EvalData
     {
         public string msg;
-        public Expression expr;
 
-        public DebugData(string msg, Expression expr)
+        public DebugData(string msg)
         {
             this.msg = msg;
-            this.expr = expr;
         }
 
         public override string ToString()
         {
-            return msg + expr.ToString();
+            return msg;
         }
     }
 }

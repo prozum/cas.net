@@ -8,7 +8,7 @@ namespace Ast
         public ExpandFunc(List<Expression> args, Scope scope)
             : base("expand", args, scope)
         {
-            validArgs = new List<ArgKind>()
+            ValidArguments = new List<ArgKind>()
                 {
                     ArgKind.Expression
                 };

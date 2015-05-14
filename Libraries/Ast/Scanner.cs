@@ -9,33 +9,33 @@ namespace Ast
     {
         const char EOS = (char)0;
 
-        static char[] chars;
-        static Pos pos;
+        static char[] Chars;
+        static Pos Position;
 
 
-        static Error _error = null; 
+        static ErrorExpr _error = null; 
 
         public static char CharNext(bool consume = true)
         {
-            if (pos.i < chars.Length)
+            if (Position.i < Chars.Length)
             {
                 if (consume)
                 {
-                    pos.Column++;
-                    return chars[pos.i++];
+                    Position.Column++;
+                    return Chars[Position.i++];
                 }
-                return chars[pos.i];
+                return Chars[Position.i];
             }
             else
                 return EOS;
         }
 
-        public static Queue<Token> Tokenize(string tokenString, out Error error)
+        public static Queue<Token> Tokenize(string tokenString, out ErrorExpr error)
         {
             var res = new Queue<Token> ();
 
-            chars = tokenString.ToCharArray();
-            pos = new Pos();
+            Chars = tokenString.ToCharArray();
+            Position = new Pos();
             error = null;
             Token tok;
 
@@ -52,7 +52,7 @@ namespace Ast
 
                 res.Enqueue(tok);
             }
-            while (tok.kind != TokenKind.END_OF_STRING);
+            while (tok.Kind != TokenKind.END_OF_STRING);
 
             return res;
         }
@@ -66,12 +66,12 @@ namespace Ast
             switch (@char)
             {
                 case EOS:
-                    return new Token(TokenKind.END_OF_STRING, "END_OF_STRING", pos);
+                    return new Token(TokenKind.END_OF_STRING, "END_OF_STRING", Position);
                 
                 case '\n':
-                    pos.Line++;
-                    pos.Column = 0;
-                    return new Token(TokenKind.NEW_LINE, "NEW_LINE", pos);
+                    Position.Line++;
+                    Position.Column = 0;
+                    return new Token(TokenKind.NEW_LINE, "NEW_LINE", Position);
 
                 case '0':
                 case '1':
@@ -90,80 +90,80 @@ namespace Ast
                     return ScanText(@char);
                 
                 case '+':
-                    return new Token(TokenKind.ADD, "+", pos);
+                    return new Token(TokenKind.ADD, "+", Position);
                 case '-':
-                    return new Token(TokenKind.SUB, "-", pos);
+                    return new Token(TokenKind.SUB, "-", Position);
                 case '*':
-                    return new Token(TokenKind.MUL, "*", pos);
+                    return new Token(TokenKind.MUL, "*", Position);
                 case '/':
-                    return new Token(TokenKind.DIV, "/", pos);
+                    return new Token(TokenKind.DIV, "/", Position);
                 case '^':
-                    return new Token(TokenKind.EXP, "^", pos);
+                    return new Token(TokenKind.EXP, "^", Position);
                 case '=':
                     if (CharNext(false) == '=')
                     {
                         CharNext(true);
-                        return new Token(TokenKind.BOOL_EQUAL, "==", pos);
+                        return new Token(TokenKind.BOOL_EQUAL, "==", Position);
                     }
                     else
-                        return new Token(TokenKind.EQUAL, "=", pos);
+                        return new Token(TokenKind.EQUAL, "=", Position);
                 case '<':
                     if (CharNext(false) == '=')
                     {
                         CharNext(true);
-                        return new Token(TokenKind.LESS_EQUAL, "<=", pos);
+                        return new Token(TokenKind.LESS_EQUAL, "<=", Position);
                     }
                     else
-                        return new Token(TokenKind.LESS, "<", pos);
+                        return new Token(TokenKind.LESS, "<", Position);
                 case '>':
                     if (CharNext(false) == '=')
                     {
                         CharNext(true);
-                        return new Token(TokenKind.GREAT_EQUAL, ">=", pos);
+                        return new Token(TokenKind.GREAT_EQUAL, ">=", Position);
                     }
                     else
-                        return new Token(TokenKind.GREAT, ">", pos);
+                        return new Token(TokenKind.GREAT, ">", Position);
                 case ':':
                     if (CharNext(false) == '=')
                     {
                         CharNext(true);
-                        return new Token(TokenKind.ASSIGN, ":=", pos);
+                        return new Token(TokenKind.ASSIGN, ":=", Position);
                     }
                     else
-                        return new Token(TokenKind.COLON, ":", pos);
+                        return new Token(TokenKind.COLON, ":", Position);
                 case '!':
                     if (CharNext(false) == '=')
                     {
                         CharNext(true);
-                        return new Token(TokenKind.NOT_EQUAL, "!=", pos);
+                        return new Token(TokenKind.NOT_EQUAL, "!=", Position);
                     }
                     else
-                        return new Token(TokenKind.NEG, "!", pos);
+                        return new Token(TokenKind.NEG, "!", Position);
 
                 case '(':
-                    return new Token(TokenKind.PARENT_START, "(", pos);
+                    return new Token(TokenKind.PARENT_START, "(", Position);
                 case ')':
-                    return new Token(TokenKind.PARENT_END, ")", pos);
+                    return new Token(TokenKind.PARENT_END, ")", Position);
                 case '[':
-                    return new Token(TokenKind.SQUARE_START, "[", pos);
+                    return new Token(TokenKind.SQUARE_START, "[", Position);
                 case ']':
-                    return new Token(TokenKind.SQUARE_END, "]", pos);
+                    return new Token(TokenKind.SQUARE_END, "]", Position);
                 case '{':
-                    return new Token(TokenKind.CURLY_START, "{", pos);
+                    return new Token(TokenKind.CURLY_START, "{", Position);
                 case '}':
-                    return new Token(TokenKind.CURLY_END, "}", pos);
+                    return new Token(TokenKind.CURLY_END, "}", Position);
                 case ',':
-                    return new Token(TokenKind.COMMA, ",", pos);
+                    return new Token(TokenKind.COMMA, ",", Position);
                 case ';':
-                    return new Token(TokenKind.SEMICOLON, ";", pos);
+                    return new Token(TokenKind.SEMICOLON, ";", Position);
                 case '.':
-                    return new Token(TokenKind.DOT, ".", pos);
+                    return new Token(TokenKind.DOT, ".", Position);
                 
                 default:
                     if (char.IsLetter(@char))
                         return ScanIdentifier(@char);
                     else
-                        return new Token(TokenKind.UNKNOWN, @char, pos);
+                        return new Token(TokenKind.UNKNOWN, @char, Position);
             }
         }
 
@@ -171,7 +171,7 @@ namespace Ast
         {
             TokenKind kind = TokenKind.INTEGER;
             string number = @char.ToString();
-            Pos startPos = pos;
+            Pos startPos = Position;
 
 
             var cur = CharNext(false);
@@ -242,14 +242,14 @@ namespace Ast
 
         private static Token ScanText(char @char)
         {
-            var startPos = pos;
+            var startPos = Position;
             return new Token(TokenKind.TEXT, ExtractSubText(@char), startPos);
         }
 
         private static Token ScanIdentifier(char @char)
         {
             string identifier = @char.ToString();
-            Pos startPos = pos;
+            Pos startPos = Position;
 
             var cur = CharNext(false);
             while (char.IsLetterOrDigit (cur))
@@ -279,6 +279,10 @@ namespace Ast
                     return new Token(TokenKind.FOR, identifier, startPos);
                 case "in":
                     return new Token(TokenKind.IN, identifier, startPos);
+                case "print":
+                    return new Token(TokenKind.PRINT, identifier, startPos);
+                case "plot":
+                    return new Token(TokenKind.PLOT, identifier, startPos);
                 default:
                     return new Token(TokenKind.IDENTIFIER, identifier, startPos);
             }
@@ -292,10 +296,10 @@ namespace Ast
             }
         }
 
-        public static Error ReportSyntaxError(string msg)
+        public static ErrorExpr ReportSyntaxError(string msg)
         {
-            _error = new Error("Scanner: " + msg);
-            _error.pos = pos;
+            _error = new ErrorExpr("Scanner: " + msg);
+            _error.Position = Position;
 
             return _error;
         }

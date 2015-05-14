@@ -9,7 +9,7 @@ namespace Ast
         public EvalFunc(List<Expression> args, Scope scope)
             : base("eval", args, scope)
         {
-            validArgs = new List<ArgKind>()
+            ValidArguments = new List<ArgKind>()
                 {
                     ArgKind.Expression
                 };
@@ -18,21 +18,21 @@ namespace Ast
         protected override Expression Evaluate(Expression caller)
         {
             if (!isArgsValid())
-                return new ArgError(this);
+                return new ArgumentError(this);
 
             var arg = args[0].Evaluate();
 
-            if (arg is Error)
+            if (arg is ErrorExpr)
                 return arg;
 
             if (!(arg is Text))
-                return new Error("Argument must be Text");
+                return new ErrorExpr("Argument must be Text");
 
             var res = Evaluator.Eval(arg as Text);
 
-            res.pos.i += args[0].pos.i;
-            res.pos.Line += args[0].pos.Line - 1;
-            res.pos.Column += args[0].pos.Column;
+            res.Position.i += args[0].Position.i;
+            res.Position.Line += args[0].Position.Line - 1;
+            res.Position.Column += args[0].Position.Column;
 
             return res;
         }
