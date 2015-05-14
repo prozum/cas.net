@@ -29,33 +29,33 @@ namespace DesktopUI
 
             output.Text = "";
 
-            do
-            {
-                res = Eval.Step();
-                DataList.Add(res);
+//            do
+//            {
+//                res = Eval.Step();
+//                DataList.Add(res);
 
-            } while (!(res is DoneData));
+//            } while (!(res is DoneData));
 
-            foreach (var data in DataList)
-            {
-                if (data is PrintData)
-                {
-                    output.Text += (data as PrintData).msg + "\n";
-//                    buffer.Insert(ref insertIter, (data as PrintData).msg + "\n");
-                }
-                else if (data is ErrorData)
-                {
-                    output.Text += (data as ErrorData).msg + "\n";
-//                    buffer.InsertWithTagsByName(ref insertIter, (data as ErrorData).err + "\n", "error");
-                }
-                else if (data is DebugData)
-                {
-                    output.Text += (data as DebugData).expr.ToString() + "\n";
-//                    buffer.Insert(ref insertIter, (data as ExprData).expr.ToString() + "\n");
-                }   
-            }
+//            foreach (var data in DataList)
+//            {
+//                if (data is PrintData)
+//                {
+//                    output.Text += (data as PrintData).msg + "\n";
+////                    buffer.Insert(ref insertIter, (data as PrintData).msg + "\n");
+//                }
+//                else if (data is ErrorData)
+//                {
+//                    output.Text += (data as ErrorData).msg + "\n";
+////                    buffer.InsertWithTagsByName(ref insertIter, (data as ErrorData).err + "\n", "error");
+//                }
+//                else if (data is DebugData)
+//                {
+//                    output.Text += (data as DebugData).expr.ToString() + "\n";
+////                    buffer.Insert(ref insertIter, (data as ExprData).expr.ToString() + "\n");
+//                }   
+//            }
 
-            DataList.Clear();
+//            DataList.Clear();
         }
     }
 }
