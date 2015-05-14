@@ -38,6 +38,7 @@ namespace DesktopUI
                     MovableCasTextView textView = (MovableCasTextView)w;
                     metaType.type = typeof(MovableCasTextView);
                     metaType.metastring = textView.textview.SerializeCasTextView();
+                    metaType.locked = textView.textview.locked;
                     metaTypeList.Add(metaType);
                 }
             }

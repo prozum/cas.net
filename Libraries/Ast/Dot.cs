@@ -2,10 +2,13 @@
 
 namespace Ast
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Dot : BinaryOperator
     {
         public Dot() : base(".", 100) { }
-        public Dot(Expression left, Expression right) : base(left, right, ".", 60) { }
+        public Dot(Expression left, Expression right) : base(left, right, ".", 100) { }
 
         protected override Expression Evaluate(Expression caller)
         {

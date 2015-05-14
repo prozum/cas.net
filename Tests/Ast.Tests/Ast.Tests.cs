@@ -10,8 +10,8 @@ namespace Ast.Tests
     [TestFixture]
     public class AstTests
     {
-        public Evaluator eval;
-        public Parser parser;
+        Evaluator eval;
+        Parser parser;
 
         public AstTests()
         {
@@ -21,26 +21,28 @@ namespace Ast.Tests
         }
 
         #region CompareTo Test Cases
-        [TestCase("x+y", "y+x")]
-        [TestCase("x+y+z", "x+y+z")]
-        [TestCase("x+y+z", "x+z+y")]
-        [TestCase("x+y+z", "y+x+z")]
-        [TestCase("x+y+z", "y+z+x")]
-        [TestCase("x+y+z", "z+y+x")]
-        [TestCase("x+y+z", "z+x+y")]
-        [TestCase("x+y+z+q+b", "b+q+z+y+x")]
-        [TestCase("x+y+z+q+b", "b+x+q+y+z")]
-        [TestCase("a+b+c+d+e+f+g+h+i+j+k+l+m+n+o+p+q+r+s+t+u+v+w+x+y+z", "z+a+y+b+x+c+w+d+v+e+u+f+t+g+s+h+r+i+q+j+p+k+o+m+n")]
-        [TestCase("x-y", "-y+x")]
-        [TestCase("x*(z/y)", "(x*z)/y")]
-        [TestCase("x*(z/y)", "(z/y)*x")]
-        [TestCase("x^2", "x*x")]
-        [TestCase("x^2+x", "x*x+x")]
-        [TestCase("x+x^2", "x*x+x")]
+        [TestCase("x+y==y+x")]
+        [TestCase("x+y+z==x+y+z")]
+        [TestCase("x+y+z==x+z+y")]
+        [TestCase("x+y+z==y+x+z")]
+        [TestCase("x+y+z==y+z+x")]
+        [TestCase("x+y+z==z+y+x")]
+        [TestCase("x+y+z==z+x+y")]
+        [TestCase("x+y+z+q+b==b+q+z+y+x")]
+        [TestCase("x+y+z+q+b==b+x+q+y+z")]
+        [TestCase("a+b+c+d+e+f+g+h+i+j+k+l+m+n+o+p+q+r+s+t+u+v+w+x+y+z==z+a+y+b+x+c+w+d+v+e+u+f+t+g+s+h+r+i+q+j+p+k+o+m+n")]
+        [TestCase("x-y==-y+x")]
+        [TestCase("x*(z/y)==(x*z)/y")]
+        [TestCase("x*(z/y)==(z/y)*x")]
+        [TestCase("x^2==x*x")]
+        [TestCase("x^2+x==x*x+x")]
+        [TestCase("x+x^2==x*x+x")]
         #endregion
-        public void ExpCompareTo(string inputString1, string inputString2)
+        public void ExpCompareTo(string inputString)
         {
-            Assert.IsTrue(parser.Parse(inputString1).CompareTo(parser.Parse(inputString2)));
+            var res = Evaluator.Eval("ret " + inputString);
+            Assert.IsTrue(res is Boolean);
+            Assert.IsTrue((res as Boolean).Value == 1);
         }
 
         #region Reduce Test Cases
@@ -104,8 +106,8 @@ namespace Ast.Tests
         #endregion
         public void Reduce(string expected, string inputString)
         {
-            var simString = "Reduce[" + inputString + "]";
-            var res = eval.Evaluation(simString);
+            var redString = "ret reduce[" + inputString + "]";
+            var res = Evaluator.Eval(redString);
             Assert.AreEqual(expected, res.ToString());
         }
 
@@ -117,6 +119,7 @@ namespace Ast.Tests
         //    Assert.AreEqual(expected, res.ToString());
         //}
 
+        /*
         #region Parse Test Cases
 
         #region Numbers
@@ -211,11 +214,11 @@ namespace Ast.Tests
         {
             Assert.AreEqual(expected, parser.Parse(inputString).ToString());
         }
+        */
 
         #region Evaluate Test Cases
 
         #region Operators
-
         #region Integers
         [TestCase(10, "10")] //value = value
         [TestCase(20, "10+10")] //add
@@ -343,7 +346,7 @@ namespace Ast.Tests
         #endregion
         public void Evaluate(dynamic expected, string calculation)
         {
-            var res = (eval.Evaluation(calculation) as DebugData).expr;
+            var res = Evaluator.Eval("ret " + calculation);
             
             if (res is Integer)
             {
@@ -351,7 +354,7 @@ namespace Ast.Tests
             }
             else if (res is Rational)
             {
-                Assert.AreEqual(expected, (res as Rational).value.@decimal);
+                Assert.AreEqual(expected, (res as Rational).Value);
             }
             else if (res is Irrational)
             {
@@ -389,10 +392,9 @@ namespace Ast.Tests
         #endregion
         public void Solve(string expected, string inputString)
         {
-            var testString = "solve[" + inputString + ",x]";
+            var testString = "ret solve[" + inputString + ",x]";
 
-            Assert.AreEqual(expected, eval.Evaluation(testString).ToString());
+            Assert.AreEqual(expected, Evaluator.Eval(testString).ToString());
         }
     }
 }
-

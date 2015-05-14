@@ -2,6 +2,9 @@
 
 namespace Ast
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class LesserEqual : BinaryOperator
     {
         public LesserEqual() : base("<=", 10) { }
@@ -17,7 +20,7 @@ namespace Ast
             return new LesserEqual(Left.Clone(), Right.Clone());
         }
 
-        public override Expression CurrectOperator()
+        internal override Expression CurrectOperator()
         {
             return new LesserEqual(Left.CurrectOperator(), Right.CurrectOperator());
         }

@@ -90,7 +90,7 @@ namespace Ast
             }
             else if (op.Left.ContainsVariable(sym))
             {
-                var inverted = (op as IInvertable).Inverted(right);
+                var inverted = (op as IInvertable).InvertOn(right);
 
                 if (inverted == null)
                     return null;
@@ -141,7 +141,7 @@ namespace Ast
 
             if (func.ContainsVariable(sym))
             {
-                return new Equal(func.args[0], (func as IInvertable).Inverted(right));
+                return new Equal(func.args[0], (func as IInvertable).InvertOn(right));
             }
 
             return null;

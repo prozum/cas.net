@@ -12,13 +12,33 @@ namespace DesktopUI
         Grid ButtonGrid = new Grid();
         Evaluator Eval;
         User user;
+        Window window;
 
-
-        public TextViewList(User user, Evaluator Eval)
+        public TextViewList(User user, Evaluator Eval, Window window)
             : base()
         {
             this.Eval = Eval;
             this.user = user;
+            this.window = window;
+
+            window.ResizeChecked += delegate
+            {
+                foreach (Widget widget in castextviews)
+                {
+                    if(widget is MovableCasCalcView)
+                    {
+                        (widget as MovableCasCalcView).calcview.input.WidthRequest = window.Window.Width - 60; 
+                    }
+                    else if (widget is MovableDrawCanvas)
+                    {
+                        (widget as MovableDrawCanvas).canvas.WidthRequest = window.Window.Width - 60;
+                    }
+                    else if(widget is MovableCasTextView) // <- This shall always be last as all other widgets inherit from it, but not all use it.
+                    {
+                        (widget as MovableCasTextView).textview.WidthRequest = window.Window.Width - 60;
+                    }
+                }
+            };
 
             ShowAll();
         }
@@ -56,10 +76,13 @@ namespace DesktopUI
                 };
 
                 VBox vbox = new VBox();
-                vbox.PackStart(ButtonMoveUp, false, false, 2);
-                vbox.PackEnd(ButtonMoveDown, false, false, 2);
-                vbox.PackStart(ButtonDelete, false, false, 2);
-                vbox.PackStart(ButtonAddNew, false, false, 2);
+                HBox hbox = new HBox();
+                Toolbar tb = new Toolbar();
+                hbox.Add(ButtonMoveUp);
+                hbox.Add(ButtonMoveDown);
+                hbox.Add(ButtonDelete);
+                hbox.Add(ButtonAddNew);
+                vbox.PackStart(hbox, false, false, 2);
                 movableLockedCasTextView.Attach(vbox, 2, 1, 1, 2);
 
                 if (pos == -1)
@@ -105,6 +128,17 @@ namespace DesktopUI
                     vbox.PackStart(ButtonAddNew, false, false, 2);
                     movableCasTextView.Attach(vbox, 2, 1, 1, 2);
                 }
+                else
+                {
+                    ButtonAddNew.Clicked += delegate
+                    {
+                        AddNew(movableCasTextView);
+                    };
+
+                    VBox vbox = new VBox();
+                    vbox.PackStart(ButtonAddNew, false, false, 2);
+                    movableCasTextView.Attach(vbox, 2, 1, 1, 2);
+                }
 
                 if (pos == -1)
                 {
@@ -115,6 +149,40 @@ namespace DesktopUI
                     castextviews.Insert(pos, movableCasTextView);
                 }
             }
+
+            Clear();
+            Redraw();
+            ShowAll();
+        }
+
+        public void InsertTaskGenTextView(string TaskString)
+        {
+            //Button ButtonMoveUp = new Button("↑");
+            //Button ButtonMoveDown = new Button("↓");
+            Button ButtonDelete = new Button("X");
+            Button ButtonAddNew = new Button("+");
+
+            MovableCasTextView movableCasTextView = new MovableCasTextView(TaskString);
+            movableCasTextView.textview.LockTextView(true);
+
+            ButtonDelete.Clicked += delegate
+            {
+                Delete(movableCasTextView.id_);
+            };
+
+            ButtonAddNew.Clicked += delegate
+            {
+                AddNew(movableCasTextView);
+            };
+
+            VBox vbox = new VBox();
+            //vbox.PackStart(ButtonMoveUp, false, false, 2);
+            //vbox.PackEnd(ButtonMoveDown, false, false, 2);
+            vbox.PackStart(ButtonDelete, false, false, 2);
+            vbox.PackStart(ButtonAddNew, false, false, 2);
+            movableCasTextView.Attach(vbox, 2, 1, 1, 2);
+
+            castextviews.Add(movableCasTextView);
 
             Clear();
             Redraw();

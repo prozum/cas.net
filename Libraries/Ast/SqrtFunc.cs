@@ -61,7 +61,7 @@ namespace Ast
             return MakeClone<SqrtFunc>();
         }
 
-        public Expression Inverted(Expression other)
+        public Expression InvertOn(Expression other)
         {
             return new Exp(other, new Integer(2));
         }

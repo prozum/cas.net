@@ -17,7 +17,18 @@ namespace DesktopUI
 
             textview = new CasTextView(serializedString, locked);
             textview.WidthRequest = 300;
-            textview.HeightRequest = 200;
+            //textview.HeightRequest = 200;
+
+            Attach(textview, 1, 1, 1, 2);
+        }
+
+        public MovableCasTextView(string TaskString)
+        {
+            id_ = ID++;
+
+            textview = new CasTextView(TaskString);
+            textview.WidthRequest = 300;
+            textview.HeightRequest = 40;
 
             Attach(textview, 1, 1, 1, 2);
         }

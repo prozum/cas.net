@@ -3,12 +3,28 @@ using System.Collections.Generic;
 
 namespace Ast
 {
+    /// <summary>
+    /// A BinaryOperator which sides can be swapped without effecting the result.
+    /// </summary>
     public interface ISwappable
     {
+        public Expression Left;
+        public Expression Right;
+
+        /// <summary>
+        /// 
+        /// </summary>
         BinaryOperator Swap();
+
+        /// <summary>
+        /// 
+        /// </summary>
         BinaryOperator Transform();
     }
 
+    /// <summary>
+    /// A Operator which evaluates to expressions.
+    /// </summary>
     public abstract class BinaryOperator : Operator
     {
         public string Identifier;

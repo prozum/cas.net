@@ -17,7 +17,7 @@ namespace Ast
             return new NotEqual(Left.Clone(), Right.Clone());
         }
 
-        public override Expression CurrectOperator()
+        internal override Expression CurrectOperator()
         {
             return new NotEqual(Left.CurrectOperator(), Right.CurrectOperator());
         }
