@@ -61,8 +61,6 @@ namespace Ast
 
             switch (list.items.Count)
             {
-                case 0:
-                    return this;
                 case 1:
                     return list.items[0];
                 default:

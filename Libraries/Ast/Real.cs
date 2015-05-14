@@ -57,6 +57,11 @@ namespace Ast
             return new Irrational(Value + other.Value);
         }
 
+        public override Expression AddWith(Text other)
+        {
+            return new Text(Value + other.Value);
+        }
+
         #endregion
 
         #region SubWith

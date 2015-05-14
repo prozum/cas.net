@@ -8,35 +8,20 @@ namespace Ast
         public List list;
         public Scope expr;
 
-        private int curItem = 0;
-
         public ForStmt (Scope scope) : base(scope) { }
 
         public override EvalData Evaluate()
         {
-            EvalData res;
-
-            while (curItem < list.items.Count)
+            foreach (var value in list.items)
             {
-                expr.SetVar(sym, list.items[curItem]);
-                //res = expr.Evaluate();
+                expr.SetVar(sym, value);
+                expr.Evaluate();
 
-//                if (res is ReturnData || res is ErrorData)
-//                    Reset();
-
-//                if (res is DoneData)
-//                    curItem++;
-//                else
-//                    return res;
+                if (expr.Error != null)
+                    return new ErrorData(expr.Error);
             }
 
-            Reset();
             return new DoneData();
-        }
-
-        public void Reset()
-        {
-            curItem = 0;
         }
     }
 }

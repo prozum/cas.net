@@ -34,9 +34,8 @@ public class MainWindow : Window
         TextIter insertIter = buffer.StartIter;
 
         eval.Parse(input.Buffer.Text);
-       
 
-        buffer.Insert(ref insertIter, eval.Evaluate().ToString() + "\n");
+        buffer.Insert(ref insertIter, "ret: " + eval.Evaluate().ToString() + "\n");
 
         foreach(var data in eval.SideEffects)
         {

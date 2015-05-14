@@ -28,7 +28,7 @@ namespace Ast
 
         public override string ToString()
         {
-            return Value;
+            return "\"" + Value + "\"";
         }
 
         public override Expression AddWith(Text other)

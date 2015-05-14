@@ -164,7 +164,7 @@ namespace Ast
 
         public virtual Expression AddWith(Text other)
         {
-            return new Error(this, "Don't support adding " + other.GetType().Name);
+            return new Text(this.ToString() + other.Value);
         }
 
         #endregion

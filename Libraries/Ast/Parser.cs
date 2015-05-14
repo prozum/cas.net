@@ -92,11 +92,17 @@ namespace Ast
                     
                     case TokenKind.PRINT:
                         Eat();
-                        res.Statements.Add(new PrintFunc(ParseList().items, curScope));
+                        if (Eat(TokenKind.SQUARE_START))
+                            res.Statements.Add(new PrintFunc(ParseList().items, curScope));
+                        else
+                            ReportSyntaxError("Print syntax: print[expr]");
                         break;
                     case TokenKind.PLOT:
                         Eat();
-                        res.Statements.Add(new PlotFunc(ParseList().items, curScope));
+                        if (Eat(TokenKind.SQUARE_START))
+                            res.Statements.Add(new PlotFunc(ParseList().items, curScope));
+                        else
+                            ReportSyntaxError("Print syntax: plot[expr,symbol]");
                             break;
 
                     case TokenKind.SEMICOLON:
@@ -191,12 +197,6 @@ namespace Ast
                 }
             }
 
-//            if (Eat())
-//            {
-//                ReportSyntaxError("If syntax: if bool: {}");
-//                return null;
-//            }
-
             while (Eat(TokenKind.ELIF))
             {
                 stmt.conditions.Add(ParseExpr(TokenKind.COLON));
@@ -289,7 +289,6 @@ namespace Ast
         {
             var list = new List();
 
-            Eat(); // Eat [
             contextStack.Push(ParseContext.List);
 
             while (tokens.Count > 0)
