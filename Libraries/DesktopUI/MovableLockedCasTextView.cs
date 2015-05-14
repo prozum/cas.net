@@ -10,6 +10,12 @@ namespace DesktopUI
         public MovableLockedCasTextView(string serializedString, bool locked)
             : base(serializedString, locked)
         {
+            if(locked == true)
+            {
+                checkButton.Active = true;
+                
+            }
+
             checkButton.Toggled += delegate
             {
                 textview.locked = !textview.locked;

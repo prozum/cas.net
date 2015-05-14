@@ -13,6 +13,7 @@ namespace CAS.NET.Desktop
             Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
             Application.Init();
             new MainWindow();
+            
             Application.Run();
         }
     }
