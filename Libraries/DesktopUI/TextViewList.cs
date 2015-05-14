@@ -48,8 +48,8 @@ namespace DesktopUI
             MovableCasTextView movableCasTextView = new MovableCasTextView(serializedString, locked);
             movableCasTextView.textview.LockTextView(locked);
 
-            movableCasTextView = AddLockCheckButton(movableCasTextView);
-            movableCasTextView = AddCommandButtons(movableCasTextView);
+            movableCasTextView.Attach(AddLockCheckButton(movableCasTextView), 1, 100, 1, 1);
+            movableCasTextView.Attach(AddCommandButtons(movableCasTextView), 100, 1, 1, 1);
 
             if (pos == -1)
             {
@@ -101,11 +101,6 @@ namespace DesktopUI
 
         public void InsertCalcView(int pos)
         {
-            Button ButtonMoveUp = new Button("↑");
-            Button ButtonMoveDown = new Button("↓");
-            Button ButtonDelete = new Button("X");
-            Button ButtonAddNew = new Button("+");
-
             MovableCasCalcView MovCasCalcView = new MovableCasCalcView(Eval);
             MovCasCalcView.calcview.input.Activated += delegate
             {
@@ -115,34 +110,8 @@ namespace DesktopUI
                 MovCasCalcView.ShowAll();
             };
 
-            ButtonMoveUp.Clicked += delegate
-            {
-                MovCasCalcView.calcview.Eval.Locals.Clear();
-                Move(MovCasCalcView.id_, -1);
-            };
-
-            ButtonMoveDown.Clicked += delegate
-            {
-                MovCasCalcView.calcview.Eval.Locals.Clear();
-                Move(MovCasCalcView.id_, 1);
-            };
-
-            ButtonDelete.Clicked += delegate
-            {
-                Delete(MovCasCalcView.id_);
-            };
-
-            ButtonAddNew.Clicked += delegate
-            {
-                AddNew(MovCasCalcView);
-            };
-
-            VBox vbox = new VBox();
-            vbox.PackStart(ButtonMoveUp, false, false, 2);
-            vbox.PackEnd(ButtonMoveDown, false, false, 2);
-            vbox.PackStart(ButtonDelete, false, false, 2);
-            vbox.PackStart(ButtonAddNew, false, false, 2);
-            MovCasCalcView.Attach(vbox, 2, 1, 1, 2);
+            MovCasCalcView.Attach(AddLockCheckButton(MovCasCalcView), 1, 2, 1, 1);
+            MovCasCalcView.Attach(AddCommandButtons(MovCasCalcView), 100, 1, 1, 1);
 
             if (pos == -1)
             {
@@ -444,7 +413,7 @@ namespace DesktopUI
             };
         }
 
-        MovableCasTextView AddLockCheckButton(MovableCasTextView mctv)
+        CheckButton AddLockCheckButton(MovableCasTextView mctv)
         {
             if(user.privilege == 1)
             {
@@ -460,21 +429,22 @@ namespace DesktopUI
                     mctv.textview.locked = !mctv.textview.locked;
                 };
 
-                mctv.Attach(checkbutton, 1, 100, 1, 1);
-                return mctv;
+                return checkbutton;
             }
             else
             {
-                return mctv;
+                return null;
             }
         }
 
-        MovableCasTextView AddCommandButtons(MovableCasTextView mctv)
+        VBox AddCommandButtons(MovableCasTextView mctv)
         {
             Button ButtonMoveUp = new Button("↑");
             Button ButtonMoveDown = new Button("↓");
             Button ButtonDelete = new Button("X");
             Button ButtonAddNew = new Button("+");
+
+            VBox vbox = new VBox();
 
             if (user.privilege == 1 || (user.privilege == 0 && mctv.textview.locked == false))
             {
@@ -499,7 +469,6 @@ namespace DesktopUI
                     AddNew(mctv);
                 };
 
-                VBox vbox = new VBox();
                 HBox hbox = new HBox();
                 Toolbar tb = new Toolbar();
                 hbox.Add(ButtonMoveUp);
@@ -507,7 +476,6 @@ namespace DesktopUI
                 hbox.Add(ButtonDelete);
                 hbox.Add(ButtonAddNew);
                 vbox.PackStart(hbox, false, false, 2);
-                mctv.Attach(vbox, 2, 1, 1, 2);
             }
             else if (user.privilege <= 0)
             {
@@ -516,12 +484,10 @@ namespace DesktopUI
                     AddNew(mctv);
                 };
 
-                VBox vbox = new VBox();
                 vbox.PackStart(ButtonAddNew, false, false, 2);
-                mctv.Attach(vbox, 2, 1, 1, 2);
             }
 
-            return mctv;
+            return vbox;
         }
     }
 }

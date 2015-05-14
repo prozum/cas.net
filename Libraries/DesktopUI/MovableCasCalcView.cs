@@ -13,7 +13,6 @@ namespace DesktopUI
             calcview = new CasCalcView(Eval);
 
             Remove(textview);
-            textview = null;
             Attach(calcview, 1, 1, 1, 2);
         }
     }

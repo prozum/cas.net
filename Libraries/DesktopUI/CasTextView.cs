@@ -16,7 +16,6 @@ namespace DesktopUI
         public CasTextView(string SerializedString, bool locked)
             : base()
         {
-
             boldTag.Weight = Pango.Weight.Bold;
             Buffer.TagTable.Add(boldTag);
 
