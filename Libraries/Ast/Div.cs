@@ -2,6 +2,9 @@
 
 namespace Ast
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Div : BinaryOperator, IInvertable
     {
         public Div() : base("/", 50) { }
@@ -116,12 +119,12 @@ namespace Ast
             return new Div(Left.Clone(), Right.Clone());
         }
 
-        public Expression Inverted(Expression other)
+        public Expression InvertOn(Expression other)
         {
             return new Mul(other, Right);
         }
 
-        public override Expression CurrectOperator()
+        internal override Expression CurrectOperator()
         {
             return new Div(Left.CurrectOperator(), Right.CurrectOperator());
         }

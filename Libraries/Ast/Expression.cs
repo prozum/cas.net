@@ -4,17 +4,43 @@ using System.Text.RegularExpressions;
 
 namespace Ast
 {
+    /// <summary>
+    /// A Expression which has a Inverted form. Invertable Expression are used to solve equations.
+    /// </summary>
     public interface IInvertable
     {
-        Expression Inverted(Expression other);
+        /// <summary>
+        /// Does the inverted Expression on the parameter.
+        /// </summary>
+        /// <remarks> 
+        /// Example 1: "x + y" would be inverted to "other - y".
+        /// Example 2: "Sin(x) would be inverted to "ASin(other)".
+        /// </remarks> 
+        Expression InvertOn(Expression other);
     }
 
+    /// <summary>
+    /// A Expression which can be negative.
+    /// </summary>
     public interface INegative
     {
+        /// <summary>
+        /// Determins wether or not the Expression is negative.
+        /// </summary>
         bool IsNegative();
+
+        /// <summary>
+        /// Returns the negative version of this Expression. 
+        /// </summary>
+        /// <remarks> 
+        /// ToNegative should return the positive version of the Expression if it's allready negative.
+        /// </remarks> 
         Expression ToNegative();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public abstract class Expression
     {
         public Expression Parent;
@@ -23,6 +49,9 @@ namespace Ast
 
         public bool stepped = false;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual Expression Evaluate() 
         {
             return Reduce().Evaluate(this); 
@@ -33,6 +62,9 @@ namespace Ast
             return new Error(this, "This type cannot evaluate");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual EvalData Step()
         {
             if (stepped)
@@ -47,32 +79,47 @@ namespace Ast
                 return new ExprData(res);
         }
 
-        public virtual Expression CurrectOperator()
+        internal virtual Expression CurrectOperator()
         {
             return this;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual Expression Expand()
         {
             return this;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual Expression Reduce() { return this.Reduce(this).CurrectOperator(); }
         internal virtual Expression Reduce(Expression caller)
         {
             return this;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual Expression Clone()
         {
             return new Error(this, "Cannot clone");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool CompareTo(Expression other)
         {
             return this.GetType() == other.GetType();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool ContainsVariable(Variable other)
         {
             return false;

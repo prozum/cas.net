@@ -2,6 +2,9 @@
 
 namespace Ast
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class BooleanEqual : BinaryOperator
     {
         public BooleanEqual() : base("==", 10) { }
@@ -17,7 +20,7 @@ namespace Ast
             return new BooleanEqual(Left.Clone(), Right.Clone());
         }
 
-        public override Expression CurrectOperator()
+        internal override Expression CurrectOperator()
         {
             return new BooleanEqual(Left.CurrectOperator(), Right.CurrectOperator());
         }

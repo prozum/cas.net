@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Ast
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Exp : BinaryOperator, IInvertable
     {
         public Exp() : base("^", 60) { }
@@ -80,7 +83,7 @@ namespace Ast
             return new Exp(Left.Clone(), Right.Clone());
         }
 
-        public Expression Inverted(Expression other)
+        public Expression InvertOn(Expression other)
         {
             if (Right.CompareTo(Constant.Two))
             {
@@ -100,7 +103,7 @@ namespace Ast
             }
         }
 
-        public override Expression CurrectOperator()
+        internal override Expression CurrectOperator()
         {
             return new Exp(Left.CurrectOperator(), Right.CurrectOperator());
         }

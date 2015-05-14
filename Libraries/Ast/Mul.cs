@@ -252,12 +252,12 @@ namespace Ast
             return new Mul(Left.Clone(), Right.Clone());
         }
 
-        public Expression Inverted(Expression other)
+        public Expression InvertOn(Expression other)
         {
             return new Div(other, Right);
         }
 
-        public override Expression CurrectOperator()
+        internal override Expression CurrectOperator()
         {
             return new Mul(Left.CurrectOperator(), Right.CurrectOperator());
         }

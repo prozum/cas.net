@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Ast
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public abstract class Message : Expression
     {
         public string msg;
@@ -34,6 +37,9 @@ namespace Ast
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class Info: Message
     {
         public Info(string message) : base(message)
@@ -46,6 +52,9 @@ namespace Ast
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class Error: Message
     {
         public Error(string msg) : base(msg) { }
@@ -65,6 +74,9 @@ namespace Ast
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class ArgError: Error
     {
         public ArgError(string msg) : base(msg) { }
