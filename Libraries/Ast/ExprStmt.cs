@@ -15,8 +15,8 @@ namespace Ast
         {
             var res = expr.Evaluate();
 
-            if (res is ErrorExpr)
-                return new ErrorData(res as ErrorExpr);
+            if (res is Error)
+                return new ErrorData(res as Error);
 
             return new ExprData(res);
         }

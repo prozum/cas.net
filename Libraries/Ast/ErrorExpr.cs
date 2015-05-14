@@ -3,19 +3,19 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class ErrorExpr : Expression
+    public class Error : Expression
     {
         public string ErrorMessage;
 
-        public ErrorExpr(string msg) 
+        public Error(string msg) 
         {
             this.ErrorMessage = msg;
         }
 
-        public ErrorExpr(Expression expr, string msg) : this(expr, expr.Position, msg) { }
-        public ErrorExpr(Statement stmt, string msg) : this(stmt, stmt.Position, msg) { }
+        public Error(Expression expr, string msg) : this(expr, expr.Position, msg) { }
+        public Error(Statement stmt, string msg) : this(stmt, stmt.Position, msg) { }
 
-        public ErrorExpr (Object obj, Pos Position, string msg)
+        public Error (Object obj, Pos Position, string msg)
         {
             if (obj is Variable)
                 this.ErrorMessage = (obj as Variable).identifier + ": " + msg;
@@ -45,11 +45,11 @@ namespace Ast
 
         public override Expression Clone()
         {
-            return new ErrorExpr(ErrorMessage);
+            return new Error(ErrorMessage);
         }
     }
 
-    public class ArgumentError: ErrorExpr
+    public class ArgumentError: Error
     {
         public ArgumentError(SysFunc func) : this(func, func.Position, func.ValidArguments) { }
         public ArgumentError(FuncStmt func) : this(func, func.Position, func.ValidArguments) { }

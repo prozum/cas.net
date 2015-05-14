@@ -18,7 +18,7 @@ namespace Ast
         {
             var res = args[0].Evaluate();
 
-            if (res is ErrorExpr)
+            if (res is Error)
                 return res;
             else
                 return new Text(args[0].Evaluate().GetType().Name);

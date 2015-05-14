@@ -9,7 +9,7 @@ namespace Ast
         public List<Statement> Statements = new List<Statement>();
         public List<EvalData> SideEffects = new List<EvalData>();
 
-        public ErrorExpr Error;
+        public Error Error;
         public List ReturnExpr = new List();
 
         const int MaxStatementPrint = 5;
@@ -94,7 +94,7 @@ namespace Ast
             if (Scope != null)
                 return Scope.GetVar(@var);
 
-            return new ErrorExpr(this, @var + " has no definition");
+            return new Error(this, @var + " has no definition");
         }
 
         public decimal GetReal(string @var)

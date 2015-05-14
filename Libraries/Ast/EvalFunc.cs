@@ -22,11 +22,11 @@ namespace Ast
 
             var arg = args[0].Evaluate();
 
-            if (arg is ErrorExpr)
+            if (arg is Error)
                 return arg;
 
             if (!(arg is Text))
-                return new ErrorExpr("Argument must be Text");
+                return new Error("Argument must be Text");
 
             var res = Evaluator.Eval(arg as Text);
 

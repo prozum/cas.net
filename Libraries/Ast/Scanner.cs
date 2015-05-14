@@ -13,7 +13,7 @@ namespace Ast
         static Pos Position;
 
 
-        static ErrorExpr _error = null; 
+        static Error _error = null; 
 
         public static char CharNext(bool consume = true)
         {
@@ -30,7 +30,7 @@ namespace Ast
                 return EOS;
         }
 
-        public static Queue<Token> Tokenize(string tokenString, out ErrorExpr error)
+        public static Queue<Token> Tokenize(string tokenString, out Error error)
         {
             var res = new Queue<Token> ();
 
@@ -296,9 +296,9 @@ namespace Ast
             }
         }
 
-        public static ErrorExpr ReportSyntaxError(string msg)
+        public static Error ReportSyntaxError(string msg)
         {
-            _error = new ErrorExpr("Scanner: " + msg);
+            _error = new Error("Scanner: " + msg);
             _error.Position = Position;
 
             return _error;

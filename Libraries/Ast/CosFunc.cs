@@ -29,7 +29,7 @@ namespace Ast
                 return ReturnValue(new Irrational(Math.Cos((double) ((deg ? Constant.DegToRad.Value  : 1) * (res as Real).Value) ))).Evaluate();
             }
 
-            return new ErrorExpr(this, "Could not take Cos of: " + args[0]);
+            return new Error(this, "Could not take Cos of: " + args[0]);
         }
 
         internal override Expression Reduce(Expression caller)

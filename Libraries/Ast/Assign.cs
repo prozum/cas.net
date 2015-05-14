@@ -17,7 +17,7 @@ namespace Ast
 
             Expression res;
 
-            if (Left is ErrorExpr)
+            if (Left is Error)
                 return Left;
 
             if (Left is Dot)
@@ -27,17 +27,17 @@ namespace Ast
                 if (dot.Right is Variable)
                     sym = dot.Right as Variable;
                 else
-                    return new ErrorExpr(dot.Right, " is not a symbol");
+                    return new Error(dot.Right, " is not a symbol");
 
                 res = dot.Left.Evaluate();
 
-                if (res is ErrorExpr)
+                if (res is Error)
                     return res;
 
                 if (res is Scope)
                     scope = res as Scope;
                 else
-                    return new ErrorExpr(res, " is not a scope");
+                    return new Error(res, " is not a scope");
             }
             else if (Left is Variable)
             {
@@ -45,14 +45,14 @@ namespace Ast
                 scope = Left.Scope;
             }
             else
-                return new ErrorExpr(Left, " is not a symbol");
+                return new Error(Left, " is not a symbol");
 
 
             if (sym is Symbol)
             {
                 res = Right.Evaluate();
 
-                if (res is ErrorExpr)
+                if (res is Error)
                     return res;
 
                 scope.SetVar(sym.identifier, res);
@@ -67,7 +67,7 @@ namespace Ast
                 foreach (var arg in usrFunc.args)
                 {
                     if (!(arg is Symbol))
-                        return new ErrorExpr(this, "All arguments must be symbols");
+                        return new Error(this, "All arguments must be symbols");
                 }
 
                 var defFunc = new UsrFunc(usrFunc.identifier, usrFunc.args, usrFunc.Scope);
@@ -81,10 +81,10 @@ namespace Ast
 
             if (Left is SysFunc)
             {
-                return new ErrorExpr(this, "Cannot override system function");
+                return new Error(this, "Cannot override system function");
             }
 
-            return new ErrorExpr(this, "Left operand must be Symbol or Function");
+            return new Error(this, "Left operand must be Symbol or Function");
         }
 
         public override Expression Expand()

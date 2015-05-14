@@ -49,18 +49,18 @@ namespace Ast
                         solved = InvertOperator(solved.Left, solved.Right);
 
                         if (solved == null)
-                            return new ErrorExpr(this, " could not solve " + sym.ToString() + ": " + solved.ToString());
+                            return new Error(this, " could not solve " + sym.ToString() + ": " + solved.ToString());
                     }
                     else if (solved.Left is Func)
                     {
                         solved = InvertFunction(solved.Left, solved.Right);
 
                         if (solved == null)
-                            return new ErrorExpr(this, " could not solve " + sym.ToString() + ": " + solved.ToString());
+                            return new Error(this, " could not solve " + sym.ToString() + ": " + solved.ToString());
                     }
                     else
                     {
-                        return new ErrorExpr(this, " could not solve " + sym.ToString() + ": " + solved.ToString());
+                        return new Error(this, " could not solve " + sym.ToString() + ": " + solved.ToString());
                     }
                 }
                 else if (solved.Left is Symbol)
@@ -71,7 +71,7 @@ namespace Ast
                 }
                 else
                 {
-                    return new ErrorExpr(this, " could not solve " + sym.ToString() + ": " + solved.ToString());
+                    return new Error(this, " could not solve " + sym.ToString() + ": " + solved.ToString());
                 }
 
                 System.Diagnostics.Debug.WriteLine(solved);

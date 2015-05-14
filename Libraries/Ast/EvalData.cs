@@ -56,7 +56,7 @@ namespace Ast
             this.msg = err;
         }
 
-        public ErrorData(ErrorExpr err)
+        public ErrorData(Error err)
         {
             this.msg = err.ErrorMessage;
             this.pos = err.Position;

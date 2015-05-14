@@ -27,7 +27,7 @@ namespace Ast
                 return ReturnValue(new Irrational(Math.Sqrt((double)(res as Real).Value))).Evaluate();
             }
 
-            return new ErrorExpr(this, "Could not take Sqrt of: " + args[0]);
+            return new Error(this, "Could not take Sqrt of: " + args[0]);
         }
 
         internal override Expression Reduce(Expression caller)

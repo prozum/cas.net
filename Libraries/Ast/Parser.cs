@@ -258,7 +258,7 @@ namespace Ast
                 return null;
             }
 
-            if (list is ErrorExpr)
+            if (list is Error)
             {
                 //TODO FIX THIS
                 //return stmt.list;
@@ -685,11 +685,11 @@ namespace Ast
             }
         }
 
-        public ErrorExpr ReportSyntaxError(string msg, bool overwrite = false)
+        public Error ReportSyntaxError(string msg, bool overwrite = false)
         {
             if (curScope.Error == null || overwrite)
             {
-                curScope.Error = new ErrorExpr("Parser: " + msg);
+                curScope.Error = new Error("Parser: " + msg);
                 curScope.Error.Position = tok.Position;
             }
 

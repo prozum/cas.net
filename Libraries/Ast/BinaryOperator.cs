@@ -75,7 +75,7 @@ namespace Ast
 
         protected override Expression Evaluate(Expression caller)
         {
-            return new ErrorExpr(this, "Cannot evaluate operator expression!");
+            return new Error(this, "Cannot evaluate operator expression!");
         }
 
         public override string ToString()

@@ -18,7 +18,7 @@ namespace Ast
             if (Right is Symbol)
                 sym = Right as Variable;
             else
-                return new ErrorExpr(this, "right operator must be Symbol/UsrFunc");
+                return new Error(this, "right operator must be Symbol/UsrFunc");
 
             if (Left is Scope)
             {
@@ -37,16 +37,16 @@ namespace Ast
             {
                 var dotVal = Left.Evaluate();
 
-                if (dotVal is ErrorExpr)
+                if (dotVal is Error)
                     return dotVal;
 
                 if (dotVal is Scope)
                     scope = dotVal as Scope;
                 else
-                    return new ErrorExpr(this, "left operator must be Symbol/Scope");
+                    return new Error(this, "left operator must be Symbol/Scope");
             }
             else
-                return new ErrorExpr(this, "left operator must be Symbol/Scope");
+                return new Error(this, "left operator must be Symbol/Scope");
 
             scope.Evaluate();
             return scope.GetVar(sym.identifier);
