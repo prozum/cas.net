@@ -108,9 +108,7 @@
     <Compile Include="Complex.cs">
       <DependentUpon>Number.cs</DependentUpon>
     </Compile>
-    <Compile Include="Boolean.cs">
-      <DependentUpon>Number.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Boolean.cs" />
     <Compile Include="UsrFunc.cs">
       <DependentUpon>Variable.cs</DependentUpon>
     </Compile>

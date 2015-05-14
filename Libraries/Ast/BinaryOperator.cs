@@ -8,8 +8,8 @@ namespace Ast
     /// </summary>
     public interface ISwappable
     {
-        public Expression Left;
-        public Expression Right;
+        Expression Left { get; set; }
+        Expression Right { get; set; }
 
         /// <summary>
         /// 
