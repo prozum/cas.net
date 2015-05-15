@@ -9,7 +9,7 @@ namespace Ast
         public SqrtFunc(List<Expression> args, Scope scope)
             : base("sqrt", args, scope)
         {
-            validArgs = new List<ArgKind>()
+            ValidArguments = new List<ArgKind>()
                 {
                     ArgKind.Expression
                 };
@@ -18,7 +18,7 @@ namespace Ast
         protected override Expression Evaluate(Expression caller)
         {
             if (!isArgsValid())
-                return new ArgError(this);
+                return new ArgumentError(this);
 
             var res = args[0].Evaluate();
 
@@ -61,7 +61,7 @@ namespace Ast
             return MakeClone<SqrtFunc>();
         }
 
-        public Expression Inverted(Expression other)
+        public Expression InvertOn(Expression other)
         {
             return new Exp(other, new Integer(2));
         }

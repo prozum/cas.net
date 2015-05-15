@@ -5,51 +5,69 @@ namespace Ast
 {
     public class Scope : Expression
     {
-        public new Scope parent;
-        public Dictionary<string,Expression> locals = new Dictionary<string,Expression>();
-        public List<Expression> statements = new List<Expression>();
+        public Dictionary<string,Expression> Locals = new Dictionary<string,Expression>();
+        public List<Statement> Statements = new List<Statement>();
+        public List<EvalData> SideEffects = new List<EvalData>();
 
-        public int curStep = 0;
+        public Error Error;
+        public List ReturnExpr = new List();
 
         const int MaxStatementPrint = 5;
 
-        public override Expression Evaluate()
+        public Scope()
         {
-            if (statements.Count == 1)
-                return statements[0].Evaluate();
-
-            List res = new List();
-
-            foreach (var statement in statements)
-            {
-                var exp = statement.Evaluate();
-
-                if (exp is Error)
-                {
-                    statements.Clear();
-                    return exp;
-                }
-
-                res.items.Add(exp);
-            }
-
-            return res;
+            SideEffects = new List<EvalData>();
         }
 
-        public override EvalData Step()
+        public Scope(Scope Scope)
         {
-            while (curStep < statements.Count)
-            {
-                var res = statements[curStep].Step();
+            this.Scope = Scope;
+            SideEffects = Scope.SideEffects;
+        }
 
-                if (res is DoneData)
-                    curStep++;
-                else
-                    return res;
+        public override Expression Evaluate()
+        {
+            var list = new List();
+
+            if (Error != null)
+            {
+                SideEffects.Add(new ErrorData(Error));
+                return Error;
             }
 
-            curStep = 0;
-            return new DoneData();
+            foreach (var stmt in Statements)
+            {
+                var data = stmt.Evaluate();
+
+                if (data is ExprData)
+                {
+                    list.items.Add((data as ExprData).expr);
+                    if (GetBool("debug"))
+                        SideEffects.Add(stmt.GetDebugData());
+                    continue;
+                }
+
+                if (data is ReturnData)
+                    return (data as ReturnData).expr;
+
+                if (data is ErrorData)
+                {
+                    SideEffects.Add(data);
+                    break;
+                }  
+
+                SideEffects.Add(data);
+            }
+
+            switch (list.items.Count)
+            {
+                case 0:
+                    return this;
+                case 1:
+                    return list.items[0];
+                default:
+                    return list;
+            }
         }
 
         public override bool ContainsVariable(Variable other)
@@ -58,53 +76,39 @@ namespace Ast
             return false;
         }
 
-        public Scope() : this(null) { }
-        public Scope(Scope parent)
-        {
-            this.parent = parent;
-        }
-
         public void SetVar(string @var, Expression exp)
         {
-            if (locals.ContainsKey(@var))
-            {
-                locals.Remove(@var);
-            }
+            if (Locals.ContainsKey(@var))
+                Locals.Remove(@var);
 
-            locals.Add(@var, exp);
+            Locals.Add(@var, exp);
         }
 
         public Expression GetVar(string @var)
         {
             Expression exp;
 
-            if (locals.TryGetValue(@var, out exp))
-            {
+            if (Locals.TryGetValue(@var, out exp))
                 return exp;
-            }
 
-            if (parent != null)
-            {
-                return parent.GetVar(@var);
-            }
+            if (Scope != null)
+                return Scope.GetVar(@var);
 
-            return null;
+            return new Error(this, @var + " has no definition");
         }
 
         public decimal GetReal(string @var)
         {
             Expression expr;
 
-            if (locals.TryGetValue(@var, out expr))
+            if (Locals.TryGetValue(@var, out expr))
             {
                 if (expr is Real)
                     return (expr as Real).Value;
             }
 
-            if (parent != null)
-            {
-                return parent.GetReal(@var);
-            }
+            if (Scope != null)
+                return Scope.GetReal(@var);
 
             return 0;
         }
@@ -113,16 +117,14 @@ namespace Ast
         {
             Expression expr;
 
-            if (locals.TryGetValue(@var, out expr))
+            if (Locals.TryGetValue(@var, out expr))
             {
                 if (expr is Integer)
                     return (expr as Integer).@int;
             }
 
-            if (parent != null)
-            {
-                return parent.GetInt(@var);
-            }
+            if (Scope != null)
+                return Scope.GetInt(@var);
 
             return 0;
         }
@@ -131,16 +133,14 @@ namespace Ast
         {
             Expression expr;
 
-            if (locals.TryGetValue(@var, out expr))
+            if (Locals.TryGetValue(@var, out expr))
             {
                 if (expr is Boolean)
                     return (expr as Boolean).@bool;
             }
 
-            if (parent != null)
-            {
-                return parent.GetBool(@var);
-            }
+            if (Scope != null)
+                return Scope.GetBool(@var);
 
             return false;
         }
@@ -149,15 +149,15 @@ namespace Ast
         {
             Expression expr;
 
-            if (locals.TryGetValue(@var, out expr))
+            if (Locals.TryGetValue(@var, out expr))
             {
                 if (expr is Text)
                     return (expr as Text).Value;
             }
 
-            if (parent != null)
+            if (Scope != null)
             {
-                return parent.GetText(@var);
+                return Scope.GetText(@var);
             }
 
             return "";
@@ -167,7 +167,7 @@ namespace Ast
         {
             string str = "{";
 
-            for (int i = 0; i < statements.Count; i++) 
+            for (int i = 0; i < Statements.Count; i++) 
             {
                 if (i >= MaxStatementPrint)
                 {
@@ -176,9 +176,9 @@ namespace Ast
                 }
                 else
                 {
-                    str += statements[i].ToString ();
+                    str += Statements[i].ToString ();
 
-                    if (i < statements.Count - 1) 
+                    if (i < Statements.Count - 1) 
                     {
                         str += ';';
                     }

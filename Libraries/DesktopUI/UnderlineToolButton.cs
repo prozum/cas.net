@@ -50,29 +50,8 @@ namespace DesktopUI
                     {
                         buffer.ApplyTag((item as MovableCasTextView).textview.underlineTag, startIter, endIter);
                     }
-
                 }
-                else if (item.GetType() == typeof(MovableLockedCasTextView))
-                {
-                    TextBuffer buffer = (item as MovableLockedCasTextView).textview.Buffer;
-                    TextIter startIter, endIter;
-                    buffer.GetSelectionBounds(out startIter, out endIter);
-
-                    byte[] byteTextView = buffer.Serialize(buffer, buffer.RegisterSerializeTagset(null), startIter, endIter);
-                    string s = Encoding.UTF8.GetString(byteTextView);
-
-                    if (s.Contains("<attr name=\"underline\" type=\"PangoUnderline\" value=\"PANGO_UNDERLINE_LOW\" />"))
-                    {
-                        buffer.RemoveTag((item as MovableLockedCasTextView).textview.underlineTag, startIter, endIter);
-                    }
-                    else
-                    {
-                        buffer.ApplyTag((item as MovableLockedCasTextView).textview.underlineTag, startIter, endIter);
-                    }
-                }
-
             }
-
         }
 
         void SetIcon()

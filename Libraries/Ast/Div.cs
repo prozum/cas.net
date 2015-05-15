@@ -2,6 +2,9 @@
 
 namespace Ast
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Div : BinaryOperator, IInvertable
     {
         public Div() : base("/", 50) { }
@@ -14,7 +17,7 @@ namespace Ast
 
         protected override Expression ExpandHelper(Expression left, Expression right)
         {
-            if (left is BinaryOperator && (left as BinaryOperator).priority < priority)
+            if (left is BinaryOperator && (left as BinaryOperator).Priority < Priority)
             {
                 if (left is Add)
                 {
@@ -29,7 +32,7 @@ namespace Ast
                     return new Div(left.Expand(), right.Expand());
                 }
             }
-            else if (right is BinaryOperator && (right as BinaryOperator).priority < priority)
+            else if (right is BinaryOperator && (right as BinaryOperator).Priority < Priority)
             {
                 if (right is Add)
                 {
@@ -116,12 +119,12 @@ namespace Ast
             return new Div(Left.Clone(), Right.Clone());
         }
 
-        public Expression Inverted(Expression other)
+        public Expression InvertOn(Expression other)
         {
             return new Mul(other, Right);
         }
 
-        public override Expression CurrectOperator()
+        internal override Expression CurrectOperator()
         {
             return new Div(Left.CurrectOperator(), Right.CurrectOperator());
         }

@@ -8,7 +8,7 @@ namespace Ast
         public RangeFunc(List<Expression> args, Scope scope)
             : base("range", args, scope)
         {
-            validArgs = new List<ArgKind>()
+            ValidArguments = new List<ArgKind>()
                 {
                     ArgKind.Number,
                     ArgKind.Number,
@@ -19,7 +19,7 @@ namespace Ast
         protected override Expression Evaluate(Expression caller)
         {
             if (!isArgsValid())
-                return new ArgError(this);
+                return new ArgumentError(this);
 
             Decimal start;
             Decimal end;

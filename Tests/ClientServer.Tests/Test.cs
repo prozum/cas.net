@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*
+using System;
 using System.Threading;
 using Account;
 using CAS.NET.Server;
@@ -115,3 +116,4 @@ namespace ClientServer
         }
     }
 }
+*/

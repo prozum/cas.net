@@ -24,7 +24,8 @@ namespace Ast
 
         public void Parse(string parseString)
         {
-            statements.Clear();
+            Statements.Clear();
+            SideEffects.Clear();
             _parser.Parse(parseString, this);
         }
 

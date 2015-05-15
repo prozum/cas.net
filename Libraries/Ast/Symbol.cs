@@ -40,15 +40,12 @@ namespace Ast
             
         public Expression GetValue()
         {
-            var value = scope.GetVar(identifier);
+            var value = Scope.GetVar(identifier);
 
-            if (value == null)
-                return new Error(this, identifier + " is not defined");
-
-            if (value is Boolean)
-                return value;
-            else
+            if (value is Real)
                 return prefix * value ^ exponent;
+            else
+                return value;
         }
 
         public override bool CompareTo(Expression other)

@@ -50,11 +50,6 @@ namespace Ast
             return new Rational(@int, 1) + other;
         }
 
-        public override Expression AddWith(Boolean other)
-        {
-            return new Integer(@int + (other.@bool ? 1: 0));
-        }
-
         #endregion
 
         #region SubWith
@@ -66,11 +61,6 @@ namespace Ast
         public override Expression SubWith(Rational other)
         {
             return new Rational(@int, 1) - other;
-        }
-
-        public override Expression SubWith(Boolean other)
-        {
-            return new Integer(@int - (other.@bool ? 1: 0));
         }
 
         #endregion
@@ -86,11 +76,6 @@ namespace Ast
             return new Rational(@int, 1) * other;
         }
 
-        public override Expression MulWith(Boolean other)
-        {
-            return new Integer(@int * (other.@bool ? 1: 0));
-        }
-
         #endregion
 
         #region ExpWith
@@ -102,11 +87,6 @@ namespace Ast
         public override Expression ExpWith(Rational other)
         {
             return new Rational(@int, 1) ^ other;
-        }
-
-        public override Expression ExpWith(Boolean other)
-        {
-            return new Integer(other.@bool ? @int : 1);
         }
 
         #endregion

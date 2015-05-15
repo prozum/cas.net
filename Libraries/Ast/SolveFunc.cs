@@ -11,7 +11,7 @@ namespace Ast
         public SolveFunc(List<Expression> args, Scope scope)
             : base("solve", args, scope)
         {
-            validArgs = new List<ArgKind>()
+            ValidArguments = new List<ArgKind>()
                 {
                     ArgKind.Equation,
                     ArgKind.Symbol
@@ -23,7 +23,7 @@ namespace Ast
             Equal solved;
 
             if (!isArgsValid())
-                return new ArgError(this);
+                return new ArgumentError(this);
 
             equal = (Equal)args[0];
             sym = (Symbol)args[1];
@@ -90,7 +90,7 @@ namespace Ast
             }
             else if (op.Left.ContainsVariable(sym))
             {
-                var inverted = (op as IInvertable).Inverted(right);
+                var inverted = (op as IInvertable).InvertOn(right);
 
                 if (inverted == null)
                     return null;
@@ -128,7 +128,6 @@ namespace Ast
 
 
                 throw new NotImplementedException();
-                return null;
             }
             else
             {
@@ -142,7 +141,7 @@ namespace Ast
 
             if (func.ContainsVariable(sym))
             {
-                return new Equal(func.args[0], (func as IInvertable).Inverted(right));
+                return new Equal(func.args[0], (func as IInvertable).InvertOn(right));
             }
 
             return null;

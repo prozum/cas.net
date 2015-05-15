@@ -2,6 +2,9 @@
 
 namespace Ast
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Greater : BinaryOperator
     {
         public Greater() : base(">", 10) { }
@@ -17,7 +20,7 @@ namespace Ast
             return new Greater(Left.Clone(), Right.Clone());
         }
 
-        public override Expression CurrectOperator()
+        internal override Expression CurrectOperator()
         {
             return new Greater(Left.CurrectOperator(), Right.CurrectOperator());
         }

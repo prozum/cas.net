@@ -98,8 +98,6 @@ namespace DesktopUI
                 {
                     if (item.type == typeof(MovableCasTextView) && user.privilege == 1)
                     {
-//                        MovableLockedCasTextView movableLockedCasTextView = new MovableLockedCasTextView(item.metastring, item.locked);
-//                        textviews.castextviews.Add(movableLockedCasTextView);
                         textviews.InsertTextView(item.metastring, item.locked, -1);
                     }
                     else if (item.type == typeof(MovableCasCalcView))
@@ -108,7 +106,7 @@ namespace DesktopUI
                         MovableCasCalcView movableCasCalcView = new MovableCasCalcView(Eval);
                         movableCasCalcView.calcview.input.Text = item.metastring;
 
-                        textviews.castextviews.Add(movableCasCalcView);
+                        textviews.InsertCalcView(item.metastring);
                     }
                     else if (item.type == typeof(MovableCasTextView))
                     {

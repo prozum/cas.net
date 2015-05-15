@@ -9,7 +9,7 @@ namespace Ast
         public AtanFunc(List<Expression> args, Scope scope)
             : base("atan", args, scope)
         {
-            validArgs = new List<ArgKind>()
+            ValidArguments = new List<ArgKind>()
                 {
                     ArgKind.Expression
                 };
@@ -18,11 +18,11 @@ namespace Ast
         protected override Expression Evaluate(Expression caller)
         {
             if (!isArgsValid())
-                return new ArgError(this);
+                return new ArgumentError(this);
 
             var res = args[0].Evaluate();
 
-            var deg = scope.GetBool("deg");
+            var deg = Scope.GetBool("deg");
 
             if (res is Real)
             {
@@ -42,11 +42,11 @@ namespace Ast
             return MakeClone<AtanFunc>();
         }
 
-        public Expression Inverted(Expression other)
+        public Expression InvertOn(Expression other)
         {
             List<Expression> newArgs = new List<Expression>();
             newArgs.Add(other);
-            return new TanFunc(newArgs, scope);
+            return new TanFunc(newArgs, Scope);
         }
     }
 }

@@ -2,6 +2,9 @@
 
 namespace Ast
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Add : BinaryOperator, ISwappable, IInvertable
     {
         public Add() : base("+", 20) { }
@@ -144,7 +147,7 @@ namespace Ast
             return res;
         }
 
-        public override Expression CurrectOperator()
+        internal override Expression CurrectOperator()
         {
             if (Right is INegative && (Right as INegative).IsNegative())
             {
@@ -159,7 +162,10 @@ namespace Ast
             return new Add(Left.Clone(), Right.Clone());
         }
 
-        public Expression Inverted(Expression other)
+        /// <summary>
+        /// 
+        /// </summary>
+        public Expression InvertOn(Expression other)
         {
             return new Sub(other, Right);
         }

@@ -2,28 +2,41 @@
 
 namespace Ast
 {
-    public class ForStmt : Expression
+    public class ForStmt : Statement
     {
-        public Symbol sym;
-        public Expression list;
+        public string sym;
+        public List list;
+        public Scope expr;
 
-        public ForStmt()
+        private int curItem = 0;
+
+        public ForStmt (Scope scope) : base(scope) { }
+
+        public override EvalData Evaluate()
         {
+            EvalData res;
+
+            while (curItem < list.items.Count)
+            {
+                expr.SetVar(sym, list.items[curItem]);
+                //res = expr.Evaluate();
+
+//                if (res is ReturnData || res is ErrorData)
+//                    Reset();
+
+//                if (res is DoneData)
+//                    curItem++;
+//                else
+//                    return res;
+            }
+
+            Reset();
+            return new DoneData();
         }
 
-        public override Expression Evaluate()
+        public void Reset()
         {
-            throw new NotImplementedException();
-        }
-
-        public override EvalData Step()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override bool ContainsVariable(Variable other)
-        {
-            throw new NotImplementedException();
+            curItem = 0;
         }
     }
 }

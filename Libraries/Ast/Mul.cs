@@ -14,7 +14,7 @@ namespace Ast
 
         protected override Expression ExpandHelper(Expression left, Expression right)
         {
-            if (left is BinaryOperator && (left as BinaryOperator).priority < priority)
+            if (left is BinaryOperator && (left as BinaryOperator).Priority < Priority)
             {
                 if (left is Add)
                 {
@@ -29,7 +29,7 @@ namespace Ast
                     return new Mul(left.Expand(), right.Expand());
                 }
             }
-            else if (right is BinaryOperator && (right as BinaryOperator).priority < priority)
+            else if (right is BinaryOperator && (right as BinaryOperator).Priority < Priority)
             {
                 if (right is Add)
                 {
@@ -252,12 +252,12 @@ namespace Ast
             return new Mul(Left.Clone(), Right.Clone());
         }
 
-        public Expression Inverted(Expression other)
+        public Expression InvertOn(Expression other)
         {
             return new Div(other, Right);
         }
 
-        public override Expression CurrectOperator()
+        internal override Expression CurrectOperator()
         {
             return new Mul(Left.CurrectOperator(), Right.CurrectOperator());
         }

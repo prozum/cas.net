@@ -4,22 +4,37 @@ namespace Ast
 {
     public abstract class UnaryOperator : Operator
     {
-        public string sym;
-        public Expression child;
+        public string Identifier;
 
-        public UnaryOperator(string sym)
+        private Expression _child;
+        public Expression Child
         {
-            this.sym = sym;
+            get
+            {
+                return _child;
+            }
+            set
+            {
+                _child = value;
+
+                if (_child != null)
+                    _child.Parent = this;
+            }
+        }
+
+        protected UnaryOperator(string sym)
+        {
+            this.Identifier = sym;
         }
             
         public override bool ContainsVariable(Variable other)
         {
-            return child.ContainsVariable(other);
+            return Child.ContainsVariable(other);
         }
 
         public override string ToString()
         {
-            return sym + child.ToString();
+            return Identifier + Child.ToString();
         }
     }
 }

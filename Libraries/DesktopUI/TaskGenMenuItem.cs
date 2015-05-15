@@ -8,19 +8,13 @@ namespace DesktopUI
     {
         TextViewList textviews;
 
-        public TaskGenMenuItem(TextViewList textviews)
-            : base("Task Gen")
+        public TaskGenMenuItem(TextViewList textviews) : base("Task Gen")
         {
             this.textviews = textviews;
             this.Activated += delegate
-       {
-           OnActivated();
-       };
-        }
-
-        void OnActivated()
-        {
-            TaskGenWindow window = new TaskGenWindow(textviews);
+            {
+                TaskGenWindow window = new TaskGenWindow(this.textviews);
+            };
         }
     }
 }

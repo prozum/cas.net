@@ -57,11 +57,6 @@ namespace Ast
             return new Irrational(Value + other.Value);
         }
 
-        public override Expression AddWith(Boolean other)
-        {
-            return new Irrational(Value + other.Value);
-        }
-
         #endregion
 
         #region SubWith
@@ -76,11 +71,6 @@ namespace Ast
         }
 
         public override Expression SubWith(Irrational other)
-        {
-            return new Irrational(Value - other.Value);
-        }
-
-        public override Expression SubWith(Boolean other)
         {
             return new Irrational(Value - other.Value);
         }
@@ -103,11 +93,6 @@ namespace Ast
             return new Irrational(Value * other.Value);
         }
 
-        public override Expression MulWith(Boolean other)
-        {
-            return new Irrational(Value * other.Value);
-        }
-
         #endregion
 
         #region DivWith
@@ -122,11 +107,6 @@ namespace Ast
         }
 
         public override Expression DivWith(Irrational other)
-        {
-            return new Irrational(Value / other.Value);
-        }
-
-        public override Expression DivWith(Boolean other)
         {
             return new Irrational(Value / other.Value);
         }
@@ -149,11 +129,6 @@ namespace Ast
             return new Irrational(Math.Pow((double)Value, (double)other.Value));
         }
 
-        public override Expression ExpWith(Boolean other)
-        {
-            return new Irrational(Math.Pow((double)Value, (double)other.Value));
-        }
-
         #endregion
 
         #region GreaterThan
@@ -168,11 +143,6 @@ namespace Ast
         }
 
         public override Expression GreaterThan(Irrational other)
-        {
-            return new Boolean(Value > other.Value);
-        }
-
-        public override Expression GreaterThan(Boolean other)
         {
             return new Boolean(Value > other.Value);
         }
@@ -195,11 +165,6 @@ namespace Ast
             return new Boolean(Value < other.Value);
         }
 
-        public override Expression LesserThan(Boolean other)
-        {
-            return new Boolean(Value < other.Value);
-        }
-
         #endregion
 
         #region GreaterThanEqualTo
@@ -214,11 +179,6 @@ namespace Ast
         }
 
         public override Expression GreaterThanOrEqualTo(Irrational other)
-        {
-            return new Boolean(Value >= other.Value);
-        }
-
-        public override Expression GreaterThanOrEqualTo(Boolean other)
         {
             return new Boolean(Value >= other.Value);
         }
@@ -241,11 +201,6 @@ namespace Ast
             return new Boolean(Value <= other.Value);
         }
 
-        public override Expression LesserThanOrEqualTo(Boolean other)
-        {
-            return new Boolean(Value <= other.Value);
-        }
-
         #endregion
 
         #region ModuloWith
@@ -260,11 +215,6 @@ namespace Ast
         }
 
         public override Expression ModuloWith(Irrational other)
-        {
-            return new Irrational(Value % other.Value);
-        }
-
-        public override Expression ModuloWith(Boolean other)
         {
             return new Irrational(Value % other.Value);
         }

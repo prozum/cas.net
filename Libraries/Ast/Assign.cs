@@ -2,6 +2,9 @@
 
 namespace Ast
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Assign : BinaryOperator
     {
         public Assign() : base(":=", 0) { }
@@ -9,14 +12,55 @@ namespace Ast
 
         protected override Expression Evaluate(Expression caller)
         {
-            if (Left is Symbol)
+            Variable sym;
+            Scope scope;
+
+            Expression res;
+
+            if (Left is Error)
+                return Left;
+
+            if (Left is Dot)
             {
-                var sym = (Symbol)Left;
-                sym.scope.SetVar(sym.identifier, Right);
-                return new Info(sym.identifier + ":=" + Right.ToString());
+                var dot = Left as Dot;
+
+                if (dot.Right is Variable)
+                    sym = dot.Right as Variable;
+                else
+                    return new Error(dot.Right, " is not a symbol");
+
+                res = dot.Left.Evaluate();
+
+                if (res is Error)
+                    return res;
+
+                if (res is Scope)
+                    scope = res as Scope;
+                else
+                    return new Error(res, " is not a scope");
+            }
+            else if (Left is Variable)
+            {
+                sym = (Variable)Left;
+                scope = Left.Scope;
+            }
+            else
+                return new Error(Left, " is not a symbol");
+
+
+            if (sym is Symbol)
+            {
+                res = Right.Evaluate();
+
+                if (res is Error)
+                    return res;
+
+                scope.SetVar(sym.identifier, res);
+
+                return res;
             }
 
-            if (Left is UsrFunc)
+            if (sym is UsrFunc)
             {
                 var usrFunc = (UsrFunc)Left;
 
@@ -26,13 +70,13 @@ namespace Ast
                         return new Error(this, "All arguments must be symbols");
                 }
 
-                var defFunc = new UsrFunc(usrFunc.identifier, usrFunc.args, usrFunc.scope);
+                var defFunc = new UsrFunc(usrFunc.identifier, usrFunc.args, usrFunc.Scope);
 
                 defFunc.expr = Right;
 
-                usrFunc.scope.SetVar(usrFunc.identifier, defFunc);
+                usrFunc.Scope.SetVar(usrFunc.identifier, defFunc);
 
-                return new Info(usrFunc.ToString() + ":=" + Right.ToString());
+                return this;
             }
 
             if (Left is SysFunc)
@@ -58,7 +102,7 @@ namespace Ast
             return new Assign(Left.Clone(), Right.Clone());
         }
 
-        public override Expression CurrectOperator()
+        internal override Expression CurrectOperator()
         {
             return new Assign(Left.CurrectOperator(), Right.CurrectOperator());
         }

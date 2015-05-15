@@ -44,7 +44,6 @@
     </Compile>
     <Compile Include="Evaluator.cs" />
     <Compile Include="List.cs" />
-    <Compile Include="Message.cs" />
     <Compile Include="EvalData.cs">
       <DependentUpon>Evaluator.cs</DependentUpon>
     </Compile>
@@ -109,9 +108,7 @@
     <Compile Include="Complex.cs">
       <DependentUpon>Number.cs</DependentUpon>
     </Compile>
-    <Compile Include="Boolean.cs">
-      <DependentUpon>Number.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Boolean.cs" />
     <Compile Include="UsrFunc.cs">
       <DependentUpon>Variable.cs</DependentUpon>
     </Compile>
@@ -120,8 +117,6 @@
       <DependentUpon>UnaryOperator.cs</DependentUpon>
     </Compile>
     <Compile Include="Text.cs" />
-    <Compile Include="ForStmt.cs" />
-    <Compile Include="IfStmt.cs" />
     <Compile Include="UnaryOperator.cs" />
     <Compile Include="BinaryOperator.cs" />
     <Compile Include="Minus.cs">
@@ -146,26 +141,17 @@
     <Compile Include="CosFunc.cs">
       <DependentUpon>SysFunc.cs</DependentUpon>
     </Compile>
-    <Compile Include="EnterFunc.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
     <Compile Include="EvalFunc.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ExitFunc.cs">
       <DependentUpon>SysFunc.cs</DependentUpon>
     </Compile>
     <Compile Include="ExpandFunc.cs">
       <DependentUpon>SysFunc.cs</DependentUpon>
     </Compile>
-    <Compile Include="MapFunc.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
     <Compile Include="PlotFunc.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
+      <DependentUpon>FuncStmt.cs</DependentUpon>
     </Compile>
     <Compile Include="PrintFunc.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
+      <DependentUpon>FuncStmt.cs</DependentUpon>
     </Compile>
     <Compile Include="RangeFunc.cs">
       <DependentUpon>SysFunc.cs</DependentUpon>
@@ -189,6 +175,29 @@
       <DependentUpon>SysFunc.cs</DependentUpon>
     </Compile>
     <Compile Include="Operator.cs" />
+    <Compile Include="Dot.cs">
+      <DependentUpon>BinaryOperator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NotEqual.cs">
+      <DependentUpon>BinaryOperator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ForStmt.cs">
+      <DependentUpon>Statement.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IfStmt.cs">
+      <DependentUpon>Statement.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RetStmt.cs">
+      <DependentUpon>Statement.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Statement.cs" />
+    <Compile Include="ExprStmt.cs">
+      <DependentUpon>Statement.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FuncStmt.cs" />
+    <Compile Include="ErrorExpr.cs">
+      <DependentUpon>BinaryOperator.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ProjectExtensions>

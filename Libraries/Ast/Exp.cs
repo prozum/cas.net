@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Ast
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Exp : BinaryOperator, IInvertable
     {
         public Exp() : base("^", 60) { }
@@ -15,7 +18,7 @@ namespace Ast
 
         protected override Expression ExpandHelper(Expression left, Expression right)
         {
-            if (left is BinaryOperator && (left as BinaryOperator).priority < priority)
+            if (left is BinaryOperator && (left as BinaryOperator).Priority < Priority)
             {
                 if (left is Add)
                 {
@@ -80,14 +83,14 @@ namespace Ast
             return new Exp(Left.Clone(), Right.Clone());
         }
 
-        public Expression Inverted(Expression other)
+        public Expression InvertOn(Expression other)
         {
             if (Right.CompareTo(Constant.Two))
             {
                 var args = new List<Expression>();
                 args.Add(other);
 
-                var answer = new SqrtFunc(args, other.scope);
+                var answer = new SqrtFunc(args, other.Scope);
                 var answers = new Ast.List();
 
                 answers.items.Add(answer);
@@ -100,7 +103,7 @@ namespace Ast
             }
         }
 
-        public override Expression CurrectOperator()
+        internal override Expression CurrectOperator()
         {
             return new Exp(Left.CurrectOperator(), Right.CurrectOperator());
         }

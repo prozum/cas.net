@@ -44,24 +44,6 @@ namespace DesktopUI
                     metaType.metastring = calcView.calcview.input.Text;
                     metaTypeList.Add(metaType);
                 }
-                else if (w.GetType() == typeof(MovableLockedCasTextView))
-                {
-                    MetaType metaType = new MetaType();
-                    MovableCasTextView textView = (MovableCasTextView)w;
-                    metaType.type = typeof(MovableCasTextView);
-                    metaType.metastring = textView.textview.SerializeCasTextView();
-                    metaType.locked = textView.textview.locked;
-                    metaTypeList.Add(metaType);
-                }
-                else if (w.GetType() == typeof(MovableCasTextView))
-                {
-                    MetaType metaType = new MetaType();
-                    MovableCasTextView textView = (MovableCasTextView)w;
-                    metaType.type = typeof(MovableCasTextView);
-                    metaType.metastring = textView.textview.SerializeCasTextView();
-                    metaType.locked = textView.textview.locked;
-                    metaTypeList.Add(metaType);
-                }
                 else if (w.GetType() == typeof(MovableCasResult))
                 {
                     Console.WriteLine("Got MovableCasResult");
@@ -74,6 +56,15 @@ namespace DesktopUI
                     metaType.metastring = Export.Serialize(result.casresult.facitContainer);
                     Console.WriteLine("META: " + metaType.metastring);
                     metaType.locked = result.casresult.correct;
+                    metaTypeList.Add(metaType);
+                }
+                else if (w.GetType() == typeof(MovableCasTextView))
+                {
+                    MetaType metaType = new MetaType();
+                    MovableCasTextView textView = (MovableCasTextView)w;
+                    metaType.type = typeof(MovableCasTextView);
+                    metaType.metastring = textView.textview.SerializeCasTextView();
+                    metaType.locked = textView.textview.locked;
                     metaTypeList.Add(metaType);
                 }
             }
@@ -96,7 +87,7 @@ namespace DesktopUI
 
                         if (filechooser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                         {
-                            System.IO.File.WriteAllText(filechooser.FileName, "file");
+                            System.IO.File.WriteAllText(filechooser.FileName, s);
                         }
 
                         break;

@@ -3,16 +3,34 @@ using System.Collections.Generic;
 
 namespace Ast
 {
+    /// <summary>
+    /// A BinaryOperator which sides can be swapped without effecting the result.
+    /// </summary>
     public interface ISwappable
     {
+        Expression Left { get; set; }
+        Expression Right { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         BinaryOperator Swap();
+
+        /// <summary>
+        /// 
+        /// </summary>
         BinaryOperator Transform();
     }
 
+    /// <summary>
+    /// A Operator which evaluates to expressions.
+    /// </summary>
     public abstract class BinaryOperator : Operator
     {
-        public string sym;
-        public int priority;
+        public string Identifier;
+        public int Priority;
+
+        private int curStep = 0;
 
         private Expression _left;
         public Expression Left
@@ -26,7 +44,7 @@ namespace Ast
                 _left = value;
 
                 if (_left != null)
-                    _left.parent = this;
+                    _left.Parent = this;
             }
         }
 
@@ -42,17 +60,17 @@ namespace Ast
                 _right = value;
 
                 if (_right != null)
-                    _right.parent = this;
+                    _right.Parent = this;
             }
         }
 
-        public BinaryOperator(string symbol, int priority) : this(null, null, symbol, priority) { }
-        public BinaryOperator(Expression left, Expression right, string symbol, int priority)
+        internal BinaryOperator(string symbol, int priority) : this(null, null, symbol, priority) { }
+        internal BinaryOperator(Expression left, Expression right, string identifier, int priority)
         {
             Left = left;
             Right = right;
-            this.sym = symbol;
-            this.priority = priority;
+            Identifier = identifier;
+            Priority = priority;
         }
 
         protected override Expression Evaluate(Expression caller)
@@ -62,14 +80,12 @@ namespace Ast
 
         public override string ToString()
         {
-            if (parent == null || priority >= parent.priority)
+            if (Parent is BinaryOperator && Priority < (Parent as BinaryOperator).Priority)
             {
-                return Left.ToString () + sym + Right.ToString ();
+                return '(' + Left.ToString() + Identifier + Right.ToString() + ')';
             } 
-            else 
-            {
-                return '(' + Left.ToString () + sym + Right.ToString () + ')';
-            }
+                
+            return Left.ToString() + Identifier + Right.ToString();
         }
 
         public override bool CompareTo(Expression other)
@@ -361,37 +377,5 @@ namespace Ast
         }
 
         #endregion
-    }
-
-    //Pleace do your magic Niclas. Put this in a file under BinaryOperator. Don't know how to do it in VS.
-    public class NotEqual : BinaryOperator
-    {
-        public NotEqual() : base("!=", 10) { }
-        public NotEqual(Expression left, Expression right) : base(left, right, "==", 10) { }
-
-        protected override Expression Evaluate(Expression caller)
-        {
-            return new Boolean(!Left.CompareTo(Right));
-        }
-
-        public override Expression Clone()
-        {
-            return new NotEqual(Left.Clone(), Right.Clone());
-        }
-
-        public override Expression CurrectOperator()
-        {
-            return new NotEqual(Left.CurrectOperator(), Right.CurrectOperator());
-        }
-
-        protected override Expression ReduceHelper(Expression left, Expression right)
-        {
-            return new NotEqual(left.Reduce(this), right.Reduce(this));
-        }
-
-        protected override Expression ExpandHelper(Expression left, Expression right)
-        {
-            return new NotEqual(left.Expand(), right.Expand());
-        }
     }
 }

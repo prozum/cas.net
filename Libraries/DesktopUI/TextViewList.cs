@@ -12,109 +12,87 @@ namespace DesktopUI
         Grid ButtonGrid = new Grid();
         Evaluator Eval;
         User user;
+        Window window;
 
-
-        public TextViewList(User user, Evaluator Eval)
+        public TextViewList(User user, Evaluator Eval, Window window)
             : base()
         {
             this.Eval = Eval;
             this.user = user;
+            this.window = window;
+
+            window.ResizeChecked += delegate
+            {
+                foreach (Widget widget in castextviews)
+                {
+                    if(widget is MovableCasCalcView)
+                    {
+                        (widget as MovableCasCalcView).calcview.input.WidthRequest = window.Window.Width - 60; 
+                    }
+                    else if (widget is MovableDrawCanvas)
+                    {
+                        (widget as MovableDrawCanvas).canvas.WidthRequest = window.Window.Width - 60;
+                    }
+                    else if(widget is MovableCasTextView) // <- This shall always be last as all other widgets inherit from it, but not all use it.
+                    {
+                        (widget as MovableCasTextView).textview.WidthRequest = window.Window.Width - 60;
+                    }
+                }
+            };
 
             ShowAll();
         }
 
         public void InsertTextView(string serializedString, bool locked, int pos)
         {
-            Button ButtonMoveUp = new Button("↑");
-            Button ButtonMoveDown = new Button("↓");
+            MovableCasTextView movableCasTextView = new MovableCasTextView(serializedString, locked);
+            movableCasTextView.textview.LockTextView(locked);
+
+            movableCasTextView.Attach(AddLockCheckButton(movableCasTextView), 1, 100, 1, 1);
+            movableCasTextView.Attach(AddCommandButtons(movableCasTextView), 100, 1, 1, 1);
+
+            if (pos == -1)
+            {
+                castextviews.Add(movableCasTextView);
+            }
+            else
+            {
+                castextviews.Insert(pos, movableCasTextView);
+            }
+
+            Clear();
+            Redraw();
+            ShowAll();
+        }
+
+        public void InsertTaskGenTextView(string TaskString)
+        {
+            //Button ButtonMoveUp = new Button("↑");
+            //Button ButtonMoveDown = new Button("↓");
             Button ButtonDelete = new Button("X");
             Button ButtonAddNew = new Button("+");
 
-            if (user.privilege == 1)
+            MovableCasTextView movableCasTextView = new MovableCasTextView(TaskString);
+            movableCasTextView.textview.LockTextView(true);
+
+            ButtonDelete.Clicked += delegate
             {
-                MovableLockedCasTextView movableLockedCasTextView = new MovableLockedCasTextView(serializedString, locked);
-                movableLockedCasTextView.textview.LockTextView(false);
+                Delete(movableCasTextView.id_);
+            };
 
-                ButtonMoveUp.Clicked += delegate
-                {
-                    Move(movableLockedCasTextView.id_, -1);
-                };
-
-                ButtonMoveDown.Clicked += delegate
-                {
-                    Move(movableLockedCasTextView.id_, 1);
-                };
-
-                ButtonDelete.Clicked += delegate
-                {
-                    Delete(movableLockedCasTextView.id_);
-                };
-
-                ButtonAddNew.Clicked += delegate
-                {
-                    AddNew(movableLockedCasTextView);
-                };
-
-                VBox vbox = new VBox();
-                vbox.PackStart(ButtonMoveUp, false, false, 2);
-                vbox.PackEnd(ButtonMoveDown, false, false, 2);
-                vbox.PackStart(ButtonDelete, false, false, 2);
-                vbox.PackStart(ButtonAddNew, false, false, 2);
-                movableLockedCasTextView.Attach(vbox, 2, 1, 1, 2);
-
-                if (pos == -1)
-                {
-                    castextviews.Add(movableLockedCasTextView);
-                }
-                else
-                {
-                    castextviews.Insert(pos, movableLockedCasTextView);
-                }
-            }
-            else if (user.privilege == 0)
+            ButtonAddNew.Clicked += delegate
             {
-                MovableCasTextView movableCasTextView = new MovableCasTextView(serializedString, locked);
-                movableCasTextView.textview.LockTextView(locked);
+                AddNew(movableCasTextView);
+            };
 
-                if (locked == false)
-                {
-                    ButtonMoveUp.Clicked += delegate
-                    {
-                        Move(movableCasTextView.id_, -1);
-                    };
+            VBox vbox = new VBox();
+            //vbox.PackStart(ButtonMoveUp, false, false, 2);
+            //vbox.PackEnd(ButtonMoveDown, false, false, 2);
+            vbox.PackStart(ButtonDelete, false, false, 2);
+            vbox.PackStart(ButtonAddNew, false, false, 2);
+            movableCasTextView.Attach(vbox, 2, 1, 1, 2);
 
-                    ButtonMoveDown.Clicked += delegate
-                    {
-                        Move(movableCasTextView.id_, 1);
-                    };
-
-                    ButtonDelete.Clicked += delegate
-                    {
-                        Delete(movableCasTextView.id_);
-                    };
-
-                    ButtonAddNew.Clicked += delegate
-                    {
-                        AddNew(movableCasTextView);
-                    };
-
-                    VBox vbox = new VBox();
-                    vbox.PackStart(ButtonMoveUp, false, false, 2);
-                    vbox.PackEnd(ButtonMoveDown, false, false, 2);
-                    vbox.PackStart(ButtonDelete, false, false, 2);
-                    vbox.PackStart(ButtonAddNew, false, false, 2);
-                    movableCasTextView.Attach(vbox, 2, 1, 1, 2);
-                }
-
-                if (pos == -1)
-                {
-                    castextviews.Add(movableCasTextView);
-                }
-                else
-                {
-                    castextviews.Insert(pos, movableCasTextView);
-                }
-            }
+            castextviews.Add(movableCasTextView);
 
             Clear();
             Redraw();
@@ -123,48 +101,17 @@ namespace DesktopUI
 
         public void InsertCalcView(int pos)
         {
-            Button ButtonMoveUp = new Button("↑");
-            Button ButtonMoveDown = new Button("↓");
-            Button ButtonDelete = new Button("X");
-            Button ButtonAddNew = new Button("+");
-
             MovableCasCalcView MovCasCalcView = new MovableCasCalcView(Eval);
             MovCasCalcView.calcview.input.Activated += delegate
             {
-                MovCasCalcView.calcview.Eval.locals.Clear();
+                MovCasCalcView.calcview.Eval.Locals.Clear();
                 MovCasCalcView.calcview.Evaluate();
                 Reevaluate();
                 MovCasCalcView.ShowAll();
             };
 
-            ButtonMoveUp.Clicked += delegate
-            {
-                MovCasCalcView.calcview.Eval.locals.Clear();
-                Move(MovCasCalcView.id_, -1);
-            };
-
-            ButtonMoveDown.Clicked += delegate
-            {
-                MovCasCalcView.calcview.Eval.locals.Clear();
-                Move(MovCasCalcView.id_, 1);
-            };
-
-            ButtonDelete.Clicked += delegate
-            {
-                Delete(MovCasCalcView.id_);
-            };
-
-            ButtonAddNew.Clicked += delegate
-            {
-                AddNew(MovCasCalcView);
-            };
-
-            VBox vbox = new VBox();
-            vbox.PackStart(ButtonMoveUp, false, false, 2);
-            vbox.PackEnd(ButtonMoveDown, false, false, 2);
-            vbox.PackStart(ButtonDelete, false, false, 2);
-            vbox.PackStart(ButtonAddNew, false, false, 2);
-            MovCasCalcView.Attach(vbox, 2, 1, 1, 2);
+            MovCasCalcView.Attach(AddLockCheckButton(MovCasCalcView), 1, 100, 1, 1);
+            MovCasCalcView.Attach(AddCommandButtons(MovCasCalcView), 100, 1, 1, 1);
 
             if (pos == -1)
             {
@@ -182,52 +129,17 @@ namespace DesktopUI
 
         public void InsertCalcView(string input)
         {
-            Button ButtonMoveUp = new Button("↑");
-            Button ButtonMoveDown = new Button("↓");
-            Button ButtonDelete = new Button("X");
-            Button ButtonAddNew = new Button("+");
-
             MovableCasCalcView MovCasCalcView = new MovableCasCalcView(Eval);
-
             MovCasCalcView.calcview.input.Text = input;
-
             MovCasCalcView.calcview.input.Activated += delegate
             {
-                MovCasCalcView.calcview.Eval.scope.locals.Clear();
+                MovCasCalcView.calcview.Eval.Scope.Locals.Clear();
                 MovCasCalcView.calcview.Evaluate();
                 MovCasCalcView.ShowAll();
             };
 
-            ButtonMoveUp.Clicked += delegate
-            {
-                MovCasCalcView.calcview.Eval.scope.locals.Clear();
-                Move(MovCasCalcView.id_, -1);
-                MovCasCalcView.calcview.Eval.scope.locals.Clear();
-            };
-
-            ButtonMoveDown.Clicked += delegate
-            {
-                MovCasCalcView.calcview.Eval.scope.locals.Clear();
-                Move(MovCasCalcView.id_, 1);
-                MovCasCalcView.calcview.Eval.scope.locals.Clear();
-            };
-
-            ButtonDelete.Clicked += delegate
-            {
-                Delete(MovCasCalcView.id_);
-            };
-
-            ButtonAddNew.Clicked += delegate
-            {
-                AddNew(MovCasCalcView);
-            };
-
-            VBox vbox = new VBox();
-            vbox.PackStart(ButtonMoveUp, false, false, 2);
-            vbox.PackEnd(ButtonMoveDown, false, false, 2);
-            vbox.PackStart(ButtonDelete, false, false, 2);
-            vbox.PackStart(ButtonAddNew, false, false, 2);
-            MovCasCalcView.Attach(vbox, 2, 1, 1, 2);
+            MovCasCalcView.Attach(AddLockCheckButton(MovCasCalcView), 1, 100, 1, 1);
+            MovCasCalcView.Attach(AddCommandButtons(MovCasCalcView), 100, 1, 1, 1);
 
             castextviews.Add(MovCasCalcView);
 
@@ -238,40 +150,10 @@ namespace DesktopUI
 
         public void InsertDrawCanvas(int pos)
         {
-            Button ButtonMoveUp = new Button("↑");
-            Button ButtonMoveDown = new Button("↓");
-            Button ButtonDelete = new Button("X");
-            Button ButtonAddNew = new Button("+");
-
             MovableDrawCanvas movableDrawCanvas = new MovableDrawCanvas();
 
-            ButtonMoveUp.Clicked += delegate
-            {
-                Move(movableDrawCanvas.id_, -1);
-            };
-
-            ButtonMoveDown.Clicked += delegate
-            {
-                Move(movableDrawCanvas.id_, 1);
-            };
-
-            ButtonDelete.Clicked += delegate
-            {
-                Delete(movableDrawCanvas.id_);
-            };
-
-            ButtonAddNew.Clicked += delegate
-            {
-                AddNew(movableDrawCanvas);
-            };
-
-            VBox vbox = new VBox();
-            vbox.PackStart(ButtonMoveUp, false, false, 2);
-            vbox.PackEnd(ButtonMoveDown, false, false, 2);
-            vbox.PackStart(ButtonDelete, false, false, 2);
-            vbox.PackStart(ButtonAddNew, false, false, 2);
-
-            movableDrawCanvas.Attach(vbox, 2, 1, 1, 2);
+            movableDrawCanvas.Attach(AddLockCheckButton(movableDrawCanvas), 1, 100, 1, 1);
+            movableDrawCanvas.Attach(AddCommandButtons(movableDrawCanvas), 100, 1, 1, 1);
 
             if (pos == -1)
             {
@@ -289,48 +171,16 @@ namespace DesktopUI
 
         public void InsertResult(string answer, string facit)
         {
-            Button ButtonMoveUp = new Button("↑");
-            Button ButtonMoveDown = new Button("↓");
-            Button ButtonDelete = new Button("X");
-            Button ButtonAddNew = new Button("+");
-
             MovableCasResult MovableCasResult = new MovableCasResult(user, answer, facit);
 
-            ButtonMoveUp.Clicked += delegate
-            {
-                Move(MovableCasResult.id_, -1);
-            };
-
-            ButtonMoveDown.Clicked += delegate
-            {
-                Move(MovableCasResult.id_, 1);
-            };
-
-            ButtonDelete.Clicked += delegate
-            {
-                Delete(MovableCasResult.id_);
-            };
-
-            ButtonAddNew.Clicked += delegate
-            {
-                AddNew(MovableCasResult);
-            };
-
-            VBox vbox = new VBox();
-            vbox.PackStart(ButtonMoveUp, false, false, 2);
-            vbox.PackEnd(ButtonMoveDown, false, false, 2);
-            vbox.PackStart(ButtonDelete, false, false, 2);
-            vbox.PackStart(ButtonAddNew, false, false, 2);
-
-            MovableCasResult.Attach(vbox, 2, 1, 1, 2);
+            MovableCasResult.Attach(AddLockCheckButton(MovableCasResult), 1, 100, 1, 1);
+            MovableCasResult.Attach(AddCommandButtons(MovableCasResult), 100, 1, 1, 1);
 
             castextviews.Add(MovableCasResult);
 
             Clear();
             Redraw();
             ShowAll();
-
-            Console.WriteLine("Inserted");
         }
 
         public void Move(int ID, int UpOrDown)
@@ -443,6 +293,7 @@ namespace DesktopUI
                 Redraw();
 
                 _id++;
+                buttonCalcel.Click();
             };
 
             buttonCalcView.Clicked += delegate
@@ -453,6 +304,7 @@ namespace DesktopUI
                 Redraw();
 
                 _id++;
+                buttonCalcel.Click();
             };
 
             buttonDrawCanvas.Clicked += delegate
@@ -463,7 +315,85 @@ namespace DesktopUI
                 Redraw();
 
                 _id++;
+                buttonCalcel.Click();
             };
+        }
+
+        CheckButton AddLockCheckButton(MovableCasTextView mctv)
+        {
+            if(user.privilege == 1)
+            {
+                CheckButton checkbutton = new CheckButton("Lock for students");
+
+                if (mctv.textview.locked == true)
+                {
+                    checkbutton.Active = true;
+                }
+
+                checkbutton.Toggled += delegate
+                {
+                    mctv.textview.locked = !mctv.textview.locked;
+                };
+
+                return checkbutton;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        VBox AddCommandButtons(MovableCasTextView mctv)
+        {
+            Button ButtonMoveUp = new Button("↑");
+            Button ButtonMoveDown = new Button("↓");
+            Button ButtonDelete = new Button("X");
+            Button ButtonAddNew = new Button("+");
+
+            VBox vbox = new VBox();
+
+            if (user.privilege == 1 || (user.privilege == 0 && mctv.textview.locked == false))
+            {
+
+                ButtonMoveUp.Clicked += delegate
+                {
+                    Move(mctv.id_, -1);
+                };
+
+                ButtonMoveDown.Clicked += delegate
+                {
+                    Move(mctv.id_, 1);
+                };
+
+                ButtonDelete.Clicked += delegate
+                {
+                    Delete(mctv.id_);
+                };
+
+                ButtonAddNew.Clicked += delegate
+                {
+                    AddNew(mctv);
+                };
+
+                HBox hbox = new HBox();
+                Toolbar tb = new Toolbar();
+                hbox.Add(ButtonMoveUp);
+                hbox.Add(ButtonMoveDown);
+                hbox.Add(ButtonDelete);
+                hbox.Add(ButtonAddNew);
+                vbox.PackStart(hbox, false, false, 2);
+            }
+            else if (user.privilege <= 0)
+            {
+                ButtonAddNew.Clicked += delegate
+                {
+                    AddNew(mctv);
+                };
+
+                vbox.PackStart(ButtonAddNew, false, false, 2);
+            }
+
+            return vbox;
         }
     }
 }

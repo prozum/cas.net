@@ -7,8 +7,6 @@ using System.Globalization;
 public class MainWindow : Window
 {
     Evaluator eval;
-    EvalData output;
-    List<EvalData> dataList;
 
     Grid grid;
 
@@ -33,34 +31,23 @@ public class MainWindow : Window
 
     public void EvaluateInput()
     {
-        eval.Parse(input.Buffer.Text);
-
-        do
-        {
-            output = eval.Step();
-            dataList.Add(output);
-
-        } while (!(output is DoneData || output is ErrorData));
-
         TextIter insertIter = buffer.StartIter;
 
-        foreach(var data in dataList)
-        {
-            if (data is PrintData)
-            {
-                buffer.Insert(ref insertIter, data.ToString() + "\n");
-            }
-            else if (data is ErrorData)
-            {
-                buffer.InsertWithTagsByName(ref insertIter, data.ToString() + "\n", "error");
-            }
-            else if (data is DebugData && eval.GetBool("debug"))
-            {
-                buffer.InsertWithTagsByName(ref insertIter, data.ToString() + "\n", "debug");
-            }
-        }
+        eval.Parse(input.Buffer.Text);
+       
 
-        dataList.Clear();
+        buffer.Insert(ref insertIter, eval.Evaluate().ToString() + "\n");
+
+        foreach(var data in eval.SideEffects)
+        {
+
+            if (data is PrintData)
+                buffer.Insert(ref insertIter, data.ToString() + "\n");
+            else if (data is ErrorData)
+                buffer.InsertWithTagsByName(ref insertIter, data.ToString() + "\n", "error");
+            else if (data is DebugData && eval.GetBool("debug"))
+                buffer.InsertWithTagsByName(ref insertIter, data.ToString() + "\n", "debug");
+        }
     }
 
     public void CreateDefTree()
@@ -81,7 +68,7 @@ public class MainWindow : Window
     {
         defStore.Clear();
 
-        foreach (var def in eval.locals)
+        foreach (var def in eval.Locals)
         {
             if (def.Value is SysFunc)
             {
@@ -136,7 +123,6 @@ public class MainWindow : Window
         grid.Attach(defTree, 1, 0, 1, 3);
 
         eval = new Evaluator ();
-        dataList = new List<EvalData>();
         UpdateDefinitions();
 
         ShowAll ();

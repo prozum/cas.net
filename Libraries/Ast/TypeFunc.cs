@@ -8,7 +8,7 @@ namespace Ast
         public TypeFunc(List<Expression> args, Scope scope)
             : base("type", args, scope)
         {
-            validArgs = new List<ArgKind>()
+            ValidArguments = new List<ArgKind>()
                 {
                     ArgKind.Expression
                 };
