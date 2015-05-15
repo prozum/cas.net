@@ -279,10 +279,6 @@ namespace Ast
                     return new Token(TokenKind.FOR, identifier, startPos);
                 case "in":
                     return new Token(TokenKind.IN, identifier, startPos);
-                case "print":
-                    return new Token(TokenKind.PRINT, identifier, startPos);
-                case "plot":
-                    return new Token(TokenKind.PLOT, identifier, startPos);
                 default:
                     return new Token(TokenKind.IDENTIFIER, identifier, startPos);
             }

@@ -10,7 +10,6 @@ namespace Ast
         public List<EvalData> SideEffects = new List<EvalData>();
 
         public Error Error;
-        public List ReturnExpr = new List();
 
         const int MaxStatementPrint = 5;
 
@@ -61,6 +60,8 @@ namespace Ast
 
             switch (list.items.Count)
             {
+                case 0:
+                    return new Null();
                 case 1:
                     return list.items[0];
                 default:

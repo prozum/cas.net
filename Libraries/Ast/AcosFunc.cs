@@ -17,10 +17,10 @@ namespace Ast
 
         protected override Expression Evaluate(Expression caller)
         {
-            if (!isArgsValid())
+            if (!IsArgumentsValid())
                 return new ArgumentError(this);
 
-            var res = args[0].Evaluate();
+            var res = Arguments[0].Evaluate();
 
             var deg = Scope.GetBool("deg");
 
@@ -29,7 +29,7 @@ namespace Ast
                 return ReturnValue(new Irrational(Math.Acos((double) ((deg ? Constant.DegToRad.Value  : 1) * (res as Real).Value) ))).Evaluate();
             }
 
-            return new Error(this, "Could not take ACos of: " + args[0]);
+            return new Error(this, "Could not take ACos of: " + Arguments[0]);
         }
 
         internal override Expression Reduce(Expression caller)

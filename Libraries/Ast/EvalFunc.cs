@@ -17,10 +17,10 @@ namespace Ast
 
         protected override Expression Evaluate(Expression caller)
         {
-            if (!isArgsValid())
+            if (!IsArgumentsValid())
                 return new ArgumentError(this);
 
-            var arg = args[0].Evaluate();
+            var arg = Arguments[0].Evaluate();
 
             if (arg is Error)
                 return arg;
@@ -30,9 +30,9 @@ namespace Ast
 
             var res = Evaluator.Eval(arg as Text);
 
-            res.Position.i += args[0].Position.i;
-            res.Position.Line += args[0].Position.Line - 1;
-            res.Position.Column += args[0].Position.Column;
+            res.Position.i += Arguments[0].Position.i;
+            res.Position.Line += Arguments[0].Position.Line - 1;
+            res.Position.Column += Arguments[0].Position.Column;
 
             return res;
         }

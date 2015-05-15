@@ -8,25 +8,25 @@ namespace Ast
 {
     public abstract class Variable : Expression, INegative
     {
-        public string identifier;
-        public Real prefix, exponent;
+        public string Identifier;
+        public Real Prefix, Exponent;
 
         protected Variable(string identifier) : this(identifier, null) { }
         protected Variable(string identifier, Scope scope)
         {
-            this.identifier = identifier;
+            this.Identifier = identifier;
             this.Scope = scope;
 
-            this.exponent = new Integer(1);
-            this.prefix = new Integer(1);
+            this.Exponent = new Integer(1);
+            this.Prefix = new Integer(1);
         }
 
         protected virtual T MakeClone<T>() where T : Variable, new()
         {
             T res = new T();
-            res.identifier = identifier;
-            res.prefix = prefix.Clone() as Real;
-            res.exponent = exponent.Clone() as Real;
+            res.Identifier = Identifier;
+            res.Prefix = Prefix.Clone() as Real;
+            res.Exponent = Exponent.Clone() as Real;
             res.Scope = Scope;
             res.Position = Position;
 
@@ -35,13 +35,13 @@ namespace Ast
 
         public override bool ContainsVariable(Variable other)
         {
-            if (identifier == other.identifier && this.GetType() == other.GetType())
+            if (Identifier == other.Identifier && this.GetType() == other.GetType())
             {
                 return true;
             }
             else if (this is Func)
             {
-                foreach (var item in (this as Func).args)
+                foreach (var item in (this as Func).Arguments)
                 {
                     if (item.ContainsVariable(other))
                     {
@@ -59,26 +59,26 @@ namespace Ast
 
         protected Expression ReturnValue(Expression res)
         {
-            if (prefix.CompareTo(Constant.Zero))
+            if (Prefix.CompareTo(Constant.Zero))
             {
                 res = new Integer(0);
             }
             else
             {
-                if (exponent.CompareTo(Constant.Zero))
+                if (Exponent.CompareTo(Constant.Zero))
                 {
-                    res = prefix.Clone();
+                    res = Prefix.Clone();
                 }
                 else
                 {
-                    if (!exponent.CompareTo(Constant.One))
+                    if (!Exponent.CompareTo(Constant.One))
                     {
-                        res = new Exp(res, exponent);
+                        res = new Exp(res, Exponent);
                     }
 
-                    if (!prefix.CompareTo(Constant.One))
+                    if (!Prefix.CompareTo(Constant.One))
                     {
-                        return new Mul(prefix, res);
+                        return new Mul(Prefix, res);
                     }
                 }
             }
@@ -89,21 +89,21 @@ namespace Ast
         public Expression SeberateNumbers()
         {
             var thisClone = Clone() as Symbol;
-            thisClone.prefix = new Integer(1);
-            thisClone.exponent = new Integer(1);
+            thisClone.Prefix = new Integer(1);
+            thisClone.Exponent = new Integer(1);
 
             return ReturnValue(thisClone);
         }
 
         public bool IsNegative()
         {
-            return prefix is INegative && (prefix as INegative).IsNegative();
+            return Prefix is INegative && (Prefix as INegative).IsNegative();
         }
 
         public Expression ToNegative()
         {
             var res = Clone();
-            (res as Variable).prefix = (prefix as INegative).ToNegative() as Real;
+            (res as Variable).Prefix = (Prefix as INegative).ToNegative() as Real;
 
             return res;
         }

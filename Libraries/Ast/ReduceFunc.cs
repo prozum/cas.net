@@ -16,10 +16,10 @@ namespace Ast
 
         protected override Expression Evaluate(Expression caller)
         {
-            if (!isArgsValid())
+            if (!IsArgumentsValid())
                 return new ArgumentError(this);
 
-            return args[0].Reduce();
+            return Arguments[0].Reduce();
         }
 
         public override Expression Clone()

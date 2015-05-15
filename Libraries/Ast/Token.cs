@@ -13,8 +13,6 @@ namespace Ast
         RET,
         FOR,
         IN,
-        PRINT,
-        PLOT,
 
         TEXT,
 

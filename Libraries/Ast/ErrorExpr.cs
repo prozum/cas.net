@@ -18,7 +18,7 @@ namespace Ast
         public Error (Object obj, Pos Position, string msg)
         {
             if (obj is Variable)
-                this.ErrorMessage = (obj as Variable).identifier + ": " + msg;
+                this.ErrorMessage = (obj as Variable).Identifier + ": " + msg;
             else
                 this.ErrorMessage = obj.GetType().Name + ": " + msg;
         }
@@ -52,7 +52,6 @@ namespace Ast
     public class ArgumentError: Error
     {
         public ArgumentError(SysFunc func) : this(func, func.Position, func.ValidArguments) { }
-        public ArgumentError(FuncStmt func) : this(func, func.Position, func.ValidArguments) { }
 
         public ArgumentError(object obj, Pos position, List<ArgKind> validArgs) : base(obj, position, "Valid args: ")
         {

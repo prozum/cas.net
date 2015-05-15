@@ -16,7 +16,7 @@ namespace Ast
 
         protected override Expression Evaluate(Expression caller)
         {
-            return args[0].Expand();
+            return Arguments[0].Expand();
         }
 
         public override Expression Clone()

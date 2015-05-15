@@ -12,22 +12,22 @@ namespace Ast
         {
             string res = "";
             
-            if (prefix.CompareTo(Constant.MinusOne))
+            if (Prefix.CompareTo(Constant.MinusOne))
             {
-                res = "-" + identifier;
+                res = "-" + Identifier;
             }
-            else if (!prefix.CompareTo(Constant.One))
+            else if (!Prefix.CompareTo(Constant.One))
             {
-                res = prefix.ToString() + identifier;
+                res = Prefix.ToString() + Identifier;
             }
             else
             {
-                res = identifier;
+                res = Identifier;
             }
 
-            if (!exponent.CompareTo(Constant.One))
+            if (!Exponent.CompareTo(Constant.One))
             {
-                res += "^" + exponent.ToString();
+                res += "^" + Exponent.ToString();
             }
             
             return res;
@@ -40,10 +40,10 @@ namespace Ast
             
         public Expression GetValue()
         {
-            var value = Scope.GetVar(identifier);
+            var value = Scope.GetVar(Identifier);
 
             if (value is Real)
-                return prefix * value ^ exponent;
+                return Prefix * value ^ Exponent;
             else
                 return value;
         }
@@ -54,7 +54,7 @@ namespace Ast
 
             if (otherSimplified is Symbol)
             {
-                if (identifier == (otherSimplified as Symbol).identifier && prefix.CompareTo((otherSimplified as Symbol).prefix) && exponent.CompareTo((otherSimplified as Symbol).exponent))
+                if (Identifier == (otherSimplified as Symbol).Identifier && Prefix.CompareTo((otherSimplified as Symbol).Prefix) && Exponent.CompareTo((otherSimplified as Symbol).Exponent))
                 {
                     return true;
                 }
@@ -67,13 +67,13 @@ namespace Ast
 
         internal override Expression Reduce(Expression caller)
         {
-            if (prefix.CompareTo(Constant.Zero))
+            if (Prefix.CompareTo(Constant.Zero))
             {
                 return new Integer(0);
             }
-            if (exponent.CompareTo(Constant.Zero))
+            if (Exponent.CompareTo(Constant.Zero))
             {
-                return prefix;
+                return Prefix;
             }
 
             return this;

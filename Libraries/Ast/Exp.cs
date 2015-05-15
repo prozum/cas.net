@@ -73,7 +73,7 @@ namespace Ast
         {
             Variable res = left.Clone() as Variable;
 
-            res.exponent = (left.exponent * right) as Real;
+            res.Exponent = (left.Exponent * right) as Real;
 
             return res;
         }

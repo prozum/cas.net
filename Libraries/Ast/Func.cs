@@ -16,24 +16,24 @@ namespace Ast
 
     public abstract class Func : Variable
     {
-        public List<Expression> args;
+        public List<Expression> Arguments;
 
         public Func(string identifier, List<Expression> args, Scope scope)
             : base(identifier,  scope) 
         {
-            this.args = args;
+            this.Arguments = args;
         }
 
         public override bool CompareTo(Expression other)
         {
             if (other is SysFunc)
             {
-                return identifier == (other as Func).identifier && prefix.CompareTo((other as Func).prefix) && exponent.CompareTo((other as Func).exponent) && CompareArgsTo(other as Func);
+                return Identifier == (other as Func).Identifier && Prefix.CompareTo((other as Func).Prefix) && Exponent.CompareTo((other as Func).Exponent) && CompareArgsTo(other as Func);
             }
 
-            if (this is UsrFunc)
+            if (this is SymbolFunc)
             {
-                return (this as UsrFunc).GetValue().CompareTo(other);
+                return (this as SymbolFunc).GetValue().CompareTo(other);
             }
 
             return false;
@@ -43,11 +43,11 @@ namespace Ast
         {
             bool res = true;
 
-            if (args.Count == (other as Func).args.Count)
+            if (Arguments.Count == (other as Func).Arguments.Count)
             {
-                for (int i = 0; i < args.Count; i++)
+                for (int i = 0; i < Arguments.Count; i++)
                 {
-                    if (!args[i].CompareTo((other as Func).args[i]))
+                    if (!Arguments[i].CompareTo((other as Func).Arguments[i]))
                     {
                         res = false;
                         break;
@@ -64,11 +64,11 @@ namespace Ast
 
         internal override Expression Reduce(Expression caller)
         {
-            if (prefix.CompareTo(Constant.Zero))
+            if (Prefix.CompareTo(Constant.Zero))
             {
                 return new Integer(0);
             }
-            if (exponent.CompareTo(Constant.Zero))
+            if (Exponent.CompareTo(Constant.Zero))
             {
                 return new Integer(1);
             }
@@ -79,7 +79,7 @@ namespace Ast
         protected override T MakeClone<T>()
         {
             T res = base.MakeClone<T>();
-            (res as Func).args = new List<Expression>(args);
+            (res as Func).Arguments = new List<Expression>(Arguments);
 
             return res;
         }
@@ -89,16 +89,16 @@ namespace Ast
             var newArgs = new List<Expression>();
             var res = new T();
 
-            foreach (var arg in args)
+            foreach (var arg in Arguments)
             {
                 newArgs.Add(arg.Reduce());
             }
 
-            res.args = newArgs;
-            res.identifier = identifier;
+            res.Arguments = newArgs;
+            res.Identifier = Identifier;
             res.Scope = Scope;
-            res.prefix = prefix.Clone() as Real;
-            res.exponent = exponent.Clone() as Real;
+            res.Prefix = Prefix.Clone() as Real;
+            res.Exponent = Exponent.Clone() as Real;
 
             return res;
         }

@@ -33,9 +33,18 @@ public class MainWindow : Window
     {
         TextIter insertIter = buffer.StartIter;
 
+        if (input.Buffer.Text.Length == 0)
+        {
+            buffer.InsertWithTagsByName(ref insertIter, "No input\n", "error");
+            return;
+        }
+
         eval.Parse(input.Buffer.Text);
 
-        buffer.Insert(ref insertIter, "ret: " + eval.Evaluate().ToString() + "\n");
+        var res = eval.Evaluate();
+
+        if (!(res is Null))
+            buffer.Insert(ref insertIter, "ret: " + res.ToString() + "\n");
 
         foreach(var data in eval.SideEffects)
         {
@@ -73,9 +82,9 @@ public class MainWindow : Window
             {
                 defStore.AppendValues(def.Value.ToString(), "System Magic");
             }
-            else if (def.Value is UsrFunc)
+            else if (def.Value is SymbolFunc)
             {
-                defStore.AppendValues(def.Value.ToString(), (def.Value as UsrFunc).expr.ToString());
+                defStore.AppendValues(def.Value.ToString(), (def.Value as SymbolFunc).expr.ToString());
             }
             else
             {

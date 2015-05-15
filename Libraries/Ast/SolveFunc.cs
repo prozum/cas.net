@@ -22,11 +22,11 @@ namespace Ast
         {
             Equal solved;
 
-            if (!isArgsValid())
+            if (!IsArgumentsValid())
                 return new ArgumentError(this);
 
-            equal = (Equal)args[0];
-            sym = (Symbol)args[1];
+            equal = (Equal)Arguments[0];
+            sym = (Symbol)Arguments[1];
 
             if (equal.Right.ContainsVariable(sym))
             {
@@ -141,7 +141,7 @@ namespace Ast
 
             if (func.ContainsVariable(sym))
             {
-                return new Equal(func.args[0], (func as IInvertable).InvertOn(right));
+                return new Equal(func.Arguments[0], (func as IInvertable).InvertOn(right));
             }
 
             return null;

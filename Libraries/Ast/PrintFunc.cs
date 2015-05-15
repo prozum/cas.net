@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class PrintFunc : FuncStmt
+    public class PrintFunc : SysFunc
     {
         public PrintFunc(List<Expression> args, Scope scope)
             : base("print", args, scope)
@@ -14,12 +14,14 @@ namespace Ast
             };
         }
 
-        public override EvalData Evaluate()
+        public override Expression Evaluate()
         {
             if (!IsArgumentsValid())
-                return new ErrorData(new ArgumentError(this));
+                return new ArgumentError(this);
 
-            return new PrintData(Arguments[0].Evaluate().ToString());
+            Scope.SideEffects.Add(new PrintData(Arguments[0].Evaluate().ToString()));
+
+            return new Null();
         }
 
     }

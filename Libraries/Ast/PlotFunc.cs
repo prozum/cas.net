@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class PlotFunc : FuncStmt
+    public class PlotFunc : SysFunc
     {
         public Expression exp;
         public Symbol sym;
@@ -24,9 +24,9 @@ namespace Ast
             }
         }
 
-        public override EvalData Evaluate()
+        public override Expression Evaluate()
         {
-            return new ErrorData(this, "Cannot evaluate plot");
+            return new Null();
         }
     }
 }

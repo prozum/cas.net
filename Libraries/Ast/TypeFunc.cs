@@ -16,12 +16,12 @@ namespace Ast
 
         public override Expression Evaluate()
         {
-            var res = args[0].Evaluate();
+            var res = Arguments[0].Evaluate();
 
             if (res is Error)
                 return res;
             else
-                return new Text(args[0].Evaluate().GetType().Name);
+                return new Text(Arguments[0].Evaluate().GetType().Name);
         }
     }
 }

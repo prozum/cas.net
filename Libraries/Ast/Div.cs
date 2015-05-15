@@ -85,30 +85,30 @@ namespace Ast
 
         private bool CompareVariables(Variable left, Variable right)
         {
-            return left.identifier == right.identifier && left.GetType() == right.GetType();
+            return left.Identifier == right.Identifier && left.GetType() == right.GetType();
         }
 
         private Expression VariableOperation(Variable left, Variable right)
         {
             Expression res;
 
-            if (((left.exponent < right.exponent) as Boolean).@bool)
+            if (((left.Exponent < right.Exponent) as Boolean).@bool)
             {
                 var symbol = right.Clone();
 
-                (symbol as Variable).exponent = (right.exponent - left.exponent) as Real;
-                res = new Div(left.prefix, symbol);
+                (symbol as Variable).Exponent = (right.Exponent - left.Exponent) as Real;
+                res = new Div(left.Prefix, symbol);
             }
-            else if (((left.exponent > right.exponent) as Boolean).@bool)
+            else if (((left.Exponent > right.Exponent) as Boolean).@bool)
             {
                 var symbol = right.Clone();
 
-                (symbol as Variable).exponent = (left.exponent - right.exponent) as Real;
-                res = new Div(symbol, right.prefix);
+                (symbol as Variable).Exponent = (left.Exponent - right.Exponent) as Real;
+                res = new Div(symbol, right.Prefix);
             }
             else
             {
-                res = left.prefix / right.prefix;
+                res = left.Prefix / right.Prefix;
             }
 
             return res;

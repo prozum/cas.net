@@ -58,7 +58,7 @@ namespace Ast
 
         private bool CompareVariables(Variable left, Variable right)
         {
-            return left.identifier == right.identifier && left.exponent.CompareTo(right.exponent) && left.GetType() == right.GetType();
+            return left.Identifier == right.Identifier && left.Exponent.CompareTo(right.Exponent) && left.GetType() == right.GetType();
         }
 
         private Expression ReduceMultiAdd(dynamic other)
@@ -142,7 +142,7 @@ namespace Ast
         {
             var res = left.Clone();
 
-            (res as Variable).prefix = (left.prefix + right.prefix) as Real;
+            (res as Variable).Prefix = (left.Prefix + right.Prefix) as Real;
 
             return res;
         }

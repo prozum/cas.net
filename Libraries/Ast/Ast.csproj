@@ -109,9 +109,6 @@
       <DependentUpon>Number.cs</DependentUpon>
     </Compile>
     <Compile Include="Boolean.cs" />
-    <Compile Include="UsrFunc.cs">
-      <DependentUpon>Variable.cs</DependentUpon>
-    </Compile>
     <Compile Include="SysFunc.cs" />
     <Compile Include="Negation.cs">
       <DependentUpon>UnaryOperator.cs</DependentUpon>
@@ -148,10 +145,10 @@
       <DependentUpon>SysFunc.cs</DependentUpon>
     </Compile>
     <Compile Include="PlotFunc.cs">
-      <DependentUpon>FuncStmt.cs</DependentUpon>
+      <DependentUpon>SysFunc.cs</DependentUpon>
     </Compile>
     <Compile Include="PrintFunc.cs">
-      <DependentUpon>FuncStmt.cs</DependentUpon>
+      <DependentUpon>SysFunc.cs</DependentUpon>
     </Compile>
     <Compile Include="RangeFunc.cs">
       <DependentUpon>SysFunc.cs</DependentUpon>
@@ -194,9 +191,12 @@
     <Compile Include="ExprStmt.cs">
       <DependentUpon>Statement.cs</DependentUpon>
     </Compile>
-    <Compile Include="FuncStmt.cs" />
     <Compile Include="ErrorExpr.cs">
       <DependentUpon>BinaryOperator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Null.cs" />
+    <Compile Include="SymbolFunc.cs">
+      <DependentUpon>Variable.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

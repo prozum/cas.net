@@ -14,24 +14,24 @@ namespace Ast
         {
             string str = "";
 
-            if (prefix.CompareTo(Constant.MinusOne))
+            if (Prefix.CompareTo(Constant.MinusOne))
             {
-                str += "-" + identifier + '[';
+                str += "-" + Identifier + '[';
             }
-            else if (!prefix.CompareTo(Constant.One))
+            else if (!Prefix.CompareTo(Constant.One))
             {
-                str += prefix.ToString() + identifier + '[';
+                str += Prefix.ToString() + Identifier + '[';
             }
             else
             {
-                str += identifier + '[';
+                str += Identifier + '[';
             }
 
             for (int i = 0; i < ValidArguments.Count; i++) 
             {
-                str += args[i].ToString ();
+                str += Arguments[i].ToString ();
 
-                if (i < args.Count - 1) 
+                if (i < Arguments.Count - 1) 
                 {
                     str += ',';
                 }
@@ -39,45 +39,45 @@ namespace Ast
 
             str += ']';
 
-            if (!exponent.CompareTo(Constant.One))
+            if (!Exponent.CompareTo(Constant.One))
             {
-                str += '^' + exponent.ToString();
+                str += '^' + Exponent.ToString();
             }
 
             return str;
         }
 
-        public bool isArgsValid()
+        public bool IsArgumentsValid()
         {
-            if (args.Count != ValidArguments.Count)
+            if (Arguments.Count != ValidArguments.Count)
                 return false;
 
-            for (int i = 0; i < args.Count; i++)
+            for (int i = 0; i < Arguments.Count; i++)
             {
                 switch (ValidArguments[i])
                 {
                     case ArgKind.Expression:
-                        if (!(args[i] is Expression))
+                        if (!(Arguments[i] is Expression))
                             return false;
                         break;
                     case ArgKind.Number:
-                        if (!(args[i] is Real))
+                        if (!(Arguments[i] is Real))
                             return false;
                         break;
                     case ArgKind.Symbol:
-                        if (!(args[i] is Symbol))
+                        if (!(Arguments[i] is Symbol))
                             return false;
                         break;
                     case ArgKind.Function:
-                        if (!(args[i] is Func))
+                        if (!(Arguments[i] is Func))
                             return false;
                         break;
                     case ArgKind.Equation:
-                        if (!(args[i] is Equal))
+                        if (!(Arguments[i] is Equal))
                             return false;
                         break;
                     case ArgKind.List:
-                        if (!(args[i] is List))
+                        if (!(Arguments[i] is List))
                             return false;
                         break;
                 }

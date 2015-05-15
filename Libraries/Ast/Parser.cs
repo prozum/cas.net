@@ -7,7 +7,10 @@ namespace Ast
     public enum ParseContext
     {
         List,
-        Scope,
+        ScopeSingle,
+        ScopeMulti,
+        ScopeGlobal,
+        Colon,
         Parenthesis
     }
 
@@ -27,8 +30,10 @@ namespace Ast
         Queue<UnaryOperator> curUnaryStack { get { return unaryStack.Peek(); } }
         Queue<BinaryOperator> curBinaryStack { get { return binaryStack.Peek(); } }
 
+        readonly Token EOS = new Token(TokenKind.END_OF_STRING, "END_OF_STRING", new Pos());
+
         Queue<Token> tokens;
-        Token tok;
+        Token curToken { get { return tokens.Count > 0 ? tokens.Peek() : EOS; } }
         bool expectUnary = true;
 
         public void Parse(string parseString)
@@ -39,71 +44,80 @@ namespace Ast
         public void Parse(string parseString, Scope global)
         {
             global.Error = null;
-            scopeStack.Push(global);
-            contextStack.Push(ParseContext.Scope);
 
             tokens = Scanner.Tokenize(parseString, out global.Error);
             if (global.Error != null)
                 return;
 
-            tok = tokens.Peek();
-            ParseScope(TokenKind.END_OF_STRING, false);
-            contextStack.Pop();
+            ParseScope(global);
         }
 
-        public Scope ParseScope(TokenKind stopToken, bool newScope = true)
+        public void Clear()
         {
-            Scope res;
+            contextStack.Clear();
+            exprStack.Clear();
+            unaryStack.Clear();
+            binaryStack.Clear();
+        }
 
-            if (newScope)
+        public Scope ParseScope(Scope global = null)
+        {
+            ParseContext cx;
+
+            if (global != null)
+            {
+                cx = ParseContext.ScopeGlobal;
+                scopeStack.Push(global);
+            }
+            else if (Eat(TokenKind.CURLY_START))
+            {
+                cx = ParseContext.ScopeMulti;
                 scopeStack.Push(new Scope(curScope));
+            }
+            else
+            {
+                cx = ParseContext.ScopeSingle;
+                scopeStack.Push(new Scope(curScope));
+            }
 
-            res = curScope;
+            contextStack.Push(cx);
+            var res = ParseStatements();
+            contextStack.Pop();
 
-            contextStack.Push(ParseContext.Scope);
+            if (cx == ParseContext.ScopeMulti && !Eat(TokenKind.CURLY_END))
+                ReportError("Missing } bracket");
 
+            return res;
+        }
+
+        public Scope ParseStatements()
+        {
             while (tokens.Count > 0)
             {
-                if (Eat(stopToken))
-                {
-                    if (newScope)
-                        scopeStack.Pop();
-
-                    contextStack.Pop();
-
-                    return res;
-                }
-
-                Peek();
-                switch (tok.Kind)
+                switch (curToken.Kind)
                 {
                     case TokenKind.IF:
                         Eat();
-                        res.Statements.Add(ParseIfStmt());
+                        curScope.Statements.Add(ParseIfStmt());
                         break;
                     case TokenKind.FOR:
                         Eat();
-                        res.Statements.Add(ParseForStmt());
+                        curScope.Statements.Add(ParseForStmt());
                         break;
                     case TokenKind.RET:
                         Eat();
-                        res.Statements.Add(new RetStmt(ParseExpr(stopToken), curScope));
+                        curScope.Statements.Add(new RetStmt(ParseExpr(), curScope));
                         break;
                     
-                    case TokenKind.PRINT:
-                        Eat();
-                        if (Eat(TokenKind.SQUARE_START))
-                            res.Statements.Add(new PrintFunc(ParseList().items, curScope));
+                    case TokenKind.CURLY_END:
+                        return scopeStack.Pop();
+                    
+                    case TokenKind.END_OF_STRING:
+                        if (curContext != ParseContext.ScopeMulti)
+                            return scopeStack.Pop();
                         else
-                            ReportSyntaxError("Print syntax: print[expr]");
+                            ReportError("Missing }");
                         break;
-                    case TokenKind.PLOT:
-                        Eat();
-                        if (Eat(TokenKind.SQUARE_START))
-                            res.Statements.Add(new PlotFunc(ParseList().items, curScope));
-                        else
-                            ReportSyntaxError("Print syntax: plot[expr,symbol]");
-                            break;
 
                     case TokenKind.SEMICOLON:
                     case TokenKind.NEW_LINE:
@@ -111,50 +125,36 @@ namespace Ast
                         break;
 
                     default:
-                        res.Statements.Add(new ExprStmt(ParseExpr(stopToken), curScope));
+                        curScope.Statements.Add(new ExprStmt(ParseExpr(), curScope));
                         break;
                 }
 
-                if (res.Error != null)
+                if (curScope.Error != null)
                 {
-                    res.Statements.Clear();
-                    return res;
+                    curScope.Statements.Clear();
+                    return curScope;
                 }
             }
 
-            ReportSyntaxError("Missing " + stopToken.ToString());
-
-            return res;
+            throw new Exception("ParseScope failed");
         }
 
         #region Peek Eat
 
         public bool Peek()
         {
-            if (tokens.Count > 0)
-            {
-                tok = tokens.Peek();
-                return true;
-            }
-                
-            return true;
+            return tokens.Count > 0;
         }
 
         public bool Peek(TokenKind kind)
         {
-            if (tokens.Count > 0 && tokens.Peek().Kind == kind)
-            {
-                tok = tokens.Peek();
-                return true;
-            }
-                
-            return false;
+            return curToken.Kind == kind;
         }
 
         public bool Eat()
         {
             if (tokens.Count > 0)
-                tok = tokens.Dequeue();
+                tokens.Dequeue();
 
             return tokens.Count > 0;
         }
@@ -163,7 +163,7 @@ namespace Ast
         {
             if (tokens.Count > 0 && tokens.Peek().Kind == kind)
             {
-                tok = tokens.Dequeue();
+                tokens.Dequeue();
                 return true;
             }
                 
@@ -176,55 +176,46 @@ namespace Ast
         {
             var stmt = new IfStmt(curScope);
 
-            stmt.conditions.Add(ParseExpr(TokenKind.COLON));
-
-            if (!Eat(TokenKind.COLON))
-            {
-                ReportSyntaxError("If syntax: if bool: {}");
-                return null;
-            }
-
-            if (Eat(TokenKind.CURLY_START))
-                stmt.expressions.Add(ParseScope(TokenKind.CURLY_END));
-            else
-            {
-                stmt.expressions.Add(ParseScope(TokenKind.SEMICOLON));
-
-                if (!Eat(TokenKind.SEMICOLON))
-                {
-                    ReportSyntaxError("If syntax: if bool: {}");
-                    return null;
-                }
-            }
-
-            while (Eat(TokenKind.ELIF))
-            {
-                stmt.conditions.Add(ParseExpr(TokenKind.COLON));
-
-                if (Eat(TokenKind.COLON))
-                    stmt.conditions.Add(ParseExpr(TokenKind.COLON));
-                else
-                {
-                    ReportSyntaxError("If syntax: if bool: {}");
-                    return null;
-                }
-
-                if (Eat(TokenKind.CURLY_START))
-                    stmt.expressions.Add(ParseScope(TokenKind.CURLY_END));
-                else
-                    stmt.expressions.Add(ParseScope(TokenKind.SEMICOLON));
-                //tokens.Dequeue(); // Skip '}' or ';'
-            }
-
-            if (Eat(TokenKind.ELSE))
-            {
-
-                if (Eat(TokenKind.CURLY_START))
-                    stmt.expressions.Add(ParseScope(TokenKind.CURLY_END));
-                else
-                    stmt.expressions.Add(ParseScope(TokenKind.SEMICOLON));
-                //tokens.Dequeue(); // Skip '}' or ';'
-            }
+//            stmt.conditions.Add(ParseExpr());
+//
+//            if (!Eat(TokenKind.COLON))
+//            {
+//                ReportSyntaxError("If syntax: if bool: {}");
+//                return null;
+//            }
+//
+//            if (Eat(TokenKind.CURLY_START))
+//                stmt.expressions.Add(ParseScope(ParseContext.Scope));
+//            else
+//            {
+//                stmt.expressions.Add(ParseScope());
+//
+//                if (!Eat(TokenKind.SEMICOLON))
+//                {
+//                    ReportSyntaxError("If syntax: if bool: {}");
+//                    return null;
+//                }
+//            }
+//
+//            while (Eat(TokenKind.ELIF))
+//            {
+//                stmt.conditions.Add(ParseExpr());
+//
+//                if (Eat(TokenKind.COLON))
+//                    stmt.conditions.Add(ParseExpr());
+//                else
+//                {
+//                    ReportSyntaxError("If syntax: if bool: {}");
+//                    return null;
+//                }
+//
+//                stmt.expressions.Add(ParseScope());
+//            }
+//
+//            if (Eat(TokenKind.ELSE))
+//            {
+//                stmt.expressions.Add(ParseScope());
+//            }
 
             return stmt;
         }
@@ -235,82 +226,85 @@ namespace Ast
 
             if (Peek(TokenKind.IDENTIFIER))
             {
-                stmt.sym = tok.Value;
+                stmt.sym = curToken.Value;
                 Eat();
             }
             else
             {
-                ReportSyntaxError("If syntax: for symbol in list:");
+                ReportError("For syntax: 'for symbol in list: expr'");
                 return null;
             }
 
             if (!Eat(TokenKind.IN))
             {
-                ReportSyntaxError("If syntax: for symbol in list:");
+                ReportError("For syntax: 'for symbol in list: expr'");
                 return null;
             }
 
-            var list = ParseExpr(TokenKind.COLON);
-
-            if (!Eat(TokenKind.COLON))
-            {
-                ReportSyntaxError("If syntax: for symbol in list:", true);
-                return null;
-            }
+            var list = ParseColon().Evaluate();
 
             if (list is Error)
             {
-                //TODO FIX THIS
-                //return stmt.list;
+                ReportError(list as Error);
                 return null;
             }
 
-            if (list is Variable)
-                list = curScope.GetVar((list as Variable).identifier);
-
-            if (list != null || list is List)
+            if (list is List)
                 stmt.list = list as List;
             else
             {
-                ReportSyntaxError("For: list argument is not a list");
+                ReportError("For syntax: 'for symbol in list: expr'");
                 return null;
             }
-                   
 
-            if (Eat(TokenKind.CURLY_START))
-                stmt.expr = ParseScope(TokenKind.CURLY_END);
-            else
-                stmt.expr = ParseScope(TokenKind.SEMICOLON);
+            stmt.expr = ParseScope();
 
             return stmt;
+        }
+
+        public Expression ParseColon()
+        {
+            contextStack.Push(ParseContext.Colon);
+            var res = ParseExpr();
+            contextStack.Pop();
+
+            if (!Eat(TokenKind.COLON))
+                return ReportError("Missing :");
+
+            return res;
         }
 
         public List ParseList()
         {
             var list = new List();
 
+            Eat();
             contextStack.Push(ParseContext.List);
 
             while (tokens.Count > 0)
             {
                 if (Eat(TokenKind.SQUARE_END))
-                {
-                    contextStack.Pop();
-                    return list;
-                }
+                    break;
 
                 if (!(Eat(TokenKind.COMMA) || Eat(TokenKind.NEW_LINE)))
-                    list.items.Add(ParseExpr(TokenKind.SQUARE_END));
+                    list.items.Add(ParseExpr());
+
+                if (Peek(TokenKind.END_OF_STRING))
+                {
+                    ReportError("Missing ] bracket");
+                    break;
+                }
             }
 
-            ReportSyntaxError("Missing ] bracket");
+            contextStack.Pop();
 
             return list;
         }
 
-        public Expression ParseExpr(TokenKind stopToken)
+        public Expression ParseExpr()
         {
             bool done = false;
+            bool eat;
 
             exprStack.Push(new Queue<Expression>());
             unaryStack.Push(new Queue<UnaryOperator>());
@@ -320,29 +314,42 @@ namespace Ast
 
             while (!done)
             {
-                if (Peek(stopToken))
-                    break;
+                eat = true;
 
-                Eat(); // Get switch token
-
-                switch (tok.Kind)
+                switch (curToken.Kind)
                 {
                     case TokenKind.END_OF_STRING:
                         done = true;
+                        eat = false;
                         break;
 
                     case TokenKind.SEMICOLON:
-                        if (curContext == ParseContext.Scope)
+                        if (curContext == ParseContext.ScopeGlobal || curContext == ParseContext.ScopeMulti)
                             done = true;
+                        else if (curContext == ParseContext.ScopeSingle)
+                        {
+                            done = true;
+                            eat = false;
+                        }
                         else
-                            ReportSyntaxError("Unexpected ';' in " + curContext);
+                            ReportError("Unexpected ';' in " + curContext);
+                        break;
+
+                    case TokenKind.COLON:
+                        if (curContext == ParseContext.Colon)
+                        {
+                            done = true;
+                            eat = false;
+                        }
+                        else
+                            ReportError("Unexpected ':' in " + curContext);
                         break;
                     
                     case TokenKind.COMMA:
                         if (curContext == ParseContext.List)
                             done = true;
                         else
-                            ReportSyntaxError("Unexpected ',' in " + curContext);
+                            ReportError("Unexpected ',' in " + curContext);
                         break;
 
                     case TokenKind.NEW_LINE:
@@ -357,15 +364,17 @@ namespace Ast
                         break;
                     
                     case TokenKind.TEXT:
-                        SetupExpr(new Text(tok.Value));
+                        SetupExpr(new Text(curToken.Value));
                         break;
                     
                     case TokenKind.IDENTIFIER:
-                        var curTok = tok;
+                        var identToken = curToken;
+                        eat = false;
+                        Eat();
                         if (Peek(TokenKind.SQUARE_START))
-                            SetupExpr(ParseFunction(curTok.Value), curTok);
+                            SetupExpr(ParseFunction(identToken.Value), identToken);
                         else
-                            SetupExpr(new Symbol(curTok.Value, curScope));
+                            SetupExpr(new Symbol(identToken.Value, curScope));
                         break;
 
                     case TokenKind.TRUE:
@@ -376,18 +385,47 @@ namespace Ast
                         break;
 
                     case TokenKind.PARENT_START:
+                        eat = false;
+                        Eat();
                         contextStack.Push(ParseContext.Parenthesis);
-                        SetupExpr(ParseExpr(TokenKind.PARENT_END));
+                        SetupExpr(ParseExpr());
                         contextStack.Pop();
- 
-                        if (!Eat(TokenKind.PARENT_END))
-                            ReportSyntaxError("Missing )");
                         break;
                     case TokenKind.SQUARE_START:
+                        eat = false;
                         SetupExpr(ParseList());
                         break;
                     case TokenKind.CURLY_START:
-                        SetupExpr(ParseScope(TokenKind.CURLY_END, true));
+                        eat = false;
+                        SetupExpr(ParseScope());
+                        break;
+
+                    case TokenKind.PARENT_END:
+                        if (curContext == ParseContext.Parenthesis)
+                        {
+                            done = true;
+                            eat = false;
+                        }
+                        else
+                            ReportError("Unexpected ')' in " + curContext);
+                        break;
+                    case TokenKind.SQUARE_END:
+                        if (curContext == ParseContext.List)
+                        {
+                            done = true;
+                            eat = false;
+                        }
+                        else
+                            ReportError("Unexpected ']' in " + curContext);
+                        break;
+                    case TokenKind.CURLY_END:
+                        if (curContext == ParseContext.ScopeMulti)
+                        {
+                            done = true;
+                            eat = false;
+                        }
+                        else
+                            ReportError("Unexpected '}' in " + curContext);
                         break;
 
                     case TokenKind.ADD:
@@ -404,103 +442,104 @@ namespace Ast
                         if (expectUnary)
                             SetupUnOp(new Negation());
                         else
-                            ReportSyntaxError("Unexpected: '!'");
+                            ReportError(curToken + " is not supported as binary operator");
                         break;
 
                     case TokenKind.MUL:
                         if (expectUnary)
-                            ReportSyntaxError(tok + " is not supported as unary operator");
+                            ReportError(curToken + " is not supported as unary operator");
                         else
                             SetupBiOp(new Mul());
                         break;
                     case TokenKind.DIV:
                         if (expectUnary)
-                            ReportSyntaxError(tok + " is not supported as unary operator");
+                            ReportError(curToken + " is not supported as unary operator");
                         else
                             SetupBiOp(new Div());
                         break;
                     case TokenKind.EXP:
                         if (expectUnary)
-                            ReportSyntaxError(tok + " is not supported as unary operator");
+                            ReportError(curToken + " is not supported as unary operator");
                         else
                             SetupBiOp(new Exp());
                         break;
 
                     case TokenKind.ASSIGN:
                         if (expectUnary)
-                            ReportSyntaxError(tok + " is not supported as unary operator");
+                            ReportError(curToken + " is not supported as unary operator");
                         else
                             SetupBiOp(new Assign());
                         break;
                     case TokenKind.EQUAL:
                         if (expectUnary)
-                            ReportSyntaxError(tok + " is not supported as unary operator");
+                            ReportError(curToken + " is not supported as unary operator");
                         else
                             SetupBiOp(new Equal());
                         break;
                     case TokenKind.BOOL_EQUAL:
                         if (expectUnary)
-                            ReportSyntaxError(tok + " is not supported as unary operator");
+                            ReportError(curToken + " is not supported as unary operator");
                         else
                             SetupBiOp(new BooleanEqual());
                         break;
                     case TokenKind.NOT_EQUAL:
                         if (expectUnary)
-                            ReportSyntaxError(tok + " is not supported as unary operator");
+                            ReportError(curToken + " is not supported as unary operator");
                         else
                             SetupBiOp(new NotEqual());
                         break;
                     case TokenKind.LESS_EQUAL:
                         if (expectUnary)
-                            ReportSyntaxError(tok + " is not supported as unary operator");
+                            ReportError(curToken + " is not supported as unary operator");
                         else
                             SetupBiOp(new LesserEqual());
                         break;
                     case TokenKind.GREAT_EQUAL:
                         if (expectUnary)
-                            ReportSyntaxError(tok + " is not supported as unary operator");
+                            ReportError(curToken + " is not supported as unary operator");
                         else
                             SetupBiOp(new GreaterEqual());
                         break;
                     case TokenKind.LESS:
                         if (expectUnary)
-                            ReportSyntaxError(tok + " is not supported as unary operator");
+                            ReportError(curToken + " is not supported as unary operator");
                         else
                             SetupBiOp(new Lesser());
                         break;
                     case TokenKind.GREAT:
                         if (expectUnary)
-                            ReportSyntaxError(tok + " is not supported as unary operator");
+                            ReportError(curToken + " is not supported as unary operator");
                         else
                             SetupBiOp(new Greater());
                         break;
 
                     case TokenKind.DOT:
                         if (expectUnary)
-                            ReportSyntaxError(tok + " is not supported as unary operator");
+                            ReportError(curToken + " is not supported as unary operator");
                         else
                             SetupBiOp(new Dot());
                         break;
 
                     default:
-                        ReportSyntaxError("Unexpected '" + tok.ToString() + "'");
+                        ReportError("Unexpected '" + curToken.ToString() + "'");
                         break;
                 }
 
                 if (curScope.Error != null)
                     return curScope.Error;
+
+                if (eat)
+                    Eat();
             }
                 
             unaryStack.Pop();
             return CreateAst(exprStack.Pop(), binaryStack.Pop());
         }
 
-        public void SetupExpr(Expression expr, Token curTok = null)
+        public void SetupExpr(Expression expr, Token tok = null)
         {
-            if (curTok == null)
-                expr.Position = tok.Position;
-            else
-                expr.Position = curTok.Position; 
+            expr.Position = tok != null ? tok.Position : curToken.Position;
+
             expr.Scope = curScope;
 
             while (curUnaryStack.Count > 0)
@@ -514,12 +553,12 @@ namespace Ast
             expectUnary = false;
 
             if (curExprStack.Count != curBinaryStack.Count + 1)
-                ReportSyntaxError("Missing operator");
+                ReportError("Missing operator");
         }
 
         public void SetupUnOp(UnaryOperator op)
         {
-            op.Position = tok.Position;
+            op.Position = curToken.Position;
             op.Scope = curScope;
 
             curUnaryStack.Enqueue(op);
@@ -527,14 +566,14 @@ namespace Ast
 
         public void SetupBiOp(BinaryOperator op)
         {
-            op.Position = tok.Position;
+            op.Position = curToken.Position;
             op.Scope = curScope;
 
             curBinaryStack.Enqueue(op);
             expectUnary = true;
 
             if (curExprStack.Count != curBinaryStack.Count)
-                ReportSyntaxError("Missing operand");
+                ReportError("Missing operand");
         }
 
         public Expression CreateAst(Queue<Expression> exprs, Queue<BinaryOperator> biops)
@@ -543,15 +582,10 @@ namespace Ast
             BinaryOperator curOp, nextOp, top;
 
             if (exprs.Count == 0)
-            {
-                return ReportSyntaxError("Missing expression");
-                return null;
-            }
+                return ReportError("Missing expression");
 
             if (exprs.Count != 1 + biops.Count)
-            {
-                return ReportSyntaxError("Missing operand");
-            }
+                return ReportError("Missing operand");
 
             if (exprs.Count == 1 && biops.Count == 0)
                 return exprs.Dequeue();
@@ -608,37 +642,37 @@ namespace Ast
             Int64 intRes;
             decimal decRes;
 
-            switch (tok.Kind)
+            switch (curToken.Kind)
             {
                 case TokenKind.INTEGER:
-                    if (Int64.TryParse(tok.Value, out intRes))
+                    if (Int64.TryParse(curToken.Value, out intRes))
                         return new Integer(intRes);
                     else
                     {
-                        return ReportSyntaxError("Int overflow");
+                        return ReportError("Int overflow");
                     }
                 
                 case TokenKind.DECIMAL:
-                    if (decimal.TryParse(tok.Value, out decRes))
+                    if (decimal.TryParse(curToken.Value, out decRes))
                         return new Irrational(decRes);
                     else
                     {
-                        return ReportSyntaxError("Decimal overflow");
+                        return ReportError("Decimal overflow");
                     }
                 case TokenKind.IMAG_INT:
-                    if (Int64.TryParse(tok.Value, out intRes))
+                    if (Int64.TryParse(curToken.Value, out intRes))
                         return new Complex(new Integer(0), new Integer(intRes));
                     else
                     {
-                        return ReportSyntaxError("Imaginary int overflow");
+                        return ReportError("Imaginary int overflow");
                     }
                 
                 case TokenKind.IMAG_DEC:
-                    if (decimal.TryParse(tok.Value, out decRes))
+                    if (decimal.TryParse(curToken.Value, out decRes))
                         return new Complex(new Integer(0), new Irrational(decRes));
                     else
                     {
-                        return ReportSyntaxError("Imaginary decimal overflow");
+                        return ReportError("Imaginary decimal overflow");
                     }
                 
                 default:
@@ -679,17 +713,29 @@ namespace Ast
                     return new TypeFunc(args, curScope);
                 case "eval":
                     return new EvalFunc(args, curScope);
+                case "print":
+                    return new PrintFunc(args, curScope);
+                case "plot":
+                    return new PlotFunc(args, curScope);
                 default:
-                    return new UsrFunc(sym.ToLower(), args, curScope);
+                    return new SymbolFunc(sym.ToLower(), args, curScope);
             }
         }
 
-        public Error ReportSyntaxError(string msg, bool overwrite = false)
+        public Error ReportError(Error error, bool overwrite = false)
+        {
+            if (curScope.Error == null || overwrite)
+                curScope.Error = error;
+
+            return curScope.Error;
+        }
+
+        public Error ReportError(string msg, bool overwrite = false)
         {
             if (curScope.Error == null || overwrite)
             {
                 curScope.Error = new Error("Parser: " + msg);
-                curScope.Error.Position = tok.Position;
+                curScope.Error.Position = curToken.Position;
             }
 
             return curScope.Error;

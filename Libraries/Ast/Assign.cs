@@ -55,26 +55,26 @@ namespace Ast
                 if (res is Error)
                     return res;
 
-                scope.SetVar(sym.identifier, res);
+                scope.SetVar(sym.Identifier, res);
 
                 return res;
             }
 
-            if (sym is UsrFunc)
+            if (sym is SymbolFunc)
             {
-                var usrFunc = (UsrFunc)Left;
+                var usrFunc = (SymbolFunc)Left;
 
-                foreach (var arg in usrFunc.args)
+                foreach (var arg in usrFunc.Arguments)
                 {
                     if (!(arg is Symbol))
                         return new Error(this, "All arguments must be symbols");
                 }
 
-                var defFunc = new UsrFunc(usrFunc.identifier, usrFunc.args, usrFunc.Scope);
+                var defFunc = new SymbolFunc(usrFunc.Identifier, usrFunc.Arguments, usrFunc.Scope);
 
                 defFunc.expr = Right;
 
-                usrFunc.Scope.SetVar(usrFunc.identifier, defFunc);
+                usrFunc.Scope.SetVar(usrFunc.Identifier, defFunc);
 
                 return this;
             }

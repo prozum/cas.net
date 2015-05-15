@@ -49,7 +49,7 @@ namespace Ast
                 return new Error(this, "left operator must be Symbol/Scope");
 
             scope.Evaluate();
-            return scope.GetVar(sym.identifier);
+            return scope.GetVar(sym.Identifier);
         }
     }
 }

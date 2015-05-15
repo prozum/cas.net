@@ -17,37 +17,37 @@ namespace Ast
 
         protected override Expression Evaluate(Expression caller)
         {
-            if (!isArgsValid())
+            if (!IsArgumentsValid())
                 return new ArgumentError(this);
 
-            var res = args[0].Evaluate();
+            var res = Arguments[0].Evaluate();
 
             if (res is Real)
             {
                 return ReturnValue(new Irrational(Math.Sqrt((double)(res as Real).Value))).Evaluate();
             }
 
-            return new Error(this, "Could not take Sqrt of: " + args[0]);
+            return new Error(this, "Could not take Sqrt of: " + Arguments[0]);
         }
 
         internal override Expression Reduce(Expression caller)
         {
-            if (exponent.CompareTo(Constant.Two))
+            if (Exponent.CompareTo(Constant.Two))
             {
-                return args[0];
+                return Arguments[0];
             }
             else
             {
                 var simplified = ReduceHelper<SqrtFunc>();
 
-                if (simplified.args[0] is Exp && (simplified.args[0] as Exp).Right.CompareTo(Constant.Two))
+                if (simplified.Arguments[0] is Exp && (simplified.Arguments[0] as Exp).Right.CompareTo(Constant.Two))
                 {
-                    return (simplified.args[0] as Exp).Left;
+                    return (simplified.Arguments[0] as Exp).Left;
                 }
-                else if (simplified.args[0] is Variable && (simplified.args[0] as Variable).exponent.CompareTo(Constant.Two))
+                else if (simplified.Arguments[0] is Variable && (simplified.Arguments[0] as Variable).Exponent.CompareTo(Constant.Two))
                 {
-                    var res = simplified.args[0].Clone() as Variable;
-                    res.exponent = new Integer(1);
+                    var res = simplified.Arguments[0].Clone() as Variable;
+                    res.Exponent = new Integer(1);
 
                     return res;
                 }

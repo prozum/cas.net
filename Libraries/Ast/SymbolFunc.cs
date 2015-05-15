@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class UsrFunc : Func
+    public class SymbolFunc : Func
     {
         public Expression expr;
 
-        public UsrFunc() : this(null, null, null) { }
-        public UsrFunc(string identifier, List<Expression> args, Scope scope) : base(identifier, args, scope) { }
+        public SymbolFunc() : this(null, null, null) { }
+        public SymbolFunc(string identifier, List<Expression> args, Scope scope) : base(identifier, args, scope) { }
 
         protected override Expression Evaluate(Expression caller)
         {
@@ -17,30 +17,28 @@ namespace Ast
 
         public Expression GetValue()
         {
-            Expression @var;
-
-            @var = Scope.GetVar(identifier);
+            Expression @var = Scope.GetVar(Identifier);
 
             if (@var == null)
                 return new Error(this,"has no definition");
 
-            if (@var is UsrFunc)
+            if (@var is SymbolFunc)
             {
-                var usrFuncDef = (UsrFunc)@var;
+                var symFuncDef = (SymbolFunc)@var;
 
-                if (args.Count != usrFuncDef.args.Count)
-                    return new Error(identifier + " takes " + usrFuncDef.args.Count.ToString() + " arguments. Not " + args.Count.ToString() + ".");
+                if (Arguments.Count != symFuncDef.Arguments.Count)
+                    return new Error(Identifier + " takes " + symFuncDef.Arguments.Count.ToString() + " arguments. Not " + Arguments.Count.ToString() + ".");
 
                 Scope = new Scope(Scope);
 
-                for (int i = 0; i < args.Count; i++)
+                for (int i = 0; i < Arguments.Count; i++)
                 {
-                    var arg = (Symbol)usrFuncDef.args[i];
+                    var arg = (Symbol)symFuncDef.Arguments[i];
 
-                    Scope.SetVar(arg.identifier, args[i]);
+                    Scope.SetVar(arg.Identifier, Arguments[i]);
                 }
 
-                expr = usrFuncDef.expr;
+                expr = symFuncDef.expr;
 
                 return expr.Evaluate();
             }
@@ -49,19 +47,20 @@ namespace Ast
             {
                 var list = (List)@var;
 
-                if (args.Count != 1 || !(args[0] is Integer))
+                if (Arguments.Count != 1 || !(Arguments[0] is Integer))
                     return new Error(list, "Valid args: [Integer]");
 
-                var @long = (args[0] as Integer).@int;
+                var @long = (Arguments[0] as Integer).@int;
+
+                if (@long < 0)
+                    return new Error(list, "Cannot access with negative integer");
+
                 int @int;
 
                 if (@long > int.MaxValue)
                     return new Error(list, "Integer is too big");
                 else
                     @int = (int)@long;
-
-                if (@int < 0)
-                    return new Error(list, "Cannot access with negative integer");
 
                 if (@int > list.items.Count - 1)
                     return new Error(list, "Cannot access item " + (@int+1).ToString() + " in list with " + list.items.Count + " items");
@@ -81,16 +80,16 @@ namespace Ast
 
         public override Expression Clone()
         {
-            return MakeClone<UsrFunc>();
+            return MakeClone<SymbolFunc>();
         }
 
         internal override Expression Reduce(Expression caller)
         {
-            if (prefix.CompareTo(Constant.Zero))
+            if (Prefix.CompareTo(Constant.Zero))
             {
                 return new Integer(0);
             }
-            if (exponent.CompareTo(Constant.Zero))
+            if (Exponent.CompareTo(Constant.Zero))
             {
                 return new Integer(1);
             }
@@ -100,13 +99,13 @@ namespace Ast
 
         public override string ToString()
         {
-            string str = identifier + "[";
+            string str = Identifier + "[";
 
-            for (int i = 0; i < args.Count; i++)
+            for (int i = 0; i < Arguments.Count; i++)
             {
-                str += args[i];
+                str += Arguments[i];
 
-                if (i < args.Count - 1)
+                if (i < Arguments.Count - 1)
                     str += ",";
             }
             str += "]";
@@ -122,7 +121,7 @@ namespace Ast
             }
             else
             {
-                foreach (var item in (this as Func).args)
+                foreach (var item in (this as Func).Arguments)
                 {
                     if (item.ContainsVariable(other))
                     {

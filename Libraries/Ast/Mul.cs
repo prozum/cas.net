@@ -65,7 +65,7 @@ namespace Ast
                 else if (right is Variable)
                 {
                     var res = right.Clone();
-                    (res as Variable).prefix = ((res as Variable).prefix * left) as Real;
+                    (res as Variable).Prefix = ((res as Variable).Prefix * left) as Real;
                     return res;
                 }
                 else if (right is Real)
@@ -86,7 +86,7 @@ namespace Ast
                 else if (left is Variable)
                 {
                     var res = left.Clone();
-                    (res as Variable).prefix = ((res as Variable).prefix * right) as Real;
+                    (res as Variable).Prefix = ((res as Variable).Prefix * right) as Real;
                     return res;
                 }
                 else if (left is Real)
@@ -120,7 +120,7 @@ namespace Ast
                 {
                     return SameVariableOperation(left as Variable, right as Variable);
                 }
-                else if (!(left as Variable).exponent.CompareTo(Constant.One) && (left as Variable).exponent.CompareTo((right as Variable).exponent))
+                else if (!(left as Variable).Exponent.CompareTo(Constant.One) && (left as Variable).Exponent.CompareTo((right as Variable).Exponent))
                 {
                     return DifferentVariableOperation(left as Variable, right as Variable);
                 }
@@ -131,7 +131,7 @@ namespace Ast
 
         private bool CompareVariables(Variable left, Variable right)
         {
-            return left.identifier == right.identifier && left.GetType() == right.GetType();
+            return left.Identifier == right.Identifier && left.GetType() == right.GetType();
         }
 
         private Expression ReduceMultiMul(dynamic other)
@@ -191,11 +191,11 @@ namespace Ast
             {
                 return new Mul(Left, SameVariableOperation(Right as Variable, other));
             }
-            if (Left is Variable && (!(Left as Variable).exponent.CompareTo(Constant.One) && (Left as Variable).exponent.CompareTo((other as Variable).exponent)))
+            if (Left is Variable && (!(Left as Variable).Exponent.CompareTo(Constant.One) && (Left as Variable).Exponent.CompareTo((other as Variable).Exponent)))
             {
                 return new Mul(DifferentVariableOperation(Left as Variable, other as Variable), Right);
             }
-            else if (Right is Variable && (!(Right as Variable).exponent.CompareTo(Constant.One) && (Right as Variable).exponent.CompareTo((other as Variable).exponent)))
+            else if (Right is Variable && (!(Right as Variable).Exponent.CompareTo(Constant.One) && (Right as Variable).Exponent.CompareTo((other as Variable).Exponent)))
             {
                 return new Mul(Left, DifferentVariableOperation(Right as Variable, other as Variable));
             }
@@ -231,8 +231,8 @@ namespace Ast
         {
             var res = left.Clone() as Variable;
 
-            res.prefix = (left.prefix * right.prefix) as Real;
-            res.exponent = (left.exponent + right.exponent) as Real;
+            res.Prefix = (left.Prefix * right.Prefix) as Real;
+            res.Exponent = (left.Exponent + right.Exponent) as Real;
 
             return res;
         }
@@ -241,10 +241,10 @@ namespace Ast
         {
             var newLeft = left.Clone();
             var newRight = right.Clone();
-            (newLeft as Variable).exponent = new Integer(1);
-            (newRight as Variable).exponent = new Integer(1);
+            (newLeft as Variable).Exponent = new Integer(1);
+            (newRight as Variable).Exponent = new Integer(1);
 
-            return new Mul(left.prefix * right.prefix, new Exp(new Mul(newLeft, newRight), left.exponent));
+            return new Mul(left.Prefix * right.Prefix, new Exp(new Mul(newLeft, newRight), left.Exponent));
         }
 
         public override Expression Clone()
