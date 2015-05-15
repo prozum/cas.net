@@ -6,6 +6,7 @@ namespace DesktopUI
     {
         public DrawCanvas canvas;
 
+        // Constructor for movabledrawcanvs
         public MovableDrawCanvas()
             : base("", false)
         {
@@ -21,6 +22,7 @@ namespace DesktopUI
 
         }
 
+        // This method is called when the canvas is updated.
         public bool RedrawCanvas()
         {
             canvas.QueueDraw();
