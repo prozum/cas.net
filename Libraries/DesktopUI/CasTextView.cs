@@ -5,14 +5,18 @@ using Gtk;
 
 namespace DesktopUI
 {
+    // The base element for widgets.
+    // All cas widgets inherit from this
     public class CasTextView : TextView
     {
         public bool locked = false;
 
+        // Text tags used for formatting text.
         public TextTag boldTag = new TextTag("BoldTag");
         public TextTag italicTag = new TextTag("ItalicTag");
         public TextTag underlineTag = new TextTag("UnderlineTag");
 
+        // Constructor for castextview, adds all tags to the textview
         public CasTextView(string SerializedString, bool locked)
             : base()
         {
@@ -32,6 +36,7 @@ namespace DesktopUI
             ShowAll();
         }
 
+        // A simplified constructor, used for TaskGen.
         public CasTextView(string TaskString)
             : base()
         {
@@ -39,6 +44,8 @@ namespace DesktopUI
             ShowAll();
         }
 
+        // A method for serializing the content of a textview buffer, allowing it to be saved in formatted form.
+        // Is converted to Base64 to avoid problems with JSON.
         public string SerializeCasTextView()
         {
             TextIter startIter, endIter;
@@ -49,6 +56,7 @@ namespace DesktopUI
             return serializedTextView;
         }
 
+        // A method for deserializing the content serialized in the above method.
         public void DeserializeCasTextView(string serializedTextView)
         {
             TextIter textIter = Buffer.StartIter;
@@ -56,9 +64,9 @@ namespace DesktopUI
             Buffer.Deserialize(Buffer, Buffer.RegisterDeserializeTagset(null), ref textIter, byteTextView, (ulong)byteTextView.Length);
         }
 
+        // Can be used to lock widget
         public void LockTextView(bool locked)
         {
-            Console.WriteLine(locked);
             Editable = !locked;
         }
     }

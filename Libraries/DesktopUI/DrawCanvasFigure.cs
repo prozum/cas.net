@@ -9,6 +9,7 @@ namespace DesktopUI
         private List<double> X;
         private List<double> Y;
 
+        // Constructor for drawcanvas figure
         public DrawCanvasFigure(double x, double y)
         {
             X = new List<double>();
@@ -18,12 +19,14 @@ namespace DesktopUI
             Y.Add(y);
         }
 
+        // Used to add a new coordinate to drawcanvasfigure
         public void Add(double x, double y)
         {
             X.Add(x);
             Y.Add(y);
         }
 
+        // Draws the figure
         public void DrawFigure(ref Context ctx)
         {
             ctx.MoveTo(X[0], Y[0]);

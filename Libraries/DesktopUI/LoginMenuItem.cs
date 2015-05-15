@@ -8,6 +8,7 @@ namespace DesktopUI
         User user;
         Menu menu;
 
+        // Constructor for login menu
         public LoginMenuItem(User user, Menu menu)
             : base("Login")
         {
@@ -20,6 +21,7 @@ namespace DesktopUI
             };
         }
 
+        // Displays the login screen when called
         void LoginScreenWrapper()
         {
             LoginScreen screen = new LoginScreen(ref user, ref menu);

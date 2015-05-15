@@ -11,6 +11,8 @@ namespace DesktopUI
         Entry entryUsername = new Entry();
         Entry entryPassword = new Entry();
 
+        // Constructor for the login screen
+        // Builds all elements of the window, and displays it to the user
         public LoginScreen(ref User user, ref Menu menu)
             : base("Login to CAS.NET")
         {
@@ -61,10 +63,9 @@ namespace DesktopUI
             Add(vbox);
 
             ShowAll();
-
-            KeepAbove = true;
         }
 
+        // When the login button is pressed, it will connect to the server, and verify the user.
         void ButtonLoginWrapper()
         {
             string username = entryUsername.Text;

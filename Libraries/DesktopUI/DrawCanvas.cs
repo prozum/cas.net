@@ -11,6 +11,7 @@ namespace DesktopUI
         private List<DrawCanvasFigure> Figures;
         private DrawCanvasMouse mouse;
 
+        // Constructor for drawcanvas, that allows users to draw with their mouse.
         public DrawCanvas()
             : base()
         {
@@ -18,9 +19,9 @@ namespace DesktopUI
             Figures = new List<DrawCanvasFigure>();
             mouse = new DrawCanvasMouse();
             GLib.Timeout.Add(1, new GLib.TimeoutHandler(CoordAddDelay));
-
         }
 
+        // Apply color to drawn area of canvas.
         protected override bool OnDrawn(Context ctx)
         {
             ctx.LineWidth = 5;
@@ -33,6 +34,7 @@ namespace DesktopUI
             return true;
         }
 
+        // Run when the mouse is pressed
         protected override bool OnButtonPressEvent(EventButton evnt)
         {
             mouse.UpdateCoord(evnt.X, evnt.Y);
@@ -41,18 +43,21 @@ namespace DesktopUI
             return true;
         }
 
+        // Run when the mouse in released
         protected override bool OnButtonReleaseEvent(EventButton evnt)
         {
             mouse.Pressed = false;
             return true;
         }
 
+        // Run when the mouse moved
         protected override bool OnMotionNotifyEvent(EventMotion evnt)
         {
             mouse.UpdateCoord(evnt.X, evnt.Y);
             return true;
         }
 
+        // Adds mouse tosition to figures.
         public bool CoordAddDelay()
         {
             if (mouse.Pressed)
