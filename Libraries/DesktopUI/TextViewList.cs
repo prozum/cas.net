@@ -21,6 +21,9 @@ namespace DesktopUI
             this.user = user;
             this.window = window;
 
+            ColumnSpacing = 10;
+            RowSpacing = 10;
+
             window.ResizeChecked += delegate
             {
                 foreach (Widget widget in castextviews)
@@ -67,30 +70,11 @@ namespace DesktopUI
 
         public void InsertTaskGenTextView(string TaskString)
         {
-            //Button ButtonMoveUp = new Button("↑");
-            //Button ButtonMoveDown = new Button("↓");
-            Button ButtonDelete = new Button("X");
-            Button ButtonAddNew = new Button("+");
-
             MovableCasTextView movableCasTextView = new MovableCasTextView(TaskString);
             movableCasTextView.textview.LockTextView(true);
 
-            ButtonDelete.Clicked += delegate
-            {
-                Delete(movableCasTextView.id_);
-            };
-
-            ButtonAddNew.Clicked += delegate
-            {
-                AddNew(movableCasTextView);
-            };
-
-            VBox vbox = new VBox();
-            //vbox.PackStart(ButtonMoveUp, false, false, 2);
-            //vbox.PackEnd(ButtonMoveDown, false, false, 2);
-            vbox.PackStart(ButtonDelete, false, false, 2);
-            vbox.PackStart(ButtonAddNew, false, false, 2);
-            movableCasTextView.Attach(vbox, 2, 1, 1, 2);
+            movableCasTextView.Attach(AddLockCheckButton(movableCasTextView), 1, 100, 1, 1);
+            movableCasTextView.Attach(AddCommandButtons(movableCasTextView), 100, 1, 1, 1);
 
             castextviews.Add(movableCasTextView);
 
@@ -319,20 +303,20 @@ namespace DesktopUI
             };
         }
 
-        CheckButton AddLockCheckButton(MovableCasTextView mctv)
+        CheckButton AddLockCheckButton(MovableCasTextView movableCasTextView)
         {
             if(user.privilege == 1)
             {
                 CheckButton checkbutton = new CheckButton("Lock for students");
 
-                if (mctv.textview.locked == true)
+                if (movableCasTextView.textview.locked == true)
                 {
                     checkbutton.Active = true;
                 }
 
                 checkbutton.Toggled += delegate
                 {
-                    mctv.textview.locked = !mctv.textview.locked;
+                    movableCasTextView.textview.locked = !movableCasTextView.textview.locked;
                 };
 
                 return checkbutton;
@@ -343,7 +327,7 @@ namespace DesktopUI
             }
         }
 
-        VBox AddCommandButtons(MovableCasTextView mctv)
+        VBox AddCommandButtons(MovableCasTextView movableCasTextView)
         {
             Button ButtonMoveUp = new Button("↑");
             Button ButtonMoveDown = new Button("↓");
@@ -352,27 +336,27 @@ namespace DesktopUI
 
             VBox vbox = new VBox();
 
-            if (user.privilege == 1 || (user.privilege == 0 && mctv.textview.locked == false))
+            if (user.privilege == 1 || (user.privilege == 0 && movableCasTextView.textview.locked == false))
             {
 
                 ButtonMoveUp.Clicked += delegate
                 {
-                    Move(mctv.id_, -1);
+                    Move(movableCasTextView.id_, -1);
                 };
 
                 ButtonMoveDown.Clicked += delegate
                 {
-                    Move(mctv.id_, 1);
+                    Move(movableCasTextView.id_, 1);
                 };
 
                 ButtonDelete.Clicked += delegate
                 {
-                    Delete(mctv.id_);
+                    Delete(movableCasTextView.id_);
                 };
 
                 ButtonAddNew.Clicked += delegate
                 {
-                    AddNew(mctv);
+                    AddNew(movableCasTextView);
                 };
 
                 HBox hbox = new HBox();
@@ -387,7 +371,7 @@ namespace DesktopUI
             {
                 ButtonAddNew.Clicked += delegate
                 {
-                    AddNew(mctv);
+                    AddNew(movableCasTextView);
                 };
 
                 vbox.PackStart(ButtonAddNew, false, false, 2);
