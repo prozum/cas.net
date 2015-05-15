@@ -8,6 +8,7 @@ namespace DesktopUI
         Menu menu;
         User user;
 
+        // Constructor for the logout menu item
         public LogoutMenuItem(User user, Menu menu)
             : base("Logout")
         {
@@ -20,6 +21,7 @@ namespace DesktopUI
             };
         }
 
+        // Logs the user out when called, and hides all irrelevant menus.
         void LogoutWrapper()
         {
             user.Logout();

@@ -11,6 +11,7 @@ namespace DesktopUI
 
         readonly Evaluator Eval;
 
+        // Constructor for the definition box, used to show declared variables.
 		public DefinitionBox (Evaluator Eval) : base()
 		{
             renderer = new CellRendererText();
@@ -26,6 +27,7 @@ namespace DesktopUI
             this.Eval.Locals.Clear();
 		}
 
+        // Updates all elements on update
 		public void Update()
 		{
             list.Clear();

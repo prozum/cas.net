@@ -13,6 +13,7 @@ namespace DesktopUI
         public Evaluator Eval;
         private List<EvalData> DataList = new List<EvalData>();
 
+        // Constructor for calcview
         public CasCalcView(Evaluator Eval)
         {
             this.Eval = Eval;
@@ -22,40 +23,11 @@ namespace DesktopUI
             ShowAll();
         }
 
+        // When run, the content of the input entry is evaluated, and the result returned to the output label
         public void Evaluate()
         {
             Eval.Parse(input.Text);
-            EvalData res;
-
-            output.Text = "";
-
-            do
-            {
-                res = Eval.Step();
-                DataList.Add(res);
-
-            } while (!(res is DoneData));
-
-            foreach (var data in DataList)
-            {
-                if (data is PrintData)
-                {
-                    output.Text += (data as PrintData).msg + "\n";
-//                    buffer.Insert(ref insertIter, (data as PrintData).msg + "\n");
-                }
-                else if (data is ErrorData)
-                {
-                    output.Text += (data as ErrorData).msg + "\n";
-//                    buffer.InsertWithTagsByName(ref insertIter, (data as ErrorData).err + "\n", "error");
-                }
-                else if (data is DebugData)
-                {
-                    output.Text += (data as DebugData).expr.ToString() + "\n";
-//                    buffer.Insert(ref insertIter, (data as ExprData).expr.ToString() + "\n");
-                }   
-            }
-
-            DataList.Clear();
+            output.Text = Eval.Evaluate().ToString();
         }
     }
 }

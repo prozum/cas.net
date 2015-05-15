@@ -81,7 +81,6 @@
     <Compile Include="TeacherAddFeedbackWindow.cs" />
     <Compile Include="TeacherGetAssignmentListWindow.cs" />
     <Compile Include="TeacherGetCompletedListWindow.cs" />
-    <Compile Include="MovableLockedCasTextView.cs" />
     <Compile Include="DrawCanvas.cs" />
     <Compile Include="DrawCanvasFigure.cs" />
     <Compile Include="DrawCanvasMouse.cs" />
