@@ -24,6 +24,11 @@ namespace Ast
             SideEffects = Scope.SideEffects;
         }
 
+        protected override Expression Evaluate(Expression caller)
+        {
+            return Evaluate();
+        }
+
         public override Expression Evaluate()
         {
             var list = new List();

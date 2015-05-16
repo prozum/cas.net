@@ -10,7 +10,7 @@ namespace Ast
         public Or() { }
         public Or(Expression left, Expression right) : base(left, right) { }
 
-        public override Expression Evaluate()
+        protected override Expression Evaluate(Expression caller)
         {
             return Left | Right;
         }

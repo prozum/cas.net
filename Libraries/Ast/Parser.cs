@@ -393,6 +393,8 @@ namespace Ast
                         contextStack.Push(ParseContext.Parenthesis);
                         SetupExpr(ParseExpr());
                         contextStack.Pop();
+                        if (!Eat(TokenKind.PARENT_END))
+                            ReportError("Missing ) bracket");
                         break;
                     case TokenKind.SQUARE_START:
                         eat = false;

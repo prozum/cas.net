@@ -11,6 +11,15 @@ namespace Ast
             this.@bool = value;
         }
 
+        public override Expression Evaluate()
+        {
+            return this;
+        }
+        protected override Expression Evaluate(Expression caller)
+        {
+            return this;
+        }
+
         public static bool operator true (Boolean b)
         {
             return b.@bool;
@@ -34,6 +43,16 @@ namespace Ast
         public override Expression Negation()
         {
             return new Boolean(!@bool);
+        }
+
+        public override Expression AndWith(Boolean other)
+        {
+            return new Boolean(this.@bool && other.@bool);
+        }
+
+        public override Expression OrWith(Boolean other)
+        {
+            return new Boolean(this.@bool || other.@bool);
         }
     }
 }

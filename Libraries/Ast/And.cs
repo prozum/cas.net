@@ -2,7 +2,7 @@
 
 namespace Ast
 {
-    public class And :BinaryOperator
+    public class And : BinaryOperator
     {
         public override string Identifier { get { return "&"; } }
         public override int Priority { get{ return 10; } }
@@ -10,7 +10,7 @@ namespace Ast
         public And() { }
         public And(Expression left, Expression right) : base(left, right) { }
 
-        public override Expression Evaluate()
+        protected override Expression Evaluate(Expression caller)
         {
             return Left & Right;
         }
