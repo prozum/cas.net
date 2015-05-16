@@ -38,7 +38,7 @@ namespace Ast
             return GetValue().Evaluate();
         }
             
-        public Expression GetValue()
+        public override Expression GetValue()
         {
             var value = Scope.GetVar(Identifier);
 

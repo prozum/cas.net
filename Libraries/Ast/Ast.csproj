@@ -191,12 +191,12 @@
     <Compile Include="ExprStmt.cs">
       <DependentUpon>Statement.cs</DependentUpon>
     </Compile>
-    <Compile Include="ErrorExpr.cs">
-      <DependentUpon>BinaryOperator.cs</DependentUpon>
-    </Compile>
     <Compile Include="Null.cs" />
     <Compile Include="SymbolFunc.cs">
       <DependentUpon>Variable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Error.cs">
+      <DependentUpon>BinaryOperator.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

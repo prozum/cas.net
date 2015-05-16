@@ -75,20 +75,21 @@ namespace Ast
             return false;
         }
 
-        public void SetVar(string @var, Expression exp)
+        public void SetVar(string @var, Expression expr)
         {
             if (Locals.ContainsKey(@var))
                 Locals.Remove(@var);
 
-            Locals.Add(@var, exp);
+            Locals.Add(@var, expr);
         }
 
+        public Expression GetVar(Variable @var) { return GetVar(@var.Identifier); }
         public Expression GetVar(string @var)
         {
-            Expression exp;
+            Expression expr;
 
-            if (Locals.TryGetValue(@var, out exp))
-                return exp;
+            if (Locals.TryGetValue(@var, out expr))
+                return expr;
 
             if (Scope != null)
                 return Scope.GetVar(@var);

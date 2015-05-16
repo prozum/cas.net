@@ -15,19 +15,20 @@ namespace Ast
         public Error(Expression expr, string msg) : this(expr, expr.Position, msg) { }
         public Error(Statement stmt, string msg) : this(stmt, stmt.Position, msg) { }
 
-        public Error (Object obj, Pos Position, string msg)
+        public Error (Object obj, Pos position, string msg)
         {
             if (obj is Variable)
-                this.ErrorMessage = (obj as Variable).Identifier + ": " + msg;
+                ErrorMessage = (obj as Variable).Identifier + ": " + msg;
             else
-                this.ErrorMessage = obj.GetType().Name + ": " + msg;
+                ErrorMessage = obj.GetType().Name + ": " + msg;
+
+            Position = position;
         }
 
         public override string ToString()
         {
             return ErrorMessage;
         }
-
 
         public override Expression Evaluate()
         {

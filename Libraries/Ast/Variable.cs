@@ -57,7 +57,7 @@ namespace Ast
             return false;
         }
 
-        protected Expression ReturnValue(Expression res)
+        public Expression ReturnValue(Expression res)
         {
             if (Prefix.CompareTo(Constant.Zero))
             {

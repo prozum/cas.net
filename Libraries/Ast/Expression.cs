@@ -62,6 +62,11 @@ namespace Ast
             return new Error(this, "This type cannot evaluate");
         }
 
+        public virtual Expression GetValue()
+        {
+            return this;
+        }
+
         /// <summary>
         /// 
         /// </summary>

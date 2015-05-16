@@ -50,7 +50,10 @@ namespace Ast
 
             if (sym is Symbol)
             {
-                res = Right.Evaluate();
+                if (Right is Scope)
+                    res = Right;
+                else
+                    res = Right.Evaluate();
 
                 if (res is Error)
                     return res;

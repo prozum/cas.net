@@ -10,7 +10,7 @@ public class MainWindow : Window
 
     Grid grid;
 
-    ListStore defStore;
+    TreeStore defStore;
     TreeView defTree;
 
     TextView textView;
@@ -62,7 +62,7 @@ public class MainWindow : Window
     {
         CellRenderer renderer;
 
-        defStore = new ListStore(typeof(string), typeof(string));
+        defStore = new TreeStore(typeof(string), typeof(string));
         defTree = new TreeView(defStore);
         defTree.Expand = true;
 
@@ -78,17 +78,38 @@ public class MainWindow : Window
 
         foreach (var def in eval.Locals)
         {
-            if (def.Value is SysFunc)
-            {
-                defStore.AppendValues(def.Value.ToString(), "System Magic");
-            }
-            else if (def.Value is SymbolFunc)
+            if (def.Value is SymbolFunc)
             {
                 defStore.AppendValues(def.Value.ToString(), (def.Value as SymbolFunc).expr.ToString());
+            }
+            else if (def.Value is Scope)
+            {
+                var iter = defStore.AppendValues(def.Key, def.Value.ToString());
+                UpdateScope(def.Value as Scope, iter);
             }
             else
             {
                 defStore.AppendValues(def.Key, def.Value.ToString());
+            }
+        }
+    }
+
+    public void UpdateScope(Scope scope, TreeIter iter)
+    {
+        foreach (var def in scope.Locals)
+        {
+            if (def.Value is SymbolFunc)
+            {
+                defStore.AppendValues(iter, def.Value.ToString(), (def.Value as SymbolFunc).expr.ToString());
+            }
+            else if (def.Value is Scope)
+            {
+                var subIter = defStore.AppendValues(iter, def.Key, def.Value.ToString());
+                UpdateScope(def.Value as Scope, subIter);
+            }
+            else
+            {
+                defStore.AppendValues(iter, def.Key, def.Value.ToString());
             }
         }
     }
