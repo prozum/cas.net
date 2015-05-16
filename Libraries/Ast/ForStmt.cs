@@ -16,9 +16,6 @@ namespace Ast
             {
                 expr.SetVar(sym, value);
                 expr.Evaluate();
-
-                if (expr.Error != null)
-                    return new ErrorData(expr.Error);
             }
 
             return new DoneData();

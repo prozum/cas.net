@@ -43,10 +43,10 @@ namespace Ast
 
         public void Parse(string parseString, Scope global)
         {
-            global.Error = null;
+            global.Errors.Clear();
 
-            tokens = Scanner.Tokenize(parseString, out global.Error);
-            if (global.Error != null)
+            tokens = Scanner.Tokenize(parseString, global.Errors);
+            if (global.Errors.Count > 0)
                 return;
 
             ParseScope(global);
@@ -129,7 +129,7 @@ namespace Ast
                         break;
                 }
 
-                if (curScope.Error != null)
+                if (curScope.Errors.Count > 0)
                 {
                     curScope.Statements.Clear();
                     return curScope;
@@ -547,8 +547,8 @@ namespace Ast
                         break;
                 }
 
-                if (curScope.Error != null)
-                    return curScope.Error;
+                if (curScope.Errors.Count > 0)
+                    return new Null();
 
                 if (eat)
                     Eat();
@@ -744,23 +744,21 @@ namespace Ast
             }
         }
 
-        public Error ReportError(Error error, bool overwrite = false)
+        public Error ReportError(Error error)
         {
-            if (curScope.Error == null || overwrite)
-                curScope.Error = error;
+            curScope.Errors.Add(error);
 
-            return curScope.Error;
+            return error;
         }
 
-        public Error ReportError(string msg, bool overwrite = false)
+        public Error ReportError(string msg)
         {
-            if (curScope.Error == null || overwrite)
-            {
-                curScope.Error = new Error("Parser: " + msg);
-                curScope.Error.Position = curToken.Position;
-            }
+            var error = new Error("Parser: " + msg);
+            error.Position = curToken.Position;
 
-            return curScope.Error;
+            curScope.Errors.Add(error);
+
+            return error;
         }
     }
 }

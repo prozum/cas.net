@@ -12,6 +12,15 @@ namespace Ast
         {
             return "null";
         }
+
+        public override Expression Evaluate()
+        {
+            return this;
+        }
+        protected override Expression Evaluate(Expression caller)
+        {
+            return this;
+        }
     }
 }
 

@@ -15,8 +15,8 @@ namespace Ast
         {
             var res = expr.Evaluate();
 
-            if (res is Error)
-                return new ErrorData(res as Error);
+            if (Scope.GetBool("debug"))
+                Scope.SideEffects.Add(new DebugData("Debug: " + expr + " = " + res));
 
             return new ExprData(res);
         }

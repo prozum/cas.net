@@ -12,8 +12,7 @@ namespace Ast
         static char[] Chars;
         static Pos Position;
 
-
-        static Error _error = null; 
+        static List<Error> Errors; 
 
         public static char CharNext(bool consume = true)
         {
@@ -30,25 +29,22 @@ namespace Ast
                 return EOS;
         }
 
-        public static Queue<Token> Tokenize(string tokenString, out Error error)
+        public static Queue<Token> Tokenize(string tokenString, List<Error> errors)
         {
             var res = new Queue<Token> ();
 
             Chars = tokenString.ToCharArray();
             Position = new Pos();
-            error = null;
             Token tok;
+
+            Errors = errors;
 
             do
             {
                 tok = ScanNext();
 
-                if (_error != null)
-                {
-                    error = _error;
-                    _error = null;
+                if (errors.Count > 0)
                     return null;
-                }
 
                 res.Enqueue(tok);
             }
@@ -191,7 +187,7 @@ namespace Ast
                     //More than one Seperator. Error!
                     if (kind == TokenKind.DECIMAL)
                     {
-                        ReportSyntaxError("Decimal with more than one seperator");
+                        ReportError("Decimal with more than one seperator");
                         return null;
                     }
                     kind = TokenKind.DECIMAL;
@@ -236,7 +232,7 @@ namespace Ast
                             res += subChar + ExtractSubText(cur) + subChar;
                         break;
                     case EOS:
-                        ReportSyntaxError("Missing end of string");
+                        ReportError("Missing end of string");
                         return "";
                     default:
                         res += cur;
@@ -304,12 +300,11 @@ namespace Ast
             }
         }
 
-        public static Error ReportSyntaxError(string msg)
+        public static void ReportError(string msg)
         {
-            _error = new Error("Scanner: " + msg);
-            _error.Position = Position;
-
-            return _error;
+            var error = new Error("Scanner: " + msg);
+            error.Position = Position;
+            Errors.Add(error);
         }
     }
 }

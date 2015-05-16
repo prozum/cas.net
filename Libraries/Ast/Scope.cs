@@ -9,19 +9,21 @@ namespace Ast
         public List<Statement> Statements = new List<Statement>();
         public List<EvalData> SideEffects = new List<EvalData>();
 
-        public Error Error;
+        public List<Error> Errors;
 
         const int MaxStatementPrint = 5;
 
         public Scope()
         {
             SideEffects = new List<EvalData>();
+            Errors = new List<Error>();
         }
 
         public Scope(Scope Scope)
         {
             this.Scope = Scope;
             SideEffects = Scope.SideEffects;
+            Errors = Scope.Errors;
         }
 
         protected override Expression Evaluate(Expression caller)
@@ -33,10 +35,13 @@ namespace Ast
         {
             var list = new List();
 
-            if (Error != null)
+            if (Errors.Count > 0)
             {
-                SideEffects.Add(new ErrorData(Error));
-                return Error;
+                foreach (var error in Errors)
+                {
+                    SideEffects.Add(new ErrorData(error));
+                }
+                return new Null();
             }
 
             foreach (var stmt in Statements)
@@ -46,19 +51,11 @@ namespace Ast
                 if (data is ExprData)
                 {
                     list.items.Add((data as ExprData).expr);
-                    if (GetBool("debug"))
-                        SideEffects.Add(new DebugData("Debug: " + stmt + " = " + data));
                     continue;
                 }
 
                 if (data is ReturnData)
                     return (data as ReturnData).expr;
-
-                if (data is ErrorData)
-                {
-                    SideEffects.Add(data);
-                    break;
-                }  
 
                 SideEffects.Add(data);
             }
