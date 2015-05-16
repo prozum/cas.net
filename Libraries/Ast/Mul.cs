@@ -4,8 +4,11 @@ namespace Ast
 {
     public class Mul : BinaryOperator, ISwappable, IInvertable
     {
-        public Mul() : base("*", 40) { }
-        public Mul(Expression left, Expression right) : base(left, right, "*", 40) { }
+        public override string Identifier { get { return "*"; } }
+        public override int Priority { get{ return 40; } }
+
+        public Mul() { }
+        public Mul(Expression left, Expression right) : base(left, right) { }
 
         protected override Expression Evaluate(Expression caller)
         {

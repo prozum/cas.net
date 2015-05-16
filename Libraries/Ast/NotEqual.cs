@@ -4,8 +4,11 @@ namespace Ast
 {
     public class NotEqual : BinaryOperator
     {
-        public NotEqual() : base("!=", 10) { }
-        public NotEqual(Expression left, Expression right) : base(left, right, "==", 10) { }
+        public override string Identifier { get { return "!="; } }
+        public override int Priority { get{ return 20; } }
+
+        public NotEqual() { }
+        public NotEqual(Expression left, Expression right) : base(left, right) { }
 
         protected override Expression Evaluate(Expression caller)
         {

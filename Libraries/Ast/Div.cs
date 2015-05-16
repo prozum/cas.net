@@ -7,8 +7,11 @@ namespace Ast
     /// </summary>
     public class Div : BinaryOperator, IInvertable
     {
-        public Div() : base("/", 50) { }
-        public Div(Expression left, Expression right) : base(left, right, "/", 50) { }
+        public override string Identifier { get { return "/"; } }
+        public override int Priority { get{ return 40; } }
+
+        public Div() { }
+        public Div(Expression left, Expression right) : base(left, right) { }
 
         protected override Expression Evaluate(Expression caller)
         {

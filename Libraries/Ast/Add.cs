@@ -7,8 +7,11 @@ namespace Ast
     /// </summary>
     public class Add : BinaryOperator, ISwappable, IInvertable
     {
-        public Add() : base("+", 20) { }
-        public Add(Expression left, Expression right) : base(left, right, "+", 20) { }
+        public override string Identifier { get { return "+"; } }
+        public override int Priority { get{ return 30; } }
+
+        public Add() { }
+        public Add(Expression left, Expression right) : base(left, right) { }
 
         protected override Expression Evaluate(Expression caller)
         {

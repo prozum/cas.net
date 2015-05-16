@@ -7,10 +7,13 @@ namespace Ast
     /// </summary>
     public class Dot : BinaryOperator
     {
-        public Dot() : base(".", 100) { }
-        public Dot(Expression left, Expression right) : base(left, right, ".", 100) { }
+        public override string Identifier { get { return "."; } }
+        public override int Priority { get{ return 100; } }
 
-        protected override Expression Evaluate(Expression caller)
+        public Dot() { }
+        public Dot(Expression left, Expression right) : base(left, right) { }
+
+        public override Expression Evaluate()
         {
             return GetValue();
         }

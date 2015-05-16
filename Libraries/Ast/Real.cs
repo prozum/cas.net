@@ -209,17 +209,17 @@ namespace Ast
         #endregion
 
         #region ModuloWith
-        public override Expression ModuloWith(Integer other)
+        public override Expression ModWith(Integer other)
         {
             return new Irrational(Value % other.Value);
         }
 
-        public override Expression ModuloWith(Rational other)
+        public override Expression ModWith(Rational other)
         {
             return new Irrational(Value % other.Value);
         }
 
-        public override Expression ModuloWith(Irrational other)
+        public override Expression ModWith(Irrational other)
         {
             return new Irrational(Value % other.Value);
         }

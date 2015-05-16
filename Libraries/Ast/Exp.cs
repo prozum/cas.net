@@ -8,8 +8,11 @@ namespace Ast
     /// </summary>
     public class Exp : BinaryOperator, IInvertable
     {
-        public Exp() : base("^", 60) { }
-        public Exp(Expression left, Expression right) : base(left, right, "^", 60) { }
+        public override string Identifier { get { return "^"; } }
+        public override int Priority { get{ return 50; } }
+
+        public Exp() { }
+        public Exp(Expression left, Expression right) : base(left, right) { }
 
         protected override Expression Evaluate(Expression caller)
         {

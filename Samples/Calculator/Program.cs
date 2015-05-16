@@ -43,7 +43,7 @@ public class MainWindow : Window
 
         var res = eval.Evaluate();
 
-        if (!(res is Null))
+        if (!(res is Null || res is Error))
             buffer.Insert(ref insertIter, "ret: " + res.ToString() + "\n");
 
         foreach(var data in eval.SideEffects)

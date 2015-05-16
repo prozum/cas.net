@@ -7,8 +7,11 @@ namespace Ast
     /// </summary>
     public class Greater : BinaryOperator
     {
-        public Greater() : base(">", 10) { }
-        public Greater(Expression left, Expression right) : base(left, right, ">", 10) { }
+        public override string Identifier { get { return ">"; } }
+        public override int Priority { get{ return 20; } }
+
+        public Greater() { }
+        public Greater(Expression left, Expression right) : base(left, right) { }
 
         protected override Expression Evaluate(Expression caller)
         {

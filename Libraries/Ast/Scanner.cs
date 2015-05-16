@@ -97,8 +97,14 @@ namespace Ast
                     return new Token(TokenKind.MUL, "*", Position);
                 case '/':
                     return new Token(TokenKind.DIV, "/", Position);
+                case '%':
+                    return new Token(TokenKind.MOD, "%", Position);
                 case '^':
                     return new Token(TokenKind.EXP, "^", Position);
+                case '&':
+                    return new Token(TokenKind.AND, "&", Position);
+                case '|':
+                    return new Token(TokenKind.OR, "|", Position);
                 case '=':
                     if (CharNext(false) == '=')
                     {
@@ -267,6 +273,8 @@ namespace Ast
                     return new Token(TokenKind.TRUE, identifier, startPos);
                 case "false":
                     return new Token(TokenKind.FALSE, identifier, startPos);
+                case "null":
+                    return new Token(TokenKind.NULL, identifier, startPos);
                 case "if":
                     return new Token(TokenKind.IF, identifier, startPos);
                 case "elif":
@@ -279,6 +287,10 @@ namespace Ast
                     return new Token(TokenKind.FOR, identifier, startPos);
                 case "in":
                     return new Token(TokenKind.IN, identifier, startPos);
+                case "and":
+                    return new Token(TokenKind.AND, identifier, startPos);
+                case "or":
+                    return new Token(TokenKind.OR, identifier, startPos);
                 default:
                     return new Token(TokenKind.IDENTIFIER, identifier, startPos);
             }

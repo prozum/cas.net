@@ -7,8 +7,11 @@ namespace Ast
     /// </summary>
     public class Assign : BinaryOperator
     {
-        public Assign() : base(":=", 0) { }
-        public Assign(Expression left, Expression right) : base(left, right, ":=", 0) { }
+        public override string Identifier { get { return ":="; } }
+        public override int Priority { get{ return 0; } }
+
+        public Assign() { }
+        public Assign(Expression left, Expression right) : base(left, right) { }
 
         protected override Expression Evaluate(Expression caller)
         {

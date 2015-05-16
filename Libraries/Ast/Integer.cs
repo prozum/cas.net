@@ -92,12 +92,12 @@ namespace Ast
         #endregion
 
         #region ModuloWith
-        public override Expression ModuloWith(Integer other)
+        public override Expression ModWith(Integer other)
         {
             return new Integer(@int % other.@int);
         }
 
-        public override Expression ModuloWith(Rational other)
+        public override Expression ModWith(Rational other)
         {
             return new Rational(this, new Integer(1)) % other;
         }

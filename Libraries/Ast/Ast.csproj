@@ -195,7 +195,14 @@
     <Compile Include="SymbolFunc.cs">
       <DependentUpon>Variable.cs</DependentUpon>
     </Compile>
-    <Compile Include="Error.cs">
+    <Compile Include="Error.cs" />
+    <Compile Include="And.cs">
+      <DependentUpon>BinaryOperator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Or.cs">
+      <DependentUpon>BinaryOperator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mod.cs">
       <DependentUpon>BinaryOperator.cs</DependentUpon>
     </Compile>
   </ItemGroup>

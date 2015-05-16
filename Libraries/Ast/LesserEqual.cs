@@ -7,8 +7,11 @@ namespace Ast
     /// </summary>
     public class LesserEqual : BinaryOperator
     {
-        public LesserEqual() : base("<=", 10) { }
-        public LesserEqual(Expression left, Expression right) : base(left, right, "<=", 10) { }
+        public override string Identifier { get { return "<="; } }
+        public override int Priority { get{ return 20; } }
+
+        public LesserEqual() { }
+        public LesserEqual(Expression left, Expression right) : base(left, right) { }
 
         protected override Expression Evaluate(Expression caller)
         {

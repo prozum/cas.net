@@ -383,6 +383,9 @@ namespace Ast
                     case TokenKind.FALSE:
                         SetupExpr(new Boolean(false));
                         break;
+                    case TokenKind.NULL:
+                        SetupExpr(new Null());
+                        break;
 
                     case TokenKind.PARENT_START:
                         eat = false;
@@ -444,7 +447,6 @@ namespace Ast
                         else
                             ReportError(curToken + " is not supported as binary operator");
                         break;
-
                     case TokenKind.MUL:
                         if (expectUnary)
                             ReportError(curToken + " is not supported as unary operator");
@@ -456,6 +458,12 @@ namespace Ast
                             ReportError(curToken + " is not supported as unary operator");
                         else
                             SetupBiOp(new Div());
+                        break;
+                    case TokenKind.MOD:
+                        if (expectUnary)
+                            ReportError(curToken + " is not supported as unary operator");
+                        else
+                            SetupBiOp(new Mod());
                         break;
                     case TokenKind.EXP:
                         if (expectUnary)
@@ -511,6 +519,18 @@ namespace Ast
                             ReportError(curToken + " is not supported as unary operator");
                         else
                             SetupBiOp(new Greater());
+                        break;
+                    case TokenKind.AND:
+                        if (expectUnary)
+                            ReportError(curToken + " is not supported as unary operator");
+                        else
+                            SetupBiOp(new And());
+                        break;
+                    case TokenKind.OR:
+                        if (expectUnary)
+                            ReportError(curToken + " is not supported as unary operator");
+                        else
+                            SetupBiOp(new Or());
                         break;
 
                     case TokenKind.DOT:

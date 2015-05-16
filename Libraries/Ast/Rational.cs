@@ -113,12 +113,12 @@ namespace Ast
         #endregion
 
         #region ModuloWith
-        public override Expression ModuloWith(Integer other)
+        public override Expression ModWith(Integer other)
         {
             return this % new Rational(other, new Integer(1));
         }
 
-        public override Expression ModuloWith(Rational other)
+        public override Expression ModWith(Rational other)
         {
             var newNumerator = numerator * other.denominator;
             var otherNewNumerator = denominator * other.numerator;

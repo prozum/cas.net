@@ -27,10 +27,8 @@ namespace Ast
     /// </summary>
     public abstract class BinaryOperator : Operator
     {
-        public string Identifier;
-        public int Priority;
-
-        private int curStep = 0;
+        public abstract string Identifier { get; }
+        public abstract int Priority { get; }
 
         private Expression _left;
         public Expression Left
@@ -64,13 +62,11 @@ namespace Ast
             }
         }
 
-        internal BinaryOperator(string symbol, int priority) : this(null, null, symbol, priority) { }
-        internal BinaryOperator(Expression left, Expression right, string identifier, int priority)
+        internal BinaryOperator() : this(null, null) { }
+        internal BinaryOperator(Expression left, Expression right)
         {
             Left = left;
             Right = right;
-            Identifier = identifier;
-            Priority = priority;
         }
 
         protected override Expression Evaluate(Expression caller)

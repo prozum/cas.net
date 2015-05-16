@@ -7,8 +7,11 @@ namespace Ast
     /// </summary>
     public class BooleanEqual : BinaryOperator
     {
-        public BooleanEqual() : base("==", 10) { }
-        public BooleanEqual(Expression left, Expression right) : base(left, right, "==", 10) { }
+        public override string Identifier { get { return "=="; } }
+        public override int Priority { get{ return 20; } }
+
+        public BooleanEqual() { }
+        public BooleanEqual(Expression left, Expression right) : base(left, right) { }
 
         protected override Expression Evaluate(Expression caller)
         {
