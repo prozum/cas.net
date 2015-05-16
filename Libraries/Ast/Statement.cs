@@ -13,10 +13,6 @@ namespace Ast
         }
 
         public abstract EvalData Evaluate();
-        public virtual DebugData GetDebugData()
-        {
-            return new DebugData(ToString());
-        }
     }
 }
 

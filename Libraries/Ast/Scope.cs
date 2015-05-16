@@ -42,7 +42,7 @@ namespace Ast
                 {
                     list.items.Add((data as ExprData).expr);
                     if (GetBool("debug"))
-                        SideEffects.Add(stmt.GetDebugData());
+                        SideEffects.Add(new DebugData("Debug: " + stmt + " = " + data));
                     continue;
                 }
 

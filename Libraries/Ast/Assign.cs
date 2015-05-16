@@ -29,7 +29,7 @@ namespace Ast
                 else
                     return new Error(dot.Right, " is not a symbol");
 
-                res = dot.Left.Evaluate();
+                res = dot.Left.GetValue();
 
                 if (res is Error)
                     return res;
@@ -51,9 +51,12 @@ namespace Ast
             if (sym is Symbol)
             {
                 if (Right is Scope)
+                {
+                    Right.Evaluate();
                     res = Right;
+                }
                 else
-                    res = Right.Evaluate();
+                    res = Right.GetValue();
 
                 if (res is Error)
                     return res;

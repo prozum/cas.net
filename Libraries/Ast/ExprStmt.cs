@@ -25,11 +25,6 @@ namespace Ast
         {
             return expr.ToString();
         }
-
-        public override DebugData GetDebugData()
-        {
-            return new DebugData("Expression: " + expr.ToString() + " = " + expr.Evaluate());
-        }
     }
 }
 
