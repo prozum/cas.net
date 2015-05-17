@@ -50,7 +50,7 @@ namespace Ast
 
             ParseScope(global);
 
-            if (Error)
+            if (global.Errors.Count > 0)
                 Clear();
         }
 
@@ -84,19 +84,19 @@ namespace Ast
             }
 
             contextStack.Push(cx);
-            var res = ParseStatements();
+            ParseStatements();
             contextStack.Pop();
 
             if (Error)
-                return res;
+                return scopeStack.Pop();
 
             if (cx == ParseContext.ScopeMulti && !Eat(TokenKind.CURLY_END))
                 ReportError("Missing } bracket");
                
-            return res;
+            return scopeStack.Pop();
         }
 
-        public Scope ParseStatements()
+        public void ParseStatements()
         {
             while (tokens.Count > 0)
             {
@@ -116,10 +116,10 @@ namespace Ast
                         break;
                     
                     case TokenKind.CURLY_END:
-                        return scopeStack.Pop();
+                        return;
                     
                     case TokenKind.END_OF_STRING:
-                        return scopeStack.Pop();
+                        return;
 
                     case TokenKind.SEMICOLON:
                     case TokenKind.NEW_LINE:
@@ -134,7 +134,7 @@ namespace Ast
                 if (Error)
                 {
                     curScope.Statements.Clear();
-                    return curScope;
+                    return;
                 }
             }
 
@@ -233,13 +233,13 @@ namespace Ast
             }
             else
             {
-                ReportError("For syntax: 'for symbol in list: expr'");
+                ReportError("For: Missing symbol");
                 return null;
             }
 
             if (!Eat(TokenKind.IN))
             {
-                ReportError("For syntax: 'for symbol in list: expr'");
+                ReportError("For: Missing in");
                 return null;
             }
 
@@ -252,7 +252,7 @@ namespace Ast
                 stmt.list = list as List;
             else
             {
-                ReportError("For syntax: 'for symbol in list: expr'");
+                ReportError("For: " + list + " is not a list");
                 return null;
             }
 
