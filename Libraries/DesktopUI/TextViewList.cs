@@ -111,19 +111,25 @@ namespace DesktopUI
             ShowAll();
         }
 
-        public void InsertCalcView(string input)
+        public void InsertCalcView(string input, bool locked)
         {
             MovableCasCalcView MovCasCalcView = new MovableCasCalcView(Eval);
             MovCasCalcView.calcview.input.Text = input;
+            MovCasCalcView.calcview.input.IsEditable = !locked;
             MovCasCalcView.calcview.input.Activated += delegate
             {
-                MovCasCalcView.calcview.Eval.Scope.Locals.Clear();
-                MovCasCalcView.calcview.Evaluate();
-                MovCasCalcView.ShowAll();
+                    MovCasCalcView.calcview.Eval.Scope.Locals.Clear();
+                    MovCasCalcView.calcview.Evaluate();
+                    MovCasCalcView.ShowAll();
             };
 
             MovCasCalcView.Attach(AddLockCheckButton(MovCasCalcView), 1, 100, 1, 1);
             MovCasCalcView.Attach(AddCommandButtons(MovCasCalcView), 100, 1, 1, 1);
+
+            if(user.privilege <= 0 && locked == true)
+            {
+                MovCasCalcView.calcview.input.IsEditable = false;
+            }
 
             castextviews.Add(MovCasCalcView);
 

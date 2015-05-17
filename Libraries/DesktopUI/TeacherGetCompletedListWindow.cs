@@ -79,7 +79,7 @@ namespace DesktopUI
             {
                 if (metaItem.type == typeof(MovableCasCalcView))
                 {
-                    textviews.InsertCalcView(metaItem.metastring);
+                    textviews.InsertCalcView(metaItem.metastring, metaItem.locked);
                 }
                 else if (metaItem.type == typeof(MovableCasTextView))
                 {
