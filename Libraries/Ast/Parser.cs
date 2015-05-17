@@ -82,10 +82,11 @@ namespace Ast
 
             contextStack.Push(cx);
             var res = ParseStatements();
-            contextStack.Pop();
 
             if (cx == ParseContext.ScopeMulti && !Eat(TokenKind.CURLY_END))
                 ReportError("Missing } bracket");
+
+            contextStack.Pop();
 
             return res;
         }
@@ -113,10 +114,7 @@ namespace Ast
                         return scopeStack.Pop();
                     
                     case TokenKind.END_OF_STRING:
-                        if (curContext != ParseContext.ScopeMulti)
-                            return scopeStack.Pop();
-                        else
-                            ReportError("Missing }");
+                        return scopeStack.Pop();
                         break;
 
                     case TokenKind.SEMICOLON:
