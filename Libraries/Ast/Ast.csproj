@@ -205,6 +205,9 @@
     <Compile Include="Mod.cs">
       <DependentUpon>BinaryOperator.cs</DependentUpon>
     </Compile>
+    <Compile Include="WhileStmt.cs">
+      <DependentUpon>Statement.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ProjectExtensions>

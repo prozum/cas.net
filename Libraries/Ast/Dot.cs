@@ -15,7 +15,7 @@ namespace Ast
 
         public override Expression Evaluate()
         {
-            return GetValue();
+            return GetValue().Evaluate();
         }
 
         public override Expression GetValue()

@@ -59,7 +59,7 @@ namespace Ast
                     res = Right;
                 }
                 else
-                    res = Right.GetValue();
+                    res = Right.Evaluate();
 
                 if (res is Error)
                     return res;
@@ -71,19 +71,19 @@ namespace Ast
 
             if (sym is SymbolFunc)
             {
-                var usrFunc = (SymbolFunc)Left;
+                var symFunc = (SymbolFunc)Left;
 
-                foreach (var arg in usrFunc.Arguments)
+                foreach (var arg in symFunc.Arguments)
                 {
                     if (!(arg is Symbol))
                         return new Error(this, "All arguments must be symbols");
                 }
 
-                var defFunc = new SymbolFunc(usrFunc.Identifier, usrFunc.Arguments, usrFunc.Scope);
+                var defFunc = new SymbolFunc(symFunc.Identifier, symFunc.Arguments, symFunc.Scope);
 
                 defFunc.expr = Right;
 
-                usrFunc.Scope.SetVar(usrFunc.Identifier, defFunc);
+                symFunc.Scope.SetVar(symFunc.Identifier, defFunc);
 
                 return this;
             }

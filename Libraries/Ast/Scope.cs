@@ -58,6 +58,9 @@ namespace Ast
                     return (data as ReturnData).expr;
 
                 SideEffects.Add(data);
+
+                if (data is ErrorData)
+                    return new Null();
             }
 
             switch (list.items.Count)

@@ -200,21 +200,6 @@ namespace Ast
             return new Error(this, "Don't support subbing " + other.GetType().Name);
         }
 
-        public virtual Expression SubWith(Variable other)
-        {
-            return this - other.Evaluate();
-        }
-
-        public virtual Expression SubWith(Operator other)
-        {
-            return this - other.Evaluate();
-        }
-
-        public virtual Expression SubWith(Scope other)
-        {
-            return this - other.Evaluate();
-        }
-
         public virtual Expression SubWith(List other)
         {
             return new Error(this, "Don't support subbing " + other.GetType().Name);
@@ -256,21 +241,6 @@ namespace Ast
         public virtual Expression MulWith(Complex other)
         {
             return new Error(this, "Don't support multipying " + other.GetType().Name);
-        }
-
-        public virtual Expression MulWith(Variable other)
-        {
-            return this * other.Evaluate();
-        }
-
-        public virtual Expression MulWith(Operator other)
-        {
-            return this * other.Evaluate();
-        }
-
-        public virtual Expression MulWith(Scope other)
-        {
-            return this * other.Evaluate();
         }
 
         public virtual Expression MulWith(List other)
@@ -316,21 +286,6 @@ namespace Ast
             return new Error(this, "Don't support diving " + other.GetType().Name);
         }
 
-        public virtual Expression DivWith(Variable other)
-        {
-            return this / other.Evaluate();
-        }
-
-        public virtual Expression DivWith(Operator other)
-        {
-            return this / other.Evaluate();
-        }
-
-        public virtual Expression DivWith(Scope other)
-        {
-            return this / other.Evaluate();
-        }
-
         public virtual Expression DivWith(List other)
         {
             return new Error(this, "Don't support diving " + other.GetType().Name);
@@ -372,21 +327,6 @@ namespace Ast
         public virtual Expression ModWith(Complex other)
         {
             return new Error(this, "Don't support modulo " + other.GetType().Name);
-        }
-
-        public virtual Expression ModWith(Variable other)
-        {
-            return this + other.Evaluate();
-        }
-
-        public virtual Expression ModWith(Operator other)
-        {
-            return this + other.Evaluate();
-        }
-
-        public virtual Expression ModWith(Scope other)
-        {
-            return this + other.Evaluate();
         }
 
         public virtual Expression ModWith(List other)
@@ -432,21 +372,6 @@ namespace Ast
             return new Error(this, "Don't support powering " + other.GetType().Name);
         }
 
-        public virtual Expression ExpWith(Variable other)
-        {
-            return this ^ other.Evaluate();
-        }
-
-        public virtual Expression ExpWith(Operator other)
-        {
-            return this ^ other.Evaluate();
-        }
-
-        public virtual Expression ExpWith(Scope other)
-        {
-            return this ^ other.Evaluate();
-        }
-
         public virtual Expression ExpWith(List other)
         {
             return new Error(this, "Don't support powering " + other.GetType().Name);
@@ -490,21 +415,6 @@ namespace Ast
             return new Error(this, "Don't support and with " + other.GetType().Name);
         }
 
-        public virtual Expression AndWith(Variable other)
-        {
-            return this & other.Evaluate();
-        }
-
-        public virtual Expression AndWith(Operator other)
-        {
-            return this & other.Evaluate();
-        }
-
-        public virtual Expression AndWith(Scope other)
-        {
-            return this & other.Evaluate();
-        }
-
         public virtual Expression AndWith(List other)
         {
             return new Error(this, "Don't support and with " + other.GetType().Name);
@@ -546,21 +456,6 @@ namespace Ast
         public virtual Expression OrWith(Complex other)
         {
             return new Error(this, "Don't support or with " + other.GetType().Name);
-        }
-
-        public virtual Expression OrWith(Variable other)
-        {
-            return this | other.Evaluate();
-        }
-
-        public virtual Expression OrWith(Operator other)
-        {
-            return this | other.Evaluate();
-        }
-
-        public virtual Expression OrWith(Scope other)
-        {
-            return this | other.Evaluate();
         }
 
         public virtual Expression OrWith(List other)
@@ -607,21 +502,6 @@ namespace Ast
             return new Error(this, "Don't support greater than " + other.GetType().Name);
         }
 
-        public virtual Expression GreaterThan(Variable other)
-        {
-            return this > other.Evaluate();
-        }
-
-        public virtual Expression GreaterThan(Operator other)
-        {
-            return this > other.Evaluate();
-        }
-
-        public virtual Expression GreaterThan(Scope other)
-        {
-            return this > other.Evaluate();
-        }
-
         public virtual Expression GreaterThan(List other)
         {
             return new Error(this, "Don't support greater than " + other.GetType().Name);
@@ -663,21 +543,6 @@ namespace Ast
         public virtual Expression LesserThan(Complex other)
         {
             return new Error(this, "Don't support lesser than " + other.GetType().Name);
-        }
-
-        public virtual Expression LesserThan(Variable other)
-        {
-            return this < other.Evaluate();
-        }
-
-        public virtual Expression LesserThan(Operator other)
-        {
-            return this < other.Evaluate();
-        }
-
-        public virtual Expression LesserThan(Scope other)
-        {
-            return this < other.Evaluate();
         }
 
         public virtual Expression LesserThan(List other)
@@ -723,21 +588,6 @@ namespace Ast
             return new Error(this, "Don't support greater than or equal to " + other.GetType().Name);
         }
 
-        public virtual Expression GreaterThanOrEqualTo(Variable other)
-        {
-            return this >= other.Evaluate();
-        }
-
-        public virtual Expression GreaterThanOrEqualTo(Operator other)
-        {
-            return this >= other.Evaluate();
-        }
-
-        public virtual Expression GreaterThanOrEqualTo(Scope other)
-        {
-            return this >= other.Evaluate();
-        }
-
         public virtual Expression GreaterThanOrEqualTo(List other)
         {
             return new Error(this, "Don't support greater than or equal to " + other.GetType().Name);
@@ -781,21 +631,6 @@ namespace Ast
             return new Error(this, "Don't support lesser than or equal " + other.GetType().Name);
         }
 
-        public virtual Expression LesserThanOrEqualTo(Variable other)
-        {
-            return this <= other.Evaluate();
-        }
-
-        public virtual Expression LesserThanOrEqualTo(Operator other)
-        {
-            return this <= other.Evaluate();
-        }
-
-        public virtual Expression LesserThanOrEqualTo(Scope other)
-        {
-            return this <= other.Evaluate();
-        }
-
         public virtual Expression LesserThanOrEqualTo(List other)
         {
             return new Error(this, "Don't support lesser than or equal " + other.GetType().Name);
@@ -827,6 +662,9 @@ namespace Ast
         #region Binary Operator Overload
         public static Expression operator +(Expression left, dynamic right)
         {
+            left = left.Evaluate();
+            right = right.Evaluate();
+
             if (left is Error)
                 return left;
             else if (right is Error)
@@ -837,6 +675,9 @@ namespace Ast
 
         public static Expression operator -(Expression left, dynamic right)
         {
+            left = left.Evaluate();
+            right = right.Evaluate();
+
             if (left is Error)
                 return left;
             else if (right is Error)
@@ -847,6 +688,9 @@ namespace Ast
 
         public static Expression operator *(Expression left, dynamic right)
         {
+            left = left.Evaluate();
+            right = right.Evaluate();
+
             if (left is Error)
                 return left;
             else if (right is Error)
@@ -857,36 +701,41 @@ namespace Ast
 
         public static Expression operator /(Expression left, dynamic right)
         {
+            left = left.Evaluate();
+            right = right.Evaluate();
+
             if (left is Error)
                 return left;
             else if (right is Error)
                 return right;
 
             if (right.CompareTo(Constant.Zero))
-            {
                 return new Error(left, "Cannot divide with 0");
-            }
 
             return left.DivWith(right);
         }
 
         public static Expression operator %(Expression left, dynamic right)
         {
+            left = left.Evaluate();
+            right = right.Evaluate();
+
             if (left is Error)
                 return left;
             else if (right is Error)
                 return right;
 
             if (right.CompareTo(Constant.Zero))
-            {
                 return new Error(left, "Cannot modulo with 0");
-            }
 
             return left.ModWith(right);
         }
 
         public static Expression operator ^(Expression left, dynamic right)
         {
+            left = left.Evaluate();
+            right = right.Evaluate();
+
             if (left is Error)
                 return left;
             else if (right is Error)
@@ -897,6 +746,9 @@ namespace Ast
 
         public static Expression operator &(Expression left, dynamic right)
         {
+            left = left.Evaluate();
+            right = right.Evaluate();
+
             if (left is Error)
                 return left;
             else if (right is Error)
@@ -907,6 +759,9 @@ namespace Ast
 
         public static Expression operator |(Expression left, dynamic right)
         {
+            left = left.Evaluate();
+            right = right.Evaluate();
+
             if (left is Error)
                 return left;
             else if (right is Error)
@@ -917,6 +772,9 @@ namespace Ast
 
         public static Expression operator >(Expression left, dynamic right)
         {
+            left = left.Evaluate();
+            right = right.Evaluate();
+
             if (left is Error)
                 return left;
             else if (right is Error)
@@ -927,6 +785,9 @@ namespace Ast
 
         public static Expression operator <(Expression left, dynamic right)
         {
+            left = left.Evaluate();
+            right = right.Evaluate();
+
             if (left is Error)
                 return left;
             else if (right is Error)
@@ -937,6 +798,9 @@ namespace Ast
 
         public static Expression operator >=(Expression left, dynamic right)
         {
+            left = left.Evaluate();
+            right = right.Evaluate();
+
             if (left is Error)
                 return left;
             else if (right is Error)
@@ -947,12 +811,15 @@ namespace Ast
 
         public static Expression operator <=(Expression left, dynamic right)
         {
+            left = left.Evaluate();
+            right = right.Evaluate();
+
             if (left is Error)
                 return left;
             else if (right is Error)
                 return right;
 
-            return left.LesserThanOrEqualTo(right);
+            return LesserThanOrEqualTo(right);
         }
 
         #endregion

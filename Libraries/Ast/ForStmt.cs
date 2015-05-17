@@ -15,7 +15,10 @@ namespace Ast
             foreach (var value in list.items)
             {
                 expr.SetVar(sym, value);
-                expr.Evaluate();
+                var res = expr.Evaluate();
+
+                if (res is Error)
+                    return new ErrorData(res as Error);
             }
 
             return new DoneData();
