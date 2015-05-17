@@ -102,15 +102,7 @@ namespace DesktopUI
                     }
                     else if (item.type == typeof(MovableCasCalcView))
                     {
-                        Evaluator Eval = new Evaluator();
-                        MovableCasCalcView movableCasCalcView = new MovableCasCalcView(Eval);
-                        movableCasCalcView.calcview.input.Text = item.metastring;
-
-                        textviews.InsertCalcView(item.metastring);
-                    }
-                    else if (item.type == typeof(MovableCasTextView))
-                    {
-                        textviews.InsertTextView(item.metastring, item.locked, -1);
+                        textviews.InsertCalcView(item.metastring, item.locked);
                     }
                     else if (item.type == typeof(MovableCasResult))
                     {
@@ -118,6 +110,10 @@ namespace DesktopUI
                         container = Import.DeserializeString<CasResult.FacitContainer>(item.metastring);
 
                         textviews.InsertResult(container.answer, container.facit);
+                    }
+                    else if (item.type == typeof(MovableCasTextView))
+                    {
+                        textviews.InsertTextView(item.metastring, item.locked, -1);
                     }
                 }
 

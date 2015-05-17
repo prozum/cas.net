@@ -26,8 +26,11 @@ namespace DesktopUI
         // When run, the content of the input entry is evaluated, and the result returned to the output label
         public void Evaluate()
         {
-            Eval.Parse(input.Text);
-            output.Text = Eval.Evaluate().ToString();
+            if(!string.IsNullOrEmpty(input.Text))
+            {
+                Eval.Parse(input.Text);
+                output.Text = Eval.Evaluate().ToString();
+            }
         }
     }
 }
