@@ -8,12 +8,14 @@ using System.IO;
 
 namespace DesktopUI
 {
+    // Opens a saved file
     public class OpenToolButton : ToolButton
     {
         static Image image = new Image();
         TextViewList textviews;
         User user;
 
+        // Constructor for opentoolbutton
         public OpenToolButton(TextViewList textviews, ref User user)
             : base(image, "open")
         {
@@ -32,6 +34,7 @@ namespace DesktopUI
             };
         }
 
+        // Opens the file when clicked
         public void OpenFile()
         {
             OperatingSystem os = Environment.OSVersion;
@@ -127,6 +130,7 @@ namespace DesktopUI
             }
         }
 
+        // Sets the icon
         void SetIcon()
         {
             OperatingSystem os = Environment.OSVersion;

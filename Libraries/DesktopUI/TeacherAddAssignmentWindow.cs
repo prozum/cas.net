@@ -5,11 +5,13 @@ using System.Collections.Generic;
 
 namespace DesktopUI
 {
+    // Handles when the teacher adds a new assignment
     public class TeacherAddAssignmentWindow : Window
     {
         User user;
         TextViewList textviews;
 
+        // Constructor for teacheraddassignmentwindow
         public TeacherAddAssignmentWindow(User user, TextViewList textviews)
             : base("Add Assignment")
         {

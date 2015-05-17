@@ -6,6 +6,7 @@ using Ast;
 
 namespace DesktopUI
 {
+    // Handles what happens when the teacher gets the completed work of the student
     public class TeacherGetCompletedListWindow : Window
     {
         User user;
@@ -13,6 +14,7 @@ namespace DesktopUI
         string Filename;
         string[] StudentList;
 
+        // Constructor for teachergetcomplatedlistwindow
         public TeacherGetCompletedListWindow(User user, ref TextViewList textviews, string Filename)
             : base("Get List of Completed Students")
         {
@@ -69,6 +71,7 @@ namespace DesktopUI
             ShowAll();
         }
 
+        // Loads the selected assignment up in the workspace
         void LoadWorkspace(string completed)
         {
             List<MetaType> metaTypeList = ImEx.Import.DeserializeString<List<MetaType>>(completed);

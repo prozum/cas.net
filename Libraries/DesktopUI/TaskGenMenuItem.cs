@@ -4,6 +4,7 @@ using TaskGenLib;
 
 namespace DesktopUI
 {
+    // Menu item for taskgen
     public class TaskGenMenuItem : MenuItem
     {
         TextViewList textviews;

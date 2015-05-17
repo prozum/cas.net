@@ -6,11 +6,13 @@ using Ast;
 
 namespace DesktopUI
 {
+    // Window for students to get a list of all assignments
     public class StudentGetAssignmentListWindow : Window
     {
         User user;
         TextViewList textviews;
 
+        // Constructor for studentgetassignmentlistwindow
         public StudentGetAssignmentListWindow(User user, ref TextViewList textviews)
             : base("Get Assignment List")
         {

@@ -5,12 +5,14 @@ using Gtk;
 
 namespace DesktopUI
 {
+    // Window for student to add completed assignments
     public class StudentAddCompletedWindow : Window
     {
         User user;
         TextViewList textviews;
         string Filename;
 
+        // Constructor for studentaddcompletedwindow
         public StudentAddCompletedWindow(User user, TextViewList textviews, string Filename)
             : base("Upload Completed Assignment")
         {

@@ -5,6 +5,7 @@ using ImEx;
 
 namespace DesktopUI
 {
+    // Handles when the teacher gives feedback to the students
     public class TeacherAddFeedbackWindow : Window
     {
         User user;
@@ -12,6 +13,7 @@ namespace DesktopUI
         string Filename;
         string className;
 
+        // Constructor for teacheraddfeedbackwindow
         public TeacherAddFeedbackWindow(User user, TextViewList textviews, string Filename)
             : base("Add Feedback")
         {

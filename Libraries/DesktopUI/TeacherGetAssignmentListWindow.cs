@@ -3,11 +3,13 @@ using Gtk;
 
 namespace DesktopUI
 {
+    // Gives the teacher a list of assignments
     public class TeacherGetAssignmentListWindow : Window
     {
         User user;
         TextViewList textviews;
 
+        // Constructor for teachergetassignmentlistwindow
         public TeacherGetAssignmentListWindow(User user, ref TextViewList textviews)
             : base("Assignment List")
         {
