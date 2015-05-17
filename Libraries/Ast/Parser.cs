@@ -34,6 +34,7 @@ namespace Ast
 
         Queue<Token> tokens;
         Token curToken { get { return tokens.Count > 0 ? tokens.Peek() : EOS; } }
+        bool Error { get { return curScope.Errors.Count > 0; } }
         bool expectUnary = true;
 
         public void Parse(string parseString)
@@ -46,14 +47,16 @@ namespace Ast
             global.Errors.Clear();
 
             tokens = Scanner.Tokenize(parseString, global.Errors);
-            if (global.Errors.Count > 0)
-                return;
 
             ParseScope(global);
+
+            if (Error)
+                Clear();
         }
 
         public void Clear()
         {
+            scopeStack.Clear();
             contextStack.Clear();
             exprStack.Clear();
             unaryStack.Clear();
@@ -82,12 +85,14 @@ namespace Ast
 
             contextStack.Push(cx);
             var res = ParseStatements();
+            contextStack.Pop();
+
+            if (Error)
+                return res;
 
             if (cx == ParseContext.ScopeMulti && !Eat(TokenKind.CURLY_END))
                 ReportError("Missing } bracket");
-
-            contextStack.Pop();
-
+               
             return res;
         }
 
@@ -115,7 +120,6 @@ namespace Ast
                     
                     case TokenKind.END_OF_STRING:
                         return scopeStack.Pop();
-                        break;
 
                     case TokenKind.SEMICOLON:
                     case TokenKind.NEW_LINE:
@@ -127,7 +131,7 @@ namespace Ast
                         break;
                 }
 
-                if (curScope.Errors.Count > 0)
+                if (Error)
                 {
                     curScope.Statements.Clear();
                     return curScope;
@@ -241,11 +245,8 @@ namespace Ast
 
             var list = ParseColon().Evaluate();
 
-            if (list is Error)
-            {
-                ReportError(list as Error);
+            if (Error)
                 return null;
-            }
 
             if (list is List)
                 stmt.list = list as List;
@@ -267,7 +268,7 @@ namespace Ast
             contextStack.Pop();
 
             if (!Eat(TokenKind.COLON))
-                return ReportError("Missing :");
+                ReportError("Missing :");
 
             return res;
         }
@@ -281,11 +282,14 @@ namespace Ast
 
             while (tokens.Count > 0)
             {
-                if (Eat(TokenKind.SQUARE_END))
-                    break;
-
                 if (!(Eat(TokenKind.COMMA) || Eat(TokenKind.NEW_LINE)))
                     list.items.Add(ParseExpr());
+
+                if (Error)
+                    return list;
+
+                if (Eat(TokenKind.SQUARE_END))
+                    break;
 
                 if (Peek(TokenKind.END_OF_STRING))
                 {
@@ -297,6 +301,25 @@ namespace Ast
             contextStack.Pop();
 
             return list;
+        }
+
+        public Expression ParseParenthesis()
+        {
+        
+            Eat();
+            contextStack.Push(ParseContext.Parenthesis);
+
+            Expression parent = ParseExpr();
+
+            if (Error)
+                return parent;
+
+            if (!Eat(TokenKind.PARENT_END))
+                ReportError("Missing ) bracket");
+
+            contextStack.Pop();
+
+            return parent;
         }
 
         public Expression ParseExpr()
@@ -387,12 +410,7 @@ namespace Ast
 
                     case TokenKind.PARENT_START:
                         eat = false;
-                        Eat();
-                        contextStack.Push(ParseContext.Parenthesis);
-                        SetupExpr(ParseExpr());
-                        contextStack.Pop();
-                        if (!Eat(TokenKind.PARENT_END))
-                            ReportError("Missing ) bracket");
+                        SetupExpr(ParseParenthesis());
                         break;
                     case TokenKind.SQUARE_START:
                         eat = false;
@@ -545,8 +563,13 @@ namespace Ast
                         break;
                 }
 
-                if (curScope.Errors.Count > 0)
+                if (Error)
+                {
+                    unaryStack.Pop();
+                    exprStack.Pop();
+                    binaryStack.Pop();
                     return new Null();
+                }
 
                 if (eat)
                     Eat();
@@ -602,14 +625,14 @@ namespace Ast
             BinaryOperator curOp, nextOp, top;
 
             if (exprs.Count == 0)
-                return ReportError("Missing expression");
-
-            if (exprs.Count != 1 + biops.Count)
-                return ReportError("Missing operand");
+                return new Null();
 
             if (exprs.Count == 1 && biops.Count == 0)
                 return exprs.Dequeue();
-                
+
+            if (exprs.Count != 1 + biops.Count)
+                return ReportError("Missing operand");
+               
 
             top = biops.Peek();
             left = exprs.Dequeue();
@@ -751,7 +774,7 @@ namespace Ast
 
         public Error ReportError(string msg)
         {
-            var error = new Error("Parser: " + msg);
+            var error = new Error(msg);
             error.Position = curToken.Position;
 
             curScope.Errors.Add(error);
