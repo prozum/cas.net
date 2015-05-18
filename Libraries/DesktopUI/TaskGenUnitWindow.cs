@@ -37,10 +37,10 @@ namespace DesktopUI
             table.Attach(spinbuttonMinimum, 1, 2, 0, 1);
             table.Attach(labelMaximum, 0, 1, 1, 2);
             table.Attach(spinbuttonMaximum, 1, 2, 1, 2);
-            table.Attach(labelNoT, 0, 1, 3, 4);
-            table.Attach(spinbuttonNumberOfTasks, 1, 2, 3, 4);
-            table.Attach(buttonCancel, 0, 1, 4, 5);
-            table.Attach(buttonOk, 1, 2, 4, 5);
+            table.Attach(labelNoT, 0, 1, 2, 3);
+            table.Attach(spinbuttonNumberOfTasks, 1, 2, 2, 3);
+            table.Attach(buttonCancel, 0, 1, 3, 4);
+            table.Attach(buttonOk, 1, 2, 3, 4);
 
             buttonCancel.Clicked += (sender, e) =>
             {

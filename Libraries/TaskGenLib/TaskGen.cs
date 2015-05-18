@@ -14,7 +14,7 @@ namespace TaskGenLib
         public static Task MakeUnitTask (int varMin, int varMax)
         {
             Random r = new Random (Guid.NewGuid ().GetHashCode ());
-
+            
             string unit1 = "";
             string unit2 = "";
             double val;
@@ -126,7 +126,7 @@ namespace TaskGenLib
 
             val = r.Next (varMin, varMax);
             string taskS = "";
-            taskS += "How many" + unit1 + "is" + val + unit2;
+            taskS += "How many " + unit1 + " is " + val + " " + unit2 +"?";
 
             //conversions
             if (unit1 == "metres" && unit2 == "centimetres") {
