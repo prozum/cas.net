@@ -173,11 +173,17 @@ namespace Ast
             return new Sub(other, Right);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public BinaryOperator Swap()
         {
             return new Add(Right, Left);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public BinaryOperator Transform()
         {
             if (Left is Add)
