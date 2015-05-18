@@ -10,7 +10,7 @@ namespace Ast
 
         public override Expression Evaluate() 
         {
-            return Reduce().Evaluate(this); 
+            return Evaluate(this); 
         }
 
         internal override Expression Evaluate(Expression caller)
@@ -57,10 +57,10 @@ namespace Ast
                 {
                     var list = (List)@var.Value;
 
-                    if (Arguments.Count != 1 || !(Arguments[0] is Integer))
+                    if (Arguments.Count != 1 || !(Arguments[0].Evaluate() is Integer))
                         return new Error(list, "Valid args: [Integer]");
 
-                    var @long = (Arguments[0] as Integer).@int;
+                    var @long = (Arguments[0].Evaluate() as Integer).@int;
 
                     if (@long < 0)
                         return new Error(list, "Cannot access with negative integer");
@@ -77,6 +77,7 @@ namespace Ast
                     else
                         return list.items[@int];
                 }
+
 
                 return new Error(this, "Variable is not a function or list");
             }

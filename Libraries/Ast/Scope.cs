@@ -182,7 +182,11 @@ namespace Ast
             
         public override string ToString()
         {
-            string str = "{";
+            string str;
+            if (Scope == null)
+                str = "Global Scope: {";
+            else
+                str = "{";
 
             for (int i = 0; i < Statements.Count; i++) 
             {

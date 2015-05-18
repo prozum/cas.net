@@ -63,6 +63,12 @@ namespace Ast
                 return @var;
             }
 
+
+            if (Left is SysFunc)
+            {
+                return new Error(this, "Cannot override system function");
+            }
+
             if (@var is Variable)
             {
                 @var.Value = Right.Evaluate();
@@ -73,12 +79,6 @@ namespace Ast
                 scope.SetVar(@var.Identifier, @var.Value);
 
                 return @var.Value;
-            }
-
-
-            if (Left is SysFunc)
-            {
-                return new Error(this, "Cannot override system function");
             }
 
             return new Error(this, "Left operand must be Symbol or Function");

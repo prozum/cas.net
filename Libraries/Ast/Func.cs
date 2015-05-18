@@ -16,12 +16,33 @@ namespace Ast
 
     public abstract class Func : Variable
     {
+        private Scope _scope;
+        public override Scope Scope
+        {
+            get
+            {
+                return _scope;
+            }
+            set
+            {
+                _scope = value;
+
+                if (Arguments != null)
+                {
+                    foreach (var arg in Arguments)
+                    {
+                        arg.Scope = value;
+                    }
+                }
+            }
+        }
+
         public List<Expression> Arguments;
 
         public Func(string identifier, List<Expression> args, Scope scope)
             : base(identifier,  scope) 
         {
-            this.Arguments = args;
+            Arguments = args;
         }
 
         public override bool CompareTo(Expression other)
