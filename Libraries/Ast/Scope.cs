@@ -7,7 +7,7 @@ namespace Ast
     {
         public Dictionary<string,Variable> Locals = new Dictionary<string,Variable>();
         public List<Statement> Statements = new List<Statement>();
-        public List<EvalData> SideEffects = new List<EvalData>();
+        public List<EvalData> SideEffects;
 
         public List<Error> Errors;
 

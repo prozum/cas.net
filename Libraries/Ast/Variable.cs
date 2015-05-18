@@ -14,11 +14,12 @@ namespace Ast
         public Variable() : this(null, null) { }
         public Variable(string identifier, Scope scope)
         {
-            this.Identifier = identifier;
-            this.Scope = scope;
+            Identifier = identifier;
+            Scope = scope;
+            SideEffects = scope.SideEffects;
 
-            this.Exponent = new Integer(1);
-            this.Prefix = new Integer(1);
+            Exponent = new Integer(1);
+            Prefix = new Integer(1);
         }
 
         public override string ToString()
@@ -73,7 +74,7 @@ namespace Ast
             return Value;
         }
 
-        private bool Definition = false;
+        protected bool Definition = false;
         private Expression _value = null;
         public override Expression Value
         {

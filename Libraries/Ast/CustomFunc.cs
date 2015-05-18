@@ -18,12 +18,13 @@ namespace Ast
             return Value.Evaluate();
         }
 
+
         private Expression _value;
         public override Expression Value
         {
             get
             {
-                if (_value != null)
+                if (Definition)
                     return _value;
 
                 var res = Scope.GetVar(Identifier);
@@ -84,6 +85,7 @@ namespace Ast
 
             set
             {
+                Definition = true;
                 _value = value;
             }
         }
