@@ -1,4 +1,5 @@
-﻿using Gtk;
+﻿using System;
+using Gtk;
 using Graph;
 using Ast;
 
@@ -8,24 +9,28 @@ public class MainWindow : Window
 
     static void Main(string[] args)
     {
-        Application.Init ();
-        new MainWindow ();
+        Application.Init();
+        new MainWindow();
         Application.Run();
     }
 
-    public MainWindow() : base("GraphViewTest")
+    public MainWindow()
+        : base("GraphViewTest")
     {
-        DeleteEvent += delegate {
-            Application.Quit ();
+        DeleteEvent += delegate
+        {
+            Application.Quit();
         };
 
         // Setup ui
-//        Evaluator eval = new Evaluator();
-//        eval.Evaluation("x:=range(-5,5,0.1)");
-//
-//        var plot = eval.Evaluation("plot(x*2,x)");
-//        graphView = new GraphView((plot as PlotData));
-        Add (graphView);
-        ShowAll ();
+        Evaluator eval = new Evaluator();
+        //eval.Evaluation("x:=range(-5,5,0.1)");
+        eval.Parse("x:=range(-5,5,0.1)");
+
+
+        var plot = eval.Evaluation("plot(x*2,x)");
+        graphView = new GraphView((plot as PlotData));
+        Add(graphView);
+        ShowAll();
     }
 }
