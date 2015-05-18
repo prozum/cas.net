@@ -12,14 +12,14 @@ namespace TaskGenLib
             private set;
         }
 
-        public Expression Solution {
+        public string Solution {
             get;
             private set;
         }
 
         #endregion
 
-        public Task (string taskDescription, Expression solution)
+        public Task (string taskDescription, string solution)
         {
             TaskDescription = taskDescription;
             Solution = solution;

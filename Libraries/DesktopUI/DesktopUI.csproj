@@ -54,6 +54,9 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GeometMenuItem.cs" />
+    <Compile Include="GeometTable.cs" />
+    <Compile Include="GeometWindow.cs" />
     <Compile Include="TaskGenAlgMenuItem.cs" />
     <Compile Include="TaskGenMenuItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -105,6 +108,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Geomet\Geomet.csproj">
+      <Project>{3b778ca7-302f-4838-b6da-9193929403d7}</Project>
+      <Name>Geomet</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ImEx\ImEx.csproj">
       <Project>{5150E825-D811-4D68-8C0E-86A1F8573561}</Project>
       <Name>ImEx</Name>

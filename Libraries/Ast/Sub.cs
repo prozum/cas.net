@@ -43,18 +43,7 @@ namespace Ast
 
         public BinaryOperator Transform()
         {
-            if (Left is Add)
-            {
-                return new Add((Left as Add).Left, new Sub((Left as Add).Right, Right));
-            }
-            else if (Right is Add)
-            {
-                return new Add(new Sub(Left, (Right as Add).Left), (Right as Add).Right);
-            }
-            else
-            {
-                return this;
-            }
+            return this;
         }
 
         internal override Expression CurrectOperator()

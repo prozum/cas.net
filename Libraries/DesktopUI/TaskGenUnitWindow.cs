@@ -54,7 +54,7 @@ namespace DesktopUI
                 {
                     TaskGenLib.Task t = TaskGenLib.TaskGen.MakeUnitTask((int)spinbuttonMinimum.Value, (int)spinbuttonMaximum.Value);
                     textviews.InsertTaskGenTextView(t.TaskDescription);
-                    //textviews.InsertResult(,);
+                    textviews.InsertResult("",t.Solution);
                 }
 
 

@@ -28,19 +28,26 @@ namespace DesktopUI
             // Resizes all widgets when the window is resized
             window.ResizeChecked += delegate
             {
+                const int buttonbarwidth = 200;
+
                 foreach (Widget widget in castextviews)
                 {
                     if (widget is MovableCasCalcView)
                     {
-                        (widget as MovableCasCalcView).calcview.input.WidthRequest = window.Window.Width - 60;
+                        (widget as MovableCasCalcView).calcview.input.WidthRequest = window.Window.Width - buttonbarwidth;
                     }
                     else if (widget is MovableDrawCanvas)
                     {
-                        (widget as MovableDrawCanvas).canvas.WidthRequest = window.Window.Width - 60;
+                        (widget as MovableDrawCanvas).canvas.WidthRequest = window.Window.Width - buttonbarwidth;
+                    }
+                    else if (widget is MovableCasResult)
+                    {
+                        (widget as MovableCasResult).casresult.entryFasitGet.WidthRequest = (window.Window.Width - buttonbarwidth - (widget as MovableCasResult).casresult.labelFacitGet.AllocatedWidth);
+                        (widget as MovableCasResult).casresult.entryFasitSet.WidthRequest = (window.Window.Width - buttonbarwidth - (widget as MovableCasResult).casresult.labelFacitSet.AllocatedWidth);
                     }
                     else if (widget is MovableCasTextView) // <- This shall always be last as all other widgets inherit from it, but not all use it.
                     {
-                        (widget as MovableCasTextView).textview.WidthRequest = window.Window.Width - 60;
+                        (widget as MovableCasTextView).textview.WidthRequest = window.Window.Width - buttonbarwidth;
                     }
                 }
             };
