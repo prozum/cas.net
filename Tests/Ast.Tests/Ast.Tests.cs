@@ -349,11 +349,11 @@ namespace Ast.Tests
             }
             else if (res is Rational)
             {
-                Assert.AreEqual(expected, (res as Rational).Value);
+                Assert.AreEqual(expected, (res as Rational).@decimal);
             }
             else if (res is Irrational)
             {
-                Assert.AreEqual(expected, (res as Irrational).Value);
+                Assert.AreEqual(expected, (res as Irrational).@decimal);
             }
             else if (res is Boolean)
             {

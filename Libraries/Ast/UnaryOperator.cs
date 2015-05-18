@@ -36,6 +36,11 @@ namespace Ast
         {
             return Identifier + Child.ToString();
         }
+
+        public override bool CompareTo(Expression other)
+        {
+            return Evaluate().CompareTo(other);
+        }
     }
 }
 

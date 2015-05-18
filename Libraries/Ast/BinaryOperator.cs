@@ -11,14 +11,7 @@ namespace Ast
         Expression Left { get; set; }
         Expression Right { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
         BinaryOperator Swap();
-
-        /// <summary>
-        /// 
-        /// </summary>
         BinaryOperator Transform();
     }
 

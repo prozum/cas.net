@@ -9,13 +9,6 @@ namespace Ast
     /// </summary>
     public interface IInvertable
     {
-        /// <summary>
-        /// Does the inverted Expression on the parameter.
-        /// </summary>
-        /// <remarks> 
-        /// Example 1: "x + y" would be inverted to "other - y".
-        /// Example 2: "Sin(x) would be inverted to "ASin(other)".
-        /// </remarks> 
         Expression InvertOn(Expression other);
     }
 
@@ -39,7 +32,7 @@ namespace Ast
     }
 
     /// <summary>
-    /// 
+    /// Expression is a expression which must have a return value.
     /// </summary>
     public abstract class Expression
     {
@@ -54,7 +47,7 @@ namespace Ast
         }
 
         /// <summary>
-        /// 
+        /// Returns the value of the expression.
         /// </summary>
         public virtual Expression Evaluate() { return Reduce().Evaluate(this); }
         internal virtual Expression Evaluate(Expression caller)
@@ -68,8 +61,9 @@ namespace Ast
         }
 
         /// <summary>
-        /// 
+        /// Returns the expanded version of the expression.
         /// </summary>
+        /// </>
         public virtual Expression Expand()
         {
             return this;

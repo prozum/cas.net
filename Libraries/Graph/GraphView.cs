@@ -21,7 +21,7 @@ namespace Graph
         public GraphView (PlotData plotData)
         {
             sym = plotData.sym;
-            xCords = (List)sym.GetValue().Evaluate();
+            //xCords = (List)sym.GetValue().Evaluate();
             exp = plotData.exp;
             SetSizeRequest(600, 600);
         }
@@ -39,7 +39,10 @@ namespace Graph
         {
             double hi, wi;
 
-            for (int i = 0; i <= scale; i++) {
+            for (int i = 0; i 
+                
+                
+                //= scale; i++) {
                 ct.SetSourceRGB (0.7, 0.7, 0.7);
                 hi = h - h * i / scale; 
                 ct.MoveTo (0, hi);

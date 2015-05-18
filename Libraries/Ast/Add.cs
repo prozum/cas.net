@@ -165,7 +165,8 @@ namespace Ast
             return new Add(Left.Clone(), Right.Clone());
         }
 
-        /// <summary>
+        /// 
+        /// summary>
         /// 
         /// </summary>
         public Expression InvertOn(Expression other)
