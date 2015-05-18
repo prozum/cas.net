@@ -7,11 +7,13 @@ using System.IO;
 
 namespace DesktopUI
 {
+    // Toolbutton for saving the current workspace to a file
     public class SaveToolButton : ToolButton
     {
         static Image image = new Image();
         TextViewList textviews;
 
+        // Constructor for savetoolbutton
         public SaveToolButton(TextViewList textviews)
             : base(image, "Save")
         {
@@ -27,6 +29,7 @@ namespace DesktopUI
             };
         }
 
+        // Run when the button is pressed. Serializes the file, and saves it to the selected file
         public void SaveFile()
         {
             OperatingSystem os = Environment.OSVersion;
@@ -126,6 +129,7 @@ namespace DesktopUI
             }
         }
 
+        // Sets the icon for the file
         void SetIcon()
         {
             OperatingSystem os = Environment.OSVersion;

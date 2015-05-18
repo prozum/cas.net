@@ -3,6 +3,7 @@ using Gtk;
 
 namespace DesktopUI
 {
+    // Menu item for teachergetassignmentlist, that opens the window once clicked.
     public class TeacherGetAssignmentListMenuItem : MenuItem
     {
         User user;

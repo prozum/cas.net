@@ -6,12 +6,14 @@ using Gdk;
 
 namespace DesktopUI
 {
+    // Creates an underline for selected text in a textview
     public class UnderlineToolButton : ToolButton
     {
         TextViewList textviews;
 
         static Image image = new Image();
 
+        // Constructor for underlinetoolbutton
         public UnderlineToolButton(ref TextViewList textviews)
             : base(image, "Underline")
         {
@@ -27,6 +29,7 @@ namespace DesktopUI
             };
         }
 
+        // Handles the text when the button is clicked
         void OnUnderlineClicked()
         {
             foreach (var item in textviews)
@@ -42,6 +45,7 @@ namespace DesktopUI
 
                     Console.WriteLine(s);
 
+                    // If the selected text contains underlines, it removes them, otherwise it sets all text as underlined
                     if (s.Contains("<attr name=\"underline\" type=\"PangoUnderline\" value=\"PANGO_UNDERLINE_SINGLE\" />"))
                     {
                         buffer.RemoveTag((item as MovableCasTextView).textview.underlineTag, startIter, endIter);
@@ -54,6 +58,7 @@ namespace DesktopUI
             }
         }
 
+        // Sets the icon for the button
         void SetIcon()
         {
             OperatingSystem os = Environment.OSVersion;
