@@ -6,7 +6,7 @@ namespace TaskGenLib
     public interface ITaskItem
     {
         string TaskDescription { get; }
-        Expression Solution { get; }
+        string Solution { get; }
     }
 }
 

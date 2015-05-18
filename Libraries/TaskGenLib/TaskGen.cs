@@ -157,7 +157,7 @@ namespace TaskGenLib
 
             answer = val.ToString ();
 
-            var task = new Task (taskS, GetAnswer (answer));
+            var task = new Task (taskS, taskS);
 
             return task;
         }
@@ -213,7 +213,7 @@ namespace TaskGenLib
 
             }
 
-            var task = new Task (taskS, GetAnswer (taskS));
+            var task = new Task (taskS, taskS);
 
             return task;
         }
