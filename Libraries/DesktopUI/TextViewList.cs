@@ -130,7 +130,7 @@ namespace DesktopUI
                 MovCasCalcView.ShowAll();
             };
 
-            MovCasCalcView.Attach(AddLockCheckButton(MovCasCalcView), 1, 100, 1, 1);
+            //MovCasCalcView.Attach(AddLockCheckButton(MovCasCalcView), 1, 100, 1, 1);
             MovCasCalcView.Attach(AddCommandButtons(MovCasCalcView), 100, 1, 1, 1);
 
             if (user.privilege <= 0 && locked == true)
@@ -150,7 +150,7 @@ namespace DesktopUI
         {
             MovableDrawCanvas movableDrawCanvas = new MovableDrawCanvas();
 
-            movableDrawCanvas.Attach(AddLockCheckButton(movableDrawCanvas), 1, 100, 1, 1);
+            //movableDrawCanvas.Attach(AddLockCheckButton(movableDrawCanvas), 1, 100, 1, 1);
             movableDrawCanvas.Attach(AddCommandButtons(movableDrawCanvas), 100, 1, 1, 1);
 
             if (pos == -1)
