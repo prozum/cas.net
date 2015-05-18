@@ -13,80 +13,65 @@ namespace Ast
         public Assign() { }
         public Assign(Expression left, Expression right) : base(left, right) { }
 
-        protected override Expression Evaluate(Expression caller)
+        public override Expression Evaluate()
         {
-            Variable sym;
+            Variable @var;
             Scope scope;
 
             Expression res;
 
             if (Left is Error)
                 return Left;
-
+                
             if (Left is Dot)
             {
-                var dot = Left as Dot;
-
-                if (dot.Right is Variable)
-                    sym = dot.Right as Variable;
-                else
-                    return new Error(dot.Right, " is not a symbol");
-
-                res = dot.Left.GetValue();
+                res = Left.Value;
 
                 if (res is Error)
                     return res;
 
-                if (res is Scope)
-                    scope = res as Scope;
+                if (res is Variable)
+                    @var = res as Variable;
                 else
-                    return new Error(res, " is not a scope");
+                    return new Error(res, " is not a variable");
             }
             else if (Left is Variable)
-            {
-                sym = (Variable)Left;
-                scope = Left.Scope;
-            }
+                @var = (Variable)Left;
             else
-                return new Error(Left, " is not a symbol");
+                return new Error(Left, " is not a variable");
 
+            scope = @var.Scope;
 
-            if (sym is Symbol)
+            if (@var is CustomFunc)
             {
-                if (Right is Scope)
+                var customFunc = (CustomFunc)Left;
+
+                foreach (var arg in customFunc.Arguments)
                 {
-                    Right.Evaluate();
-                    res = Right;
-                }
-                else
-                    res = Right.Evaluate();
-
-                if (res is Error)
-                    return res;
-
-                scope.SetVar(sym.Identifier, res);
-
-                return res;
-            }
-
-            if (sym is SymbolFunc)
-            {
-                var symFunc = (SymbolFunc)Left;
-
-                foreach (var arg in symFunc.Arguments)
-                {
-                    if (!(arg is Symbol))
+                    if (!(arg is Variable))
                         return new Error(this, "All arguments must be symbols");
                 }
 
-                var defFunc = new SymbolFunc(symFunc.Identifier, symFunc.Arguments, symFunc.Scope);
+                Right.Scope = customFunc;
+                customFunc.Value = Right;
+               
+                scope.SetVar(customFunc);
 
-                defFunc.expr = Right;
-
-                symFunc.Scope.SetVar(symFunc.Identifier, defFunc);
-
-                return this;
+                return @var;
             }
+
+            if (@var is Variable)
+            {
+                @var.Value = Right.Evaluate();
+
+                if (@var.Value is Error)
+                    return @var.Value;
+
+                scope.SetVar(@var.Identifier, @var.Value);
+
+                return @var.Value;
+            }
+
 
             if (Left is SysFunc)
             {

@@ -78,38 +78,30 @@ public class MainWindow : Window
 
         foreach (var def in eval.Locals)
         {
-            if (def.Value is SymbolFunc)
+            if (def.Value is CustomFunc)
             {
-                defStore.AppendValues(def.Value.ToString(), (def.Value as SymbolFunc).expr.ToString());
-            }
-            else if (def.Value is Scope)
-            {
-                var iter = defStore.AppendValues(def.Key, def.Value.ToString());
-                UpdateScope(def.Value as Scope, iter);
+                defStore.AppendValues(def.Value.ToString(), def.Value.Value.ToString());
             }
             else
             {
-                defStore.AppendValues(def.Key, def.Value.ToString());
+                var iter = defStore.AppendValues(def.Key, def.Value.Value.ToString());
+                UpdateScope(def.Value, iter);
             }
         }
     }
 
-    public void UpdateScope(Scope scope, TreeIter iter)
+    public void UpdateScope(Variable scope, TreeIter iter)
     {
         foreach (var def in scope.Locals)
         {
-            if (def.Value is SymbolFunc)
+            if (def.Value is CustomFunc)
             {
-                defStore.AppendValues(iter, def.Value.ToString(), (def.Value as SymbolFunc).expr.ToString());
-            }
-            else if (def.Value is Scope)
-            {
-                var subIter = defStore.AppendValues(iter, def.Key, def.Value.ToString());
-                UpdateScope(def.Value as Scope, subIter);
+                defStore.AppendValues(iter, def.Value.ToString(), def.Value.Value.ToString());
             }
             else
             {
-                defStore.AppendValues(iter, def.Key, def.Value.ToString());
+                var subIter = defStore.AppendValues(iter, def.Key, def.Value.Value.ToString());
+                UpdateScope(def.Value, subIter);
             }
         }
     }

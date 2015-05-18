@@ -15,7 +15,7 @@ namespace Ast
                 };
         }
 
-        protected override Expression Evaluate(Expression caller)
+        internal override Expression Evaluate(Expression caller)
         {
             if (!IsArgumentsValid())
                 return new ArgumentError(this);
@@ -26,7 +26,7 @@ namespace Ast
 
             if (res is Real)
             {
-                return ReturnValue(new Irrational(Math.Cos((double) ((deg ? Constant.DegToRad.Value  : 1) * (res as Real).Value) ))).Evaluate();
+                return ReturnValue(new Irrational(Math.Cos((double) ((deg ? Constant.DegToRad.@decimal  : 1) * (res as Real)) ))).Evaluate();
             }
 
             return new Error(this, "Could not take Cos of: " + Arguments[0]);

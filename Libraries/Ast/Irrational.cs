@@ -4,19 +4,19 @@ namespace Ast
 {
     public class Irrational : Real, INegative 
     {
-        public decimal @decimal;
+        public decimal _decimal;
 
         public Irrational(double value) : this ((decimal)value) {}
         public Irrational(decimal value)
         {
-            this.@decimal = value;
+            _decimal = value;
         }
 
-        public override decimal Value
+        public override decimal @decimal
         {
             get
             {
-                return @decimal;
+                return _decimal;
             }
         }
 
@@ -27,7 +27,7 @@ namespace Ast
 
         public Expression ToNegative()
         {
-            return new Irrational(@decimal *= -1);
+            return new Irrational(-@decimal);
         }
 
         public override Expression Minus()

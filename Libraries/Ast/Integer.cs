@@ -11,7 +11,7 @@ namespace Ast
             this.@int = value;
         }
 
-        public override decimal Value
+        public override decimal @decimal
         {
             get
             {

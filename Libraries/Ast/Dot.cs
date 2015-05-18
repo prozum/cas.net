@@ -13,30 +13,44 @@ namespace Ast
         public Dot() { }
         public Dot(Expression left, Expression right) : base(left, right) { }
 
+        public override Expression Value
+        {
+            get
+            {
+                Variable @var;
+                Scope scope;
+
+                var left = Left.Value;
+
+                if (left == null &&
+                    Left is Variable)
+                {
+                    left = Scope.SetVar((Left as Variable).Identifier, new Null());
+                }
+
+                if (left is Variable)
+                    scope = (Variable)Scope.GetVar((left as Variable).Identifier);
+                else if (left is Scope)
+                    scope = (Scope)Left;
+                else if (left is Error)
+                    return left;
+                else
+                    return new Error(this, "left operator must be a Scope");
+ 
+                if (Right is Variable)
+                    @var = Right as Variable;
+                else
+                    return new Error(this, "right operator must be Symbol/SymbolFunc");
+
+                return scope.GetVar(@var);
+            }
+        }
+
         public override Expression Evaluate()
         {
-            return GetValue().Evaluate();
+            return Value;
         }
-
-        public override Expression GetValue()
-        {
-            Variable sym;
-            Scope scope;
-
-            if (Right is Symbol)
-                sym = Right as Variable;
-            else
-                return new Error(this, "right operator must be Symbol/SymbolFunc");
-
-            if (Left.GetValue() is Scope)
-                scope = (Scope)Left.GetValue();
-            else if (Left.GetValue() is Error)
-                return Left.GetValue();
-            else
-                return new Error(this, "left operator must be a Scope");
-
-            return scope.GetVar(sym);
-        }
+           
     }
 }
 

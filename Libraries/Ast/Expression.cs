@@ -44,10 +44,14 @@ namespace Ast
     public abstract class Expression
     {
         public Expression Parent;
-        public Scope Scope;
+        public virtual Scope Scope { get; set; }
         public Pos Position;
 
-        public bool stepped = false;
+        public virtual Expression Value
+        {
+            get { return this; }
+            set { throw new Exception("Cannot set value on " + this.GetType().Name); }
+        }
 
         /// <summary>
         /// 
@@ -57,14 +61,9 @@ namespace Ast
             return Reduce().Evaluate(this); 
         }
 
-        protected virtual Expression Evaluate(Expression caller)
+        internal virtual Expression Evaluate(Expression caller)
         {
             return new Error(this, "This type cannot evaluate");
-        }
-
-        public virtual Expression GetValue()
-        {
-            return this;
         }
 
         /// <summary>

@@ -10,7 +10,7 @@ namespace Ast
         public Mul() { }
         public Mul(Expression left, Expression right) : base(left, right) { }
 
-        protected override Expression Evaluate(Expression caller)
+        internal override Expression Evaluate(Expression caller)
         {
             return Left * Right;
         }

@@ -15,7 +15,7 @@ namespace Ast
             this.items = items;
         }
 
-        protected override Expression Evaluate(Expression caller)
+        internal override Expression Evaluate(Expression caller)
         {
             var res = new List();
 

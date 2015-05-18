@@ -37,7 +37,7 @@ namespace Ast
     public class PlotData : DrawData
     {
         public Expression exp;
-        public Symbol sym;
+        public Variable sym;
 
         public PlotData(PlotFunc plot)
         {

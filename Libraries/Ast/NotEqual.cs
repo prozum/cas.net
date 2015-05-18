@@ -10,7 +10,7 @@ namespace Ast
         public NotEqual() { }
         public NotEqual(Expression left, Expression right) : base(left, right) { }
 
-        protected override Expression Evaluate(Expression caller)
+        internal override Expression Evaluate(Expression caller)
         {
             return new Boolean(!Left.CompareTo(Right));
         }

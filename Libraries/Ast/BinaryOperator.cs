@@ -30,6 +30,21 @@ namespace Ast
         public abstract string Identifier { get; }
         public abstract int Priority { get; }
 
+        private Scope _scope;
+        public override Scope Scope
+        {
+            get { return _scope; }
+            set
+            {
+                _scope = value;
+                if (Left != null && Right != null)
+                {
+                    Left.Scope = value;
+                    Right.Scope = value;
+                }
+            }
+        }
+
         private Expression _left;
         public Expression Left
         {
@@ -69,7 +84,7 @@ namespace Ast
             Right = right;
         }
 
-        protected override Expression Evaluate(Expression caller)
+        internal override Expression Evaluate(Expression caller)
         {
             return new Error(this, "Cannot evaluate operator expression!");
         }

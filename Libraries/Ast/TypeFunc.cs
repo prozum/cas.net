@@ -21,7 +21,7 @@ namespace Ast
             if (res is Error)
                 return res;
             else
-                return new Text(Arguments[0].Evaluate().GetType().Name);
+                return new Text(res.GetType().Name);
         }
     }
 }

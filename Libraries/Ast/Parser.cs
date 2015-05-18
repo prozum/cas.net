@@ -300,6 +300,9 @@ namespace Ast
 
             contextStack.Pop();
 
+            if (list.items.Count == 1 && list.items[0] is Null)
+                list.items.Clear();
+
             return list;
         }
 
@@ -395,7 +398,7 @@ namespace Ast
                         if (Peek(TokenKind.SQUARE_START))
                             SetupExpr(ParseFunction(identToken.Value), identToken);
                         else
-                            SetupExpr(new Symbol(identToken.Value, curScope));
+                            SetupExpr(new Variable(identToken.Value, curScope));
                         break;
 
                     case TokenKind.TRUE:
@@ -761,7 +764,7 @@ namespace Ast
                 case "plot":
                     return new PlotFunc(args, curScope);
                 default:
-                    return new SymbolFunc(sym.ToLower(), args, curScope);
+                    return new CustomFunc(sym.ToLower(), args, curScope);
             }
         }
 

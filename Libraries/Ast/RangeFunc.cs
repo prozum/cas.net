@@ -16,7 +16,7 @@ namespace Ast
                 };
         }
 
-        protected override Expression Evaluate(Expression caller)
+        internal override Expression Evaluate(Expression caller)
         {
             if (!IsArgumentsValid())
                 return new ArgumentError(this);
@@ -25,24 +25,18 @@ namespace Ast
             Decimal end;
             Decimal step;
 
-            if (Arguments[0] is Integer)
-                start = (Arguments[0] as Integer).@int;
-            else if (Arguments[0] is Irrational)
-                start = (Arguments[0] as Irrational).@decimal;
+            if (Arguments[0] is Real)
+                start = Arguments[0] as Real;
             else
                 return new Error(this, "argument 1 cannot be: " + Arguments[0].GetType().Name);
 
-            if (Arguments[1] is Integer)
-                end = (Arguments[1] as Integer).@int;
-            else if (Arguments[1] is Irrational)
-                end = (Arguments[1] as Irrational).@decimal;
+            if (Arguments[1] is Real)
+                end = Arguments[1] as Real;
             else
                 return new Error(this, "argument 2 cannot be: " + Arguments[1].GetType().Name);
 
-            if (Arguments[2] is Integer)
-                step = (Arguments[2] as Integer).@int;
-            else if (Arguments[2] is Irrational)
-                step = (Arguments[2] as Irrational).@decimal;
+            if (Arguments[2] is Real)
+                step = Arguments[2] as Real;
             else
                 return new Error(this, "argument 3 cannot be: " + Arguments[2].GetType().Name);
 

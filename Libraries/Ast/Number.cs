@@ -8,7 +8,8 @@ namespace Ast
         {
             return this;
         }
-        protected override Expression Evaluate(Expression caller)
+
+        internal override Expression Evaluate(Expression caller)
         {
             return this;
         }

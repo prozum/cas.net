@@ -10,7 +10,7 @@ namespace Ast
         public And() { }
         public And(Expression left, Expression right) : base(left, right) { }
 
-        protected override Expression Evaluate(Expression caller)
+        internal override Expression Evaluate(Expression caller)
         {
             return Left & Right;
         }

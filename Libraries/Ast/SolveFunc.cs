@@ -6,7 +6,7 @@ namespace Ast
     public class SolveFunc : SysFunc
     {
         Equal equal;
-        Symbol sym;
+        Variable sym;
 
         public SolveFunc(List<Expression> args, Scope scope)
             : base("solve", args, scope)
@@ -18,7 +18,7 @@ namespace Ast
                 };
         }
 
-        protected override Expression Evaluate(Expression caller)
+        internal override Expression Evaluate(Expression caller)
         {
             Equal solved;
 
@@ -26,7 +26,7 @@ namespace Ast
                 return new ArgumentError(this);
 
             equal = (Equal)Arguments[0];
-            sym = (Symbol)Arguments[1];
+            sym = (Variable)Arguments[1];
 
             if (equal.Right.ContainsVariable(sym))
             {
@@ -40,7 +40,7 @@ namespace Ast
             System.Diagnostics.Debug.WriteLine(equal.ToString());
             System.Diagnostics.Debug.WriteLine(solved);
 
-            while (!((solved.Left is Symbol) && solved.Left.CompareTo(sym)))
+            while (!((solved.Left is Variable) && solved.Left.CompareTo(sym)))
             {
                 if (solved.Left is IInvertable)
                 {
@@ -63,9 +63,9 @@ namespace Ast
                         return new Error(this, " could not solve " + sym.ToString() + ": " + solved.ToString());
                     }
                 }
-                else if (solved.Left is Symbol)
+                else if (solved.Left is Variable)
                 {
-                    var newLeft = (solved.Left as Symbol).SeberateNumbers();
+                    var newLeft = (solved.Left as Variable).SeberateNumbers();
 
                     solved = new Equal(newLeft, solved.Right);
                 }

@@ -10,14 +10,9 @@ namespace Ast.Tests
     [TestFixture]
     public class AstTests
     {
-        Evaluator eval;
-        Parser parser;
-
         public AstTests()
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
-            eval = new Evaluator();
-            parser = new Parser();
         }
 
         #region CompareTo Test Cases
@@ -42,7 +37,7 @@ namespace Ast.Tests
         {
             var res = Evaluator.Eval("ret " + inputString);
             Assert.IsTrue(res is Boolean);
-            Assert.IsTrue((res as Boolean).Value == 1);
+            Assert.IsTrue((res as Boolean).@bool == true);
         }
 
         #region Reduce Test Cases
@@ -358,7 +353,7 @@ namespace Ast.Tests
             }
             else if (res is Irrational)
             {
-                Assert.AreEqual(expected, (res as Irrational).@decimal);
+                Assert.AreEqual(expected, (res as Irrational).Value);
             }
             else if (res is Boolean)
             {

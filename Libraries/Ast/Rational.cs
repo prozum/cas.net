@@ -13,7 +13,7 @@ namespace Ast
             denominator = denom;
         }
 
-        public override decimal Value
+        public override decimal @decimal
         {
             get
             {

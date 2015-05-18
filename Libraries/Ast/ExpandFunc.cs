@@ -14,7 +14,7 @@ namespace Ast
                 };
         }
 
-        protected override Expression Evaluate(Expression caller)
+        internal override Expression Evaluate(Expression caller)
         {
             return Arguments[0].Expand();
         }

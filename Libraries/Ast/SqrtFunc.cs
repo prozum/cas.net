@@ -15,7 +15,7 @@ namespace Ast
                 };
         }
 
-        protected override Expression Evaluate(Expression caller)
+        internal override Expression Evaluate(Expression caller)
         {
             if (!IsArgumentsValid())
                 return new ArgumentError(this);
@@ -24,7 +24,7 @@ namespace Ast
 
             if (res is Real)
             {
-                return ReturnValue(new Irrational(Math.Sqrt((double)(res as Real).Value))).Evaluate();
+                return ReturnValue(new Irrational(Math.Sqrt((double)(res as Real)))).Evaluate();
             }
 
             return new Error(this, "Could not take Sqrt of: " + Arguments[0]);

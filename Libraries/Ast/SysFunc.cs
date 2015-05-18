@@ -65,7 +65,7 @@ namespace Ast
                             return false;
                         break;
                     case ArgKind.Symbol:
-                        if (!(Arguments[i] is Symbol))
+                        if (!(Arguments[i] is Variable))
                             return false;
                         break;
                     case ArgKind.Function:

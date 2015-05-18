@@ -7,7 +7,7 @@ namespace Ast
     {
         public Negation() : base("!") { }
 
-        protected override Expression Evaluate(Expression caller)
+        internal override Expression Evaluate(Expression caller)
         {
             return Child.Evaluate().Negation();
         }

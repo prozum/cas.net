@@ -15,7 +15,7 @@ namespace Graph
         List xCords;
         List yCords;
 
-        Symbol sym;
+        Variable sym;
         Expression exp;
 
         public GraphView (PlotData plotData)

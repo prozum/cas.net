@@ -5,13 +5,13 @@ namespace Ast
 {
     public class Scope : Expression
     {
-        public Dictionary<string,Expression> Locals = new Dictionary<string,Expression>();
+        public Dictionary<string,Variable> Locals = new Dictionary<string,Variable>();
         public List<Statement> Statements = new List<Statement>();
         public List<EvalData> SideEffects = new List<EvalData>();
 
         public List<Error> Errors;
 
-        const int MaxStatementPrint = 5;
+        readonly int MaxStatementPrint = 5;
 
         public Scope()
         {
@@ -26,7 +26,7 @@ namespace Ast
             Errors = Scope.Errors;
         }
 
-        protected override Expression Evaluate(Expression caller)
+        internal override Expression Evaluate(Expression caller)
         {
             return Evaluate();
         }
@@ -80,93 +80,105 @@ namespace Ast
             return false;
         }
 
-        public void SetVar(string @var, Expression expr)
+        public Variable SetVar(string identifier, Expression expr)
         {
-            if (Locals.ContainsKey(@var))
-                Locals.Remove(@var);
+            var @var = new Variable(identifier, this);
+            @var.Value = expr;
 
-            Locals.Add(@var, expr);
+            return SetVar(@var);
         }
 
+        public Variable SetVar(Variable @var)
+        {
+            if (Locals.ContainsKey(@var.Identifier))
+                Locals.Remove(@var.Identifier);
+
+            Locals.Add(@var.Identifier, @var);
+
+            return @var;
+        }
+
+
+        // TODO Fix position
         public Expression GetVar(Variable @var) { return GetVar(@var.Identifier); }
-        public Expression GetVar(string @var)
+        public Expression GetVar(string identifier)
         {
-            Expression expr;
+            Variable @var;
 
-            if (Locals.TryGetValue(@var, out expr))
-                return expr;
+            if (Locals.TryGetValue(identifier, out @var))
+                return @var;
 
             if (Scope != null)
-                return Scope.GetVar(@var);
+                return Scope.GetVar(identifier);
 
-            return new Error(this, @var + " has no definition");
+            return new Error(identifier + " is not defined");
         }
 
-        public decimal GetReal(string @var)
+        public decimal GetReal(string identifier)
         {
-            Expression expr;
+            Variable @var;
 
-            if (Locals.TryGetValue(@var, out expr))
+            if (Locals.TryGetValue(identifier, out @var))
             {
-                if (expr is Real)
-                    return (expr as Real).Value;
+                if (@var.Value is Real)
+                    return @var.Value as Real;
             }
 
             if (Scope != null)
-                return Scope.GetReal(@var);
+                return Scope.GetReal(identifier);
 
             return 0;
         }
 
-        public Int64 GetInt(string @var)
+//        public Int64 GetInt(string @var)
+//        {
+//            Expression expr;
+//
+//            if (Locals.TryGetValue(@var, out expr))
+//            {
+//                if (expr is Integer)
+//                    return (expr as Integer).@int;
+//            }
+//
+//            if (Scope != null)
+//                return Scope.GetInt(@var);
+//
+//            return 0;
+//        }
+//
+        public bool GetBool(string identifier)
         {
-            Expression expr;
+            Variable @var;
 
-            if (Locals.TryGetValue(@var, out expr))
+            if (Locals.TryGetValue(identifier, out @var))
             {
-                if (expr is Integer)
-                    return (expr as Integer).@int;
+                if (@var.Value is Boolean)
+                    return (@var.Value as Boolean).@bool;
             }
 
             if (Scope != null)
-                return Scope.GetInt(@var);
-
-            return 0;
-        }
-
-        public bool GetBool(string @var)
-        {
-            Expression expr;
-
-            if (Locals.TryGetValue(@var, out expr))
-            {
-                if (expr is Boolean)
-                    return (expr as Boolean).@bool;
-            }
-
-            if (Scope != null)
-                return Scope.GetBool(@var);
+                return Scope.GetBool(identifier);
 
             return false;
         }
-
-        public string GetText(string @var)
-        {
-            Expression expr;
-
-            if (Locals.TryGetValue(@var, out expr))
-            {
-                if (expr is Text)
-                    return (expr as Text).Value;
-            }
-
-            if (Scope != null)
-            {
-                return Scope.GetText(@var);
-            }
-
-            return "";
-        }
+//
+//        public string GetText(string @var)
+//        {
+//            Expression expr;
+//
+//            if (Locals.TryGetValue(@var, out expr))
+//            {
+//                if (expr is Text)
+//                    return (expr as Text).Value;
+//            }
+//
+//            if (Scope != null)
+//            {
+//                return Scope.GetText(@var);
+//            }
+//
+//            return "";
+//        }
             
         public override string ToString()
         {

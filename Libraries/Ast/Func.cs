@@ -31,9 +31,22 @@ namespace Ast
                 return Identifier == (other as Func).Identifier && Prefix.CompareTo((other as Func).Prefix) && Exponent.CompareTo((other as Func).Exponent) && CompareArgsTo(other as Func);
             }
 
-            if (this is SymbolFunc)
+            if (this is CustomFunc)
             {
-                return (this as SymbolFunc).GetValue().CompareTo(other);
+                return this.Value.CompareTo(other);
+            }
+
+            return false;
+        }
+
+        public override bool ContainsVariable(Variable other)
+        {
+            foreach (var item in Arguments)
+            {
+                if (item.ContainsVariable(other))
+                {
+                    return true;
+                }
             }
 
             return false;

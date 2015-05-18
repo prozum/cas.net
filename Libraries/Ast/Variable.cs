@@ -6,19 +6,44 @@ using System.Threading.Tasks;
 
 namespace Ast
 {
-    public abstract class Variable : Expression, INegative
+    public class Variable : Scope, INegative
     {
         public string Identifier;
         public Real Prefix, Exponent;
 
-        protected Variable(string identifier) : this(identifier, null) { }
-        protected Variable(string identifier, Scope scope)
+        public Variable() : this(null, null) { }
+        public Variable(string identifier, Scope scope)
         {
             this.Identifier = identifier;
             this.Scope = scope;
 
             this.Exponent = new Integer(1);
             this.Prefix = new Integer(1);
+        }
+
+        public override string ToString()
+        {
+            string res;
+
+            if (Prefix.CompareTo(Constant.MinusOne))
+            {
+                res = "-" + Identifier.ToString();
+            }
+            else if (!Prefix.CompareTo(Constant.One))
+            {
+                res = Prefix.ToString() + Identifier.ToString();
+            }
+            else
+            {
+                res = Identifier.ToString();
+            }
+
+            if (!Exponent.CompareTo(Constant.One))
+            {
+                res += "^" + Exponent.ToString();
+            }
+
+            return res;
         }
 
         protected virtual T MakeClone<T>() where T : Variable, new()
@@ -33,28 +58,80 @@ namespace Ast
             return res;
         }
 
+        public override Expression Clone()
+        {
+            return MakeClone<Variable>();
+        }
+
+        public override Expression Evaluate() 
+        {
+            return Reduce().Evaluate(this); 
+        }
+
+        internal override Expression Evaluate(Expression caller)
+        {
+            return Value.Evaluate();
+        }
+
+        private Expression _value = null;
+        public override Expression Value
+        {
+            get
+            {
+                if (_value != null)
+                    return _value;
+
+                _value = Scope.GetVar(Identifier);
+
+                if (_value is Real)
+                    _value = Prefix * _value ^ Exponent;
+
+                return _value;
+            }
+
+            set
+            {
+                _value = value;
+            }
+        }
+
+        public override bool CompareTo(Expression other)
+        {
+            var otherSimplified = other.Reduce();
+
+            if (otherSimplified is Variable)
+            {
+                if (Identifier == (otherSimplified as Variable).Identifier && Prefix.CompareTo((otherSimplified as Variable).Prefix) && Exponent.CompareTo((otherSimplified as Variable).Exponent))
+                {
+                    return true;
+                }
+
+                return Value.CompareTo(otherSimplified.Value);
+            }
+
+            return otherSimplified.CompareTo(this.Value);
+        }
+
+        internal override Expression Reduce(Expression caller)
+        {
+            if (Prefix.CompareTo(Constant.Zero))
+            {
+                return new Integer(0);
+            }
+            if (Exponent.CompareTo(Constant.Zero))
+            {
+                return Prefix;
+            }
+
+            return this;
+        }
+
         public override bool ContainsVariable(Variable other)
         {
             if (Identifier == other.Identifier && this.GetType() == other.GetType())
-            {
                 return true;
-            }
-            else if (this is Func)
-            {
-                foreach (var item in (this as Func).Arguments)
-                {
-                    if (item.ContainsVariable(other))
-                    {
-                        return true;
-                    }
-                }
-            }
-            else if (this is Symbol)
-            {
-                return (this as Symbol).GetValue().ContainsVariable(other);
-            }
-
-            return false;
+            else
+                return Value.ContainsVariable(other);
         }
 
         public Expression ReturnValue(Expression res)
@@ -88,7 +165,7 @@ namespace Ast
 
         public Expression SeberateNumbers()
         {
-            var thisClone = Clone() as Symbol;
+            var thisClone = Clone() as Variable;
             thisClone.Prefix = new Integer(1);
             thisClone.Exponent = new Integer(1);
 
