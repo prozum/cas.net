@@ -8,8 +8,8 @@ namespace DesktopUI
         public Entry entryFasitSet;
         public Entry entryFasitGet;
 
-        Label labelFacitSet;
-        Label labelFacitGet;
+        public Label labelFacitSet;
+        public Label labelFacitGet;
 
         CheckButton checkShowCorrect;
         Label labelCorrect;
