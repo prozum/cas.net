@@ -1,24 +1,32 @@
 ﻿using Gtk;
-using Cairo;
+using Gdk;
 using Ast;
+using Cairo;
+using System.Collections.Generic;
 
-namespace Graph
+namespace Draw
 {
-    public class GraphView : DrawingArea
+    public class DrawView : DrawingArea
     {
+        Surface surface = null;
+
         Pango.Layout layout;
         int h, w;
-        int iter = 1000;
         double scale = 20;
-        double a, b, c;
+        List<Real> xList;
+        List<Real> yList;
 
-        public GraphView(PlotData plotData)
+        public DrawView()
         {
-            //plotData.sym.evaluator.
             SetSizeRequest(600, 600);
-            this.a = a;
-            this.b = b;
-            this.c = c;
+            Drawn += new DrawnHandler(Redraw);
+            ConfigureEvent += new ConfigureEventHandler(Configure);
+        }
+
+        public void Plot(PlotData data)
+        {
+            xList = data.x;
+            yList = data.y;
         }
 
         private void DrawAxes(Context ct)
@@ -60,26 +68,25 @@ namespace Graph
 
         private void DrawGraph(Context ct)
         {
-            double x, y;
+            if (xList == null || yList == null)
+                return;
 
-            // Move context to first iteration
-            x = -0.5 * scale;
-            y = a * x * x + b * x + c;
-            ct.MoveTo((x / scale + 0.5) * w, (-y / scale + 0.5) * h);
-
-
-            for (int i = 1; i <= iter; i++)
+            for(int i = 0; i < xList.Count; i++)
             {
-                x = ((double)i / iter - 0.5) * scale;
-                y = a * x * x + b * x + c;
-
-                ct.LineTo((x / scale + 0.5) * w, (-y / scale + 0.5) * h);
+                ct.LineTo(((double)xList[i].@decimal / scale + 0.5) * w, 
+                    ((double)-yList[i].@decimal / scale + 0.5) * h);
             }
             ct.Stroke();
         }
 
-        protected override bool OnDrawn(Context ct)
+        protected void Redraw(object o, DrawnArgs args)
         {
+            var cr = args.Cr;
+
+            cr.SetSourceSurface(surface, 0, 0);
+            cr.Paint();
+            var ct = args.Cr;
+
             w = AllocatedWidth;
             h = AllocatedHeight;
             layout = Pango.CairoHelper.CreateLayout(ct);
@@ -88,9 +95,28 @@ namespace Graph
             DrawAxes(ct);
             DrawGrid(ct);
             DrawGraph(ct);
-
-            return true;
+            args.RetVal = true;
         }
+
+        protected void Configure(object o, ConfigureEventArgs args)
+        {
+            Widget widget = o as Widget;
+
+            if (surface != null)
+                surface.Dispose();
+
+            var allocation = widget.Allocation;
+            surface = widget.Window.CreateSimilarSurface(Cairo.Content.Color, allocation.Width, allocation.Height);
+
+            var cr = new Context(surface);
+
+            cr.SetSourceRGB(1, 1, 1);
+            cr.Paint();
+            cr.Dispose();
+
+            args.RetVal = true;
+        }
+
     }
 
 

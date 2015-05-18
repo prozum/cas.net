@@ -73,24 +73,26 @@ namespace Ast
             return Value;
         }
 
+        private bool Definition = false;
         private Expression _value = null;
         public override Expression Value
         {
             get
             {
-                if (_value != null)
+                if (Definition)
                     return _value;
 
-                _value = Scope.GetVar(Identifier).Value;
+                var value = Scope.GetVar(Identifier).Value;
 
-                if (_value is Real)
-                    _value = Prefix * _value ^ Exponent;
+                if (value is Real)
+                    value = Prefix * value ^ Exponent;
 
-                return _value;
+                return value;
             }
 
             set
             {
+                Definition = true;
                 _value = value;
             }
         }

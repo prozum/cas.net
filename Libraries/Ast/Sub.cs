@@ -5,7 +5,7 @@ namespace Ast
     public class Sub : BinaryOperator, ISwappable, IInvertable
     {
         public override string Identifier { get { return "-"; } }
-        public override int Priority { get{ return 40; } }
+        public override int Priority { get{ return 30; } }
 
         public Sub() { }
         public Sub(Expression left, Expression right) : base(left, right) { }

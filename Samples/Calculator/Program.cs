@@ -1,10 +1,11 @@
 ﻿using Gtk;
 using Ast;
+using Draw;
 using System.Collections.Generic;
 using System.Threading;
 using System.Globalization;
 
-public class MainWindow : Window
+public class Calculator : Window
 {
     Evaluator eval;
 
@@ -19,15 +20,19 @@ public class MainWindow : Window
     TextView input;
     Button evalButton;
 
+    DrawView draw;
+
+    public event ChangedHandler UpdateDrawView;
+    //public event ChangedHandler UpdateDefinitions;
 
     static void Main(string[] args)
     {
         Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
         Application.Init ();
-        new MainWindow ();
+        new Calculator ();
         Application.Run();
     }
-
+        
 
     public void EvaluateInput()
     {
@@ -55,6 +60,10 @@ public class MainWindow : Window
                 buffer.InsertWithTagsByName(ref insertIter, data.ToString() + "\n", "error");
             else if (data is DebugData && eval.GetBool("debug"))
                 buffer.InsertWithTagsByName(ref insertIter, data.ToString() + "\n", "debug");
+            else if (data is PlotData)
+            {
+                draw.Plot(data as PlotData);
+            }
         }
     }
 
@@ -106,7 +115,7 @@ public class MainWindow : Window
         }
     }
 
-    public MainWindow() : base("MainWindow")
+    public Calculator() : base("MainWindow")
     {
         DeleteEvent += (o, a) => Application.Quit ();
 
@@ -131,6 +140,9 @@ public class MainWindow : Window
         grid.Attach (sw, 0, 2, 1, 1);
         buffer = textView.Buffer;
 
+        draw = new DrawView();
+        //UpdateDrawView += new EventHandler(draw.Redraw);
+        grid.Attach(draw, 0, 3, 1, 1);
 
         var infoTag = new TextTag ("debug");
         infoTag.Foreground = "blue";

@@ -109,7 +109,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Geomet\Geomet.csproj">
-      <Project>{3b778ca7-302f-4838-b6da-9193929403d7}</Project>
+      <Project>{3B778CA7-302F-4838-B6DA-9193929403D7}</Project>
       <Name>Geomet</Name>
     </ProjectReference>
     <ProjectReference Include="..\ImEx\ImEx.csproj">
