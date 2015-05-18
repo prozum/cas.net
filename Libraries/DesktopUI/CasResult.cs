@@ -59,7 +59,8 @@ namespace DesktopUI
 
                 facitContainer.answer = entryFasitGet.Text;
 
-                labelCorrect.Text = entryFasitGet.Text.Equals(facitContainer.facit) ? "Correct" : "Wrong";
+                System.Threading.Thread thread = new System.Threading.Thread(ThreadCheckAnswer);
+                thread.Start();
             };
 
             entryFasitSet.Changed += delegate
@@ -86,6 +87,16 @@ namespace DesktopUI
 
                 Attach(labelCorrect, 1, 2, 2, 1);
             }
+        }
+
+        void ThreadCheckAnswer()
+        {
+            if(entryFasitGet.Text.Equals(facitContainer.facit) == true)
+            {
+                System.Threading.Thread.Sleep(5000);
+            }
+            labelCorrect.Text = entryFasitGet.Text.Equals(facitContainer.facit) ? "Correct" : "Wrong";
+            System.Threading.Thread.CurrentThread.Abort();
         }
     }
 }
