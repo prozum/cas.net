@@ -50,7 +50,7 @@ namespace TaskGenLib
                             unit2 = "millimetres";
                             break;
                         case DistanceUnits.Metre:
-                            unit2 = "metres";
+                            distance = (DistanceUnits)r.Next(0, 3);
                             break;
                         }
                     }
@@ -65,22 +65,26 @@ namespace TaskGenLib
                             unit2 = "millimetres";
                             break;
                         case DistanceUnits.Centimetre:
-                            unit2 = "millimetres";
+                            distance = (DistanceUnits)r.Next(0, 3);
                             break;
                         }
                     }
                     break;
                 case "millimetres":
-                    switch (distance) {
-                    case DistanceUnits.Metre:
-                        unit2 = "metres";
-                        break;
-                    case DistanceUnits.Centimetre:
-                        unit2 = "centimetres";
-                        break;
-                    case DistanceUnits.Millimetre:
-                        unit2 = "millimetres";
-                        break;
+                    while (unit2 == unit1 || unit2 == "")
+                    {
+                        switch (distance)
+                        {
+                            case DistanceUnits.Metre:
+                                unit2 = "metres";
+                                break;
+                            case DistanceUnits.Centimetre:
+                                unit2 = "centimetres";
+                                break;
+                            case DistanceUnits.Millimetre:
+                                distance = (DistanceUnits)r.Next(0, 3);
+                                break;
+                        }
                     }
                     break;
                 }
