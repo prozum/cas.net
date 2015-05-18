@@ -804,7 +804,7 @@ namespace Ast
             else if (right is Error)
                 return right;
 
-            return LesserThanOrEqualTo(right);
+            return left.LesserThanOrEqualTo(right);
         }
 
         #endregion
