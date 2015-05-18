@@ -19,10 +19,10 @@ namespace TaskGenLib
             string unit2 = "";
             double val;
             string answer = "";
-            Units unit = (Units)r.Next (0, 2);
-            DistanceUnits distance = (DistanceUnits)r.Next (0, 2);
-            WeightUnits weight = (WeightUnits)r.Next (0, 1);
-            VolumeUnits volume = (VolumeUnits)r.Next (0, 1);
+            Units unit = (Units)r.Next (0, 3);
+            DistanceUnits distance = (DistanceUnits)r.Next (0, 3);
+            WeightUnits weight = (WeightUnits)r.Next (0, 2);
+            VolumeUnits volume = (VolumeUnits)r.Next (0, 2);
 
             switch (unit) {
             case Units.Distance:
