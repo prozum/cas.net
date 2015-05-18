@@ -26,6 +26,11 @@ namespace Ast
             return "\"" + @string + "\"";
         }
 
+        public override bool CompareTo(Expression other)
+        {
+            return false;
+        }
+
         public override Expression AddWith(Text other)
         {
             return new Text(@string + other);

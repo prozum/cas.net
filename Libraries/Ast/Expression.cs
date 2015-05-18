@@ -56,19 +56,12 @@ namespace Ast
         /// <summary>
         /// 
         /// </summary>
-        public virtual Expression Evaluate() 
-        {
-            return Reduce().Evaluate(this); 
-        }
-
+        public virtual Expression Evaluate() { return Reduce().Evaluate(this); }
         internal virtual Expression Evaluate(Expression caller)
         {
             return new Error(this, "This type cannot evaluate");
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         internal virtual Expression CurrectOperator()
         {
             return this;
@@ -473,7 +466,6 @@ namespace Ast
         }
 
         #endregion
-
 
         #region GreaterThan
         public virtual Expression GreaterThan(Integer other)
