@@ -12,22 +12,30 @@ namespace DesktopUI
     {
         public Table CreateGeometTable()
         {
-            Table table = new Table(12, 2, false);
+            Table table = new Table(5, 2, true);
 
-            Label labelCircle = new Label("Circle:");
-            Label labelCircleCircumferance = new Label("Circumferance: ");
-            Entry entryCicleCircumferance = new Entry("");
-            entryCicleCircumferance.Activated += (o, a) =>
+            Label labelCircle = new Label();
+            labelCircle.Markup = "<b> Circle: </b>";
+            Label labelCircleCircumference = new Label("Circumference: ");
+            Entry entryCircleCircumference = new Entry("");
+            entryCircleCircumference.Activated += (o, a) =>
             {
-                entryCicleCircumferance.Text = Geomet.Circle.Circumference(double.Parse(entryCicleCircumferance.Text)).ToString();
+                entryCircleCircumference.Text = Geomet.Circle.Circumference(double.Parse(entryCircleCircumference.Text)).ToString();
             };
+            Label labelCircleArea = new Label("Area: ");
+            Entry entryCircleArea = new Entry("Area");
+            entryCircleArea.Activated += (o, a) =>
+                {
+                    entryCircleArea.Text = Geomet.Circle.Area(double.Parse(entryCircleArea.Text)).ToString();
+                };
 
 
-            Label labelCicleArea = new Label("Area: ");
-            Entry entryCicleArea = new Entry("");
 
-            Label labelSquare = new Label("Square");
-            Label labelSquareCircumferance = new Label("Circumferance: 2 * l + 2 * h");
+
+            Label labelSquare = new Label();
+            labelSquare.Markup = "<b> Square: </b>";
+
+            Label labelSquareCircumference = new Label("Circumference: 2 * l + 2 * h");
             Label labelSquareArea = new Label("Area: l * h");
 
 
@@ -37,11 +45,17 @@ namespace DesktopUI
 
             //Sets the table
             table.Attach(labelCircle, 0, 1, 0, 1);
-            table.Attach(labelCircleCircumferance, 0, 1, 1, 2);
-            table.Attach(entryCicleCircumferance, 1, 2, 1, 2);
-            table.Attach(labelSquare, 0, 1, 2, 3);
-            table.Attach(labelSquareCircumferance, 0, 1, 3, 4);
+            table.Attach(labelCircleCircumference, 0, 1, 1, 2);
+            table.Attach(entryCircleCircumference, 1, 2, 1, 2);
+            table.Attach(labelCircleArea, 0, 1, 2, 3);
+            table.Attach(entryCircleArea, 1, 1, 2, 3);
+
+            table.Attach(labelSquare, 0, 1, 3, 4);
+            table.Attach(labelSquareCircumference, 0, 1, 4, 4);
             table.Attach(labelSquareArea, 1, 2, 3, 4);
+
+            table.SetRowSpacing(1, 1);
+            table.SetRowSpacing(2, 1);
 
 
             return table;
