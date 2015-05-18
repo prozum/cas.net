@@ -11,6 +11,7 @@ namespace Ast
         public static readonly Integer Two = new Integer(2);
         
         public static readonly Irrational DegToRad = new Irrational(Math.PI / 180);
+        public static readonly Irrational RadToDeg = new Irrational(180 / Math.PI);
     }
 }
 
