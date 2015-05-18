@@ -7,8 +7,8 @@ namespace Ast
     public enum ArgKind
     {
         Expression,
-        Number,
-        Symbol,
+        Real,
+        Variable,
         Function,
         Equation,
         List

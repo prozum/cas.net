@@ -34,16 +34,16 @@ namespace Ast
         public string text;
     }
 
-    public class PlotData : DrawData
-    {
-        public Expression exp;
-        public Variable sym;
-
-        public PlotData(PlotFunc plot)
-        {
-            this.sym = plot.sym;
-            this.exp = plot.exp;
-        }
-    }
+//    public class PlotData : DrawData
+//    {
+//        public Expression exp;
+//        public Variable sym;
+//
+//        public PlotData(PlotFunc plot)
+//        {
+//            this.sym = plot.@var;
+//            this.exp = plot.expr;
+//        }
+//    }
 }
 

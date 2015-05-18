@@ -14,7 +14,7 @@ namespace Ast
             ValidArguments = new List<ArgKind>()
                 {
                     ArgKind.Equation,
-                    ArgKind.Symbol
+                    ArgKind.Variable
                 };
         }
 

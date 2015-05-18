@@ -60,11 +60,11 @@ namespace Ast
                         if (!(Arguments[i] is Expression))
                             return false;
                         break;
-                    case ArgKind.Number:
-                        if (!(Arguments[i] is Real))
+                    case ArgKind.Real:
+                        if (!(Arguments[i].Evaluate() is Real))
                             return false;
                         break;
-                    case ArgKind.Symbol:
+                    case ArgKind.Variable:
                         if (!(Arguments[i] is Variable))
                             return false;
                         break;

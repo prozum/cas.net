@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Ast
 {
@@ -28,6 +29,18 @@ namespace Ast
         public override string ToString()
         {
             return expr.ToString();
+        }
+    }
+
+    public class PlotData : EvalData
+    {
+        public List<Real> x;
+        public List<Real> y;
+
+        public PlotData(List<Real> x, List<Real> y)
+        {
+            this.x = x;
+            this.y = y;
         }
     }
 
