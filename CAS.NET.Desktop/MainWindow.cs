@@ -122,10 +122,15 @@ namespace CAS.NET.Desktop
             DefBox.WidthRequest = 50;
             VBox vboxOuter = new VBox();
             VBox vbox = new VBox();
+            VBox vboxRight = new VBox();
             HBox hbox = new HBox(false, 20);
 
+            GeometTable gt = new GeometTable();
+
             hbox.Add(vbox);
-            hbox.Add(DefBox);
+            hbox.Add(vboxRight);
+            vboxRight.Add(DefBox);
+            vboxRight.Add(gt.CreateGeometTable());
 
             vboxOuter.PackStart(menubar, false, false, 2);
             vboxOuter.PackStart(toolbar, false, false, 2);
