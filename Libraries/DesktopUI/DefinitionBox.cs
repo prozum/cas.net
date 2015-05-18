@@ -34,7 +34,7 @@ namespace DesktopUI
 
             foreach (var def in Eval.Locals)
             {
-                list.AppendValues(def.Key, def.Value.ToString());
+                list.AppendValues(def.Value.ToString(), def.Value.Value.ToString());
             }
   
 			ShowAll ();

@@ -54,12 +54,15 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TaskGenAlgMenuItem.cs" />
     <Compile Include="TaskGenMenuItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CasTextView.cs" />
     <Compile Include="OpenToolButton.cs" />
     <Compile Include="SaveToolButton.cs" />
-    <Compile Include="TaskGenWindow.cs" />
+    <Compile Include="TaskGenUnitMenuItem.cs" />
+    <Compile Include="TaskGenAlgWindow.cs" />
+    <Compile Include="TaskGenUnitWindow.cs" />
     <Compile Include="TextViewList.cs" />
     <Compile Include="ServerMenuItem.cs" />
     <Compile Include="LoginMenuItem.cs" />

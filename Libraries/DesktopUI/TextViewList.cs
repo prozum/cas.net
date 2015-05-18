@@ -30,15 +30,15 @@ namespace DesktopUI
             {
                 foreach (Widget widget in castextviews)
                 {
-                    if(widget is MovableCasCalcView)
+                    if (widget is MovableCasCalcView)
                     {
-                        (widget as MovableCasCalcView).calcview.input.WidthRequest = window.Window.Width - 60; 
+                        (widget as MovableCasCalcView).calcview.input.WidthRequest = window.Window.Width - 60;
                     }
                     else if (widget is MovableDrawCanvas)
                     {
                         (widget as MovableDrawCanvas).canvas.WidthRequest = window.Window.Width - 60;
                     }
-                    else if(widget is MovableCasTextView) // <- This shall always be last as all other widgets inherit from it, but not all use it.
+                    else if (widget is MovableCasTextView) // <- This shall always be last as all other widgets inherit from it, but not all use it.
                     {
                         (widget as MovableCasTextView).textview.WidthRequest = window.Window.Width - 60;
                     }
@@ -124,15 +124,16 @@ namespace DesktopUI
             //MovCasCalcView.calcview.input.IsEditable = !locked;
             MovCasCalcView.calcview.input.Activated += delegate
             {
-                    MovCasCalcView.calcview.Eval.Scope.Locals.Clear();
-                    MovCasCalcView.calcview.Evaluate();
-                    MovCasCalcView.ShowAll();
+
+                MovCasCalcView.calcview.Eval.Scope.Locals.Clear();
+                MovCasCalcView.calcview.Evaluate();
+                MovCasCalcView.ShowAll();
             };
 
-            MovCasCalcView.Attach(AddLockCheckButton(MovCasCalcView), 1, 100, 1, 1);
+            //MovCasCalcView.Attach(AddLockCheckButton(MovCasCalcView), 1, 100, 1, 1);
             MovCasCalcView.Attach(AddCommandButtons(MovCasCalcView), 100, 1, 1, 1);
 
-            if(user.privilege <= 0 && locked == true)
+            if (user.privilege <= 0 && locked == true)
             {
                 MovCasCalcView.calcview.input.IsEditable = false;
             }
@@ -149,7 +150,7 @@ namespace DesktopUI
         {
             MovableDrawCanvas movableDrawCanvas = new MovableDrawCanvas();
 
-            movableDrawCanvas.Attach(AddLockCheckButton(movableDrawCanvas), 1, 100, 1, 1);
+            //movableDrawCanvas.Attach(AddLockCheckButton(movableDrawCanvas), 1, 100, 1, 1);
             movableDrawCanvas.Attach(AddCommandButtons(movableDrawCanvas), 100, 1, 1, 1);
 
             if (pos == -1)
@@ -197,8 +198,8 @@ namespace DesktopUI
                 castextviews.Insert(i + 2, castextviews[i]);
                 castextviews.RemoveAt(i);
             }
-			// move up
-			else if (UpOrDown == -1 && i - 1 >= 0)
+            // move up
+            else if (UpOrDown == -1 && i - 1 >= 0)
             {
                 castextviews.Insert(i - 1, castextviews[i]);
                 castextviews.RemoveAt(i + 1);
@@ -249,7 +250,7 @@ namespace DesktopUI
         {
             foreach (Widget widget in castextviews)
             {
-                if(widget is MovableCasCalcView)
+                if (widget is MovableCasCalcView)
                 {
                     (widget as MovableCasCalcView).calcview.Evaluate();
                 }
@@ -325,7 +326,7 @@ namespace DesktopUI
         // Adds a lock button for teachers, so that they can set id the student can edit the content of the widget 
         CheckButton AddLockCheckButton(MovableCasTextView movableCasTextView)
         {
-            if(user.privilege == 1)
+            if (user.privilege == 1)
             {
                 CheckButton checkbutton = new CheckButton("Lock for students");
 
