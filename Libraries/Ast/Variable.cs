@@ -70,7 +70,7 @@ namespace Ast
 
         internal override Expression Evaluate(Expression caller)
         {
-            return Value.Evaluate();
+            return Value;
         }
 
         private Expression _value = null;
@@ -81,7 +81,7 @@ namespace Ast
                 if (_value != null)
                     return _value;
 
-                _value = Scope.GetVar(Identifier);
+                _value = Scope.GetVar(Identifier).Value;
 
                 if (_value is Real)
                     _value = Prefix * _value ^ Exponent;
