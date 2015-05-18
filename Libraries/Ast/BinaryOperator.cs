@@ -99,6 +99,9 @@ namespace Ast
             return Left.ToString() + Identifier + Right.ToString();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override bool CompareTo(Expression other)
         {
             Expression thisSimplified = Reduce();
@@ -180,6 +183,9 @@ namespace Ast
             return exp1.Left.CompareTo(exp2.Left) && exp1.Right.CompareTo(exp2.Right);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override bool ContainsVariable(Variable other)
         {
             return Left.ContainsVariable(other) || Right.ContainsVariable(other);
@@ -204,6 +210,9 @@ namespace Ast
             return this;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override Expression Expand()
         {
             var prev = ToString();

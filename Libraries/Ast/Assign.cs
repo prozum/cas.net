@@ -13,6 +13,9 @@ namespace Ast
         public Assign() { }
         public Assign(Expression left, Expression right) : base(left, right) { }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override Expression Evaluate()
         {
             Variable @var;
@@ -81,7 +84,7 @@ namespace Ast
             return new Error(this, "Left operand must be Symbol or Function");
         }
 
-        public override Expression Expand()
+        protected override Expression ExpandHelper(Expression left, Expression right)
         {
             return new Assign(Left.Expand(), Right.Expand());
         }
