@@ -54,6 +54,8 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GeometMenuItem.cs" />
+    <Compile Include="GeometWindow.cs" />
     <Compile Include="TaskGenAlgMenuItem.cs" />
     <Compile Include="TaskGenMenuItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

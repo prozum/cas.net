@@ -25,6 +25,8 @@ namespace CAS.NET.Desktop
         TaskGenAlgMenuItem taskGenMenuAlgItem;
         TaskGenUnitMenuItem taskGenMenuUnitItem;
 
+        GeometMenuItem geometMenuItem;
+
         Toolbar toolbar = new Toolbar();
         OpenToolButton open;
         SaveToolButton save;
@@ -74,9 +76,16 @@ namespace CAS.NET.Desktop
             tgmi.Submenu = taskgenMenu;
             taskgenMenu.Append(taskGenMenuAlgItem);
             taskgenMenu.Append(taskGenMenuUnitItem);
-            
+
+            //Dårlig 
+            Menu bob = new Menu();
+            geometMenuItem = new GeometMenuItem(textviews);
+            geometMenuItem.Submenu = bob;
+
             menubar.Append(server);
             menubar.Append(tgmi);
+            menubar.Append(geometMenuItem);
+
             //menubar.Append(taskGenMenuAlgItem);
             //menubar.Append(taskGenMenuUnitItem);
 
@@ -110,15 +119,22 @@ namespace CAS.NET.Desktop
             toolbar.Add(movabledrawcanvas);
             toolbar.Add(movablecasresult);
 
+            DefBox.WidthRequest = 50;
+            VBox vboxOuter = new VBox();
             VBox vbox = new VBox();
+            HBox hbox = new HBox(false, 20);
 
-            vbox.PackStart(menubar, false, false, 2);
-            vbox.PackStart(toolbar, false, false, 2);
+            hbox.Add(vbox);
+            hbox.Add(DefBox);
+
+            vboxOuter.PackStart(menubar, false, false, 2);
+            vboxOuter.PackStart(toolbar, false, false, 2);
+            vboxOuter.Add(hbox);
             scrolledWindow.Add(textviews);
             vbox.Add(scrolledWindow);
-            vbox.Add(DefBox);
+            //vbox.Add(DefBox);
 
-            Add(vbox);
+            Add(vboxOuter);
             SetSizeRequest(600, 600);
             ShowAll();
 

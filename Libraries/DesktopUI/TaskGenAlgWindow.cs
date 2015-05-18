@@ -62,8 +62,6 @@ namespace DesktopUI
                     textviews.InsertTaskGenTextView(t.TaskDescription);
 
                     textviews.InsertResult("", t.Solution);
-                    
-                    
                 }
 
 
