@@ -49,21 +49,21 @@ namespace Ast
                         solved = InvertOperator(solved.Left, solved.Right);
 
                         if (solved == null)
-                            return new Error(this, " could not solve " + sym.ToString() + ": " + solved.ToString());
+                            return new Error(this, " could not solve " + sym.ToString());
                     }
                     else if (solved.Left is Func)
                     {
                         solved = InvertFunction(solved.Left, solved.Right);
 
                         if (solved == null)
-                            return new Error(this, " could not solve " + sym.ToString() + ": " + solved.ToString());
+                            return new Error(this, " could not solve " + sym.ToString());
                     }
                     else
                     {
-                        return new Error(this, " could not solve " + sym.ToString() + ": " + solved.ToString());
+                        return new Error(this, " could not solve " + sym.ToString());
                     }
                 }
-                else if (solved.Left is Variable)
+                else if (solved.Left is Variable && (solved.Left as Variable).Identifier == sym.Identifier)
                 {
                     var newLeft = (solved.Left as Variable).SeberateNumbers();
 
@@ -71,7 +71,7 @@ namespace Ast
                 }
                 else
                 {
-                    return new Error(this, " could not solve " + sym.ToString() + ": " + solved.ToString());
+                    return new Error(this, " could not solve " + sym.ToString());
                 }
 
                 System.Diagnostics.Debug.WriteLine(solved);
@@ -121,13 +121,7 @@ namespace Ast
 
             if (leftSimplified is BinaryOperator && ((leftSimplified as BinaryOperator).Left.ContainsVariable(sym) && (leftSimplified as BinaryOperator).Right.ContainsVariable(sym)))
             {
-                if (true)
-                {
-                    
-                }
-
-
-                throw new NotImplementedException();
+                return null;
             }
             else
             {
