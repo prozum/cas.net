@@ -56,7 +56,7 @@ namespace Ast
             {
                 return new Integer(1);
             }
-            else if (right is Real && left.CompareTo(Constant.Zero))
+            else if (right is Real && right.CompareTo(Constant.Zero))
             {
                 return new Integer(1);
             }

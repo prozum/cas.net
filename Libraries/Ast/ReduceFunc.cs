@@ -5,6 +5,7 @@ namespace Ast
 {
     public class ReduceFunc : SysFunc
     {
+        public ReduceFunc() : this(null, null) { }
         public ReduceFunc(List<Expression> args, Scope scope)
             : base("reduce", args, scope)
         {
@@ -24,7 +25,7 @@ namespace Ast
 
         public override Expression Clone()
         {
-            throw new NotImplementedException();
+            return MakeClone<ReduceFunc>();
         }
     }
 }

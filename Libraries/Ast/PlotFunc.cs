@@ -8,6 +8,7 @@ namespace Ast
         public Expression expr;
         public Variable @var;
 
+        public PlotFunc() : this(null, null) { }
         public PlotFunc(List<Expression> args, Scope scope)
             : base("plot", args, scope)
         {
@@ -57,6 +58,11 @@ namespace Ast
 
             Scope.SideEffects.Add(new PlotData(xList, yList));
             return new Null();
+        }
+
+        public override Expression Clone()
+        {
+            return MakeClone<PlotFunc>();
         }
     }
 }

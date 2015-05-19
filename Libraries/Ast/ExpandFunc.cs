@@ -5,6 +5,7 @@ namespace Ast
 {
     public class ExpandFunc : SysFunc
     {
+        public ExpandFunc() : this(null, null) { }
         public ExpandFunc(List<Expression> args, Scope scope)
             : base("expand", args, scope)
         {
@@ -21,7 +22,7 @@ namespace Ast
 
         public override Expression Clone()
         {
-            throw new NotImplementedException();
+            return MakeClone<ExpandFunc>();
         }
     }
 }
