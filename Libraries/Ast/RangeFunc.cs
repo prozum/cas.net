@@ -33,7 +33,7 @@ namespace Ast
             step = Arguments[2].Evaluate() as Real;
 
             var list = new Ast.List ();
-            for (Decimal i = start; i < end; i += step)
+            for (Decimal i = start; i <= end; i += step)
             {
                 list.items.Add(new Irrational(i));
             }
