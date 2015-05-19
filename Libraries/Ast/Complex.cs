@@ -15,7 +15,10 @@ namespace Ast
 
         public override string ToString()
         {
-            return real.ToString () + '+' + imag.ToString() + 'i';
+            if (imag.IsNegative())
+                return "(" + real + imag.ToString() + "i)";
+            else
+                return "(" + real.ToString () + '+' + imag.ToString() + "i)";
         }
 
         public override bool CompareTo(Expression other)
@@ -31,6 +34,11 @@ namespace Ast
             }
 
             return res;
+        }
+
+        public override Expression Minus()
+        {
+            return new Complex(real.ToNegative() as Real, imag.ToNegative() as Real);
         }
 
         public override Expression Clone()
