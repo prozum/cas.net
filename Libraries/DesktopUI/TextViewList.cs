@@ -44,7 +44,6 @@ namespace DesktopUI
                     else if (widget is MovableCasResult)
                     {
                         (widget as MovableCasResult).casresult.entryFasitGet.WidthRequest = (window.Window.Width - buttonbarwidth - (widget as MovableCasResult).casresult.labelFacitGet.AllocatedWidth);
-                        (widget as MovableCasResult).casresult.entryFasitSet.WidthRequest = (window.Window.Width - buttonbarwidth - (widget as MovableCasResult).casresult.labelFacitSet.AllocatedWidth);
                     }
                     else if (widget is MovableCasTextView) // <- This shall always be last as all other widgets inherit from it, but not all use it.
                     {

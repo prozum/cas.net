@@ -42,6 +42,11 @@ namespace DesktopUI
                 eval.Parse(input.Text);
 
                 var res = eval.Evaluate();
+                drawView.xList.Clear();
+                drawView.xList.Clear();
+                drawView.Hide();
+
+                output.Text = string.Empty; // Clears output before adding new text
 
                 if (!(res is Null || res is Error))
                 {
@@ -57,11 +62,17 @@ namespace DesktopUI
                 {
 
                     if (data is PrintData)
+                    {
                         output.Text += data.ToString() + "\n";
+                    }
                     else if (data is ErrorData)
+                    {
                         output.Text += data.ToString() + "\n";
+                    }
                     else if (data is DebugData && eval.GetBool("debug"))
+                    {
                         output.Text += data.ToString() + "\n";
+                    }
                     else if (data is PlotData)
                     {
                         drawView.Plot(data as PlotData);
