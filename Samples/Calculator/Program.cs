@@ -63,6 +63,7 @@ public class Calculator : Window
             else if (data is PlotData)
             {
                 draw.Plot(data as PlotData);
+                draw.Show();
             }
         }
     }
