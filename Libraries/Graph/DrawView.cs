@@ -36,6 +36,7 @@ namespace Draw
         {
             xList = data.x;
             yList = data.y;
+            QueueDraw();
         }
 
         private void DrawAxes(Context ct)
