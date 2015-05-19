@@ -12,7 +12,7 @@ namespace DesktopUI
             : base("Geomet Window")
         {
             this.textviews = textviews;
-
+            double k;
             Table table = new Table(16, 2, true);
 
             Label labelCircle = new Label();
@@ -23,7 +23,9 @@ namespace DesktopUI
             labelCircleCircumference.SetAlignment (0, 2);
             entryCircleCircumference.Activated += (o, a) =>
             {
-                entryCircleCircumference.Text = Geomet.Circle.Circumference(double.Parse(entryCircleCircumference.Text)).ToString();
+                k = 0;
+                double.TryParse(entryCircleCircumference.Text, out k);
+                entryCircleCircumference.Text = Geomet.Circle.Circumference(k).ToString();
             };
 
             Label labelCircleArea = new Label("Area (radius):");
@@ -31,7 +33,9 @@ namespace DesktopUI
             labelCircleArea.SetAlignment (0, 2);
             entryCircleArea.Activated += (o, a) =>
             {
-                entryCircleArea.Text = Geomet.Circle.Area(double.Parse(entryCircleArea.Text)).ToString();
+                k = 0;
+                double.TryParse(entryCircleArea.Text, out k);
+                entryCircleArea.Text = Geomet.Circle.Area(k).ToString();
             };
 
 
@@ -43,6 +47,8 @@ namespace DesktopUI
             Entry entrySquareCircumference = new Entry("");
             entrySquareCircumference.Activated += (o, a) =>
             {
+                k = 0;
+                double.TryParse(entrySquareCircumference.Text, out k);
                 //Skal bruge 2 inputs
                 //entrySquareCircumference.Text = Geomet.Square.Circumference(double.Parse(entrySquareCircumference.Text)).ToString();
             };
@@ -52,6 +58,8 @@ namespace DesktopUI
             Entry entrySquareArea = new Entry("");
             entrySquareArea.Activated += (o, a) =>
             {
+                k = 0;
+                double.TryParse(entrySquareArea.Text, out k);
                 //skal bruge 2 inputs
                 //entrySquareCircumference.Text = Geomet.Square.Area(double.Parse(entrySquareCircumference.Text)).ToString();
             };
@@ -65,7 +73,9 @@ namespace DesktopUI
             Entry entrySphereVolume = new Entry("");
             entrySphereVolume.Activated += (o, a) =>
             {
-                entrySphereVolume.Text = Geomet.Sphere.Volume(double.Parse(entrySphereVolume.Text)).ToString();
+                k = 0;
+                double.TryParse(entrySphereVolume.Text, out k);
+                entrySphereVolume.Text = Geomet.Sphere.Volume(k).ToString();
             };
 
             Label labelSphereSurfaceArea = new Label("Surface area (radius):");
@@ -73,7 +83,9 @@ namespace DesktopUI
             Entry entrySphereSurfaceArea = new Entry("");
             entrySphereSurfaceArea.Activated += (o, a) =>
             {
-                entrySphereSurfaceArea.Text = Geomet.Sphere.SurfaceArea(double.Parse(entrySphereSurfaceArea.Text)).ToString();
+                k = 0;
+                double.TryParse(entrySphereSurfaceArea.Text, out k);
+                entrySphereSurfaceArea.Text = Geomet.Sphere.SurfaceArea(k).ToString();
             };
 
             Label labelCube = new Label();
@@ -84,6 +96,8 @@ namespace DesktopUI
             Entry entryCubeVolume = new Entry("");
             entryCubeVolume.Activated += (o, a) =>
             {
+                k = 0;
+                double.TryParse(entrySquareCircumference.Text, out k);
                 //Skal bruge 3 inputs
                 //entryCubeVolume.Text = Geomet.Cube.Volume(double.Parse(entryCubeVolume.Text)).ToString();
             };
@@ -92,6 +106,8 @@ namespace DesktopUI
             Entry entryCubeSurfaceArea = new Entry("");
             entrySphereSurfaceArea.Activated += (o, a) =>
             {
+                k = 0;
+                double.TryParse(entrySquareCircumference.Text, out k);
                 //skal bruge 3 inputs
                 //entryCubeSurfaceArea.Text = Geomet.Cube.SurfaceArea(double.Parse(entryCubeSurfaceArea.Text)).ToString();
             };
