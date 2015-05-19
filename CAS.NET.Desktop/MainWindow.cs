@@ -22,9 +22,11 @@ namespace CAS.NET.Desktop
         TeacherGetAssignmentListMenuItem teaGetAsmList;
 
         Menu taskgenMenu = new Menu();
+        TaskGenMenuItem taskGenSubMenu;
         TaskGenAlgMenuItem taskGenMenuAlgItem;
         TaskGenUnitMenuItem taskGenMenuUnitItem;
 
+        Menu geometMenu = new Menu();
         GeometMenuItem geometMenuItem;
 
         Toolbar toolbar = new Toolbar();
@@ -59,9 +61,11 @@ namespace CAS.NET.Desktop
             teaAddAsm = new TeacherAddAssignmentMenuItem(user, textviews);
             teaGetAsmList = new TeacherGetAssignmentListMenuItem(user, textviews);
 
+            taskGenSubMenu = new TaskGenMenuItem(textviews);
             taskGenMenuAlgItem = new TaskGenAlgMenuItem(textviews);
             taskGenMenuUnitItem = new TaskGenUnitMenuItem(textviews);
 
+            geometMenuItem = new GeometMenuItem(textviews);
 
             // Adding elements to menu
             server.Submenu = menu;
@@ -71,23 +75,15 @@ namespace CAS.NET.Desktop
             menu.Append(teaAddAsm);
             menu.Append(teaGetAsmList);
 
-
-            TaskGenMenuItem tgmi = new TaskGenMenuItem(textviews);
-            tgmi.Submenu = taskgenMenu;
+            taskGenSubMenu.Submenu = taskgenMenu;
             taskgenMenu.Append(taskGenMenuAlgItem);
             taskgenMenu.Append(taskGenMenuUnitItem);
 
-            //Dårlig 
-            Menu bob = new Menu();
-            geometMenuItem = new GeometMenuItem(textviews);
-            geometMenuItem.Submenu = bob;
+            geometMenuItem.Submenu = geometMenu;
 
             menubar.Append(server);
-            menubar.Append(tgmi);
+            menubar.Append(taskGenSubMenu);
             menubar.Append(geometMenuItem);
-
-            //menubar.Append(taskGenMenuAlgItem);
-            //menubar.Append(taskGenMenuUnitItem);
 
             open = new OpenToolButton(textviews, ref user);
             save = new SaveToolButton(textviews);
@@ -120,12 +116,16 @@ namespace CAS.NET.Desktop
             toolbar.Add(movablecasresult);
 
             VBox vbox = new VBox();
+
+            ScrolledWindow scrolleddefbox = new ScrolledWindow();
+            scrolleddefbox.Add(DefBox);
+            scrolleddefbox.HeightRequest = 100;
             
             vbox.PackStart(menubar, false, false, 2);
             vbox.PackStart(toolbar, false, false, 2);
             scrolledWindow.Add(textviews);
             vbox.Add(scrolledWindow);
-            vbox.Add(DefBox);
+            vbox.PackEnd(scrolleddefbox, false, false, 2);
 
             Add(vbox);
             SetSizeRequest(600, 600);

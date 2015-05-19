@@ -12,74 +12,102 @@ namespace DesktopUI
             : base("Geomet Window")
         {
             this.textviews = textviews;
-
+            double k;
             Table table = new Table(16, 2, true);
 
             Label labelCircle = new Label();
             labelCircle.Markup = "<b> Circle: </b>";
-            Label labelCircleCircumference = new Label("Circumference: ");
+            labelCircle.SetAlignment (0, 2);
+            Label labelCircleCircumference = new Label("Circumference (radius): ");
             Entry entryCircleCircumference = new Entry("");
+            labelCircleCircumference.SetAlignment (0, 2);
             entryCircleCircumference.Activated += (o, a) =>
             {
-                entryCircleCircumference.Text = Geomet.Circle.Circumference(double.Parse(entryCircleCircumference.Text)).ToString();
+                k = 0;
+                double.TryParse(entryCircleCircumference.Text, out k);
+                entryCircleCircumference.Text = Geomet.Circle.Circumference(k).ToString();
             };
 
-            Label labelCircleArea = new Label("Area: ");
+            Label labelCircleArea = new Label("Area (radius):");
             Entry entryCircleArea = new Entry("");
+            labelCircleArea.SetAlignment (0, 2);
             entryCircleArea.Activated += (o, a) =>
             {
-                entryCircleArea.Text = Geomet.Circle.Area(double.Parse(entryCircleArea.Text)).ToString();
+                k = 0;
+                double.TryParse(entryCircleArea.Text, out k);
+                entryCircleArea.Text = Geomet.Circle.Area(k).ToString();
             };
 
 
             Label labelSquare = new Label();
             labelSquare.Markup = "<b> Square: </b>";
-            Label labelSquareCircumference = new Label("Circumference: ");
+            labelSquare.SetAlignment (0, 2);
+            Label labelSquareCircumference = new Label("Circumference (width, height): ");
+            labelSquareCircumference.SetAlignment (0, 2);
             Entry entrySquareCircumference = new Entry("");
             entrySquareCircumference.Activated += (o, a) =>
             {
+                k = 0;
+                double.TryParse(entrySquareCircumference.Text, out k);
                 //Skal bruge 2 inputs
                 //entrySquareCircumference.Text = Geomet.Square.Circumference(double.Parse(entrySquareCircumference.Text)).ToString();
             };
 
-            Label labelSquareArea = new Label("Area: ");
+            Label labelSquareArea = new Label("Area (width, height): ");
+            labelSquareArea.SetAlignment (0, 2);
             Entry entrySquareArea = new Entry("");
             entrySquareArea.Activated += (o, a) =>
             {
+                k = 0;
+                double.TryParse(entrySquareArea.Text, out k);
                 //skal bruge 2 inputs
                 //entrySquareCircumference.Text = Geomet.Square.Area(double.Parse(entrySquareCircumference.Text)).ToString();
             };
 
             Label labelSphere = new Label();
+
             labelSphere.Markup = "<b> Sphere: </b>";
-            Label labelSphereVolume = new Label("Volume: ");
+            labelSphere.SetAlignment (0, 2);
+            Label labelSphereVolume = new Label("Volume (radius): ");
+            labelSphereVolume.SetAlignment (0, 2);
             Entry entrySphereVolume = new Entry("");
             entrySphereVolume.Activated += (o, a) =>
             {
-                entrySphereVolume.Text = Geomet.Sphere.Volume(double.Parse(entrySphereVolume.Text)).ToString();
+                k = 0;
+                double.TryParse(entrySphereVolume.Text, out k);
+                entrySphereVolume.Text = Geomet.Sphere.Volume(k).ToString();
             };
 
-            Label labelSphereSurfaceArea = new Label("Surface area");
+            Label labelSphereSurfaceArea = new Label("Surface area (radius):");
+            labelSphereSurfaceArea.SetAlignment (0, 2);
             Entry entrySphereSurfaceArea = new Entry("");
             entrySphereSurfaceArea.Activated += (o, a) =>
             {
-                entrySphereSurfaceArea.Text = Geomet.Sphere.SurfaceArea(double.Parse(entrySphereSurfaceArea.Text)).ToString();
+                k = 0;
+                double.TryParse(entrySphereSurfaceArea.Text, out k);
+                entrySphereSurfaceArea.Text = Geomet.Sphere.SurfaceArea(k).ToString();
             };
 
             Label labelCube = new Label();
             labelCube.Markup = "<b> Cube: </b>";
-            Label labelCubeVolume = new Label("Volume: ");
+            labelCube.SetAlignment (0, 2);
+            Label labelCubeVolume = new Label("Volume (length, width, height): ");
+            labelCubeVolume.SetAlignment (0, 2);
             Entry entryCubeVolume = new Entry("");
             entryCubeVolume.Activated += (o, a) =>
             {
+                k = 0;
+                double.TryParse(entrySquareCircumference.Text, out k);
                 //Skal bruge 3 inputs
                 //entryCubeVolume.Text = Geomet.Cube.Volume(double.Parse(entryCubeVolume.Text)).ToString();
             };
 
-            Label labelCubeSurfaceArea = new Label("Surface area");
+            Label labelCubeSurfaceArea = new Label("Surface area (length, width, height):");
             Entry entryCubeSurfaceArea = new Entry("");
             entrySphereSurfaceArea.Activated += (o, a) =>
             {
+                k = 0;
+                double.TryParse(entrySquareCircumference.Text, out k);
                 //skal bruge 3 inputs
                 //entryCubeSurfaceArea.Text = Geomet.Cube.SurfaceArea(double.Parse(entryCubeSurfaceArea.Text)).ToString();
             };

@@ -13,6 +13,7 @@ namespace Ast
 
         BinaryOperator Swap();
         BinaryOperator Transform();
+        string ToStringParent();
     }
 
     /// <summary>
@@ -92,6 +93,11 @@ namespace Ast
             return Left.ToString() + Identifier + Right.ToString();
         }
 
+        public string ToStringParent()
+        {
+            return '(' + Left.ToString() + Identifier + Right.ToString() + ')';
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -123,13 +129,13 @@ namespace Ast
 
         private bool CompareSwappables(ISwappable exp1, BinaryOperator exp2)
         {
-            if (CompareSides(exp1 as BinaryOperator, exp2) || CompareSides(exp1.Swap().Reduce() as BinaryOperator, exp2))
-            {
-                return true;
-            }
-            else if ((exp1 as BinaryOperator).Left is ISwappable || (exp1 as BinaryOperator).Right is ISwappable)
+            if ((exp1 as BinaryOperator).Left is ISwappable || (exp1 as BinaryOperator).Right is ISwappable)
             {
                 return SwappableCompareAlorithem(exp1, exp2);
+            }
+            else if (CompareSides(exp1 as BinaryOperator, exp2) || CompareSides(exp1.Swap().Reduce() as BinaryOperator, exp2))
+            {
+                return true;
             }
 
             return false;
@@ -139,11 +145,16 @@ namespace Ast
         {
             BinaryOperator modified = (exp1 as BinaryOperator).Clone() as BinaryOperator;
 
+            if (modified.ToStringParent() == exp2.ToStringParent())
+            {
+                return true;
+            }
+
             do
             {
                 modified = (modified as ISwappable).Transform();
 
-                if (modified.CompareTo(exp2))
+                if (modified.ToStringParent() == exp2.ToStringParent())
                 {
                     return true;
                 }
@@ -152,7 +163,7 @@ namespace Ast
                 {
                     modified.Left = (modified.Left as ISwappable).Swap();
 
-                    if (modified.CompareTo(exp2))
+                    if (modified.ToStringParent() == exp2.ToStringParent())
                     {
                         return true;
                     }
@@ -161,12 +172,12 @@ namespace Ast
                 {
                     modified.Right = (modified.Right as ISwappable).Swap();
 
-                    if (modified.CompareTo(exp2))
+                    if (modified.ToStringParent() == exp2.ToStringParent())
                     {
                         return true;
                     }
                 }
-            } while (!modified.CompareTo(exp1 as BinaryOperator));
+            } while (!(modified.ToStringParent() == exp1.ToStringParent()));
 
             return false;
         }

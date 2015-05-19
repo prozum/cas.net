@@ -187,6 +187,7 @@ namespace Ast
         /// </summary>
         public BinaryOperator Transform()
         {
+
             if (Left is Add)
             {
                 return new Add((Left as Add).Left, new Add((Left as Add).Right, Right));
