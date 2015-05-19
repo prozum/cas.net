@@ -67,6 +67,11 @@ namespace Ast
             return new Irrational(@decimal + other.@decimal);
         }
 
+        public override Expression AddWith(Complex other)
+        {
+            return new Complex(new Irrational(@decimal + other.real.@decimal), other.imag);
+        }
+
         public override Expression AddWith(Text other)
         {
             return new Text(@decimal + other.@string);
@@ -90,6 +95,11 @@ namespace Ast
             return new Irrational(@decimal - other.@decimal);
         }
 
+        public override Expression SubWith(Complex other)
+        {
+            return new Complex(new Irrational(@decimal - other.real.@decimal), other.imag);
+        }
+
         #endregion
 
         #region MulWith
@@ -108,6 +118,11 @@ namespace Ast
             return new Irrational(@decimal * other.@decimal);
         }
 
+        public override Expression MulWith(Complex other)
+        {
+            return new Complex(new Irrational(@decimal * other.real.@decimal), new Irrational(@decimal * other.imag.@decimal));
+        }
+
         #endregion
 
         #region DivWith
@@ -124,6 +139,11 @@ namespace Ast
         public override Expression DivWith(Irrational other)
         {
             return new Irrational(@decimal / other.@decimal);
+        }
+
+        public override Expression DivWith(Complex other)
+        {
+            return new Complex(new Irrational(@decimal / other.real.@decimal), new Irrational(@decimal / other.imag.@decimal));
         }
 
         #endregion
