@@ -24,7 +24,10 @@ namespace Ast
 
             if (res is Real)
             {
-                return ReturnValue(new Irrational(Math.Sqrt((double)(res as Real)))).Evaluate();
+                if ((res as Real).IsNegative())
+                    return ReturnValue(new Complex(new Integer(0), new Irrational(Math.Sqrt((double)(Real)(res as Real).ToNegative()))));
+                else
+                    return ReturnValue(new Irrational(Math.Sqrt((double)(res as Real)))).Evaluate();
             }
 
             return new Error(this, "Could not take Sqrt of: " + Arguments[0]);
