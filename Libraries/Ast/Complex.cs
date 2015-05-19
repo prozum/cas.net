@@ -43,7 +43,7 @@ namespace Ast
 
         public override Expression Clone()
         {
-            throw new NotImplementedException();
+            return new Complex(real.Clone() as Real, imag.Clone() as Real);
         }
     }
 }
