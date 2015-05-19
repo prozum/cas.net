@@ -8,6 +8,11 @@ namespace Geomet
         {
             return height*width;
         }
+
+        public static double Circumference(double width, double height)
+        {
+            return 2 * height + 2 * width;
+        } 
     }
 }
 

@@ -119,27 +119,15 @@ namespace CAS.NET.Desktop
             toolbar.Add(movabledrawcanvas);
             toolbar.Add(movablecasresult);
 
-            DefBox.WidthRequest = 50;
-            VBox vboxOuter = new VBox();
             VBox vbox = new VBox();
-            VBox vboxRight = new VBox();
-            HBox hbox = new HBox(false, 20);
-
-            GeometTable gt = new GeometTable();
-
-            hbox.Add(vbox);
-            hbox.Add(vboxRight);
-            vboxRight.Add(DefBox);
-            vboxRight.Add(gt.CreateGeometTable());
-
-            vboxOuter.PackStart(menubar, false, false, 2);
-            vboxOuter.PackStart(toolbar, false, false, 2);
-            vboxOuter.Add(hbox);
+            
+            vbox.PackStart(menubar, false, false, 2);
+            vbox.PackStart(toolbar, false, false, 2);
             scrolledWindow.Add(textviews);
             vbox.Add(scrolledWindow);
-            //vbox.Add(DefBox);
+            vbox.Add(DefBox);
 
-            Add(vboxOuter);
+            Add(vbox);
             SetSizeRequest(600, 600);
             ShowAll();
 

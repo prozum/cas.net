@@ -13,14 +13,23 @@ namespace Draw
         Pango.Layout layout;
         int h, w;
         double scale = 20;
-        List<Real> xList;
-        List<Real> yList;
+        public List<Real> xList = new List<Real>();
+        public List<Real> yList = new List<Real>();
 
         public DrawView()
         {
             SetSizeRequest(600, 600);
             Drawn += new DrawnHandler(Redraw);
             ConfigureEvent += new ConfigureEventHandler(Configure);
+
+            this.Shown += delegate
+            {
+                System.Console.WriteLine("***\nShowing graph\n***");
+                if(xList.Count == 0 || yList.Count == 0)
+                {
+                    Hide();
+                }
+            };
         }
 
         public void Plot(PlotData data)
@@ -116,6 +125,8 @@ namespace Draw
 
             args.RetVal = true;
         }
+
+        
 
     }
 
