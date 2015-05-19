@@ -2,7 +2,7 @@
 
 namespace Ast
 {
-    public class Rational : Real, INegative
+    public class Rational : Real
     {
         public Int64 numerator;
         public Int64 denominator;
@@ -35,16 +35,7 @@ namespace Ast
         {
             return new Rational(numerator, denominator);
         }
-
-        public Expression ToNegative()
-        {
-            return new Rational(numerator * -1, denominator);
-        }
-
-        public override Expression Minus()
-        {
-            return ToNegative();
-        }
+            
 
         #region AddWith
         public override Expression AddWith(Integer other)

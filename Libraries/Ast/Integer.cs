@@ -2,7 +2,7 @@
 
 namespace Ast
 {
-    public class Integer : Real, INegative
+    public class Integer : Real
     {
         public Int64 @int;
 
@@ -27,16 +27,6 @@ namespace Ast
         public override Expression Clone()
         {
             return new Integer(@int);
-        }
-
-        public Expression ToNegative()
-        {
-            return new Integer(@int * -1);
-        }
-
-        public override Expression Minus()
-        {
-            return ToNegative();
         }
 
         #region AddWith

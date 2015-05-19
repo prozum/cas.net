@@ -733,6 +733,8 @@ namespace Ast
                 
             switch (sym.ToLower())
             {
+                case "abs":
+                    return new AbsFunc(args, curScope);
                 case "sin":
                     return new SinFunc(args, curScope);
                 case "cos":

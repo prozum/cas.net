@@ -2,7 +2,7 @@
 
 namespace Ast
 {
-    public abstract class Real : Number
+    public abstract class Real : Number, INegative
     {
         public abstract Decimal @decimal
         {
@@ -36,9 +36,19 @@ namespace Ast
             return false;
         }
 
+        public Expression ToNegative()
+        {
+            return this * Constant.MinusOne;
+        }
+
         public bool IsNegative()
         {
             return @decimal < 0;
+        }
+
+        public override Expression Minus()
+        {
+            return ToNegative();
         }
 
         #region AddWith

@@ -2,7 +2,7 @@
 
 namespace Ast
 {
-    public class Irrational : Real, INegative 
+    public class Irrational : Real
     {
         public decimal _decimal;
 
@@ -23,16 +23,6 @@ namespace Ast
         public override Expression Clone()
         {
             return new Irrational(@decimal);
-        }
-
-        public Expression ToNegative()
-        {
-            return new Irrational(-@decimal);
-        }
-
-        public override Expression Minus()
-        {
-            return ToNegative();
         }
     }
 }
