@@ -26,7 +26,10 @@ namespace Ast
 
             if (res is Real)
             {
-                return ReturnValue(new Irrational((decimal)Math.Asin((double) (res as Real)) * (deg ? Constant.RadToDeg.@decimal  : 1))).Evaluate();
+                double value = res as Real;
+
+                if (value >= -1 && value <= 1)
+                    return ReturnValue(new Irrational((decimal)Math.Asin(value) * (deg ? Constant.RadToDeg.@decimal  : 1))).Evaluate();
             }
 
             return new Error(this, "Could not take ASin of: " + Arguments[0]);
