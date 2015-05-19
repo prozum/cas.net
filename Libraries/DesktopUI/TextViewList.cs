@@ -35,6 +35,7 @@ namespace DesktopUI
                     if (widget is MovableCasCalcView)
                     {
                         (widget as MovableCasCalcView).calcview.input.WidthRequest = window.Window.Width - buttonbarwidth;
+                        (widget as MovableCasCalcView).calcview.drawView.WidthRequest = window.Window.Width - buttonbarwidth;
                     }
                     else if (widget is MovableDrawCanvas)
                     {
@@ -100,7 +101,7 @@ namespace DesktopUI
             MovableCasCalcView MovCasCalcView = new MovableCasCalcView(Eval);
             MovCasCalcView.calcview.input.Activated += delegate
             {
-                MovCasCalcView.calcview.Eval.Locals.Clear();
+                MovCasCalcView.calcview.eval.Locals.Clear();
                 MovCasCalcView.calcview.Evaluate();
                 Reevaluate();
                 MovCasCalcView.ShowAll();
@@ -132,7 +133,7 @@ namespace DesktopUI
             MovCasCalcView.calcview.input.Activated += delegate
             {
 
-                MovCasCalcView.calcview.Eval.Scope.Locals.Clear();
+                MovCasCalcView.calcview.eval.Scope.Locals.Clear();
                 MovCasCalcView.calcview.Evaluate();
                 MovCasCalcView.ShowAll();
             };

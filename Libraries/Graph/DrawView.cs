@@ -18,7 +18,7 @@ namespace Draw
 
         public DrawView()
         {
-            SetSizeRequest(600, 600);
+            //SetSizeRequest(600, 600); // Will be set by the program
             Drawn += new DrawnHandler(Redraw);
             ConfigureEvent += new ConfigureEventHandler(Configure);
         }

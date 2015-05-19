@@ -1,11 +1,11 @@
 ﻿using System;
 using Gtk;
-using Graph;
+using Draw;
 using Ast;
 
 public class MainWindow : Window
 {
-    GraphView graphView;
+    Draw.DrawView graphView;
 
     static void Main(string[] args)
     {
