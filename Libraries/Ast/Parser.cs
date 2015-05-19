@@ -47,6 +47,8 @@ namespace Ast
             global.Errors.Clear();
 
             tokens = Scanner.Tokenize(parseString, global.Errors);
+            if (global.Errors.Count > 0)
+                return;
 
             ParseScope(global);
 
