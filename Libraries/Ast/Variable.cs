@@ -11,12 +11,25 @@ namespace Ast
         public string Identifier;
         public Real Prefix, Exponent;
 
+        public override Scope Scope
+        {
+            get
+            {
+                return base.Scope;
+            }
+            set
+            {
+                base.Scope = value;
+                if (value != null)
+                    SideEffects = value.SideEffects;
+            }
+        }
+
         public Variable() : this(null, null) { }
         public Variable(string identifier, Scope scope)
         {
             Identifier = identifier;
             Scope = scope;
-            SideEffects = scope.SideEffects;
 
             Exponent = new Integer(1);
             Prefix = new Integer(1);

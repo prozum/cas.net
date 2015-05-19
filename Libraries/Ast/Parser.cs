@@ -763,6 +763,8 @@ namespace Ast
                     return new PrintFunc(args, curScope);
                 case "plot":
                     return new PlotFunc(args, curScope);
+                case "line":
+                    return new LineFunc(args, curScope);
                 default:
                     return new CustomFunc(sym.ToLower(), args, curScope);
             }

@@ -205,6 +205,9 @@
     <Compile Include="CustomFunc.cs">
       <DependentUpon>Variable.cs</DependentUpon>
     </Compile>
+    <Compile Include="LineFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ProjectExtensions>
