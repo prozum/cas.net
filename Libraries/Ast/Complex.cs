@@ -36,14 +36,24 @@ namespace Ast
             return res;
         }
 
+        public override Expression Clone()
+        {
+            return new Complex(real.Clone() as Real, imag.Clone() as Real);
+        }
+
         public override Expression Minus()
         {
             return new Complex(real.ToNegative() as Real, imag.ToNegative() as Real);
         }
 
-        public override Expression Clone()
+        public override Expression AddWith(Complex other)
         {
-            return new Complex(real.Clone() as Real, imag.Clone() as Real);
+            return new Complex(real + other.real as Real, imag + other.imag as Real);
+        }
+
+        public override Expression SubWith(Complex other)
+        {
+            return new Complex(real - other.real as Real, imag - other.imag as Real);
         }
     }
 }
