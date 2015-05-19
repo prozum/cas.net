@@ -5,6 +5,7 @@ namespace Ast
 {
     public class PrintFunc : SysFunc
     {
+        public PrintFunc() : this(null, null) { }
         public PrintFunc(List<Expression> args, Scope scope)
             : base("print", args, scope)
         {
@@ -24,6 +25,10 @@ namespace Ast
             return new Null();
         }
 
+        public override Expression Clone()
+        {
+            return MakeClone<PrintFunc>();
+        }
     }
 }
 

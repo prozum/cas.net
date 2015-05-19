@@ -5,6 +5,7 @@ namespace Ast
 {
     public class RangeFunc : SysFunc
     {
+        public RangeFunc() : this(null, null) { }
         public RangeFunc(List<Expression> args, Scope scope)
             : base("range", args, scope)
         {
@@ -42,7 +43,7 @@ namespace Ast
 
         public override Expression Clone()
         {
-            throw new NotImplementedException();
+            return MakeClone<RangeFunc>();
         }
     }
 }

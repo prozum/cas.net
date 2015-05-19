@@ -8,6 +8,7 @@ namespace Ast
         Equal equal;
         Variable sym;
 
+        public SolveFunc() : this(null, null) { }
         public SolveFunc(List<Expression> args, Scope scope)
             : base("solve", args, scope)
         {
@@ -139,6 +140,11 @@ namespace Ast
             }
 
             return null;
+        }
+
+        public override Expression Clone()
+        {
+            return MakeClone<SolveFunc>();
         }
     }
 }

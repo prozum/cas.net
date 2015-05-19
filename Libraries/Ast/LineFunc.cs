@@ -11,6 +11,7 @@ namespace Ast
         public decimal x2;
         public decimal y2;
 
+        public LineFunc() : this(null, null) { }
         public LineFunc(List<Expression> args, Scope scope)
             : base("line", args, scope)
         {
@@ -36,6 +37,11 @@ namespace Ast
 
             Scope.SideEffects.Add(new LineData(x1,y1,x2,y2));
             return new Null();
+        }
+
+        public override Expression Clone()
+        {
+            return MakeClone<LineFunc>();
         }
     }
 }
