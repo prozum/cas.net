@@ -129,13 +129,13 @@ namespace Ast
 
         private bool CompareSwappables(ISwappable exp1, BinaryOperator exp2)
         {
-            if (CompareSides(exp1 as BinaryOperator, exp2) || CompareSides(exp1.Swap().Reduce() as BinaryOperator, exp2))
-            {
-                return true;
-            }
-            else if ((exp1 as BinaryOperator).Left is ISwappable || (exp1 as BinaryOperator).Right is ISwappable)
+            if ((exp1 as BinaryOperator).Left is ISwappable || (exp1 as BinaryOperator).Right is ISwappable)
             {
                 return SwappableCompareAlorithem(exp1, exp2);
+            }
+            else if (CompareSides(exp1 as BinaryOperator, exp2) || CompareSides(exp1.Swap().Reduce() as BinaryOperator, exp2))
+            {
+                return true;
             }
 
             return false;
@@ -144,6 +144,11 @@ namespace Ast
         private bool SwappableCompareAlorithem(ISwappable exp1, BinaryOperator exp2)
         {
             BinaryOperator modified = (exp1 as BinaryOperator).Clone() as BinaryOperator;
+
+            if (modified.ToStringParent() == exp2.ToStringParent())
+            {
+                return true;
+            }
 
             do
             {
