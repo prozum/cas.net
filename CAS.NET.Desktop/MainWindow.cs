@@ -116,12 +116,16 @@ namespace CAS.NET.Desktop
             toolbar.Add(movablecasresult);
 
             VBox vbox = new VBox();
+
+            ScrolledWindow scrolleddefbox = new ScrolledWindow();
+            scrolleddefbox.Add(DefBox);
+            scrolleddefbox.HeightRequest = 100;
             
             vbox.PackStart(menubar, false, false, 2);
             vbox.PackStart(toolbar, false, false, 2);
             scrolledWindow.Add(textviews);
             vbox.Add(scrolledWindow);
-            vbox.Add(DefBox);
+            vbox.PackEnd(scrolleddefbox, false, false, 2);
 
             Add(vbox);
             SetSizeRequest(600, 600);
