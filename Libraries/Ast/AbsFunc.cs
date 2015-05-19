@@ -20,11 +20,14 @@ namespace Ast
             if (!IsArgumentsValid())
                 return new ArgumentError(this);
 
-            var res = Arguments[0].Evaluate();
+            var res = ReturnValue(Arguments[0]).Evaluate();
 
             if (res is INegative)
             {
-                return (res as INegative).ToNegative();
+                if ((res as INegative).IsNegative())
+                    return (res as INegative).ToNegative();
+                else
+                    return res;
             }
 
             if (res is Complex)
