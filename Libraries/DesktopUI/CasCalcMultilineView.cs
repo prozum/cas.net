@@ -14,7 +14,6 @@ namespace DesktopUI
         public Evaluator eval;
         public TextView input = new TextView();
         public Button evaluateButton = new Button("Evaluate");
-        private List<EvalData> DataList = new List<EvalData>();
         public Label output = new Label();
         public DrawView drawView = new DrawView();
 

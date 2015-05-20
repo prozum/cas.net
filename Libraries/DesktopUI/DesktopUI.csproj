@@ -135,6 +135,10 @@
       <Project>{882174F5-0B72-4DF3-997F-BD2EB16C6E6C}</Project>
       <Name>TaskGenLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Draw\Draw.csproj">
+      <Project>{61470166-2F65-41BD-9D9C-2C2C5F2DA6ED}</Project>
+      <Name>Draw</Name>
+    </ProjectReference>
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
