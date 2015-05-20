@@ -61,7 +61,22 @@ namespace Ast
 
         private bool CompareVariables(Variable left, Variable right)
         {
-            return left.Identifier == right.Identifier && left.Exponent.CompareTo(right.Exponent) && left.GetType() == right.GetType();
+            if (left.Identifier == right.Identifier && left.Exponent.CompareTo(right.Exponent) && left.GetType() == right.GetType())
+            {
+                if (left is Func)
+                {
+                    if ((left as Func).CompareArgsTo(right as Func))
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private Expression ReduceMultiAdd(dynamic other)
