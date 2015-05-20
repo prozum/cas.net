@@ -32,18 +32,6 @@ namespace Ast
         }
     }
 
-    public class PlotData : EvalData
-    {
-        public List<Real> x;
-        public List<Real> y;
-
-        public PlotData(List<Real> x, List<Real> y)
-        {
-            this.x = x;
-            this.y = y;
-        }
-    }
-
     public class PrintData : EvalData
     {
         public string msg;

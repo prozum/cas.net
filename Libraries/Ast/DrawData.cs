@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Ast
 {
@@ -26,6 +27,20 @@ namespace Ast
             this.y1 = y1;
             this.x2 = x2;
             this.y2 = y2;
+        }
+    }
+
+    public class PlotData : EvalData
+    {
+        public List<Real> x;
+        public List<Real> y;
+        public List<Real> z;
+
+        public PlotData(List<Real> x, List<Real> y, List<Real> z)
+        {
+            this.x = x;
+            this.y = y;
+            this.z = z;
         }
     }
 

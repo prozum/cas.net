@@ -126,10 +126,5 @@ namespace Draw
 
             args.RetVal = true;
         }
-
-        
-
     }
-
-
 }

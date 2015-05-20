@@ -56,7 +56,7 @@ namespace Ast
                     return new Error(this, "Argument 1 does not return a real number");
             }
 
-            Scope.SideEffects.Add(new PlotData(xList, yList));
+            Scope.SideEffects.Add(new PlotData(xList, yList, null));
             return new Null();
         }
 
