@@ -327,6 +327,15 @@ namespace Ast
             return parent;
         }
 
+        public void ParseComment()
+        {
+            do
+            {
+                Eat();
+            }
+            while (curToken.Kind != TokenKind.NEW_LINE && curToken.Kind != TokenKind.END_OF_STRING);
+        }
+
         public Expression ParseExpr()
         {
             bool done = false;
@@ -424,6 +433,12 @@ namespace Ast
                     case TokenKind.CURLY_START:
                         eat = false;
                         SetupExpr(ParseScope());
+                        break;
+
+                    case TokenKind.HASH:
+                        done = true;
+                        eat = false;
+                        ParseComment();
                         break;
 
                     case TokenKind.PARENT_END:

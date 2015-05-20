@@ -154,12 +154,15 @@ namespace Ast
                     return new Token(TokenKind.CURLY_START, "{", Position);
                 case '}':
                     return new Token(TokenKind.CURLY_END, "}", Position);
+                
                 case ',':
                     return new Token(TokenKind.COMMA, ",", Position);
                 case ';':
                     return new Token(TokenKind.SEMICOLON, ";", Position);
                 case '.':
                     return new Token(TokenKind.DOT, ".", Position);
+                case '#':
+                    return new Token(TokenKind.HASH, "#", Position);
                 
                 default:
                     if (char.IsLetter(@char))

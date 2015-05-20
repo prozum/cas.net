@@ -51,6 +51,7 @@ namespace Ast
         COLON,
         SEMICOLON,
         DOT,
+        HASH,
 
         NEW_LINE,
         END_OF_STRING,
