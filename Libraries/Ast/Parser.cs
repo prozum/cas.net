@@ -436,7 +436,6 @@ namespace Ast
                         break;
 
                     case TokenKind.HASH:
-                        done = true;
                         eat = false;
                         ParseComment();
                         break;
