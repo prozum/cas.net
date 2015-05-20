@@ -280,12 +280,14 @@ namespace Ast
                     return new Token(TokenKind.ELIF, identifier, startPos);
                 case "else":
                     return new Token(TokenKind.ELSE, identifier, startPos);
-                case "ret":
-                    return new Token(TokenKind.RET, identifier, startPos);
                 case "for":
                     return new Token(TokenKind.FOR, identifier, startPos);
                 case "in":
                     return new Token(TokenKind.IN, identifier, startPos);
+                case "while":
+                    return new Token(TokenKind.WHILE, identifier, startPos);
+                case "ret":
+                    return new Token(TokenKind.RET, identifier, startPos);
                 case "and":
                     return new Token(TokenKind.AND, identifier, startPos);
                 case "or":

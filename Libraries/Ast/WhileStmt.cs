@@ -5,19 +5,18 @@ namespace Ast
     public class WhileStmt : Statement
     {
         public Expression condition;
-        public Expression expr;
+        public Expression expression;
         readonly int MaxIterations = 10000;
 
-        public WhileStmt(Expression expr, Scope scope) : base(scope)
+        public WhileStmt(Scope scope) : base(scope)
         {
-            this.expr = expr;
         }
 
         public override EvalData Evaluate()
         {
             int i = 0;
 
-            while (i < MaxIterations)
+            while (i++ < MaxIterations)
             {
                 var res = condition.Evaluate();
 
@@ -29,20 +28,18 @@ namespace Ast
                 else if (res is Error)
                     return new ErrorData(res as Error);
 
+                expression.Evaluate();
             }
-//            var res = expr.Evaluate();
-//
-//            if (Scope.GetBool("debug"))
-//                Scope.SideEffects.Add(new DebugData("Debug: " + expr + " = " + res));
-//
-//            return new ExprData(res);
+
+            if (i > MaxIterations)
+                return new ErrorData("while: Overflow!");
 
             return new DoneData();
         }
 
         public override string ToString()
         {
-            return expr.ToString();
+            return expression.ToString();
         }
     }
 }

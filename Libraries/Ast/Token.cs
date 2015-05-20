@@ -8,12 +8,14 @@ namespace Ast
         TRUE,
         FALSE,
         NULL,
+
         IF,
         ELIF,
         ELSE,
-        RET,
         FOR,
         IN,
+        WHILE,
+        RET,
 
         TEXT,
 

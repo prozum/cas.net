@@ -114,6 +114,10 @@ namespace Ast
                         Eat();
                         curScope.Statements.Add(ParseForStmt());
                         break;
+                    case TokenKind.WHILE:
+                        Eat();
+                        curScope.Statements.Add(ParseWhileStmt());
+                        break;
                     case TokenKind.RET:
                         Eat();
                         curScope.Statements.Add(new RetStmt(ParseExpr(), curScope));
@@ -262,6 +266,27 @@ namespace Ast
             }
 
             stmt.expr = ParseScope();
+
+            return stmt;
+        }
+
+        public WhileStmt ParseWhileStmt()
+        {
+            Expression cond;
+            Scope scope;
+
+            var stmt = new WhileStmt(curScope);
+
+            cond = ParseColon();
+            if (Error)
+                return null;
+            stmt.condition = cond;
+
+            scope = ParseScope();
+            if (Error)
+                return null;
+            stmt.expression = scope;
+            stmt.condition.Scope = scope;
 
             return stmt;
         }
