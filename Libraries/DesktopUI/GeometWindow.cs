@@ -9,7 +9,7 @@ namespace DesktopUI
 
         // Constructor for taskgenwindow
         public GeometWindow(TextViewList textviews)
-            : base("Geomet Window")
+            : base("Solver Tools")
         {
             this.textviews = textviews;
             double k;
