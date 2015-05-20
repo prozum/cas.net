@@ -23,8 +23,8 @@ namespace DesktopUI
             drawView = new DrawView();
 
             Attach(input, 1, 1, 1, 1);
-            Attach(output, 1, 2, 1, 1);
-            Attach(drawView, 1, 3, 1, 1);
+            Attach(output, 1, 3, 1, 1);
+            Attach(drawView, 1, 4, 1, 1);
             ShowAll();
         }
 
