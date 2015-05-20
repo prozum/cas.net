@@ -27,7 +27,7 @@ build_script:
     # MSBuild.
     "Scheduled build: $env:APPVEYOR_SCHEDULED_BUILD"
     "Forced build: $env:APPVEYOR_FORCED_BUILD"
-    if ($env:APPVEYOR_SCHEDULED_BUILD -ne "True" -Or $env:APPVEYOR_FORCED_BUILD -ne "True") {
+    if ($env:APPVEYOR_SCHEDULED_BUILD -ne "True" -And $env:APPVEYOR_FORCED_BUILD -ne "True") {
       & $buildCmd $buildArgs
       return
     }
