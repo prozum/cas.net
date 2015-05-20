@@ -5,6 +5,11 @@ namespace Ast
 {
     public class PrintFunc : SysFunc
     {
+        internal override Expression Evaluate(Expression caller)
+        {
+            return Evaluate();
+        }
+
         public PrintFunc() : this(null, null) { }
         public PrintFunc(List<Expression> args, Scope scope)
             : base("print", args, scope)
@@ -20,9 +25,11 @@ namespace Ast
             if (!IsArgumentsValid())
                 return new ArgumentError(this);
 
-            Scope.SideEffects.Add(new PrintData(Arguments[0].Evaluate().ToString()));
+            var res = Arguments[0].Evaluate().ToString();
 
-            return new Null();
+            Scope.SideEffects.Add(new PrintData(res));
+
+            return new Text(res);
         }
 
         public override Expression Clone()

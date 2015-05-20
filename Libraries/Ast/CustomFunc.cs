@@ -18,7 +18,6 @@ namespace Ast
             return Value.Evaluate();
         }
 
-
         private Expression _value;
         public override Expression Value
         {
