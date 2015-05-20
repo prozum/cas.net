@@ -68,10 +68,6 @@
       <Project>{82C03E10-075F-411C-A1F1-D5506C62BE1C}</Project>
       <Name>Ast</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Libraries\Graph\Draw.csproj">
-      <Project>{61470166-2F65-41BD-9D9C-2C2C5F2DA6ED}</Project>
-      <Name>Draw</Name>
-    </ProjectReference>
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
