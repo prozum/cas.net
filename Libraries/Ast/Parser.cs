@@ -69,6 +69,8 @@ namespace Ast
         {
             ParseContext cx;
 
+            while (Eat(TokenKind.NEW_LINE));
+
             if (global != null)
             {
                 cx = ParseContext.ScopeGlobal;
@@ -116,10 +118,10 @@ namespace Ast
                         Eat();
                         curScope.Statements.Add(new RetStmt(ParseExpr(), curScope));
                         break;
-                    
+
+                    case TokenKind.ELIF:
+                    case TokenKind.ELSE:
                     case TokenKind.CURLY_END:
-                        return;
-                    
                     case TokenKind.END_OF_STRING:
                         return;
 
@@ -178,48 +180,47 @@ namespace Ast
 
         public IfStmt ParseIfStmt()
         {
+            Expression cond;
+            Expression expr;
+
             var stmt = new IfStmt(curScope);
 
-//            stmt.conditions.Add(ParseExpr());
-//
-//            if (!Eat(TokenKind.COLON))
-//            {
-//                ReportSyntaxError("If syntax: if bool: {}");
-//                return null;
-//            }
-//
-//            if (Eat(TokenKind.CURLY_START))
-//                stmt.expressions.Add(ParseScope(ParseContext.Scope));
-//            else
-//            {
-//                stmt.expressions.Add(ParseScope());
-//
-//                if (!Eat(TokenKind.SEMICOLON))
-//                {
-//                    ReportSyntaxError("If syntax: if bool: {}");
-//                    return null;
-//                }
-//            }
-//
-//            while (Eat(TokenKind.ELIF))
-//            {
-//                stmt.conditions.Add(ParseExpr());
-//
-//                if (Eat(TokenKind.COLON))
-//                    stmt.conditions.Add(ParseExpr());
-//                else
-//                {
-//                    ReportSyntaxError("If syntax: if bool: {}");
-//                    return null;
-//                }
-//
-//                stmt.expressions.Add(ParseScope());
-//            }
-//
-//            if (Eat(TokenKind.ELSE))
-//            {
-//                stmt.expressions.Add(ParseScope());
-//            }
+            cond = ParseColon();
+            if (Error)
+                return null;
+            stmt.conditions.Add(cond);
+
+            expr = ParseScope();
+            if (Error)
+                return null;
+            stmt.expressions.Add(expr);
+
+            while (Eat(TokenKind.NEW_LINE));
+            while (Eat(TokenKind.ELIF))
+            {
+                cond = ParseColon();
+                if (Error)
+                    return null;
+                stmt.conditions.Add(cond);
+
+                expr = ParseScope();
+                if (Error)
+                    return null;
+                stmt.expressions.Add(expr);
+
+                while (Eat(TokenKind.NEW_LINE));
+            }
+
+            while (Eat(TokenKind.NEW_LINE));
+            if (Eat(TokenKind.ELSE))
+            {
+                Eat(TokenKind.COLON); // Optional colon
+
+                expr = ParseScope();
+                if (Error)
+                    return null;
+                stmt.expressions.Add(expr);
+            }
 
             return stmt;
         }

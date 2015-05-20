@@ -28,10 +28,6 @@ namespace Ast
                 }
                 else if (res is Error)
                     return new ErrorData(res as Error);
-                else
-                    return new ErrorData(res as Error);
-
-
 
             }
 //            var res = expr.Evaluate();
