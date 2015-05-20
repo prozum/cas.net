@@ -21,7 +21,10 @@ namespace Ast
             if (Scope.GetBool("debug"))
                 Scope.SideEffects.Add(new DebugData("Debug: " + expr + " = " + res));
 
-            return new ExprData(res);
+            if (!(res is Null))
+                return new ExprData(res);
+            else
+                return new DoneData();
         }
 
         public override string ToString()
