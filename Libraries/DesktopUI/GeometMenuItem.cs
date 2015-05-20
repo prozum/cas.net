@@ -7,7 +7,7 @@ namespace DesktopUI
     {
         TextViewList textviews;
 
-        public GeometMenuItem(TextViewList textviews) : base("Geometry")
+        public GeometMenuItem(TextViewList textviews) : base("Solver Tools")
         {
             this.textviews = textviews;
             this.Activated += delegate
