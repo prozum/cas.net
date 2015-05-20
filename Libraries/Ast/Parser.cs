@@ -128,6 +128,8 @@ namespace Ast
                     case TokenKind.SEMICOLON:
                     case TokenKind.NEW_LINE:
                         Eat();
+                        if (curContext == ParseContext.ScopeSingle)
+                            return;
                         break;
 
                     default:
@@ -389,7 +391,15 @@ namespace Ast
                         break;
 
                     case TokenKind.NEW_LINE:
-                        done |= curContext != ParseContext.Parenthesis;
+                        if (curContext == ParseContext.ScopeSingle)
+                        {
+                            done = true;
+                            eat = false;
+                        }
+                        else if (curContext != ParseContext.Parenthesis)
+                        {
+                            done = true;
+                        }
                         break;
 
                     case TokenKind.INTEGER:
