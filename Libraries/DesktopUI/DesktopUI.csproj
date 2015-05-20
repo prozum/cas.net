@@ -54,9 +54,11 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CasCalcTextView.cs" />
+    <Compile Include="CasCalcMultilineView.cs" />
+    <Compile Include="MovableCasCalcMultilineToolButton.cs" />
     <Compile Include="GeometMenuItem.cs" />
     <Compile Include="GeometWindow.cs" />
+    <Compile Include="MovableCasCalcMulitlineView.cs" />
     <Compile Include="MovableDrawView.cs" />
     <Compile Include="TaskGenAlgMenuItem.cs" />
     <Compile Include="TaskGenMenuItem.cs" />
