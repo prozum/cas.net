@@ -24,31 +24,6 @@ namespace Geomet
             }
         }
 
-        //To vinkler og en længde eller vice versa.For at finde side. *Virker ikke 
-        /*
-        public static double SineRelation(int select, double a, double b, double c, double A, double B, double C)
-        {
-            double side;
-            if (select == 1) {
-
-                if (B > 0) {
-                
-                } else if (C > 0) {
-
-                }
-                side = Math.Asin((b / Math.Sin (B)) * Math.Sin (A));
-                return side;
-            } else if (select == 2) {
-                side = Math.Asin((a / Math.Sin (A)) * Math.Sin (B));
-                return side;
-            } else if (select == 3) {
-                side = (a*Math.Sin(C)) / Math.Sin (A);
-                return side;
-            } else {
-                return 0;
-            }
-        } */
-
         // Trigonometri, have alle sidelængder, find alle vinkler.
         public static double[] Angles(double a, double b, double c) {
             if (Verify(a,b,c)) {
@@ -82,6 +57,7 @@ namespace Geomet
         {
             return 0.5 * height * width;
         }
+
         //Check if valid triangle
         public static bool Verify(double a, double b, double c) {
             if (a + b > c || a + c > b || b + c > a) {
