@@ -41,6 +41,13 @@ namespace DesktopUI
                     {
                         (widget as MovableDrawCanvas).canvas.WidthRequest = window.Window.Width - buttonbarwidth;
                     }
+                    else if (widget is MovableCasCalcMulitlineView)
+                    {
+                        (widget as MovableCasCalcMulitlineView).calcview.input.WidthRequest = window.Window.Width - buttonbarwidth;
+                        (widget as MovableCasCalcMulitlineView).calcview.output.WidthRequest = window.Window.Width - buttonbarwidth;
+                        (widget as MovableCasCalcMulitlineView).calcview.evaluateButton.WidthRequest = window.Window.Width - buttonbarwidth;
+                        (widget as MovableCasCalcMulitlineView).calcview.drawView.WidthRequest = window.Window.Width - buttonbarwidth;
+                    }
                     else if (widget is MovableCasResult)
                     {
                         (widget as MovableCasResult).casresult.entryFasitGet.WidthRequest = (window.Window.Width - buttonbarwidth - (widget as MovableCasResult).casresult.labelFacitGet.AllocatedWidth);
@@ -131,7 +138,6 @@ namespace DesktopUI
             //MovCasCalcView.calcview.input.IsEditable = !locked;
             MovCasCalcView.calcview.input.Activated += delegate
             {
-
                 MovCasCalcView.calcview.eval.Scope.Locals.Clear();
                 MovCasCalcView.calcview.Evaluate();
                 MovCasCalcView.ShowAll();
@@ -140,13 +146,60 @@ namespace DesktopUI
             //MovCasCalcView.Attach(AddLockCheckButton(MovCasCalcView), 1, 100, 1, 1);
             MovCasCalcView.Attach(AddCommandButtons(MovCasCalcView), 100, 1, 1, 1);
 
-            if (user.privilege <= 0 && locked == true)
-            {
-                MovCasCalcView.calcview.input.IsEditable = false;
-            }
+            //if (user.privilege <= 0 && locked == true)
+            //{
+            //    MovCasCalcView.calcview.input.IsEditable = false;
+            //}
 
             castextviews.Add(MovCasCalcView);
 
+            Clear();
+            Redraw();
+            ShowAll();
+        }
+
+        public void InsertCalcMultilineView(int pos)
+        {
+            MovableCasCalcMulitlineView movCasCalcMultiView = new MovableCasCalcMulitlineView(Eval);
+            movCasCalcMultiView.calcview.evaluateButton.Clicked += delegate
+            {
+                movCasCalcMultiView.calcview.eval.Locals.Clear();
+                movCasCalcMultiView.calcview.Evaluate();
+                Reevaluate();
+                movCasCalcMultiView.ShowAll();
+            };
+
+            movCasCalcMultiView.Attach(AddLockCheckButton(movCasCalcMultiView), 1, 100, 1, 1);
+            movCasCalcMultiView.Attach(AddCommandButtons(movCasCalcMultiView), 100, 1, 1, 1);
+
+            if (pos == -1)
+            {
+                castextviews.Add(movCasCalcMultiView);
+            }
+            else
+            {
+                castextviews.Insert(pos, movCasCalcMultiView);
+            }
+
+            Clear();
+            Redraw();
+            ShowAll();
+        }
+
+        public void InsertCalcMultilineView(string input, bool locked)
+        {
+            MovableCasCalcMulitlineView movCasCalcMultiView = new MovableCasCalcMulitlineView(Eval);
+            movCasCalcMultiView.calcview.input.Buffer.Text = input;
+            movCasCalcMultiView.calcview.evaluateButton.Clicked += delegate
+            {
+                movCasCalcMultiView.calcview.eval.Scope.Locals.Clear();
+                movCasCalcMultiView.calcview.Evaluate();
+                movCasCalcMultiView.ShowAll();
+            };
+
+            movCasCalcMultiView.Attach(AddCommandButtons(movCasCalcMultiView), 100, 1, 1, 1);
+            castextviews.Add(movCasCalcMultiView);
+            
             Clear();
             Redraw();
             ShowAll();

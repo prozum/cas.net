@@ -38,6 +38,7 @@ namespace CAS.NET.Desktop
         UnderlineToolButton underline;
         MovableTextViewToolButton movabletextview;
         MovableCalcViewToolButton movablecalcview;
+        MovableCasCalcMultilineToolButton movablecalcmultiline;
         MovableDrawCanvasToolButton movabledrawcanvas;
         MovableResultToolButton movablecasresult;
 
@@ -99,6 +100,7 @@ namespace CAS.NET.Desktop
 
             movabletextview = new MovableTextViewToolButton(ref textviews);
             movablecalcview = new MovableCalcViewToolButton(ref textviews);
+            movablecalcmultiline = new MovableCasCalcMultilineToolButton(ref textviews);
             movabledrawcanvas = new MovableDrawCanvasToolButton(ref textviews);
             movablecasresult = new MovableResultToolButton(ref textviews);
 
@@ -112,7 +114,8 @@ namespace CAS.NET.Desktop
             toolbar.Add(separator2);
             toolbar.Add(movabletextview);
             toolbar.Add(movablecalcview);
-            toolbar.Add(movabledrawcanvas);
+            toolbar.Add(movablecalcmultiline);
+            //toolbar.Add(movabledrawcanvas);
             toolbar.Add(movablecasresult);
 
             VBox vbox = new VBox();
