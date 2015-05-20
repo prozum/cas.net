@@ -23,7 +23,7 @@ namespace Ast
 
         public override string ToString()
         {
-            return "\"" + @string + "\"";
+            return @string;
         }
 
         public override bool CompareTo(Expression other)
