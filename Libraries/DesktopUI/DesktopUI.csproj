@@ -115,10 +115,6 @@
       <Project>{3B778CA7-302F-4838-B6DA-9193929403D7}</Project>
       <Name>Geomet</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Graph\Draw.csproj">
-      <Project>{61470166-2f65-41bd-9d9c-2c2c5f2da6ed}</Project>
-      <Name>Draw</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ImEx\ImEx.csproj">
       <Project>{5150E825-D811-4D68-8C0E-86A1F8573561}</Project>
       <Name>ImEx</Name>
