@@ -57,7 +57,7 @@ namespace Ast
                 switch (ValidArguments[i])
                 {
                     case ArgKind.Expression:
-                        if (!(Arguments[i] is Expression))
+                        if (!(Arguments[i].Value is Expression))
                             return false;
                         break;
                     case ArgKind.Real:
@@ -73,11 +73,11 @@ namespace Ast
                             return false;
                         break;
                     case ArgKind.Equation:
-                        if (!(Arguments[i] is Equal))
+                        if (!(Arguments[i].Value is Equal))
                             return false;
                         break;
                     case ArgKind.List:
-                        if (!(Arguments[i] is List))
+                        if (!(Arguments[i].Value is List))
                             return false;
                         break;
                 }

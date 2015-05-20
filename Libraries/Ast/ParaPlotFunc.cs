@@ -43,8 +43,8 @@ namespace Ast
             }
 
 
-            expr1.Scope = new Scope(expr1.Scope);
-            expr2.Scope = new Scope(expr2.Scope);
+            expr1.Scope = new Scope(Scope);
+            expr2.Scope = new Scope(Scope);
 
             foreach (var z in zList)
             {

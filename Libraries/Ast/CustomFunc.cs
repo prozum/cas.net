@@ -48,7 +48,7 @@ namespace Ast
                     {
                         var arg = (Variable)customDef.Arguments[i];
 
-                        customDef.SetVar(arg.Identifier, Arguments[i]);
+                        customDef.SetVar(arg.Identifier, Arguments[i].Value);
                     }
 
                     return customDef;

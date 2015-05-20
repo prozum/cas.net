@@ -11,7 +11,7 @@ namespace Ast
         {
             ValidArguments = new List<ArgKind>()
                 {
-                    ArgKind.Expression
+                    ArgKind.Real
                 };
         }
 
@@ -22,7 +22,7 @@ namespace Ast
 
             var res = Arguments[0].Evaluate();
 
-            var deg = Scope.GetBool("deg");
+            var deg = GetBool("deg");
 
             if (res is Real)
             {

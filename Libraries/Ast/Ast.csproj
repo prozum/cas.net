@@ -211,7 +211,9 @@
     <Compile Include="AbsFunc.cs">
       <DependentUpon>SysFunc.cs</DependentUpon>
     </Compile>
-    <Compile Include="ParaPlotFunc.cs" />
+    <Compile Include="ParaPlotFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ProjectExtensions>

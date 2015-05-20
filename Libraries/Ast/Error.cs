@@ -55,7 +55,7 @@ namespace Ast
     {
         public ArgumentError(SysFunc func) : this(func, func.Position, func.ValidArguments) { }
 
-        public ArgumentError(object obj, Pos position, List<ArgKind> validArgs) : base(obj, position, "Valid args: ")
+        public ArgumentError(object obj, Pos position, List<ArgKind> validArgs) : base(obj, position, "valid arguments: ")
         {
             ErrorMessage += "[";
             for(int i = 0; i < validArgs.Count; i++)
