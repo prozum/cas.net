@@ -29,6 +29,30 @@ namespace Ast
         {
             return MakeClone<TypeFunc>();
         }
+
+        public override bool CompareTo(Expression other)
+        {
+            var eval = Evaluate();
+
+            if (eval is Text)
+            {
+                if (other is Text)
+                {
+                    return ((eval as Text).@string.CompareTo((other as Text).@string) == 0) ? true : false;
+                }
+                if (other is TypeFunc)
+                {
+                    var text = (other as TypeFunc).Evaluate();
+
+                    if (text is Text)
+                    {
+                        return ((eval as Text).@string.CompareTo((text as Text).@string) == 0) ? true : false;
+                    }
+                }
+            }
+
+            return base.CompareTo(other);
+        }
     }
 }
 

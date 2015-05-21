@@ -32,6 +32,15 @@ namespace Ast
             {
                 return (@string.CompareTo((other as Text).@string) == 0) ? true : false;
             }
+            if (other is TypeFunc)
+            {
+                var text = (other as TypeFunc).Evaluate();
+
+                if (text is Text)
+                {
+                    return (@string.CompareTo((text as Text).@string) == 0) ? true : false;
+                }
+            }
 
             return false;
         }
