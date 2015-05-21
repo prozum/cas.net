@@ -80,24 +80,35 @@ namespace Ast
             return false;
         }
 
-        public Variable SetVar(string identifier, Expression expr)
-        {
-            var @var = new Variable(identifier, this);
-            @var.Value = expr;
-
-            return SetVar(@var);
-        }
-
         public Variable SetVar(Variable @var)
         {
-            if (Locals.ContainsKey(@var.Identifier))
-                Locals.Remove(@var.Identifier);
+            return SetVar(@var.Identifier, @var);
+        }
 
-            Locals.Add(@var.Identifier, @var);
+        public Variable SetVar(string identifier, Expression expr)
+        {
+            Variable @var;
+
+            if (expr is Variable)
+            {
+                @var = (Variable)expr;
+                @var.Scope = this;
+            }
+            else
+            {
+                @var = new Variable(identifier, this);
+                @var.Value = expr;
+            }
+
+            //return SetVar(@var);
+
+            if (Locals.ContainsKey(identifier))
+                Locals.Remove(identifier);
+
+            Locals.Add(identifier, @var);
 
             return @var;
         }
-
 
         // TODO Fix position
         public Expression GetVar(Variable @var) { return GetVar(@var.Identifier); }

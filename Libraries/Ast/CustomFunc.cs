@@ -28,17 +28,12 @@ namespace Ast
 
                 var res = Scope.GetVar(Identifier);
 
-                Variable @var;
-                if (res is Variable)
-                    @var = res as Variable;
-                else if (res is Error)
+                if (res is Error)
                     return res;
-                else
-                    return new Error(this, "Variable is not a function or list");
 
-                if (@var is CustomFunc)
+                if (res is CustomFunc)
                 {
-                    var customDef = (CustomFunc)@var;
+                    var customDef = (CustomFunc)res;
 
                     if (Arguments.Count != customDef.Arguments.Count)
                         return new Error(Identifier + " takes " + customDef.Arguments.Count.ToString() + " arguments. Not " + Arguments.Count.ToString() + ".");
@@ -53,9 +48,9 @@ namespace Ast
                     return customDef;
                 }
 
-                if (@var.Value is List)
+                if (res.Value is List)
                 {
-                    var list = (List)@var.Value;
+                    var list = (List)res.Value;
 
                     if (Arguments.Count != 1 || !(Arguments[0].Evaluate() is Integer))
                         return new Error(list, "Valid args: [Integer]");

@@ -96,7 +96,10 @@ namespace Ast
                 if (Definition)
                     return _value;
 
-                var value = Scope.GetVar(Identifier).Value;
+                var value = Scope.GetVar(Identifier);
+
+                if (!(value is Func))
+                    value = value.Value;
 
                 if (value is Real)
                     value = Prefix * value ^ Exponent;
