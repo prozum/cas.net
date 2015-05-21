@@ -45,16 +45,13 @@ namespace DesktopUI
                 drawView.xList.Clear();
                 drawView.Hide();
 
+                string outputstring = String.Empty;
+
                 output.Text = string.Empty; // Clears output before adding new text
 
                 if (!(res is Null || res is Error))
                 {
-                    output.Text = res.ToString() + "\n";
-                }
-
-                foreach (var data in eval.SideEffects)
-                {
-                    Console.WriteLine("Sideeffect: " + data.ToString());
+                    outputstring = res.ToString() + "\n";
                 }
 
                 foreach (var data in eval.SideEffects)
@@ -62,21 +59,23 @@ namespace DesktopUI
 
                     if (data is PrintData)
                     {
-                        output.Text += data.ToString() + "\n";
+                        outputstring += data.ToString() + "\n";
                     }
                     else if (data is ErrorData)
                     {
-                        output.Text += data.ToString() + "\n";
+                        outputstring += data.ToString() + "\n";
                     }
                     else if (data is DebugData && eval.GetBool("debug"))
                     {
-                        output.Text += data.ToString() + "\n";
+                        outputstring += data.ToString() + "\n";
                     }
                     else if (data is PlotData)
                     {
                         drawView.Plot(data as PlotData);
                     }
                 }
+
+                output.Text = outputstring;
             }
         }
     }
