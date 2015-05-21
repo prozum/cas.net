@@ -552,7 +552,12 @@ namespace Ast
                         if (expectUnary)
                             ReportError(curToken + " is not supported as unary operator");
                         else
+                        {
+                            eat = false;
+                            Eat();
                             SetupBiOp(new Assign());
+                            while (Eat(TokenKind.NEW_LINE)); // Allow assignment on new line
+                        }
                         break;
                     case TokenKind.EQUAL:
                         if (expectUnary)
