@@ -457,6 +457,9 @@ namespace Ast
                     case TokenKind.NULL:
                         SetupExpr(new Null());
                         break;
+                    case TokenKind.SELF:
+                        SetupExpr(new Self());
+                        break;
 
                     case TokenKind.PARENT_START:
                         eat = false;

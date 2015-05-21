@@ -292,6 +292,8 @@ namespace Ast
                     return new Token(TokenKind.AND, identifier, startPos);
                 case "or":
                     return new Token(TokenKind.OR, identifier, startPos);
+                case "self":
+                    return new Token(TokenKind.SELF, identifier, startPos);
                 default:
                     return new Token(TokenKind.IDENTIFIER, identifier, startPos);
             }

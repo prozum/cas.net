@@ -8,6 +8,7 @@ namespace Ast
         TRUE,
         FALSE,
         NULL,
+        SELF,
 
         IF,
         ELIF,
