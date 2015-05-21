@@ -47,14 +47,9 @@ namespace Ast
 
         public override bool CompareTo(Expression other)
         {
-            if (other is SysFunc)
+            if (other is Func)
             {
                 return Identifier == (other as Func).Identifier && Prefix.CompareTo((other as Func).Prefix) && Exponent.CompareTo((other as Func).Exponent) && CompareArgsTo(other as Func);
-            }
-
-            if (this is CustomFunc)
-            {
-                return this.Value.CompareTo(other);
             }
 
             return false;

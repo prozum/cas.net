@@ -2,9 +2,6 @@
 
 namespace Ast
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public class Assign : BinaryOperator
     {
         public override string Identifier { get { return ":="; } }
@@ -13,9 +10,6 @@ namespace Ast
         public Assign() { }
         public Assign(Expression left, Expression right) : base(left, right) { }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public override Expression Evaluate()
         {
             Variable @var;
@@ -25,7 +19,7 @@ namespace Ast
 
             if (Left is Error)
                 return Left;
-                
+            
             if (Left is Dot)
             {
                 res = Left.Value;
