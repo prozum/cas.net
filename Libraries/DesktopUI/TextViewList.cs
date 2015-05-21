@@ -314,6 +314,10 @@ namespace DesktopUI
                 {
                     (widget as MovableCasCalcView).calcview.Evaluate();
                 }
+                else if (widget is MovableCasCalcMulitlineView)
+                {
+                    (widget as MovableCasCalcMulitlineView).calcview.Evaluate();
+                }
             }
         }
 

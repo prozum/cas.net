@@ -17,7 +17,7 @@ namespace Ast
     }
 
     /// <summary>
-    /// A Operator which evaluates to expressions.
+    /// A Operator which evaluates two expressions.
     /// </summary>
     public abstract class BinaryOperator : Operator
     {
@@ -98,14 +98,13 @@ namespace Ast
             return '(' + Left.ToString() + Identifier + Right.ToString() + ')';
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
+
         public override bool CompareTo(Expression other)
         {
             Expression thisSimplified = Reduce();
             Expression otherSimplified = other.Reduce();
 
+            //When this changes type after reduction.
             if (!(thisSimplified is BinaryOperator))
             {
                 return thisSimplified.CompareTo(otherSimplified);
@@ -150,8 +149,12 @@ namespace Ast
                 return true;
             }
 
+            //Transforms modified until modified == exp2 or modified == exp1
+            //When modified == exp2 then exp1's result is the same as exp2, aka they are the same
+            //When modified == exp1 then the loop is done, and it found no matching trees.
             do
             {
+                //First, transform modified.
                 modified = (modified as ISwappable).Transform();
 
                 if (modified.ToStringParent() == exp2.ToStringParent())
@@ -159,6 +162,7 @@ namespace Ast
                     return true;
                 }
 
+                //Second, swap one of the swappable sides.
                 if (modified.Left is ISwappable)
                 {
                     modified.Left = (modified.Left as ISwappable).Swap();
@@ -187,9 +191,6 @@ namespace Ast
             return exp1.Left.CompareTo(exp2.Left) && exp1.Right.CompareTo(exp2.Right);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public override bool ContainsVariable(Variable other)
         {
             return Left.ContainsVariable(other) || Right.ContainsVariable(other);
@@ -199,8 +200,10 @@ namespace Ast
         {
             var prev = ToString();
             var prevType = GetType();
+            //Reduces the whole expression.
             var res = ReduceHelper(Left.Reduce(caller), Right.Reduce(caller));
 
+            //If the reduction did something, aka res is different from this, then reduce again.
             if (prevType != res.GetType() || prev != res.ToString())
             {
                 res = res.Reduce(caller);
@@ -214,14 +217,13 @@ namespace Ast
             return this;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public override Expression Expand()
         {
             var prev = ToString();
+            //Expands the whole expression.
             var res = ExpandHelper(Left.Expand(), Right.Expand());
 
+            //If the expandtion did something, aka res is different from this, then reduce again.
             if (prev != res.ToString())
             {
                 res = res.Expand();

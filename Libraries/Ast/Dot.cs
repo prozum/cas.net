@@ -2,9 +2,6 @@
 
 namespace Ast
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public class Dot : BinaryOperator
     {
         public override string Identifier { get { return "."; } }

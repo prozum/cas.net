@@ -24,7 +24,6 @@ namespace Draw
 
             this.Shown += delegate
             {
-                System.Console.WriteLine("***\nShowing graph\n***");
                 if(xList.Count == 0 || yList.Count == 0)
                 {
                     Hide();

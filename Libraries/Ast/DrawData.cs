@@ -30,7 +30,7 @@ namespace Ast
         }
     }
 
-    public class PlotData : EvalData
+    public class PlotData : DrawData
     {
         public List<Real> x;
         public List<Real> y;
@@ -56,17 +56,5 @@ namespace Ast
     {
         public string text;
     }
-
-//    public class PlotData : DrawData
-//    {
-//        public Expression exp;
-//        public Variable sym;
-//
-//        public PlotData(PlotFunc plot)
-//        {
-//            this.sym = plot.@var;
-//            this.exp = plot.expr;
-//        }
-//    }
 }
 
