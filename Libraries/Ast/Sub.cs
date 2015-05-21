@@ -20,6 +20,7 @@ namespace Ast
             return new Sub(left.Expand(), right.Expand());
         }
 
+        //Returns the Add version of the Sub. Is done, so Sub don't need to implement rules itself.
         protected override Expression ReduceHelper(Expression left, Expression right)
         {
             var newRight = new Mul(new Integer(-1), right).Reduce(this);
@@ -48,6 +49,7 @@ namespace Ast
 
         internal override Expression CurrectOperator()
         {
+            //When right is negative, return a Add, with right as positive. 2-(-2) -> 2+2.
             if (Right is INegative && (Right as INegative).IsNegative())
             {
                 return new Add(Left.CurrectOperator(), (Right as INegative).ToNegative());

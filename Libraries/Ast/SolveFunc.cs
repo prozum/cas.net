@@ -38,9 +38,6 @@ namespace Ast
                 solved = equal;
             }
 
-            System.Diagnostics.Debug.WriteLine(equal.ToString());
-            System.Diagnostics.Debug.WriteLine(solved);
-
             while (!((solved.Left is Variable) && solved.Left.CompareTo(sym)))
             {
                 if (solved.Left is IInvertable)
@@ -74,8 +71,6 @@ namespace Ast
                 {
                     return new Error(this, " could not solve " + sym.ToString());
                 }
-
-                System.Diagnostics.Debug.WriteLine(solved);
             }
 
             return solved.Reduce();
