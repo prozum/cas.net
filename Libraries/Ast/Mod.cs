@@ -15,9 +15,14 @@ namespace Ast
             return Left % Right;
         }
 
+        protected override Expression ExpandHelper(Expression left, Expression right)
+        {
+            return new Mod(left, right);
+        }
+
         protected override Expression ReduceHelper(Expression left, Expression right)
         {
-            return new Mod(left.Reduce(this), right.Reduce(this));
+            return new Mod(left, right);
         }
     }
 }

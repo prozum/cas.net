@@ -80,12 +80,12 @@ namespace Ast
 
         protected override Expression ExpandHelper(Expression left, Expression right)
         {
-            return new Assign(Left.Expand(), Right.Expand());
+            return new Assign(left, right);
         }
 
         protected override Expression ReduceHelper(Expression left, Expression right)
         {
-            return new Assign(Left.Reduce(this), Right.Reduce(this));
+            return new Assign(left, right);
         }
 
         public override Expression Clone()

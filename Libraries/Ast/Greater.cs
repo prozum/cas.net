@@ -28,14 +28,14 @@ namespace Ast
             return new Greater(Left.CurrectOperator(), Right.CurrectOperator());
         }
 
-        protected override Expression ReduceHelper(Expression left, Expression right)
-        {
-            return new Greater(left.Reduce(this), right.Reduce(this));
-        }
-
         protected override Expression ExpandHelper(Expression left, Expression right)
         {
-            return new Greater(left.Expand(), right.Expand());
+            return new Greater(left, right);
+        }
+
+        protected override Expression ReduceHelper(Expression left, Expression right)
+        {
+            return new Greater(left, right);
         }
     }
 }
