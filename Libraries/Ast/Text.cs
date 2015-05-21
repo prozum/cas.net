@@ -28,6 +28,11 @@ namespace Ast
 
         public override bool CompareTo(Expression other)
         {
+            if (other is Text)
+            {
+                return (@string.CompareTo((other as Text).@string) == 0) ? true : false;
+            }
+
             return false;
         }
 

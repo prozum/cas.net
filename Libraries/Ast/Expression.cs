@@ -17,17 +17,7 @@ namespace Ast
     /// </summary>
     public interface INegative
     {
-        /// <summary>
-        /// Determins wether or not the Expression is negative.
-        /// </summary>
         bool IsNegative();
-
-        /// <summary>
-        /// Returns the negative version of this Expression. 
-        /// </summary>
-        /// <remarks> 
-        /// ToNegative should return the positive version of the Expression if it's allready negative.
-        /// </remarks> 
         Expression ToNegative();
     }
 
@@ -36,8 +26,9 @@ namespace Ast
     /// </summary>
     public abstract class Expression
     {
-        public Expression Parent;
         public virtual Scope Scope { get; set; }
+
+        public Expression Parent;
         public Pos Position;
 
         public virtual Expression Value
@@ -46,9 +37,6 @@ namespace Ast
             set { throw new Exception("Cannot set value on " + this.GetType().Name); }
         }
 
-        /// <summary>
-        /// Returns the value of the expression.
-        /// </summary>
         public virtual Expression Evaluate() { return Reduce().Evaluate(this); }
         internal virtual Expression Evaluate(Expression caller)
         {
@@ -60,43 +48,27 @@ namespace Ast
             return this;
         }
 
-        /// <summary>
-        /// Returns the expanded version of the expression.
-        /// </summary>
-        /// </>
         public virtual Expression Expand()
         {
             return this;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public virtual Expression Reduce() { return this.Reduce(this).CurrectOperator(); }
         internal virtual Expression Reduce(Expression caller)
         {
             return this;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public virtual Expression Clone()
         {
             return new Error(this, "Cannot clone");
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public virtual bool CompareTo(Expression other)
         {
             return this.GetType() == other.GetType();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public virtual bool ContainsVariable(Variable other)
         {
             return false;
