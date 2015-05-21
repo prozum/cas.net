@@ -10,14 +10,14 @@ namespace Ast
         public Equal() { }
         public Equal(Expression left, Expression right) : base(left, right) { }
 
-        protected override Expression ReduceHelper(Expression left, Expression right)
-        {
-            return new Equal(Left.Reduce(this), Right.Reduce(this));
-        }
-
         protected override Expression ExpandHelper(Expression left, Expression right)
         {
-            return new Equal(Left.Expand(), Right.Expand());
+            return new Equal(left, right);
+        }
+
+        protected override Expression ReduceHelper(Expression left, Expression right)
+        {
+            return new Equal(left, right);
         }
 
         public override Expression Clone()

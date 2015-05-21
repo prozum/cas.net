@@ -25,14 +25,14 @@ namespace Ast
             return new NotEqual(Left.CurrectOperator(), Right.CurrectOperator());
         }
 
-        protected override Expression ReduceHelper(Expression left, Expression right)
-        {
-            return new NotEqual(left.Reduce(this), right.Reduce(this));
-        }
-
         protected override Expression ExpandHelper(Expression left, Expression right)
         {
-            return new NotEqual(left.Expand(), right.Expand());
+            return new NotEqual(left, right);
+        }
+
+        protected override Expression ReduceHelper(Expression left, Expression right)
+        {
+            return new NotEqual(left, right);
         }
     }
 }

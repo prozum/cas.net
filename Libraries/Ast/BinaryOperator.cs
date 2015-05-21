@@ -101,8 +101,8 @@ namespace Ast
 
         public override bool CompareTo(Expression other)
         {
-            Expression thisSimplified = Reduce();
-            Expression otherSimplified = other.Reduce();
+            var thisSimplified = Reduce();
+            var otherSimplified = other.Reduce();
 
             //When this changes type after reduction.
             if (!(thisSimplified is BinaryOperator))
@@ -122,7 +122,10 @@ namespace Ast
             }
             else
             {
-                return false;
+                var thisEval = thisSimplified.Evaluate();
+                var otherEval = otherSimplified.Evaluate();
+
+                return thisEval.CompareTo(otherEval);
             }
         }
 
