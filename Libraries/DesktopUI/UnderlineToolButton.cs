@@ -43,8 +43,6 @@ namespace DesktopUI
                     byte[] byteTextView = buffer.Serialize(buffer, buffer.RegisterSerializeTagset(null), startIter, endIter);
                     string s = Encoding.UTF8.GetString(byteTextView);
 
-                    Console.WriteLine(s);
-
                     // If the selected text contains underlines, it removes them, otherwise it sets all text as underlined
                     if (s.Contains("<attr name=\"underline\" type=\"PangoUnderline\" value=\"PANGO_UNDERLINE_SINGLE\" />"))
                     {

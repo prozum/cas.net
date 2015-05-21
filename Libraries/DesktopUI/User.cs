@@ -38,8 +38,6 @@ namespace DesktopUI
         {
             foreach (Widget w in menu)
             {
-                Console.WriteLine(w);
-
                 // Shows the logout menu if a user of privilege 0 or 1 is logged in.
                 if (privilege == 1 || privilege == 0)
                 {

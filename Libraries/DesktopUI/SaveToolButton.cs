@@ -50,15 +50,10 @@ namespace DesktopUI
                 }
                 else if (w.GetType() == typeof(MovableCasResult))
                 {
-                    Console.WriteLine("Got MovableCasResult");
-                    Console.WriteLine((w as MovableCasResult).casresult.entryFasitSet.Text);
-
                     MetaType metaType = new MetaType();
                     MovableCasResult result = (MovableCasResult)w;
                     metaType.type = typeof(MovableCasResult);
-                    Console.WriteLine("Answer: " + result.casresult.entryFasitSet.Text);
                     metaType.metastring = Export.Serialize(result.casresult.facitContainer);
-                    Console.WriteLine("META: " + metaType.metastring);
                     metaType.locked = result.casresult.correct;
                     metaTypeList.Add(metaType);
                 }
