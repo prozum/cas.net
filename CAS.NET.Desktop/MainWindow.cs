@@ -23,7 +23,7 @@ namespace CAS.NET.Desktop
 
         Menu taskgenMenu = new Menu();
         TaskGenMenuItem taskGenSubMenu;
-        TaskGenAlgMenuItem taskGenMenuAlgItem;
+        TaskGenAritMenuItem taskGenMenuAlgItem;
         TaskGenUnitMenuItem taskGenMenuUnitItem;
 
         Menu geometMenu = new Menu();
@@ -63,7 +63,7 @@ namespace CAS.NET.Desktop
             teaGetAsmList = new TeacherGetAssignmentListMenuItem(user, textviews);
 
             taskGenSubMenu = new TaskGenMenuItem(textviews);
-            taskGenMenuAlgItem = new TaskGenAlgMenuItem(textviews);
+            taskGenMenuAlgItem = new TaskGenAritMenuItem(textviews);
             taskGenMenuUnitItem = new TaskGenUnitMenuItem(textviews);
 
             geometMenuItem = new GeometMenuItem(textviews);
