@@ -55,17 +55,13 @@ namespace DesktopUI
 
             entryFasitGet.Changed += delegate
             {
-                Console.WriteLine("Got setting change...");
-
                 facitContainer.answer = entryFasitGet.Text;
-
                 System.Threading.Thread thread = new System.Threading.Thread(ThreadCheckAnswer);
                 thread.Start();
             };
 
             entryFasitSet.Changed += delegate
             {
-                Console.WriteLine("Got setting change...");
                 facitContainer.facit = entryFasitSet.Text;
             };
 
