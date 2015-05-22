@@ -33,6 +33,15 @@ namespace DesktopUI
                 {
                     this.textviews.InsertCalcView(metaItem.metastring, metaItem.locked);
                 }
+                else if (metaItem.type == typeof(MovableCasCalcMulitlineView))
+                {
+                    this.textviews.InsertCalcMultilineView(metaItem.metastring, metaItem.locked);
+                }
+                else if (metaItem.type == typeof(MovableCasResult))
+                {
+                    CasResult.FacitContainer facitcontainer = Import.DeserializeString<CasResult.FacitContainer>(metaItem.metastring);
+                    this.textviews.InsertResult(facitcontainer.answer, facitcontainer.facit);
+                }
                 else if (metaItem.type == typeof(MovableCasTextView))
                 {
                     this.textviews.InsertTextView(metaItem.metastring, metaItem.locked, -1);

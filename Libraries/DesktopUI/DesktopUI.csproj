@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CasCalcMultilineView.cs" />
+    <Compile Include="CasTextViewSerializer.cs" />
     <Compile Include="MovableCasCalcMultilineToolButton.cs" />
     <Compile Include="GeometMenuItem.cs" />
     <Compile Include="GeometWindow.cs" />

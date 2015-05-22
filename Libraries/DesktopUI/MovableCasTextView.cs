@@ -17,7 +17,10 @@ namespace DesktopUI
         {
             id_ = ID++;
 
-            textview = new CasTextView(serializedString, locked);
+            CasTextViewSerializer serializer = new CasTextViewSerializer();
+            string deserializedString = serializer.DeserializeCasTextView(serializedString);
+
+            textview = new CasTextView(deserializedString, locked);
             textview.WidthRequest = 300;
             textview.HeightRequest = 40;
 

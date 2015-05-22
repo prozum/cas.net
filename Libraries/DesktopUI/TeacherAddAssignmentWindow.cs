@@ -37,6 +37,8 @@ namespace DesktopUI
             {
                 List<MetaType> metaTypeList = new List<MetaType>();
 
+                CasTextViewSerializer serializer = new CasTextViewSerializer();
+
                 foreach (Widget w in this.textviews)
                 {
                     if (w.GetType() == typeof(MovableCasCalcView))
@@ -45,6 +47,25 @@ namespace DesktopUI
                         MovableCasCalcView calcView = (MovableCasCalcView)w;
                         metaType.type = typeof(MovableCasCalcView);
                         metaType.metastring = calcView.calcview.input.Text;
+                        metaType.locked = calcView.textview.locked;
+                        metaTypeList.Add(metaType);
+                    }
+                    else if(w is MovableCasCalcMulitlineView)
+                    {
+                        MetaType metaType = new MetaType();
+                        MovableCasCalcMulitlineView calcview = (MovableCasCalcMulitlineView)w;
+                        metaType.type = typeof(MovableCasCalcMulitlineView);
+                        metaType.metastring = serializer.SerializeCasTextView(calcview.calcview.input);
+                        metaType.locked = calcview.textview.locked;
+                        metaTypeList.Add(metaType);
+                    }
+                    else if(w is MovableCasResult)
+                    {
+                        MetaType metaType = new MetaType();
+                        MovableCasResult casres = (MovableCasResult)w;
+                        metaType.type = typeof(MovableCasResult);
+                        metaType.metastring = Export.Serialize(casres.casresult.facitContainer);
+                        metaType.locked = casres.textview.locked;
                         metaTypeList.Add(metaType);
                     }
                     else if (w.GetType() == typeof(MovableCasTextView))
@@ -52,7 +73,7 @@ namespace DesktopUI
                         MetaType metaType = new MetaType();
                         MovableCasTextView textView = (MovableCasTextView)w;
                         metaType.type = typeof(MovableCasTextView);
-                        metaType.metastring = textView.textview.SerializeCasTextView(textView.textview);
+                        metaType.metastring = serializer.SerializeCasTextView(textView.textview);
                         metaType.locked = textView.textview.locked;
                         metaTypeList.Add(metaType);
                     }

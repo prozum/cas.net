@@ -37,6 +37,8 @@ namespace DesktopUI
 
             List<MetaType> metaTypeList = new List<MetaType>();
 
+            CasTextViewSerializer serializer = new CasTextViewSerializer();
+
             foreach (Widget w in textviews)
             {
                 if (w is MovableCasCalcView)
@@ -53,7 +55,7 @@ namespace DesktopUI
                     MetaType metaType = new MetaType();
                     MovableCasCalcMulitlineView calcview = (MovableCasCalcMulitlineView)w;
                     metaType.type = typeof(MovableCasCalcMulitlineView);
-                    metaType.metastring = calcview.textview.SerializeCasTextView(calcview.calcview.input);
+                    metaType.metastring = serializer.SerializeCasTextView(calcview.calcview.input);
                     metaType.locked = calcview.textview.locked;
                     metaTypeList.Add(metaType);
                 }
@@ -71,7 +73,7 @@ namespace DesktopUI
                     MetaType metaType = new MetaType();
                     MovableCasTextView textView = (MovableCasTextView)w;
                     metaType.type = typeof(MovableCasTextView);
-                    metaType.metastring = textView.textview.SerializeCasTextView(textView.textview);
+                    metaType.metastring = serializer.SerializeCasTextView(textView.textview);
                     metaType.locked = textView.textview.locked;
                     metaTypeList.Add(metaType);
                 }
