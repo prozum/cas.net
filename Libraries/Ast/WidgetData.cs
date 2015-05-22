@@ -92,73 +92,73 @@ namespace Ast
         }
     }
 
-    public class Relative : LayoutData
+    public class RelativeData : LayoutData
     {
         public int Spacing;
     }
 
-    public class Grid : LayoutData
+    public class GridData : LayoutData
     {
         public int Spacing;
     }
 
-    public class VBox : LayoutData
+    public class VBoxData : LayoutData
     {
 
     }
 
-    public class HBox : LayoutData
+    public class HBoxData : LayoutData
     {
 
     }
 
-    public class Label : WidgetData
+    public class LabelData : WidgetData
     {
         public string Text;
 
-        public Label(string text) : base("Label")
+        public LabelData(string text) : base("Label")
         {
             Text = text;
         }
     }
 
-    public class TextView : WidgetData
+    public class TextViewData : WidgetData
     {
         public string Text;
 
-        public TextView(string text) : base("TextView")
+        public TextViewData(string text) : base("TextView")
         {
             Text = text;
         }
     }
 
-    public class Entry : WidgetData
+    public class EntryData : WidgetData
     {
-        public Entry(int x, int y) : base("Entry")
+        public EntryData(int x, int y) : base("Entry")
         {
 
         }
     }
 
-    public class Button : WidgetData
+    public class ButtonData : WidgetData
     {
-        public Button(int x, int y) : base("Button")
+        public ButtonData(int x, int y) : base("Button")
         {
 
         }
     }
 
-    public class Image : WidgetData
+    public class ImageData : WidgetData
     {
-        public Image(int x, int y) : base("Image")
+        public ImageData(int x, int y) : base("Image")
         {
 
         }
     }
 
-    public class ListView : WidgetData
+    public class ListViewData : WidgetData
     {
-        public ListView(int x, int y) : base("ListView")
+        public ListViewData(int x, int y) : base("ListView")
         {
 
         }
