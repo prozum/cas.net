@@ -114,6 +114,10 @@ namespace DesktopUI
 
                         textviews.InsertResult(container.answer, container.facit);
                     }
+                    else if(item.type == typeof(MovableCasCalcMulitlineView))
+                    {
+                        textviews.InsertCalcMultilineView(item.metastring, item.locked);
+                    }
                     else if (item.type == typeof(MovableCasTextView))
                     {
                         textviews.InsertTextView(item.metastring, item.locked, -1);
