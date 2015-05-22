@@ -12,7 +12,7 @@ namespace DesktopUI
     public class CasCalcMultilineView : Grid
     {
         public Evaluator eval;
-        public CasTextView input = new CasTextView("",false);
+        public TextView input = new TextView();
         public Button evaluateButton = new Button("Evaluate");
         public Label output = new Label();
         public DrawView drawView = new DrawView();

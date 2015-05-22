@@ -188,10 +188,9 @@ namespace DesktopUI
 
         public void InsertCalcMultilineView(string input, bool locked)
         {
-            CasTextViewSerializer serializer = new CasTextViewSerializer();
-
             MovableCasCalcMulitlineView movCasCalcMultiView = new MovableCasCalcMulitlineView(Eval);
-            movCasCalcMultiView.calcview.input.Buffer.Text = serializer.DeserializeCasTextView(input);
+            Console.WriteLine("Input: " + input + "\nDeserialisedInput: " + movCasCalcMultiView.textview.DeserializeCasTextView(input));
+            movCasCalcMultiView.calcview.input.Buffer.Text = movCasCalcMultiView.textview.DeserializeCasTextView(input);
             movCasCalcMultiView.calcview.evaluateButton.Clicked += delegate
             {
                 movCasCalcMultiView.calcview.eval.Scope.Locals.Clear();
