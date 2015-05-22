@@ -10,7 +10,7 @@ namespace Ast
 
         public ForStmt (Scope scope) : base(scope) { }
 
-        public override EvalData Evaluate()
+        public override void Evaluate()
         {
             foreach (var value in list.items)
             {
@@ -18,10 +18,11 @@ namespace Ast
                 var res = expr.Evaluate();
 
                 if (res is Error)
-                    return new ErrorData(res as Error);
+                {
+                    Scope.Errors.Add(new ErrorData(res as Error));
+                    return;
+                }
             }
-
-            return new DoneData();
         }
     }
 }

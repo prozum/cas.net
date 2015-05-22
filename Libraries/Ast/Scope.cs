@@ -7,23 +7,56 @@ namespace Ast
     {
         public Dictionary<string,Variable> Locals = new Dictionary<string,Variable>();
         public List<Statement> Statements = new List<Statement>();
+        public List<Expression> Returns = new List<Expression>();
         public List<EvalData> SideEffects;
+        public List<ErrorData> Errors;
+        public bool Return = false;
 
-        public List<Error> Errors;
+        public bool Error 
+        { 
+            get 
+            {
+                if (Errors.Count > 0)
+                {
+                    foreach (var error in Errors)
+                    {
+                        SideEffects.Add(error);
+                    }
+                    return true;
+                }
+                else
+                    return false;
+            }
+        }
 
         readonly int MaxStatementPrint = 5;
 
         public Scope()
         {
             SideEffects = new List<EvalData>();
-            Errors = new List<Error>();
+            Errors = new List<ErrorData>();
         }
 
-        public Scope(Scope Scope)
+        public Scope(Scope scope)
         {
-            this.Scope = Scope;
-            SideEffects = Scope.SideEffects;
-            Errors = Scope.Errors;
+            Scope = scope;
+            SideEffects = scope.SideEffects;
+            Errors = scope.Errors;
+        }
+
+        protected virtual T MakeClone<T>() where T : Scope, new()
+        {
+            T res = new T();
+            res.Scope = Scope;
+            res.Position = Position;
+            res.Statements = new List<Statement>(Statements);
+
+            return res;
+        }
+
+        public override Expression Clone()
+        {
+            return MakeClone<Scope>();
         }
 
         internal override Expression Evaluate(Expression caller)
@@ -33,50 +66,36 @@ namespace Ast
 
         public override Expression Evaluate()
         {
-            var list = new List();
-
-            if (Errors.Count > 0)
-            {
-                foreach (var error in Errors)
-                {
-                    SideEffects.Add(new ErrorData(error));
-                }
+            if (Error)
                 return new Null();
-            }
+
+            Returns.Clear();
+            Return = false;
 
             foreach (var stmt in Statements)
             {
-                var data = stmt.Evaluate();
+                stmt.Evaluate();
 
-                if (data is ExprData)
-                {
-                    list.items.Add((data as ExprData).expr);
-                    continue;
-                }
-
-                if (data is ReturnData)
-                    return (data as ReturnData).expr;
-
-                SideEffects.Add(data);
-
-                if (data is ErrorData)
+                if (Error)
                     return new Null();
+
+                if (Return)
+                    break;
             }
 
-            switch (list.items.Count)
+            switch (Returns.Count)
             {
                 case 0:
                     return new Null();
                 case 1:
-                    return list.items[0];
+                    return Returns[0];
                 default:
-                    return list;
+                    return new List(Returns);
             }
         }
 
         public override bool ContainsVariable(Variable other)
         {
-            // TODO
             return false;
         }
 

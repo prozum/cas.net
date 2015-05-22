@@ -18,7 +18,6 @@ namespace Ast
             return Value.Evaluate();
         }
 
-        private Expression _value;
         public override Expression Value
         {
             get
@@ -35,6 +34,11 @@ namespace Ast
                 {
                     var customDef = (CustomFunc)res;
 
+                    Definition=true;
+                    Value = customDef.Value.Clone();
+                    Value.Scope = this;
+                    Locals = new Dictionary<string,Variable>(customDef.Locals);
+
                     if (Arguments.Count != customDef.Arguments.Count)
                         return new Error(Identifier + " takes " + customDef.Arguments.Count.ToString() + " arguments. Not " + Arguments.Count.ToString() + ".");
 
@@ -42,12 +46,12 @@ namespace Ast
                     {
                         var arg = (Variable)customDef.Arguments[i];
 
-                        customDef.SetVar(arg.Identifier, Arguments[i].Value);
+                        SetVar(arg.Identifier, Arguments[i].Value);
                     }
 
-                    return customDef;
+                    return Value;
                 }
-
+                    
                 if (res.Value is List)
                 {
                     var list = (List)res.Value;
@@ -73,7 +77,6 @@ namespace Ast
                         return list.items[@int];
                 }
 
-
                 return new Error(this, "Variable is not a function or list");
             }
 
@@ -87,6 +90,13 @@ namespace Ast
         public override Expression Clone()
         {
             return MakeClone<CustomFunc>();
+        }
+
+        protected override T MakeClone<T>()
+        {
+            T res = base.MakeClone<T>();
+
+            return res;
         }
 
         internal override Expression Reduce(Expression caller)

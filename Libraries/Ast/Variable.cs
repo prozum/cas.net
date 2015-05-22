@@ -60,7 +60,7 @@ namespace Ast
             return res;
         }
 
-        protected virtual T MakeClone<T>() where T : Variable, new()
+        protected new virtual T MakeClone<T>() where T : Variable, new()
         {
             T res = new T();
             res.Identifier = Identifier;
@@ -68,6 +68,8 @@ namespace Ast
             res.Exponent = Exponent.Clone() as Real;
             res.Scope = Scope;
             res.Position = Position;
+            res.Definition = Definition;
+            res._value = Value.Clone();
 
             return res;
         }
@@ -84,11 +86,11 @@ namespace Ast
 
         internal override Expression Evaluate(Expression caller)
         {
-            return Value;
+            return Value.Evaluate();
         }
 
         protected bool Definition = false;
-        private Expression _value = null;
+        protected Expression _value = null;
         public override Expression Value
         {
             get
@@ -98,10 +100,7 @@ namespace Ast
 
                 var value = Scope.GetVar(Identifier);
 
-                if (!(value is Func))
-                    value = value.Value;
-
-                if (value is Real)
+                if (value.Value is Real)
                     value = Prefix * value ^ Exponent;
 
                 return value;

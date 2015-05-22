@@ -17,35 +17,36 @@ namespace Ast
                 Variable @var;
                 Scope scope;
 
-                var left = Left.Value;
+                var res = Left;
 
-                if (left == null &&
-                    Left is Variable)
-                {
-                    left = Scope.SetVar((Left as Variable).Identifier, new Null());
-                }
+                if (res is Variable)
+                    res = Scope.GetVar((res as Variable).Identifier);
+                else if (res is Scope)
+                    res.Evaluate();
+                else if (res is Dot)
+                    res = res.Evaluate();
 
-                if (left is Variable)
-                    scope = (Variable)Scope.GetVar((left as Variable).Identifier);
-                else if (left is Scope)
-                    scope = (Scope)Left;
-                else if (left is Error)
-                    return left;
-                else
+                if (res is Error)
+                    return res;
+
+                if (!(res is Scope))
                     return new Error(this, "left operator must be a Scope");
+                scope = (Scope)res;
  
                 if (Right is Variable)
                     @var = Right as Variable;
+                else if (Right is Self)
+                    return scope;
                 else
-                    return new Error(this, "right operator must be Symbol/SymbolFunc");
+                    return new Error(this, "right operator must be a Variable");
 
-                return scope.GetVar(@var);
+                return scope.GetVar(@var).Value;
             }
         }
 
         public override Expression Evaluate()
         {
-            return Value;
+            return Value.Evaluate();
         }
 
         protected override Expression ExpandHelper(Expression left, Expression right)

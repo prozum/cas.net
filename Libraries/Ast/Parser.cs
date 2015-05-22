@@ -694,7 +694,10 @@ namespace Ast
                 return exprs.Dequeue();
 
             if (exprs.Count != 1 + biops.Count)
-                return ReportError("Missing operand");
+            {
+                ReportError("Missing operand");
+                return new Null();
+            }
                
 
             top = biops.Peek();
@@ -755,7 +758,8 @@ namespace Ast
                         return new Integer(intRes);
                     else
                     {
-                        return ReportError("Int overflow");
+                        ReportError("Int overflow");
+                        return new Null();
                     }
                 
                 case TokenKind.DECIMAL:
@@ -763,14 +767,16 @@ namespace Ast
                         return new Irrational(decRes);
                     else
                     {
-                        return ReportError("Decimal overflow");
+                        ReportError("Decimal overflow");
+                        return new Null();
                     }
                 case TokenKind.IMAG_INT:
                     if (Int64.TryParse(curToken.Value, out intRes))
                         return new Complex(new Integer(0), new Integer(intRes));
                     else
                     {
-                        return ReportError("Imaginary int overflow");
+                        ReportError("Imaginary int overflow");
+                        return new Null();
                     }
                 
                 case TokenKind.IMAG_DEC:
@@ -778,7 +784,8 @@ namespace Ast
                         return new Complex(new Integer(0), new Irrational(decRes));
                     else
                     {
-                        return ReportError("Imaginary decimal overflow");
+                        ReportError("Imaginary decimal overflow");
+                        return new Null();
                     }
                 
                 default:
@@ -834,16 +841,16 @@ namespace Ast
             }
         }
 
-        public Error ReportError(Error error)
+        public ErrorData ReportError(ErrorData error)
         {
             curScope.Errors.Add(error);
 
             return error;
         }
 
-        public Error ReportError(string msg)
+        public ErrorData ReportError(string msg)
         {
-            var error = new Error(msg);
+            var error = new ErrorData(msg);
             error.Position = curToken.Position;
 
             curScope.Errors.Add(error);

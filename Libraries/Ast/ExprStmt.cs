@@ -11,20 +11,21 @@ namespace Ast
             this.expr = expr;
         }
 
-        public override EvalData Evaluate()
+        public override void Evaluate()
         {
             var res = expr.Evaluate();
-
-            if (res is Error)
-                return new ErrorData(res as Error);
 
             if (Scope.GetBool("debug"))
                 Scope.SideEffects.Add(new DebugData("Debug: " + expr + " = " + res));
 
+            if (res is Error)
+            {
+                Scope.Errors.Add(new ErrorData(res as Error));
+                return;
+            }
+
             if (!(res is Null))
-                return new ExprData(res);
-            else
-                return new DoneData();
+                Scope.Returns.Add(res);
         }
 
         public override string ToString()

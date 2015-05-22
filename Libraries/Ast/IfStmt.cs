@@ -12,28 +12,42 @@ namespace Ast
         {
         }
 
-        public override EvalData Evaluate()
+        public override void Evaluate()
         {
+            Expression res;
+
             for (int i = 0; i < conditions.Count; i++)
             {
-                var res = conditions[i].Evaluate();
+                res = conditions[i].Evaluate();
+
+                if (Scope.GetBool("debug"))
+                    Scope.SideEffects.Add(new DebugData("Debug if["+i+"]: "+conditions[i]+" = "+res));
+                    
+                if (res is Error)
+                {
+                    Scope.Errors.Add(new ErrorData(res as Error));
+                    return;
+                }
 
                 if (res is Boolean)
                 {
-                    if (res as Boolean)
-                    {
-                        expressions[i].Evaluate();
-                        return new DoneData();
-                    }
-
-                    continue;
+                    res = expressions[i].Evaluate();
+                    if (Scope.GetBool("debug"))
+                        Scope.SideEffects.Add(new DebugData("Debug if[" + i + "]: " + conditions[i] + " = " + res));
+                }
+                else
+                {
+                    Scope.Errors.Add(new ErrorData("Condition " + i + ": " + conditions[i] + " does not return bool"));
+                    return;
                 }
             }
 
             if (expressions.Count > conditions.Count)
-                expressions[expressions.Count - 1].Evaluate();
-
-            return new DoneData();
+            {
+                res = expressions[expressions.Count - 1].Evaluate();
+                if (Scope.GetBool("debug"))
+                    Scope.SideEffects.Add(new DebugData("Debug if["+(expressions.Count-1)+"]: "+conditions[expressions.Count-1]+" = "+res));
+            }
         }
 
         public override string ToString()

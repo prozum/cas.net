@@ -11,14 +11,17 @@ namespace Ast
             this.expr = expr;
         }
             
-        public override EvalData Evaluate()
+        public override void Evaluate()
         {
             var res = expr.Evaluate();
 
             if (res is Error)
-                return new ErrorData(res as Error);
+            {
+                Scope.Errors.Add(new ErrorData(res as Error));
+                return;
+            }
 
-            return new ReturnData(res);
+            Scope.Returns.Add(res);
         }
 
         public override string ToString()

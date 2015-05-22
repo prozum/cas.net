@@ -16,16 +16,15 @@ namespace Ast
 
     public abstract class Func : Variable
     {
-        private Scope _scope;
         public override Scope Scope
         {
             get
             {
-                return _scope;
+                return base.Scope;
             }
             set
             {
-                _scope = value;
+                base.Scope = value;
 
                 if (Arguments != null)
                 {
@@ -104,7 +103,7 @@ namespace Ast
 
             return this;
         }
-
+            
         protected override T MakeClone<T>()
         {
             T res = base.MakeClone<T>();

@@ -12,7 +12,7 @@ namespace Ast
             Scope = scope;
         }
 
-        public abstract EvalData Evaluate();
+        public abstract void Evaluate();
     }
 }
 

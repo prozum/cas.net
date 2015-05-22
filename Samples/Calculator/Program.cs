@@ -22,9 +22,6 @@ public class Calculator : Window
 
     DrawView draw;
 
-    public event ChangedHandler UpdateDrawView;
-    //public event ChangedHandler UpdateDefinitions;
-
     static void Main(string[] args)
     {
         Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
@@ -133,6 +130,7 @@ public class Calculator : Window
         evalButton.Clicked += (o, a) => UpdateDefinitions();
         grid.Attach(evalButton, 0, 1, 1, 1); 
 
+
         textView = new TextView();
         textView.Expand = true;
         textView.Editable = false;
@@ -142,7 +140,6 @@ public class Calculator : Window
         buffer = textView.Buffer;
 
         draw = new DrawView();
-        //UpdateDrawView += new EventHandler(draw.Redraw);
         grid.Attach(draw, 0, 3, 1, 1);
 
         var infoTag = new TextTag ("debug");

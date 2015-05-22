@@ -15,29 +15,29 @@ namespace Ast
             Variable @var;
             Scope scope;
 
-            Expression res;
+            Expression res = Left;
 
-            if (Left is Error)
-                return Left;
-            
-            if (Left is Dot)
+//            if (res is Dot)
+//            {
+//                res = new Variable( (res as Dot).Right.Value);
+//            }
+
+            if (res is Error)
+                return res;
+
+            if (res is Variable)
             {
-                res = Left.Value;
-
-                if (res is Error)
-                    return res;
-
-                if (res is Variable)
-                    @var = res as Variable;
-                else
-                    return new Error(res, " is not a variable");
+                @var = (Variable)res;
+                scope = @var.Scope;
             }
-            else if (Left is Variable)
-                @var = (Variable)Left;
             else
-                return new Error(Left, " is not a variable");
+                return new Error(res, " is not a variable");
 
-            scope = @var.Scope;
+
+            if (@var is SysFunc)
+            {
+                return new Error(this, "Cannot override system function");
+            }
 
             if (@var is CustomFunc)
             {
@@ -49,20 +49,14 @@ namespace Ast
                         return new Error(this, "All arguments must be symbols");
                 }
 
-                Right.Scope = customFunc;
+                //Right.Scope = customFunc;
                 customFunc.Value = Right;
                
                 scope.SetVar(customFunc);
 
                 return @var;
             }
-
-
-            if (Left is SysFunc)
-            {
-                return new Error(this, "Cannot override system function");
-            }
-
+                
             if (@var is Variable)
             {
                 @var.Value = Right.Evaluate();
@@ -70,7 +64,7 @@ namespace Ast
                 if (@var.Value is Error)
                     return @var.Value;
 
-                scope.SetVar(@var.Identifier, @var.Value);
+                scope.SetVar(@var.Identifier, @var);
 
                 return @var.Value;
             }

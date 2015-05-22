@@ -12,7 +12,7 @@ namespace Ast
         {
         }
 
-        public override EvalData Evaluate()
+        public override void Evaluate()
         {
             int i = 0;
 
@@ -26,15 +26,16 @@ namespace Ast
                         break;
                 }
                 else if (res is Error)
-                    return new ErrorData(res as Error);
+                {
+                    Scope.Errors.Add(new ErrorData(res as Error));
+                }
 
                 expression.Evaluate();
             }
 
             if (i > MaxIterations)
-                return new ErrorData("while: Overflow!");
+                Scope.Errors.Add(new ErrorData("while: Overflow!"));
 
-            return new DoneData();
         }
 
         public override string ToString()
