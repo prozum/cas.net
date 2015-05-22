@@ -17,7 +17,7 @@ namespace DesktopUI
         public TextTag underlineTag = new TextTag("UnderlineTag");
 
         // Constructor for castextview, adds all tags to the textview
-        public CasTextView(string SerializedString, bool locked)
+        public CasTextView(string deserializedString, bool locked)
             : base()
         {
             boldTag.Weight = Pango.Weight.Bold;
@@ -30,7 +30,10 @@ namespace DesktopUI
             Buffer.TagTable.Add(underlineTag);
 
             WrapMode = WrapMode.WordChar;
-            DeserializeCasTextView(SerializedString);
+            
+            CasTextViewSerializer serializer = new CasTextViewSerializer();
+
+            Buffer.Text = deserializedString;
             this.locked = locked;
 
             ShowAll();
@@ -42,26 +45,6 @@ namespace DesktopUI
         {
             Buffer.Text = TaskString;
             ShowAll();
-        }
-
-        // A method for serializing the content of a textview buffer, allowing it to be saved in formatted form.
-        // Is converted to Base64 to avoid problems with JSON.
-        public string SerializeCasTextView()
-        {
-            TextIter startIter, endIter;
-            Buffer.GetBounds(out startIter, out endIter);
-            byte[] byteTextView = Buffer.Serialize(Buffer, Buffer.RegisterSerializeTagset(null), startIter, endIter);
-            string serializedTextView = Convert.ToBase64String(byteTextView);
-
-            return serializedTextView;
-        }
-
-        // A method for deserializing the content serialized in the above method.
-        public void DeserializeCasTextView(string serializedTextView)
-        {
-            TextIter textIter = Buffer.StartIter;
-            byte[] byteTextView = Convert.FromBase64String(serializedTextView);
-            Buffer.Deserialize(Buffer, Buffer.RegisterDeserializeTagset(null), ref textIter, byteTextView, (ulong)byteTextView.Length);
         }
 
         // Can be used to lock widget

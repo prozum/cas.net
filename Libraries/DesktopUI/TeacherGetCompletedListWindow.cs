@@ -84,6 +84,15 @@ namespace DesktopUI
                 {
                     textviews.InsertCalcView(metaItem.metastring, metaItem.locked);
                 }
+                else if (metaItem.type == typeof(MovableCasCalcMulitlineView))
+                {
+                    textviews.InsertCalcMultilineView(metaItem.metastring, metaItem.locked);
+                }
+                else if (metaItem.type == typeof(MovableCasResult))
+                {
+                    CasResult.FacitContainer facitcontainer = Import.DeserializeString<CasResult.FacitContainer>(metaItem.metastring);
+                    textviews.InsertResult(facitcontainer.answer, facitcontainer.facit);
+                }
                 else if (metaItem.type == typeof(MovableCasTextView))
                 {
                     textviews.InsertTextView(metaItem.metastring, metaItem.locked, -1);

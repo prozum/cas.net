@@ -4,16 +4,16 @@ using TaskGenLib;
 
 namespace DesktopUI
 {
-    public class TaskGenAlgMenuItem : MenuItem
+    public class TaskGenAritMenuItem : MenuItem
     {
         TextViewList textviews;
 
-        public TaskGenAlgMenuItem(TextViewList textviews) : base("Algebra")
+        public TaskGenAritMenuItem(TextViewList textviews) : base("Arithmetic")
         {
             this.textviews = textviews;
             this.Activated += delegate
             {
-                TaskGenAlgWindow window = new TaskGenAlgWindow(this.textviews);
+                TaskGenAritWindow window = new TaskGenAritWindow(this.textviews);
             };
         }
     }
