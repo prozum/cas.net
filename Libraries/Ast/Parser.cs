@@ -50,7 +50,7 @@ namespace Ast
             if (global.Errors.Count > 0)
                 return;
 
-            ParseScope(global,true);
+            ParseScope(false, global);
 
             if (global.Errors.Count > 0)
                 Clear();
@@ -65,32 +65,26 @@ namespace Ast
             binaryStack.Clear();
         }
 
-        public Scope ParseScope(Scope parentscope = null, bool global = false)
+        public Scope ParseScope(bool share = false, Scope global = null)
         {
             ParseContext cx;
 
             while (Eat(TokenKind.NEW_LINE));
 
-            if (global)
+            if (global != null)
             {
                 cx = ParseContext.ScopeGlobal;
-                scopeStack.Push(parentscope);
+                scopeStack.Push(global);
             }
             else if (Eat(TokenKind.CURLY_START))
             {
                 cx = ParseContext.ScopeMulti;
-                if (parentscope != null)
-                    scopeStack.Push(parentscope);
-                else
-                    scopeStack.Push(new Scope(curScope));
+                scopeStack.Push(new Scope(curScope, share));
             }
             else
             {
                 cx = ParseContext.ScopeSingle;
-                if (parentscope != null)
-                    scopeStack.Push(parentscope);
-                else
-                    scopeStack.Push(new Scope(curScope));
+                scopeStack.Push(new Scope(curScope, share));
             }
 
             contextStack.Push(cx);
@@ -114,19 +108,19 @@ namespace Ast
                 {
                     case TokenKind.IF:
                         Eat();
-                        curScope.Statements.Add(ParseIfStmt());
+                        curScope.Expressions.Add(ParseIfStmt());
                         break;
                     case TokenKind.FOR:
                         Eat();
-                        curScope.Statements.Add(ParseForStmt());
+                        curScope.Expressions.Add(ParseForStmt());
                         break;
                     case TokenKind.WHILE:
                         Eat();
-                        curScope.Statements.Add(ParseWhileStmt());
+                        curScope.Expressions.Add(ParseWhileStmt());
                         break;
                     case TokenKind.RET:
                         Eat();
-                        curScope.Statements.Add(new RetStmt(ParseExpr(), curScope));
+                        curScope.Expressions.Add(new RetExpr(ParseExpr(), curScope));
                         break;
 
                     case TokenKind.ELIF:
@@ -143,13 +137,13 @@ namespace Ast
                         break;
 
                     default:
-                        curScope.Statements.Add(new ExprStmt(ParseExpr(), curScope));
+                        curScope.Expressions.Add(ParseExpr());
                         break;
                 }
 
                 if (Error)
                 {
-                    curScope.Statements.Clear();
+                    curScope.Expressions.Clear();
                     return;
                 }
             }
@@ -190,19 +184,19 @@ namespace Ast
 
         #endregion
 
-        public IfStmt ParseIfStmt()
+        public IfExpr ParseIfStmt()
         {
             Expression cond;
             Expression expr;
 
-            var stmt = new IfStmt(curScope);
+            var stmt = new IfExpr(curScope);
 
             cond = ParseColon();
             if (Error)
                 return null;
             stmt.Conditions.Add(cond);
 
-            expr = ParseScope(curScope);
+            expr = ParseScope(true);
             if (Error)
                 return null;
             stmt.Expressions.Add(expr);
@@ -215,7 +209,7 @@ namespace Ast
                     return null;
                 stmt.Conditions.Add(cond);
 
-                expr = ParseScope(curScope);
+                expr = ParseScope(true);
                 if (Error)
                     return null;
                 stmt.Expressions.Add(expr);
@@ -228,7 +222,7 @@ namespace Ast
             {
                 Eat(TokenKind.COLON); // Optional colon
 
-                expr = ParseScope(curScope);
+                expr = ParseScope(true);
                 if (Error)
                     return null;
                 stmt.Expressions.Add(expr);
@@ -237,9 +231,9 @@ namespace Ast
             return stmt;
         }
 
-        public ForStmt ParseForStmt()
+        public ForExpr ParseForStmt()
         {
-            var stmt = new ForStmt(curScope);
+            var stmt = new ForExpr(curScope);
 
             if (Peek(TokenKind.IDENTIFIER))
             {
@@ -276,12 +270,12 @@ namespace Ast
             return stmt;
         }
 
-        public WhileStmt ParseWhileStmt()
+        public WhileExpr ParseWhileStmt()
         {
             Expression cond;
             Scope scope;
 
-            var stmt = new WhileStmt(curScope);
+            var stmt = new WhileExpr(curScope);
 
             cond = ParseColon();
             if (Error)

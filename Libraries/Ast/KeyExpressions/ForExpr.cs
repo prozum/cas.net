@@ -2,15 +2,18 @@
 
 namespace Ast
 {
-    public class ForStmt : Statement
+    public class ForExpr : Expression
     {
         public string Var;
         public List List;
         public Scope ForScope;
 
-        public ForStmt (Scope scope) : base(scope) { }
+        public ForExpr (Scope scope) 
+        { 
+            CurScope = scope;
+        }
 
-        public override void Evaluate()
+        public override Expression Evaluate()
         {
             foreach (var value in List.items)
             {
@@ -20,9 +23,11 @@ namespace Ast
                 if (res is Error)
                 {
                     CurScope.Errors.Add(new ErrorData(res as Error));
-                    return;
+                    return new Null();
                 }
             }
+
+            return new Null();
         }
     }
 }

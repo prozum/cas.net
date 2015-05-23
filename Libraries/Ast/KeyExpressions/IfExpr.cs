@@ -3,16 +3,17 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class IfStmt : Statement
+    public class IfExpr : Expression
     {
         public List<Expression> Conditions = new List<Expression>();
         public List<Expression> Expressions = new List<Expression>();
 
-        public IfStmt (Scope scope) : base(scope)
-        {
+        public IfExpr (Scope scope)
+        { 
+            CurScope = scope;
         }
 
-        public override void Evaluate()
+        public override Expression Evaluate()
         {
             Expression res;
 
@@ -26,7 +27,7 @@ namespace Ast
                 if (res is Error)
                 {
                     CurScope.Errors.Add(new ErrorData(res as Error));
-                    return;
+                    return new Null();
                 }
 
                 if (res is Boolean)
@@ -37,13 +38,13 @@ namespace Ast
                         res = Expressions[i].Evaluate();
                         if (CurScope.GetBool("debug"))
                             CurScope.SideEffects.Add(new DebugData("Debug if expr[" + i + "]: " + Expressions[i] + " = " + res));
-                        return;
+                        return new Null();
                     }
                 }
                 else
                 {
                     CurScope.Errors.Add(new ErrorData("Condition " + i + ": " + Conditions[i] + " does not return bool"));
-                    return;
+                    return new Null();
                 }
             }
 
@@ -53,6 +54,8 @@ namespace Ast
                 if (CurScope.GetBool("debug"))
                     CurScope.SideEffects.Add(new DebugData("Debug if["+(Expressions.Count-1)+"]: "+Expressions[Expressions.Count-1]+" = "+res));
             }
+
+            return new Null();
         }
 
         public override string ToString()

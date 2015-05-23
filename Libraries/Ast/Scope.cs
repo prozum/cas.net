@@ -5,13 +5,15 @@ namespace Ast
 {
     public class Scope : Expression
     {
-        public Dictionary<string,Variable> Locals = new Dictionary<string,Variable>();
-        public List<Statement> Statements = new List<Statement>();
-        public List<Expression> Returns = new List<Expression>();
+        public List<Expression> Expressions = new List<Expression>();
+
+        public Dictionary<string,Variable> Locals;
         public List<EvalData> SideEffects;
-        public List<ErrorData> Errors;
+
+        public List<Expression> Returns;
         public bool Return = false;
 
+        public List<ErrorData> Errors;
         public bool Error 
         { 
             get 
@@ -39,7 +41,7 @@ namespace Ast
             {
                 base.CurScope = value;
 
-                foreach (var stmt in Statements)
+                foreach (var stmt in Expressions)
                 {
                     stmt.CurScope = value;
                 }
@@ -52,13 +54,27 @@ namespace Ast
         {
             SideEffects = new List<EvalData>();
             Errors = new List<ErrorData>();
+
+            Locals =  new Dictionary<string,Variable>();
+            Returns = new List<Expression>();
         }
 
-        public Scope(Scope scope)
+        public Scope(Scope scope, bool share = false)
         {
             CurScope = scope;
             SideEffects = scope.SideEffects;
             Errors = scope.Errors;
+
+            if (share)
+            {
+                Locals = scope.Locals;
+                Returns = scope.Returns;
+            }
+            else
+            {
+                Locals =  new Dictionary<string,Variable>();
+                Returns = new List<Expression>();
+            }
         }
 
         internal override Expression Evaluate(Expression caller)
@@ -74,12 +90,21 @@ namespace Ast
             Returns.Clear();
             Return = false;
 
-            foreach (var stmt in Statements)
+            foreach (var expr in Expressions)
             {
-                stmt.Evaluate();
+                var res = expr.Evaluate();
+
+                if (GetBool("debug"))
+                    SideEffects.Add(new DebugData("Debug: " + expr + " = " + res));
+
+                if (res is Error)
+                    Errors.Add(new ErrorData(res as Error));
 
                 if (Error)
                     return new Null();
+
+                if (!(res is Null))
+                    Returns.Add(res);
 
                 if (Return)
                     break;
@@ -218,7 +243,7 @@ namespace Ast
             else
                 str = "{";
 
-            for (int i = 0; i < Statements.Count; i++) 
+            for (int i = 0; i < Expressions.Count; i++) 
             {
                 if (i >= MaxStatementPrint)
                 {
@@ -227,9 +252,9 @@ namespace Ast
                 }
                 else
                 {
-                    str += Statements[i].ToString ();
+                    str += Expressions[i].ToString ();
 
-                    if (i < Statements.Count - 1) 
+                    if (i < Expressions.Count - 1) 
                     {
                         str += ';';
                     }

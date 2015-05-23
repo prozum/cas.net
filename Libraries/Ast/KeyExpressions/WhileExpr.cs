@@ -2,18 +2,19 @@
 
 namespace Ast
 {
-    public class WhileStmt : Statement
+    public class WhileExpr : Expression
     {
         public Expression Condition;
         public Expression Expression;
 
         readonly int MaxIterations = 10000;
 
-        public WhileStmt(Scope scope) : base(scope)
+        public WhileExpr(Scope scope)
         {
+            CurScope = scope;
         }
 
-        public override void Evaluate()
+        public override Expression Evaluate()
         {
             int i = 0;
 
@@ -29,6 +30,7 @@ namespace Ast
                 else if (res is Error)
                 {
                     CurScope.Errors.Add(new ErrorData(res as Error));
+                    return new Null();
                 }
 
                 Expression.Evaluate();
@@ -36,6 +38,8 @@ namespace Ast
 
             if (i > MaxIterations)
                 CurScope.Errors.Add(new ErrorData("while: Overflow!"));
+
+            return new Null();
 
         }
 

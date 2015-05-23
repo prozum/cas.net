@@ -11,18 +11,15 @@ namespace Ast
         {
             this.ErrorMessage = msg;
         }
-
-        public Error(Expression expr, string msg) : this(expr, expr.Position, msg) { }
-        public Error(Statement stmt, string msg) : this(stmt, stmt.Position, msg) { }
-
-        public Error (Object obj, Pos position, string msg)
+            
+        public Error (Expression expr, string msg)
         {
-            if (obj is Variable)
-                ErrorMessage = (obj as Variable).Identifier + ": " + msg;
+            if (expr is Variable)
+                ErrorMessage = (expr as Variable).Identifier + ": " + msg;
             else
-                ErrorMessage = obj.GetType().Name + ": " + msg;
+                ErrorMessage = expr.GetType().Name + ": " + msg;
 
-            Position = position;
+            Position = expr.Position;
         }
 
         public override string ToString()
@@ -53,16 +50,14 @@ namespace Ast
 
     public class ArgumentError: Error
     {
-        public ArgumentError(SysFunc func) : this(func, func.Position, func.ValidArguments) { }
-
-        public ArgumentError(object obj, Pos position, List<ArgKind> validArgs) : base(obj, position, "valid arguments: ")
+        public ArgumentError(SysFunc func) : base(func, "valid arguments: ")
         {
             ErrorMessage += "[";
-            for(int i = 0; i < validArgs.Count; i++)
+            for(int i = 0; i < func.ValidArguments.Count; i++)
             {
-                ErrorMessage += validArgs[i].ToString();
+                ErrorMessage += func.ValidArguments[i].ToString();
 
-                if (i < validArgs.Count -1) 
+                if (i < func.ValidArguments.Count -1) 
                 {
                     ErrorMessage += ',';
                 }

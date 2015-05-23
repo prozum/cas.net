@@ -50,9 +50,7 @@
     <Compile Include="Token.cs">
       <DependentUpon>Parser.cs</DependentUpon>
     </Compile>
-    <Compile Include="Constant.cs">
-      <DependentUpon>Number.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Constant.cs" />
     <Compile Include="Scope.cs" />
     <Compile Include="Func.cs">
       <DependentUpon>Variable.cs</DependentUpon>
@@ -72,12 +70,6 @@
     <Compile Include="Mul.cs">
       <DependentUpon>BinaryOperator.cs</DependentUpon>
     </Compile>
-    <Compile Include="Div.cs">
-      <DependentUpon>BinaryOperator.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Exp.cs">
-      <DependentUpon>BinaryOperator.cs</DependentUpon>
-    </Compile>
     <Compile Include="BooleanEqual.cs">
       <DependentUpon>BinaryOperator.cs</DependentUpon>
     </Compile>
@@ -93,24 +85,10 @@
     <Compile Include="LesserEqual.cs">
       <DependentUpon>BinaryOperator.cs</DependentUpon>
     </Compile>
-    <Compile Include="Integer.cs">
-      <DependentUpon>Number.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Rational.cs">
-      <DependentUpon>Number.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Irrational.cs">
-      <DependentUpon>Number.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Complex.cs">
-      <DependentUpon>Number.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Boolean.cs" />
     <Compile Include="SysFunc.cs" />
     <Compile Include="Negation.cs">
       <DependentUpon>UnaryOperator.cs</DependentUpon>
     </Compile>
-    <Compile Include="Text.cs" />
     <Compile Include="UnaryOperator.cs" />
     <Compile Include="BinaryOperator.cs" />
     <Compile Include="Minus.cs">
@@ -119,76 +97,10 @@
     <Compile Include="DrawData.cs">
       <DependentUpon>Evaluator.cs</DependentUpon>
     </Compile>
-    <Compile Include="Real.cs">
-      <DependentUpon>Number.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Number.cs" />
-    <Compile Include="AcosFunc.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
-    <Compile Include="AsinFunc.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
-    <Compile Include="AtanFunc.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CosFunc.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
-    <Compile Include="EvalFunc.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ExpandFunc.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PlotFunc.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PrintFunc.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
-    <Compile Include="RangeFunc.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SinFunc.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ReduceFunc.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SolveFunc.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SqrtFunc.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TanFunc.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TypeFunc.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
     <Compile Include="Operator.cs" />
-    <Compile Include="Dot.cs">
-      <DependentUpon>BinaryOperator.cs</DependentUpon>
-    </Compile>
     <Compile Include="NotEqual.cs">
       <DependentUpon>BinaryOperator.cs</DependentUpon>
     </Compile>
-    <Compile Include="ForStmt.cs">
-      <DependentUpon>Statement.cs</DependentUpon>
-    </Compile>
-    <Compile Include="IfStmt.cs">
-      <DependentUpon>Statement.cs</DependentUpon>
-    </Compile>
-    <Compile Include="RetStmt.cs">
-      <DependentUpon>Statement.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Statement.cs" />
-    <Compile Include="ExprStmt.cs">
-      <DependentUpon>Statement.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Null.cs" />
     <Compile Include="Error.cs" />
     <Compile Include="And.cs">
       <DependentUpon>BinaryOperator.cs</DependentUpon>
@@ -199,20 +111,8 @@
     <Compile Include="Mod.cs">
       <DependentUpon>BinaryOperator.cs</DependentUpon>
     </Compile>
-    <Compile Include="WhileStmt.cs">
-      <DependentUpon>Statement.cs</DependentUpon>
-    </Compile>
     <Compile Include="CustomFunc.cs">
       <DependentUpon>Variable.cs</DependentUpon>
-    </Compile>
-    <Compile Include="LineFunc.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
-    <Compile Include="AbsFunc.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ParaPlotFunc.cs">
-      <DependentUpon>SysFunc.cs</DependentUpon>
     </Compile>
     <Compile Include="Self.cs" />
     <Compile Include="WidgetData.cs">
@@ -221,6 +121,62 @@
     <Compile Include="Referation.cs">
       <DependentUpon>UnaryOperator.cs</DependentUpon>
     </Compile>
+    <Compile Include="Types\Boolean.cs" />
+    <Compile Include="Types\Null.cs" />
+    <Compile Include="Types\Number.cs" />
+    <Compile Include="Types\Text.cs" />
+    <Compile Include="Types\Real.cs">
+      <DependentUpon>Number.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Types\Complex.cs">
+      <DependentUpon>Number.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Types\Integer.cs">
+      <DependentUpon>Number.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Types\Irrational.cs">
+      <DependentUpon>Number.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Types\Rational.cs" />
+    <Compile Include="BinaryOperators\Div.cs" />
+    <Compile Include="BinaryOperators\Dot.cs" />
+    <Compile Include="BinaryOperators\Exp.cs" />
+    <Compile Include="BinaryOperators\Add.cs" />
+    <Compile Include="BinaryOperators\And.cs" />
+    <Compile Include="BinaryOperators\Equal.cs" />
+    <Compile Include="BinaryOperators\Assign.cs" />
+    <Compile Include="BinaryOperators\Greater.cs" />
+    <Compile Include="BinaryOperators\GreaterEqual.cs" />
+    <Compile Include="BinaryOperators\Lesser.cs" />
+    <Compile Include="BinaryOperators\Mod.cs" />
+    <Compile Include="BinaryOperators\Mul.cs" />
+    <Compile Include="BinaryOperators\Or.cs" />
+    <Compile Include="BinaryOperators\BooleanEqual.cs" />
+    <Compile Include="BinaryOperators\LesserEqual.cs" />
+    <Compile Include="BinaryOperators\NotEqual.cs" />
+    <Compile Include="BinaryOperators\Sub.cs" />
+    <Compile Include="SystemFunctions\AbsFunc.cs" />
+    <Compile Include="SystemFunctions\AcosFunc.cs" />
+    <Compile Include="SystemFunctions\AsinFunc.cs" />
+    <Compile Include="SystemFunctions\AtanFunc.cs" />
+    <Compile Include="SystemFunctions\CosFunc.cs" />
+    <Compile Include="SystemFunctions\ExpandFunc.cs" />
+    <Compile Include="SystemFunctions\LineFunc.cs" />
+    <Compile Include="SystemFunctions\PlotFunc.cs" />
+    <Compile Include="SystemFunctions\PrintFunc.cs" />
+    <Compile Include="SystemFunctions\RangeFunc.cs" />
+    <Compile Include="SystemFunctions\ReduceFunc.cs" />
+    <Compile Include="SystemFunctions\SinFunc.cs" />
+    <Compile Include="SystemFunctions\SolveFunc.cs" />
+    <Compile Include="SystemFunctions\SqrtFunc.cs" />
+    <Compile Include="SystemFunctions\TanFunc.cs" />
+    <Compile Include="SystemFunctions\TypeFunc.cs" />
+    <Compile Include="SystemFunctions\EvalFunc.cs" />
+    <Compile Include="SystemFunctions\ParaPlotFunc.cs" />
+    <Compile Include="KeyExpressions\ForExpr.cs" />
+    <Compile Include="KeyExpressions\IfExpr.cs" />
+    <Compile Include="KeyExpressions\WhileExpr.cs" />
+    <Compile Include="KeyExpressions\RetExpr.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ProjectExtensions>
@@ -233,4 +189,11 @@
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
+  <ItemGroup>
+    <Folder Include="Types\" />
+    <Folder Include="UnaryOperators\" />
+    <Folder Include="BinaryOperators\" />
+    <Folder Include="SystemFunctions\" />
+    <Folder Include="KeyExpressions\" />
+  </ItemGroup>
 </Project>

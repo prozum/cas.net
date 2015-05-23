@@ -2,28 +2,31 @@
 
 namespace Ast
 {
-    public class RetStmt : Statement
+    public class RetExpr : Expression
     {
         public Expression Expression;
 
-        public RetStmt(Expression expr, Scope scope) : base(scope)
+        public RetExpr(Expression expr, Scope scope)
         {
             Expression = expr;
+            CurScope = scope;
         }
             
-        public override void Evaluate()
+        public override Expression Evaluate()
         {
             var res = Expression.Evaluate();
 
             if (res is Error)
             {
                 CurScope.Errors.Add(new ErrorData(res as Error));
-                return;
+                return new Null();
             }
 
             CurScope.Returns.Clear();
             CurScope.Returns.Add(res);
             CurScope.Return = true;
+
+            return new Null();
         }
 
         public override string ToString()

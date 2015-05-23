@@ -44,12 +44,6 @@ namespace Ast
             this.Position = expr.Position;
         }
 
-        public ErrorData(Statement stmt, string err)
-        {
-            this.msg = err;
-            this.Position = stmt.Position;
-        }
-
         public override string ToString()
         {
             var str = "";
