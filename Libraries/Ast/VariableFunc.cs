@@ -124,11 +124,6 @@ namespace Ast
             return MakeClone<VariableFunc>();
         }
 
-        protected override T MakeClone<T>()
-        {
-            return base.MakeClone<T>();
-        }
-
         internal override Expression Reduce(Expression caller)
         {
             if (Prefix.CompareTo(Constant.Zero))

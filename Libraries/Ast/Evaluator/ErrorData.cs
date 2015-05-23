@@ -1,27 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Ast
 {
-    public abstract class EvalData
-    {
-    }
-
-    public class PrintData : EvalData
-    {
-        public string msg;
-
-        public PrintData(string msg)
-        {
-            this.msg = msg;
-        }
-
-        public override string ToString()
-        {
-            return msg;
-        }
-    }
-
     public class ErrorData : EvalData
     {
         public string msg;
@@ -53,21 +33,6 @@ namespace Ast
             str += msg;
 
             return str;
-        }
-    }
-
-    public class DebugData : EvalData
-    {
-        public string msg;
-
-        public DebugData(string msg)
-        {
-            this.msg = msg;
-        }
-
-        public override string ToString()
-        {
-            return msg;
         }
     }
 }
