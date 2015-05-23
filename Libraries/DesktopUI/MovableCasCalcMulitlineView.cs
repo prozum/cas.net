@@ -11,9 +11,9 @@ namespace DesktopUI
     {
         public CasCalcMultilineView calcview;
 
-        public MovableCasCalcMulitlineView(Evaluator eval) : base("",false)
+        public MovableCasCalcMulitlineView(string serializedMultiline, Evaluator eval) : base("",false)
         {
-            calcview = new CasCalcMultilineView(eval);
+            calcview = new CasCalcMultilineView(serializedMultiline, eval);
 
             Remove(textview);
             Attach(calcview, 1, 1, 1, 2);

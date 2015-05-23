@@ -160,7 +160,8 @@ namespace DesktopUI
 
         public void InsertCalcMultilineView(int pos)
         {
-            MovableCasCalcMulitlineView movCasCalcMultiView = new MovableCasCalcMulitlineView(Eval);
+            MovableCasCalcMulitlineView movCasCalcMultiView = new MovableCasCalcMulitlineView("",Eval);
+            
             movCasCalcMultiView.calcview.evaluateButton.Clicked += delegate
             {
                 movCasCalcMultiView.calcview.eval.Locals.Clear();
@@ -186,12 +187,10 @@ namespace DesktopUI
             ShowAll();
         }
 
-        public void InsertCalcMultilineView(string input, bool locked)
+        public void InsertCalcMultilineView(string serializedString, bool locked)
         {
-            CasTextViewSerializer serializer = new CasTextViewSerializer();
+            MovableCasCalcMulitlineView movCasCalcMultiView = new MovableCasCalcMulitlineView(serializedString, Eval);
 
-            MovableCasCalcMulitlineView movCasCalcMultiView = new MovableCasCalcMulitlineView(Eval);
-            movCasCalcMultiView.calcview.input.Buffer.Text = serializer.DeserializeCasTextView(input);
             movCasCalcMultiView.calcview.evaluateButton.Clicked += delegate
             {
                 movCasCalcMultiView.calcview.eval.CurScope.Locals.Clear();

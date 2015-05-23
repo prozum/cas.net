@@ -17,9 +17,12 @@ namespace DesktopUI
         public Label output = new Label();
         public DrawView drawView = new DrawView();
 
-        public CasCalcMultilineView(Evaluator eval) : base()
+        public CasCalcMultilineView(String serializedMultiview, Evaluator eval) : base()
         {
             this.eval = eval;
+
+            input.WrapMode = WrapMode.WordChar;
+            DeserializeCasTextView(serializedMultiview);
 
             Attach(input, 1, 1, 1, 1);
             Attach(evaluateButton, 1, 2, 1, 1);
@@ -78,5 +81,24 @@ namespace DesktopUI
                 output.Text = outputstring;
             }
         }
+
+        public string SerializeCasTextView()
+        {
+            TextIter startIter, endIter;
+            input.Buffer.GetBounds(out startIter, out endIter);
+            byte[] byteTextView = input.Buffer.Serialize(input.Buffer, input.Buffer.RegisterSerializeTagset(null), startIter, endIter);
+            string serializedTextView = Convert.ToBase64String(byteTextView);
+
+            return serializedTextView;
+        }
+
+        // A method for deserializing the content serialized in the above method.
+        public void DeserializeCasTextView(string serializedTextView)
+        {
+            TextIter textIter = input.Buffer.StartIter;
+            byte[] byteTextView = Convert.FromBase64String(serializedTextView);
+            input.Buffer.Deserialize(input.Buffer, input.Buffer.RegisterDeserializeTagset(null), ref textIter, byteTextView, (ulong)byteTextView.Length);
+        }
+
     }
 }
