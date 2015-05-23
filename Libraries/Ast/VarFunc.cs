@@ -23,10 +23,10 @@ namespace Ast
 
         public override Expression Evaluate()
         {
-            var val = Value;
+            if (Definition)
+                return Value.Evaluate();
 
-            if (val is Error)
-                return val;
+            var val = Value;
 
             if (val is VarFunc)
             {
@@ -57,8 +57,6 @@ namespace Ast
                 }
             }
 
-            if (val is List)
-                return val;
 
             //return val.Evaluate();
             throw new Exception("Not good");
@@ -77,8 +75,10 @@ namespace Ast
                     return @var;
 
                 if (@var is VarFunc)
+                {
                     return @var;
-                    
+                }
+
                 if (@var.Value is List)
                 {
                     var list = (List)@var.Value;

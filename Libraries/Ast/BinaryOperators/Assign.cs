@@ -58,7 +58,7 @@ namespace Ast
             }
 
             // Variable
-            @var.Value.Value = Right.Evaluate();
+            @var.Value = Right.Evaluate();
 
             if (@var.Value is Error)
                 return @var.Value;
