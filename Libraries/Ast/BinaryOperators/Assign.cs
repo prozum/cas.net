@@ -39,9 +39,9 @@ namespace Ast
                 return new Error(this, "Cannot override system function");
             }
 
-            if (@var is CustomFunc)
+            if (@var is VariableFunc)
             {
-                var customFunc = (CustomFunc)@var;
+                var customFunc = (VariableFunc)@var;
 
                 foreach (var arg in customFunc.Arguments)
                 {

@@ -85,7 +85,7 @@ public class Calculator : Window
 
         foreach (var def in eval.Locals)
         {
-            if (def.Value is CustomFunc)
+            if (def.Value is VariableFunc)
             {
                 defStore.AppendValues(def.Value.ToString(), def.Value.Value.ToString());
             }
@@ -101,7 +101,7 @@ public class Calculator : Window
     {
         foreach (var def in scope.Locals)
         {
-            if (def.Value is CustomFunc)
+            if (def.Value is VariableFunc)
             {
                 defStore.AppendValues(iter, def.Value.ToString(), def.Value.Value.ToString());
             }

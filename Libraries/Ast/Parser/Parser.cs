@@ -844,7 +844,7 @@ namespace Ast
                 case "line":
                     return new LineFunc(args, curScope);
                 default:
-                    return new CustomFunc(sym.ToLower(), args, curScope);
+                    return new VariableFunc(sym.ToLower(), args, curScope);
             }
         }
 
