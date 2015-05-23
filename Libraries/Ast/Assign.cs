@@ -56,20 +56,16 @@ namespace Ast
 
                 return @var;
             }
-                
-            if (@var is Variable)
-            {
-                @var.Value = Right.Evaluate();
 
-                if (@var.Value is Error)
-                    return @var.Value;
+            // Variable
+            @var.Value = Right.Evaluate();
 
-                scope.SetVar(@var.Identifier, @var);
-
+            if (@var.Value is Error)
                 return @var.Value;
-            }
 
-            return new Error(this, "Left operand must be Symbol or Function");
+            scope.SetVar(@var.Identifier, @var);
+
+            return @var.Value;
         }
 
         protected override Expression ExpandHelper(Expression left, Expression right)

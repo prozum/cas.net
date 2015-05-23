@@ -60,7 +60,7 @@ namespace Ast
             return res;
         }
 
-        protected new virtual T MakeClone<T>() where T : Variable, new()
+        protected virtual T MakeClone<T>() where T : Variable, new()
         {
             T res = new T();
             res.Identifier = Identifier;

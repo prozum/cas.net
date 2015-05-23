@@ -8,6 +8,17 @@ namespace Ast
         public CustomFunc() : this(null, null, null) { }
         public CustomFunc(string identifier, List<Expression> args, Scope scope) : base(identifier, args, scope) { }
 
+        public override Scope CurScope 
+        { 
+            get 
+            {
+                if (CallStack == null)
+                    return base.CurScope;
+                return CallStack.Peek(); 
+            }
+        }
+        public Stack<Scope> CallStack;
+
         public override Expression Evaluate() 
         {
             return Evaluate(this); 
@@ -15,7 +26,18 @@ namespace Ast
 
         internal override Expression Evaluate(Expression caller)
         {
-            return Value.Evaluate();
+            var val = Value;
+
+            if (!(val is CustomFunc))
+                return val.Evaluate();
+
+            var def = (CustomFunc)val;
+
+            def.CallStack.Push(this);
+            var res = def.Evaluate();
+            def.CallStack.Pop();
+
+            return res;
         }
 
         public override Expression Value
@@ -34,13 +56,15 @@ namespace Ast
                 {
                     var customDef = (CustomFunc)res;
 
-                    Definition=true;
-                    Value = customDef.Value.Clone();
-                    Value.CurScope = this;
-                    Locals = new Dictionary<string,Variable>(customDef.Locals);
+                    //Definition=true;
+                    //Value = customDef.Value.Clone();
+                    //Value.CurScope = this;
+                    //Locals = new Dictionary<string,Variable>(customDef.Locals);
 
                     if (Arguments.Count != customDef.Arguments.Count)
                         return new Error(Identifier + " takes " + customDef.Arguments.Count.ToString() + " arguments. Not " + Arguments.Count.ToString() + ".");
+
+
 
                     for (int i = 0; i < Arguments.Count; i++)
                     {
@@ -49,7 +73,7 @@ namespace Ast
                         SetVar(arg.Identifier, Arguments[i].Value);
                     }
 
-                    return Value;
+                    return customDef;
                 }
                     
                 if (res.Value is List)
@@ -82,6 +106,7 @@ namespace Ast
 
             set
             {
+                CallStack = new Stack<Scope>();
                 Definition = true;
                 _value = value;
             }
