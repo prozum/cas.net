@@ -21,12 +21,7 @@ namespace Ast
         }
         public Stack<Scope> CallStack;
 
-        public override Expression Evaluate() 
-        {
-            return Evaluate(this); 
-        }
-
-        internal override Expression Evaluate(Expression caller)
+        public override Expression Evaluate()
         {
             var val = Value;
 
@@ -125,7 +120,7 @@ namespace Ast
             return MakeClone<VarFunc>();
         }
 
-        internal override Expression Reduce(Expression caller)
+        public override Expression Reduce()
         {
             if (Prefix.CompareTo(Constant.Zero))
             {

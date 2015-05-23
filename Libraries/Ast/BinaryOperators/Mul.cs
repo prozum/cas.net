@@ -167,12 +167,12 @@ namespace Ast
                 //If left and other are the same, return the squared of one of them times the right. ((x+y)*z)*(y+x) -> (x+y)^2 * z
                 if (Left.CompareTo(other))
                 {
-                    return new Mul(new Exp(other, new Integer(2)).Reduce(this), Right);
+                    return new Mul(new Exp(other, new Integer(2)).Reduce(), Right);
                 }
                 //If right and other are the same, return the squared of one of them times the left. (z*(x+y))*(y+x) -> z * (x+y)^2
                 else if (Right.CompareTo(other))
                 {
-                    return new Mul(Left, new Exp(other, new Integer(2)).Reduce(this));
+                    return new Mul(Left, new Exp(other, new Integer(2)).Reduce());
                 }
                 //Couldn't reduce.
                 else

@@ -193,7 +193,7 @@ namespace Ast
             return Left.ContainsVariable(other) || Right.ContainsVariable(other);
         }
 
-        internal override Expression Reduce()
+        public override Expression Reduce()
         {
             var prev = ToString();
             var prevType = GetType();

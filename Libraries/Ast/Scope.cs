@@ -49,7 +49,7 @@ namespace Ast
         }
 
         readonly int MaxStatementPrint = 5;
-        ,
+
         public Scope()
         {
             SideEffects = new List<EvalData>();

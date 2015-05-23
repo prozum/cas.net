@@ -90,7 +90,7 @@ namespace Ast
             return res;
         }
 
-        internal override Expression Reduce(Expression caller)
+        public override Expression Reduce()
         {
             if (Prefix.CompareTo(Constant.Zero))
             {

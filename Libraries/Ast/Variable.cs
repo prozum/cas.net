@@ -128,7 +128,7 @@ namespace Ast
             return otherSimplified.CompareTo(this.Value);
         }
 
-        internal override Expression Reduce(Expression caller)
+        public override Expression Reduce()
         {
             if (Prefix.CompareTo(Constant.Zero))
             {
