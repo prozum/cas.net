@@ -3,10 +3,12 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class VariableFunc : Func
+    public class VarFunc : Func
     {
-        public VariableFunc() : this(null, null, null) { }
-        public VariableFunc(string identifier, List<Expression> args, Scope scope) : base(identifier, args, scope) { }
+        public VarFunc() : this(null, null, null) { }
+        public VarFunc(string identifier, List<Expression> args, Scope scope) : base(identifier, args, scope) { }
+
+        public readonly int MaxFunctionRecursion = 5;
 
         public override Scope CurScope 
         { 
@@ -31,20 +33,40 @@ namespace Ast
             if (val is Error)
                 return val;
 
-            if (val is VariableFunc)
+            if (val is VarFunc)
             {
-                var def = (VariableFunc)val;
+                var def = (VarFunc)val;
 
                 if (def.Definition)
                 {
-                    def.CallStack.Push(this);
+                    if (def.CallStack.Count > MaxFunctionRecursion)
+                        return new Error(this, "Maximum function recursion exceeded");
+
+
+                    if (Arguments.Count != def.Arguments.Count)
+                        return new Error(Identifier + " takes " + def.Arguments.Count.ToString() + " arguments. Not " + Arguments.Count.ToString() + ".");
+
+                    var callScope = new Scope(CurScope);
+                    def.CallStack.Push(callScope);
+
+
+                    for (int i = 0; i < Arguments.Count; i++)
+                    {
+                        var arg = (Variable)def.Arguments[i];
+                        callScope.SetVar(arg.Identifier, Arguments[i].Evaluate());
+                    }
+
                     var res = def.Evaluate();
                     def.CallStack.Pop();
                     return res;
                 }
             }
 
-            return val.Evaluate();
+            if (val is List)
+                return val;
+
+            //return val.Evaluate();
+            throw new Exception("Not good");
         }
 
         public override Expression Value
@@ -54,38 +76,17 @@ namespace Ast
                 if (Definition)
                     return _value;
 
-                var res = CurScope.GetVar(Identifier);
+                var @var = CurScope.GetVar(Identifier);
 
-                if (res is Error)
-                    return res;
+                if (@var is Error)
+                    return @var;
 
-                if (res is VariableFunc)
-                {
-                    var customDef = (VariableFunc)res;
-
-                    //Definition=true;
-                    //Value = customDef.Value.Clone();
-                    //Value.CurScope = this;
-                    //Locals = new Dictionary<string,Variable>(customDef.Locals);
-
-                    if (Arguments.Count != customDef.Arguments.Count)
-                        return new Error(Identifier + " takes " + customDef.Arguments.Count.ToString() + " arguments. Not " + Arguments.Count.ToString() + ".");
-
-
-
-                    for (int i = 0; i < Arguments.Count; i++)
-                    {
-                        var arg = (Variable)customDef.Arguments[i];
-
-                        SetVar(arg.Identifier, Arguments[i].Value);
-                    }
-
-                    return customDef;
-                }
+                if (@var is VarFunc)
+                    return @var;
                     
-                if (res.Value is List)
+                if (@var.Value is List)
                 {
-                    var list = (List)res.Value;
+                    var list = (List)@var.Value;
 
                     if (Arguments.Count != 1 || !(Arguments[0].Evaluate() is Integer))
                         return new Error(list, "Valid args: [Integer]");
@@ -121,7 +122,7 @@ namespace Ast
 
         public override Expression Clone()
         {
-            return MakeClone<VariableFunc>();
+            return MakeClone<VarFunc>();
         }
 
         internal override Expression Reduce(Expression caller)

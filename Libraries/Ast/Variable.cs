@@ -81,7 +81,7 @@ namespace Ast
 
         public override Expression Evaluate() 
         {
-            return Reduce().Evaluate(this); 
+            return Evaluate(this); 
         }
 
         internal override Expression Evaluate(Expression caller)

@@ -104,9 +104,6 @@
     <Compile Include="KeyExpressions\RetExpr.cs" />
     <Compile Include="BinaryOperators\BinaryOperator.cs" />
     <Compile Include="Types\List.cs" />
-    <Compile Include="VariableFunc.cs">
-      <DependentUpon>Variable.cs</DependentUpon>
-    </Compile>
     <Compile Include="SystemFunctions\SysFunc.cs" />
     <Compile Include="UnaryOperators\Minus.cs" />
     <Compile Include="UnaryOperators\Negation.cs" />
@@ -140,6 +137,9 @@
     </Compile>
     <Compile Include="Evaluator\CircleData.cs">
       <DependentUpon>DrawData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="VarFunc.cs">
+      <DependentUpon>Variable.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

@@ -39,26 +39,26 @@ namespace Ast
                 return new Error(this, "Cannot override system function");
             }
 
-            if (@var is VariableFunc)
+            if (@var is VarFunc)
             {
-                var customFunc = (VariableFunc)@var;
+                var varfunc = (VarFunc)@var;
 
-                foreach (var arg in customFunc.Arguments)
+                foreach (var arg in varfunc.Arguments)
                 {
                     if (!(arg is Variable))
                         return new Error(this, "All arguments must be symbols");
                 }
 
-                Right.CurScope = customFunc;
-                customFunc.Value = Right;
+                Right.CurScope = varfunc;
+                varfunc.Value = Right;
                
-                scope.SetVar(customFunc);
+                scope.SetVar(varfunc);
 
                 return @var;
             }
 
             // Variable
-            @var.Value = Right.Evaluate();
+            @var.Value.Value = Right.Evaluate();
 
             if (@var.Value is Error)
                 return @var.Value;

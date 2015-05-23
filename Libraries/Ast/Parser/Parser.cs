@@ -88,7 +88,7 @@ namespace Ast
             }
 
             contextStack.Push(cx);
-            ParseStatements();
+            ParseKeyExpressions();
             contextStack.Pop();
 
             if (Error)
@@ -100,7 +100,7 @@ namespace Ast
             return scopeStack.Pop();
         }
 
-        public void ParseStatements()
+        public void ParseKeyExpressions()
         {
             while (tokens.Count > 0)
             {
@@ -800,12 +800,12 @@ namespace Ast
             }
         }
             
-        public Expression ParseFunction(string sym)
+        public Expression ParseFunction(string identifier)
         {
             List res = ParseList();
             var args = res.items;
                 
-            switch (sym.ToLower())
+            switch (identifier.ToLower())
             {
                 case "abs":
                     return new AbsFunc(args, curScope);
@@ -844,7 +844,7 @@ namespace Ast
                 case "line":
                     return new LineFunc(args, curScope);
                 default:
-                    return new VariableFunc(sym.ToLower(), args, curScope);
+                    return new VarFunc(identifier.ToLower(), args, curScope);
             }
         }
 
