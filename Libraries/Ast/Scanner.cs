@@ -85,6 +85,8 @@ namespace Ast
                 case '\'':
                     return ScanText(@char);
                 
+                case '~':
+                    return new Token(TokenKind.TILDE, "~", Position);
                 case '+':
                     return new Token(TokenKind.ADD, "+", Position);
                 case '-':

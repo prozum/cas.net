@@ -25,6 +25,7 @@ namespace Ast
         IMAG_INT,
         IMAG_DEC,
 
+        TILDE,
         ASSIGN,
         EQUAL,
         BOOL_EQUAL,

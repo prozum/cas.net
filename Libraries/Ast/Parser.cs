@@ -506,6 +506,13 @@ namespace Ast
                         else
                             ReportError("Unexpected '}' in " + curContext);
                         break;
+                    
+                    case TokenKind.TILDE:
+                        if (expectUnary)
+                            SetupUnOp(new Referation());
+                        else
+                            ReportError(curToken + " is not supported as binary operator");
+                        break;
 
                     case TokenKind.ADD:
                         if (!expectUnary) // Ignore Unary +

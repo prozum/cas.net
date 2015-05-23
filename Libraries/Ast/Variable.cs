@@ -86,7 +86,12 @@ namespace Ast
 
         internal override Expression Evaluate(Expression caller)
         {
-            return Value.Evaluate();
+            var value = Value;
+
+            if (value.Value is Number)
+                value = Prefix * value ^ Exponent;
+
+            return value.Evaluate();
         }
 
         protected bool Definition = false;
@@ -98,12 +103,7 @@ namespace Ast
                 if (Definition)
                     return _value;
 
-                var value = CurScope.GetVar(Identifier);
-
-                if (value.Value is Real)
-                    value = Prefix * value ^ Exponent;
-
-                return value;
+                return CurScope.GetVar(Identifier);
             }
 
             set

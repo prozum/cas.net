@@ -21,7 +21,9 @@ namespace Ast
                 return;
             }
 
+            CurScope.Returns.Clear();
             CurScope.Returns.Add(res);
+            CurScope.Return = true;
         }
 
         public override string ToString()

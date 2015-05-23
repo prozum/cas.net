@@ -218,6 +218,9 @@
     <Compile Include="WidgetData.cs">
       <DependentUpon>Evaluator.cs</DependentUpon>
     </Compile>
+    <Compile Include="Referation.cs">
+      <DependentUpon>UnaryOperator.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ProjectExtensions>
