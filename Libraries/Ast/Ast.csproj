@@ -55,42 +55,11 @@
     <Compile Include="Func.cs">
       <DependentUpon>Variable.cs</DependentUpon>
     </Compile>
-    <Compile Include="Equal.cs">
-      <DependentUpon>BinaryOperator.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Assign.cs">
-      <DependentUpon>BinaryOperator.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Add.cs">
-      <DependentUpon>BinaryOperator.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Sub.cs">
-      <DependentUpon>BinaryOperator.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Mul.cs">
-      <DependentUpon>BinaryOperator.cs</DependentUpon>
-    </Compile>
-    <Compile Include="BooleanEqual.cs">
-      <DependentUpon>BinaryOperator.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Lesser.cs">
-      <DependentUpon>BinaryOperator.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Greater.cs">
-      <DependentUpon>BinaryOperator.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GreaterEqual.cs">
-      <DependentUpon>BinaryOperator.cs</DependentUpon>
-    </Compile>
-    <Compile Include="LesserEqual.cs">
-      <DependentUpon>BinaryOperator.cs</DependentUpon>
-    </Compile>
     <Compile Include="SysFunc.cs" />
     <Compile Include="Negation.cs">
       <DependentUpon>UnaryOperator.cs</DependentUpon>
     </Compile>
     <Compile Include="UnaryOperator.cs" />
-    <Compile Include="BinaryOperator.cs" />
     <Compile Include="Minus.cs">
       <DependentUpon>UnaryOperator.cs</DependentUpon>
     </Compile>
@@ -98,19 +67,7 @@
       <DependentUpon>Evaluator.cs</DependentUpon>
     </Compile>
     <Compile Include="Operator.cs" />
-    <Compile Include="NotEqual.cs">
-      <DependentUpon>BinaryOperator.cs</DependentUpon>
-    </Compile>
     <Compile Include="Error.cs" />
-    <Compile Include="And.cs">
-      <DependentUpon>BinaryOperator.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Or.cs">
-      <DependentUpon>BinaryOperator.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Mod.cs">
-      <DependentUpon>BinaryOperator.cs</DependentUpon>
-    </Compile>
     <Compile Include="CustomFunc.cs">
       <DependentUpon>Variable.cs</DependentUpon>
     </Compile>
@@ -177,6 +134,7 @@
     <Compile Include="KeyExpressions\IfExpr.cs" />
     <Compile Include="KeyExpressions\WhileExpr.cs" />
     <Compile Include="KeyExpressions\RetExpr.cs" />
+    <Compile Include="BinaryOperators\BinaryOperator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ProjectExtensions>
