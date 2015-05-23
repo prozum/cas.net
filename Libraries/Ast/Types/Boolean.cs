@@ -16,11 +16,6 @@ namespace Ast
             return this;
         }
 
-        internal override Expression Evaluate(Expression caller)
-        {
-            return this;
-        }
-
         public static bool operator true (Boolean b)
         {
             return b.@bool;

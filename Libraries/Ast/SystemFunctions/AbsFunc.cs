@@ -15,7 +15,7 @@ namespace Ast
                 };
         }
 
-        internal override Expression Evaluate(Expression caller)
+        public override Expression Evaluate()
         {
             if (!IsArgumentsValid())
                 return new ArgumentError(this);
@@ -41,7 +41,7 @@ namespace Ast
             return new Error(this, "Could not take Abs of: " + Arguments[0]);
         }
 
-        internal override Expression Reduce(Expression caller)
+        public override Expression Reduce()
         {
             return ReduceHelper<AbsFunc>();
         }

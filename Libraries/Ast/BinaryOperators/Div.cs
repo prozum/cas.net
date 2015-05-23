@@ -10,7 +10,7 @@ namespace Ast
         public Div() { }
         public Div(Expression left, Expression right) : base(left, right) { }
 
-        internal override Expression Evaluate(Expression caller)
+        public override Expression Evaluate()
         {
             return Left / Right;
         }

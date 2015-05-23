@@ -19,7 +19,7 @@ namespace Ast
                 };
         }
 
-        internal override Expression Evaluate(Expression caller)
+        public override Expression Evaluate()
         {
             Equal solved;
 

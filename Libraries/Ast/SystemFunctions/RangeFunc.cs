@@ -17,7 +17,7 @@ namespace Ast
                 };
         }
 
-        internal override Expression Evaluate(Expression caller)
+        public override Expression Evaluate()
         {
             if (!IsArgumentsValid())
                 return new ArgumentError(this);

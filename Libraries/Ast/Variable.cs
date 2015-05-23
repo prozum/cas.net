@@ -79,19 +79,14 @@ namespace Ast
             return MakeClone<Variable>();
         }
 
-        public override Expression Evaluate() 
-        {
-            return Evaluate(this); 
-        }
-
-        internal override Expression Evaluate(Expression caller)
+        public override Expression Evaluate()
         {
             var value = Value;
 
             if (value.Value is Number)
                 value = Prefix * value ^ Exponent;
 
-            return value.Evaluate();
+            return value.ReduceEvaluate();
         }
 
         protected bool Definition = false;

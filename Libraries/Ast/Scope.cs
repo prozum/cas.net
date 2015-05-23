@@ -49,7 +49,7 @@ namespace Ast
         }
 
         readonly int MaxStatementPrint = 5;
-
+        ,
         public Scope()
         {
             SideEffects = new List<EvalData>();
@@ -80,11 +80,6 @@ namespace Ast
             }
         }
 
-        internal override Expression Evaluate(Expression caller)
-        {
-            return Evaluate();
-        }
-
         public override Expression Evaluate()
         {
             if (Error)
@@ -95,7 +90,7 @@ namespace Ast
 
             foreach (var expr in Expressions)
             {
-                var res = expr.Evaluate();
+                var res = expr.ReduceEvaluate();
 
                 if (GetBool("debug"))
                     SideEffects.Add(new DebugData("Debug: " + expr + " = " + res));
