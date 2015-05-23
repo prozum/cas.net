@@ -49,7 +49,7 @@ namespace Ast
         {
             List<Expression> newArgs = new List<Expression>();
             newArgs.Add(other);
-            return new SinFunc(newArgs, Scope);
+            return new SinFunc(newArgs, CurScope);
         }
     }
 }

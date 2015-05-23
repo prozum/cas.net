@@ -29,6 +29,23 @@ namespace Ast
             }
         }
 
+        public override Scope CurScope
+        {
+            get
+            {
+                return base.CurScope;
+            }
+            set
+            {
+                base.CurScope = value;
+
+                foreach (var stmt in Statements)
+                {
+                    stmt.CurScope = value;
+                }
+            }
+        }
+
         readonly int MaxStatementPrint = 5;
 
         public Scope()
@@ -39,24 +56,9 @@ namespace Ast
 
         public Scope(Scope scope)
         {
-            Scope = scope;
+            CurScope = scope;
             SideEffects = scope.SideEffects;
             Errors = scope.Errors;
-        }
-
-        protected virtual T MakeClone<T>() where T : Scope, new()
-        {
-            T res = new T();
-            res.Scope = Scope;
-            res.Position = Position;
-            res.Statements = new List<Statement>(Statements);
-
-            return res;
-        }
-
-        public override Expression Clone()
-        {
-            return MakeClone<Scope>();
         }
 
         internal override Expression Evaluate(Expression caller)
@@ -111,15 +113,13 @@ namespace Ast
             if (expr is Variable)
             {
                 @var = (Variable)expr;
-                @var.Scope = this;
+                @var.CurScope = this;
             }
             else
             {
                 @var = new Variable(identifier, this);
                 @var.Value = expr;
             }
-
-            //return SetVar(@var);
 
             if (Locals.ContainsKey(identifier))
                 Locals.Remove(identifier);
@@ -138,8 +138,8 @@ namespace Ast
             if (Locals.TryGetValue(identifier, out @var))
                 return @var;
 
-            if (Scope != null)
-                return Scope.GetVar(identifier);
+            if (CurScope != null)
+                return CurScope.GetVar(identifier);
 
             return new Error(identifier + " is not defined");
         }
@@ -154,8 +154,8 @@ namespace Ast
                     return @var.Value as Real;
             }
 
-            if (Scope != null)
-                return Scope.GetReal(identifier);
+            if (CurScope != null)
+                return CurScope.GetReal(identifier);
 
             return 0;
         }
@@ -186,8 +186,8 @@ namespace Ast
                     return (@var.Value as Boolean).@bool;
             }
 
-            if (Scope != null)
-                return Scope.GetBool(identifier);
+            if (CurScope != null)
+                return CurScope.GetBool(identifier);
 
             return false;
         }
@@ -213,7 +213,7 @@ namespace Ast
         public override string ToString()
         {
             string str;
-            if (Scope == null)
+            if (CurScope == null)
                 str = "Global Scope: {";
             else
                 str = "{";

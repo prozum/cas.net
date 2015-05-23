@@ -194,12 +194,12 @@ namespace Ast
             cond = ParseColon();
             if (Error)
                 return null;
-            stmt.conditions.Add(cond);
+            stmt.Conditions.Add(cond);
 
             expr = ParseScope();
             if (Error)
                 return null;
-            stmt.expressions.Add(expr);
+            stmt.Expressions.Add(expr);
 
             while (Eat(TokenKind.NEW_LINE));
             while (Eat(TokenKind.ELIF))
@@ -207,12 +207,12 @@ namespace Ast
                 cond = ParseColon();
                 if (Error)
                     return null;
-                stmt.conditions.Add(cond);
+                stmt.Conditions.Add(cond);
 
                 expr = ParseScope();
                 if (Error)
                     return null;
-                stmt.expressions.Add(expr);
+                stmt.Expressions.Add(expr);
 
                 while (Eat(TokenKind.NEW_LINE));
             }
@@ -225,7 +225,7 @@ namespace Ast
                 expr = ParseScope();
                 if (Error)
                     return null;
-                stmt.expressions.Add(expr);
+                stmt.Expressions.Add(expr);
             }
 
             return stmt;
@@ -237,7 +237,7 @@ namespace Ast
 
             if (Peek(TokenKind.IDENTIFIER))
             {
-                stmt.sym = curToken.Value;
+                stmt.Var = curToken.Value;
                 Eat();
             }
             else
@@ -258,14 +258,14 @@ namespace Ast
                 return null;
 
             if (list is List)
-                stmt.list = list as List;
+                stmt.List = list as List;
             else
             {
                 ReportError("For: " + list + " is not a list");
                 return null;
             }
 
-            stmt.expr = ParseScope();
+            stmt.ForScope = ParseScope();
 
             return stmt;
         }
@@ -280,13 +280,13 @@ namespace Ast
             cond = ParseColon();
             if (Error)
                 return null;
-            stmt.condition = cond;
+            stmt.Condition = cond;
 
             scope = ParseScope();
             if (Error)
                 return null;
-            stmt.expression = scope;
-            stmt.condition.Scope = scope;
+            stmt.Expression = scope;
+            stmt.Condition.CurScope = scope;
 
             return stmt;
         }
@@ -646,7 +646,7 @@ namespace Ast
         {
             expr.Position = tok != null ? tok.Position : curToken.Position;
 
-            expr.Scope = curScope;
+            expr.CurScope = curScope;
 
             while (curUnaryStack.Count > 0)
             {
@@ -665,7 +665,7 @@ namespace Ast
         public void SetupUnOp(UnaryOperator op)
         {
             op.Position = curToken.Position;
-            op.Scope = curScope;
+            op.CurScope = curScope;
 
             curUnaryStack.Enqueue(op);
         }
@@ -673,7 +673,7 @@ namespace Ast
         public void SetupBiOp(BinaryOperator op)
         {
             op.Position = curToken.Position;
-            op.Scope = curScope;
+            op.CurScope = curScope;
 
             curBinaryStack.Enqueue(op);
             expectUnary = true;

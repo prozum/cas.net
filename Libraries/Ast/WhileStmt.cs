@@ -4,8 +4,9 @@ namespace Ast
 {
     public class WhileStmt : Statement
     {
-        public Expression condition;
-        public Expression expression;
+        public Expression Condition;
+        public Expression Expression;
+
         readonly int MaxIterations = 10000;
 
         public WhileStmt(Scope scope) : base(scope)
@@ -18,7 +19,7 @@ namespace Ast
 
             while (i++ < MaxIterations)
             {
-                var res = condition.Evaluate();
+                var res = Condition.Evaluate();
 
                 if (res is Boolean)
                 {
@@ -27,20 +28,20 @@ namespace Ast
                 }
                 else if (res is Error)
                 {
-                    Scope.Errors.Add(new ErrorData(res as Error));
+                    CurScope.Errors.Add(new ErrorData(res as Error));
                 }
 
-                expression.Evaluate();
+                Expression.Evaluate();
             }
 
             if (i > MaxIterations)
-                Scope.Errors.Add(new ErrorData("while: Overflow!"));
+                CurScope.Errors.Add(new ErrorData("while: Overflow!"));
 
         }
 
         public override string ToString()
         {
-            return expression.ToString();
+            return Expression.ToString();
         }
     }
 }

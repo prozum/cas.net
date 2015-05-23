@@ -46,7 +46,7 @@ namespace Ast
         {
             List<Expression> newArgs = new List<Expression>();
             newArgs.Add(other);
-            return new AcosFunc(newArgs, Scope);
+            return new AcosFunc(newArgs, CurScope);
         }
     }
 }

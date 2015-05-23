@@ -4,12 +4,13 @@ namespace Ast
 {
     public abstract class Statement
     {
-        public Scope Scope;
+        public virtual Scope CurScope { get; set; }
+
         public Pos Position;
 
         public Statement(Scope scope)
         {
-            Scope = scope;
+            CurScope = scope;
         }
 
         public abstract void Evaluate();

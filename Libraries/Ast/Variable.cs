@@ -11,15 +11,15 @@ namespace Ast
         public string Identifier;
         public Real Prefix, Exponent;
 
-        public override Scope Scope
+        public override Scope CurScope
         {
             get
             {
-                return base.Scope;
+                return base.CurScope;
             }
             set
             {
-                base.Scope = value;
+                base.CurScope = value;
                 if (value != null)
                     SideEffects = value.SideEffects;
             }
@@ -29,7 +29,7 @@ namespace Ast
         public Variable(string identifier, Scope scope)
         {
             Identifier = identifier;
-            Scope = scope;
+            CurScope = scope;
 
             Exponent = new Integer(1);
             Prefix = new Integer(1);
@@ -66,7 +66,7 @@ namespace Ast
             res.Identifier = Identifier;
             res.Prefix = Prefix.Clone() as Real;
             res.Exponent = Exponent.Clone() as Real;
-            res.Scope = Scope;
+            res.CurScope = CurScope;
             res.Position = Position;
             res.Definition = Definition;
             res._value = Value.Clone();
@@ -98,7 +98,7 @@ namespace Ast
                 if (Definition)
                     return _value;
 
-                var value = Scope.GetVar(Identifier);
+                var value = CurScope.GetVar(Identifier);
 
                 if (value.Value is Real)
                     value = Prefix * value ^ Exponent;
@@ -108,8 +108,11 @@ namespace Ast
 
             set
             {
-                Definition = true;
-                _value = value;
+                if (value != null)
+                {
+                    Definition = true;
+                    _value = value;
+                }
             }
         }
 

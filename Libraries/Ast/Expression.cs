@@ -26,7 +26,7 @@ namespace Ast
     /// </summary>
     public abstract class Expression
     {
-        public virtual Scope Scope { get; set; }
+        public virtual Scope CurScope { get; set; }
 
         public Expression Parent;
         public Pos Position;

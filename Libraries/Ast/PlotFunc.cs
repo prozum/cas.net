@@ -40,11 +40,11 @@ namespace Ast
 
             var yList = new List<Real>();
 
-            expr.Scope = new Scope(expr.Scope);
+            expr.CurScope = new Scope(expr.CurScope);
 
             foreach (var x in xList)
             {
-                expr.Scope.SetVar(@var.ToString(), x);
+                expr.CurScope.SetVar(@var.ToString(), x);
 
                 var res = expr.Evaluate();
 
@@ -56,7 +56,7 @@ namespace Ast
                     return new Error(this, "Argument 1 does not return a real number");
             }
 
-            Scope.SideEffects.Add(new PlotData(xList, yList, null));
+            CurScope.SideEffects.Add(new PlotData(xList, yList, null));
             return new Null();
         }
 

@@ -138,7 +138,7 @@ namespace DesktopUI
             //MovCasCalcView.calcview.input.IsEditable = !locked;
             MovCasCalcView.calcview.input.Activated += delegate
             {
-                MovCasCalcView.calcview.eval.Scope.Locals.Clear();
+                MovCasCalcView.calcview.eval.CurScope.Locals.Clear();
                 MovCasCalcView.calcview.Evaluate();
                 MovCasCalcView.ShowAll();
             };
@@ -194,7 +194,7 @@ namespace DesktopUI
             movCasCalcMultiView.calcview.input.Buffer.Text = serializer.DeserializeCasTextView(input);
             movCasCalcMultiView.calcview.evaluateButton.Clicked += delegate
             {
-                movCasCalcMultiView.calcview.eval.Scope.Locals.Clear();
+                movCasCalcMultiView.calcview.eval.CurScope.Locals.Clear();
                 movCasCalcMultiView.calcview.Evaluate();
                 movCasCalcMultiView.ShowAll();
             };

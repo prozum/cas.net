@@ -16,21 +16,21 @@ namespace Ast
 
     public abstract class Func : Variable
     {
-        public override Scope Scope
+        public override Scope CurScope
         {
             get
             {
-                return base.Scope;
+                return base.CurScope;
             }
             set
             {
-                base.Scope = value;
+                base.CurScope = value;
 
                 if (Arguments != null)
                 {
                     foreach (var arg in Arguments)
                     {
-                        arg.Scope = value;
+                        arg.CurScope = value;
                     }
                 }
             }
@@ -124,7 +124,7 @@ namespace Ast
 
             res.Arguments = newArgs;
             res.Identifier = Identifier;
-            res.Scope = Scope;
+            res.CurScope = CurScope;
             res.Prefix = Prefix.Clone() as Real;
             res.Exponent = Exponent.Clone() as Real;
 

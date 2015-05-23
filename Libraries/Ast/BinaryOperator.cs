@@ -25,7 +25,7 @@ namespace Ast
         public abstract int Priority { get; }
 
         private Scope _scope;
-        public override Scope Scope
+        public override Scope CurScope
         {
             get { return _scope; }
             set
@@ -33,8 +33,8 @@ namespace Ast
                 _scope = value;
                 if (Left != null && Right != null)
                 {
-                    Left.Scope = value;
-                    Right.Scope = value;
+                    Left.CurScope = value;
+                    Right.CurScope = value;
                 }
             }
         }

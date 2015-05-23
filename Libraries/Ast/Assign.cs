@@ -28,7 +28,7 @@ namespace Ast
             if (res is Variable)
             {
                 @var = (Variable)res;
-                scope = @var.Scope;
+                scope = @var.CurScope;
             }
             else
                 return new Error(res, " is not a variable");
@@ -41,7 +41,7 @@ namespace Ast
 
             if (@var is CustomFunc)
             {
-                var customFunc = (CustomFunc)Left;
+                var customFunc = (CustomFunc)@var;
 
                 foreach (var arg in customFunc.Arguments)
                 {
@@ -49,7 +49,7 @@ namespace Ast
                         return new Error(this, "All arguments must be symbols");
                 }
 
-                //Right.Scope = customFunc;
+                Right.CurScope = customFunc;
                 customFunc.Value = Right;
                
                 scope.SetVar(customFunc);

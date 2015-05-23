@@ -4,22 +4,22 @@ namespace Ast
 {
     public class ForStmt : Statement
     {
-        public string sym;
-        public List list;
-        public Scope expr;
+        public string Var;
+        public List List;
+        public Scope ForScope;
 
         public ForStmt (Scope scope) : base(scope) { }
 
         public override void Evaluate()
         {
-            foreach (var value in list.items)
+            foreach (var value in List.items)
             {
-                expr.SetVar(sym, value);
-                var res = expr.Evaluate();
+                ForScope.SetVar(Var, value);
+                var res = ForScope.Evaluate();
 
                 if (res is Error)
                 {
-                    Scope.Errors.Add(new ErrorData(res as Error));
+                    CurScope.Errors.Add(new ErrorData(res as Error));
                     return;
                 }
             }

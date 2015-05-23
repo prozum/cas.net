@@ -25,7 +25,7 @@ namespace Ast
                 if (Definition)
                     return _value;
 
-                var res = Scope.GetVar(Identifier);
+                var res = CurScope.GetVar(Identifier);
 
                 if (res is Error)
                     return res;
@@ -36,7 +36,7 @@ namespace Ast
 
                     Definition=true;
                     Value = customDef.Value.Clone();
-                    Value.Scope = this;
+                    Value.CurScope = this;
                     Locals = new Dictionary<string,Variable>(customDef.Locals);
 
                     if (Arguments.Count != customDef.Arguments.Count)
@@ -94,9 +94,7 @@ namespace Ast
 
         protected override T MakeClone<T>()
         {
-            T res = base.MakeClone<T>();
-
-            return res;
+            return base.MakeClone<T>();
         }
 
         internal override Expression Reduce(Expression caller)

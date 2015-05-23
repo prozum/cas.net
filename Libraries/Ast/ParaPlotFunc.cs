@@ -43,13 +43,13 @@ namespace Ast
             }
 
 
-            expr1.Scope = new Scope(Scope);
-            expr2.Scope = new Scope(Scope);
+            expr1.CurScope = new Scope(CurScope);
+            expr2.CurScope = new Scope(CurScope);
 
             foreach (var z in zList)
             {
-                expr1.Scope.SetVar(@var.ToString(), z);
-                expr2.Scope.SetVar(@var.ToString(), z);
+                expr1.CurScope.SetVar(@var.ToString(), z);
+                expr2.CurScope.SetVar(@var.ToString(), z);
 
                 var res1 = expr1.Evaluate();
                 var res2 = expr2.Evaluate();
@@ -69,7 +69,7 @@ namespace Ast
                     return new Error(this, "Argument 2 returned a none real number:" + res2);
             }
 
-            Scope.SideEffects.Add(new PlotData(xList, yList, zList));
+            CurScope.SideEffects.Add(new PlotData(xList, yList, zList));
             return new Null();
         }
 

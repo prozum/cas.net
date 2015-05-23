@@ -4,29 +4,29 @@ namespace Ast
 {
     public class RetStmt : Statement
     {
-        public Expression expr;
+        public Expression Expression;
 
         public RetStmt(Expression expr, Scope scope) : base(scope)
         {
-            this.expr = expr;
+            Expression = expr;
         }
             
         public override void Evaluate()
         {
-            var res = expr.Evaluate();
+            var res = Expression.Evaluate();
 
             if (res is Error)
             {
-                Scope.Errors.Add(new ErrorData(res as Error));
+                CurScope.Errors.Add(new ErrorData(res as Error));
                 return;
             }
 
-            Scope.Returns.Add(res);
+            CurScope.Returns.Add(res);
         }
 
         public override string ToString()
         {
-            return "ret " + expr.ToString();
+            return "ret " + Expression.ToString();
         }
     }
 }

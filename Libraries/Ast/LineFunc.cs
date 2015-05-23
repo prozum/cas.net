@@ -35,7 +35,7 @@ namespace Ast
         public override Expression Evaluate()
         {
 
-            Scope.SideEffects.Add(new LineData(x1,y1,x2,y2));
+            CurScope.SideEffects.Add(new LineData(x1,y1,x2,y2));
             return new Null();
         }
 

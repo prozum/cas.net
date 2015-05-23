@@ -15,7 +15,7 @@ namespace Ast
 
         public override Expression Evaluate()
         {
-            return Scope;
+            return CurScope;
         }
 
         internal override Expression Evaluate(Expression caller)

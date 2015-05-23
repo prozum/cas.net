@@ -20,7 +20,7 @@ namespace Ast
                 var res = Left;
 
                 if (res is Variable)
-                    res = Scope.GetVar((res as Variable).Identifier);
+                    res = CurScope.GetVar((res as Variable).Identifier);
                 else if (res is Scope)
                     res.Evaluate();
                 else if (res is Dot)

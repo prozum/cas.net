@@ -46,7 +46,7 @@ namespace Ast
         {
             List<Expression> newArgs = new List<Expression>();
             newArgs.Add(other);
-            return new TanFunc(newArgs, Scope);
+            return new TanFunc(newArgs, CurScope);
         }
     }
 }

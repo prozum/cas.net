@@ -27,7 +27,7 @@ namespace Ast
 
             var res = Arguments[0].Evaluate().ToString();
 
-            Scope.SideEffects.Add(new PrintData(res));
+            CurScope.SideEffects.Add(new PrintData(res));
 
             return new Text(res);
         }

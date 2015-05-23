@@ -4,33 +4,33 @@ namespace Ast
 {
     public class ExprStmt : Statement
     {
-        public Expression expr;
+        public Expression Expression;
 
         public ExprStmt(Expression expr, Scope scope) : base(scope)
         {
-            this.expr = expr;
+            Expression = expr;
         }
 
         public override void Evaluate()
         {
-            var res = expr.Evaluate();
+            var res = Expression.Evaluate();
 
-            if (Scope.GetBool("debug"))
-                Scope.SideEffects.Add(new DebugData("Debug: " + expr + " = " + res));
+            if (CurScope.GetBool("debug"))
+                CurScope.SideEffects.Add(new DebugData("Debug: " + Expression + " = " + res));
 
             if (res is Error)
             {
-                Scope.Errors.Add(new ErrorData(res as Error));
+                CurScope.Errors.Add(new ErrorData(res as Error));
                 return;
             }
 
             if (!(res is Null))
-                Scope.Returns.Add(res);
+                CurScope.Returns.Add(res);
         }
 
         public override string ToString()
         {
-            return expr.ToString();
+            return Expression.ToString();
         }
     }
 }
