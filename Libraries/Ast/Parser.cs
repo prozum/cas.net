@@ -50,7 +50,7 @@ namespace Ast
             if (global.Errors.Count > 0)
                 return;
 
-            ParseScope(global);
+            ParseScope(global,true);
 
             if (global.Errors.Count > 0)
                 Clear();
@@ -65,26 +65,32 @@ namespace Ast
             binaryStack.Clear();
         }
 
-        public Scope ParseScope(Scope global = null)
+        public Scope ParseScope(Scope parentscope = null, bool global = false)
         {
             ParseContext cx;
 
             while (Eat(TokenKind.NEW_LINE));
 
-            if (global != null)
+            if (global)
             {
                 cx = ParseContext.ScopeGlobal;
-                scopeStack.Push(global);
+                scopeStack.Push(parentscope);
             }
             else if (Eat(TokenKind.CURLY_START))
             {
                 cx = ParseContext.ScopeMulti;
-                scopeStack.Push(new Scope(curScope));
+                if (parentscope != null)
+                    scopeStack.Push(parentscope);
+                else
+                    scopeStack.Push(new Scope(curScope));
             }
             else
             {
                 cx = ParseContext.ScopeSingle;
-                scopeStack.Push(new Scope(curScope));
+                if (parentscope != null)
+                    scopeStack.Push(parentscope);
+                else
+                    scopeStack.Push(new Scope(curScope));
             }
 
             contextStack.Push(cx);
@@ -196,7 +202,7 @@ namespace Ast
                 return null;
             stmt.Conditions.Add(cond);
 
-            expr = ParseScope();
+            expr = ParseScope(curScope);
             if (Error)
                 return null;
             stmt.Expressions.Add(expr);
@@ -209,7 +215,7 @@ namespace Ast
                     return null;
                 stmt.Conditions.Add(cond);
 
-                expr = ParseScope();
+                expr = ParseScope(curScope);
                 if (Error)
                     return null;
                 stmt.Expressions.Add(expr);
@@ -222,7 +228,7 @@ namespace Ast
             {
                 Eat(TokenKind.COLON); // Optional colon
 
-                expr = ParseScope();
+                expr = ParseScope(curScope);
                 if (Error)
                     return null;
                 stmt.Expressions.Add(expr);
