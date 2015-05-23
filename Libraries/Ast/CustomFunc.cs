@@ -28,16 +28,23 @@ namespace Ast
         {
             var val = Value;
 
-            if (!(val is CustomFunc))
-                return val.Evaluate();
+            if (val is Error)
+                return val;
 
-            var def = (CustomFunc)val;
+            if (val is CustomFunc)
+            {
+                var def = (CustomFunc)val;
 
-            def.CallStack.Push(this);
-            var res = def.Evaluate();
-            def.CallStack.Pop();
+                if (def.Definition)
+                {
+                    def.CallStack.Push(this);
+                    var res = def.Evaluate();
+                    def.CallStack.Pop();
+                    return res;
+                }
+            }
 
-            return res;
+            return val.Evaluate();
         }
 
         public override Expression Value
