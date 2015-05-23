@@ -11,7 +11,7 @@ namespace Ast
         public List<EvalData> SideEffects;
 
         public List<Expression> Returns;
-        public bool Return = false;
+        public Boolean Return;
 
         public List<ErrorData> Errors;
         public bool Error 
@@ -41,10 +41,10 @@ namespace Ast
             {
                 base.CurScope = value;
 
-                foreach (var stmt in Expressions)
-                {
-                    stmt.CurScope = value;
-                }
+//                foreach (var stmt in Expressions)
+//                {
+//                    stmt.CurScope = value;
+//                }
             }
         }
 
@@ -57,6 +57,7 @@ namespace Ast
 
             Locals =  new Dictionary<string,Variable>();
             Returns = new List<Expression>();
+            Return = new Boolean(false);
         }
 
         public Scope(Scope scope, bool share = false)
@@ -69,11 +70,13 @@ namespace Ast
             {
                 Locals = scope.Locals;
                 Returns = scope.Returns;
+                Return = scope.Return;
             }
             else
             {
                 Locals =  new Dictionary<string,Variable>();
                 Returns = new List<Expression>();
+                Return = new Boolean(false);
             }
         }
 
@@ -88,7 +91,7 @@ namespace Ast
                 return new Null();
 
             Returns.Clear();
-            Return = false;
+            Return.@bool = false;
 
             foreach (var expr in Expressions)
             {
@@ -185,22 +188,22 @@ namespace Ast
             return 0;
         }
 
-//        public Int64 GetInt(string @var)
-//        {
-//            Expression expr;
-//
-//            if (Locals.TryGetValue(@var, out expr))
-//            {
-//                if (expr is Integer)
-//                    return (expr as Integer).@int;
-//            }
-//
-//            if (Scope != null)
-//                return Scope.GetInt(@var);
-//
-//            return 0;
-//        }
-//
+        public Int64 GetInt(string identifier)
+        {
+            Variable @var;
+
+            if (Locals.TryGetValue(identifier, out @var))
+            {
+                if (@var.Value is Integer)
+                    return (@var.Value as Integer).@int;
+            }
+
+            if (CurScope != null)
+                return CurScope.GetInt(identifier);
+
+            return 0;
+        }
+
         public bool GetBool(string identifier)
         {
             Variable @var;
@@ -216,24 +219,22 @@ namespace Ast
 
             return false;
         }
-//
-//        public string GetText(string @var)
-//        {
-//            Expression expr;
-//
-//            if (Locals.TryGetValue(@var, out expr))
-//            {
-//                if (expr is Text)
-//                    return (expr as Text).Value;
-//            }
-//
-//            if (Scope != null)
-//            {
-//                return Scope.GetText(@var);
-//            }
-//
-//            return "";
-//        }
+
+        public string GetText(string identifier)
+        {
+            Variable @var;
+
+            if (Locals.TryGetValue(identifier, out @var))
+            {
+                if (@var.Value is Text)
+                    return (@var.Value as Text).@string;
+            }
+
+            if (CurScope != null)
+                return CurScope.GetText(identifier);
+
+            return "";
+        }
             
         public override string ToString()
         {

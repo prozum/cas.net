@@ -24,7 +24,7 @@ namespace Ast
 
             CurScope.Returns.Clear();
             CurScope.Returns.Add(res);
-            CurScope.Return = true;
+            CurScope.Return.@bool = true;
 
             return new Null();
         }
