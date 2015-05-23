@@ -119,6 +119,28 @@
     <Compile Include="Evaluator\EvalData.cs" />
     <Compile Include="Evaluator\Evaluator.cs" />
     <Compile Include="Evaluator\WidgetData.cs" />
+    <Compile Include="Evaluator\ErrorData.cs">
+      <DependentUpon>EvalData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Evaluator\DebugData.cs" />
+    <Compile Include="Evaluator\PrintData.cs">
+      <DependentUpon>EvalData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Evaluator\PlotData.cs">
+      <DependentUpon>DrawData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Evaluator\TextData.cs">
+      <DependentUpon>DrawData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Evaluator\DotData.cs">
+      <DependentUpon>DrawData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Evaluator\LineData.cs">
+      <DependentUpon>DrawData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Evaluator\CircleData.cs">
+      <DependentUpon>DrawData.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ProjectExtensions>
