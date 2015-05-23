@@ -10,7 +10,7 @@ namespace Ast
         public Sub() { }
         public Sub(Expression left, Expression right) : base(left, right) { }
 
-        internal override Expression Evaluate(Expression caller)
+        public override Expression Evaluate()
         {
             return Left - Right;
         }
@@ -23,7 +23,7 @@ namespace Ast
         //Returns the Add version of the Sub. Is done, so Sub don't need to implement rules itself.
         protected override Expression ReduceHelper(Expression left, Expression right)
         {
-            var newRight = new Mul(new Integer(-1), right).Reduce(this);
+            var newRight = new Mul(new Integer(-1), right).Reduce();
             return new Add(left, newRight);
         }
 

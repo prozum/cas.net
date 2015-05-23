@@ -32,11 +32,6 @@ namespace Ast
             return this;
         }
 
-        internal override Expression Evaluate(Expression caller)
-        {
-            return this;
-        }
-
         public override bool CompareTo(Expression other)
         {
             return false;

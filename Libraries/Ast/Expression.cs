@@ -37,8 +37,12 @@ namespace Ast
             set { throw new Exception("Cannot set value on " + this.GetType().Name); }
         }
 
-        public virtual Expression Evaluate() { return Reduce().Evaluate(this); }
-        internal virtual Expression Evaluate(Expression caller)
+        public Expression ReduceEvaluate()
+        {
+            return ReduceCurrectOp().Evaluate();
+        }
+
+        public virtual Expression Evaluate()
         {
             return new Error(this, "This type cannot evaluate");
         }
@@ -53,8 +57,12 @@ namespace Ast
             return this;
         }
 
-        public virtual Expression Reduce() { return this.Reduce(this).CurrectOperator(); }
-        internal virtual Expression Reduce(Expression caller)
+        public Expression ReduceCurrectOp()
+        {
+            return Reduce().CurrectOperator();
+        }
+
+        public virtual Expression Reduce()
         {
             return this;
         }

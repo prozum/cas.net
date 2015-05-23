@@ -6,9 +6,9 @@ namespace Ast
     {
         public Minus() : base("-") { }
 
-        internal override Expression Evaluate(Expression caller)
+        public override Expression Evaluate()
         {
-            return Child.Evaluate(caller).Minus();
+            return Child.Evaluate().Minus();
         }
     }
 }

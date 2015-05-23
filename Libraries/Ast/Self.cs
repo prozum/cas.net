@@ -17,11 +17,6 @@ namespace Ast
         {
             return CurScope;
         }
-
-        internal override Expression Evaluate(Expression caller)
-        {
-            return this;
-        }
     }
 }
 

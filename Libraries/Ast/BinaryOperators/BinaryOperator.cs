@@ -78,11 +78,6 @@ namespace Ast
             Right = right;
         }
 
-        internal override Expression Evaluate(Expression caller)
-        {
-            return new Error(this, "Cannot evaluate operator expression!");
-        }
-
         public override string ToString()
         {
             if (Parent is BinaryOperator && Priority < (Parent as BinaryOperator).Priority)
@@ -97,7 +92,6 @@ namespace Ast
         {
             return '(' + Left.ToString() + Identifier + Right.ToString() + ')';
         }
-
 
         public override bool CompareTo(Expression other)
         {
@@ -199,17 +193,17 @@ namespace Ast
             return Left.ContainsVariable(other) || Right.ContainsVariable(other);
         }
 
-        internal override Expression Reduce(Expression caller)
+        internal override Expression Reduce()
         {
             var prev = ToString();
             var prevType = GetType();
             //Reduces the whole expression.
-            var res = ReduceHelper(Left.Reduce(caller), Right.Reduce(caller));
+            var res = ReduceHelper(Left.Reduce(), Right.Reduce());
 
             //If the reduction did something, aka res is different from this, then reduce again.
             if (prevType != res.GetType() || prev != res.ToString())
             {
-                res = res.Reduce(caller);
+                res = res.Reduce();
             }
 
             return res;
