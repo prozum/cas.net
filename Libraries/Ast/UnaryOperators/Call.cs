@@ -12,15 +12,31 @@ namespace Ast
             CurScope = scope;
         }
 
+        public override Scope CurScope
+        {
+            get { return base.CurScope; }
+            set
+            {
+                base.CurScope = value;
+                if (Arguments != null)
+                {
+                    Arguments.CurScope = value;
+                }
+            }
+        }
+
         public override Expression Evaluate()
         {
             var val = Child.Value;
+
+            if (val is Call)
+                val = val.Evaluate();
 
             if (CurScope.Error)
                 return new Null();
 
             if (!(val is ICallable))
-                return new Error(Child, "is not callable");
+                return new Error(val, "is not callable");
 
             if (!(val as ICallable).IsArgumentsValid(Arguments))
                 return new Null();

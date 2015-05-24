@@ -2,29 +2,13 @@
 
 namespace Ast
 {
-    public abstract class PrefixOperator : Expression
+    public abstract class PrefixOperator : UnaryOperator
     {
         public string Identifier;
 
-        private Expression _child;
-        public Expression Child
+        protected PrefixOperator(string identifier)
         {
-            get
-            {
-                return _child;
-            }
-            set
-            {
-                _child = value;
-
-                if (_child != null)
-                    _child.Parent = this;
-            }
-        }
-
-        protected PrefixOperator(string sym)
-        {
-            this.Identifier = sym;
+            this.Identifier = identifier;
         }
             
         public override bool ContainsVariable(Variable other)

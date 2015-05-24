@@ -21,13 +21,12 @@ namespace Ast
         public abstract string Identifier { get; }
         public abstract int Priority { get; }
 
-        private Scope _scope;
         public override Scope CurScope
         {
-            get { return _scope; }
+            get { return base.CurScope; }
             set
             {
-                _scope = value;
+                base.CurScope = value;
                 if (Left != null && Right != null)
                 {
                     Left.CurScope = value;

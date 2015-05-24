@@ -15,6 +15,7 @@ namespace Ast
         {
             Identifier = identifier;
             Definition = definition;
+            Definition.CurScope = this;
             Arguments = args;
             CurScope = scope;
         }
@@ -36,7 +37,7 @@ namespace Ast
         {
             if (args.Count != Arguments.Count)
             {
-                CurScope.Errors.Add(new ErrorData(this, Identifier + " takes " + Arguments.Count.ToString() + " arguments. Not " + args.Count.ToString() + "."));
+                CurScope.Errors.Add(new ErrorData(this, this.ToString() + " takes " + Arguments.Count.ToString() + " arguments. Not " + args.Count.ToString() + "."));
                 return false;
             }
 
@@ -48,13 +49,15 @@ namespace Ast
             if (CallStack.Count > MaxFunctionRecursion)
                 return new Error(this, "Maximum function recursion exceeded");;
 
-            var callScope = new Scope(this);
+            // TODO add definition locals. Etc. deg 
+            var callScope = new Scope(CurScope);
             CallStack.Push(callScope);
 
             for (int i = 0; i < args.Count; i++)
             {
-                var arg = (Variable)Arguments[i];
-                callScope.SetVar(arg.Identifier, args[i].Evaluate());
+                var arg = args[i].Value;
+                arg.CurScope = callScope;
+                callScope.SetVar((Arguments[i] as Variable).Identifier, arg);
             }
 
             var res = Definition.Evaluate();

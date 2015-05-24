@@ -140,9 +140,15 @@
     <Compile Include="BinaryOperators\BinaryOperator.cs" />
     <Compile Include="Types\List.cs" />
     <Compile Include="SystemFunctions\SysFunc.cs" />
-    <Compile Include="UnaryOperators\Minus.cs" />
-    <Compile Include="UnaryOperators\Negation.cs" />
-    <Compile Include="UnaryOperators\Referation.cs" />
+    <Compile Include="UnaryOperators\Minus.cs">
+      <DependentUpon>PrefixOperator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UnaryOperators\Negation.cs">
+      <DependentUpon>PrefixOperator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UnaryOperators\Referation.cs">
+      <DependentUpon>PrefixOperator.cs</DependentUpon>
+    </Compile>
     <Compile Include="Parser\Parser.cs" />
     <Compile Include="Parser\Scanner.cs" />
     <Compile Include="Parser\Token.cs" />
@@ -175,12 +181,15 @@
     <Compile Include="VarFunc.cs">
       <DependentUpon>Variable.cs</DependentUpon>
     </Compile>
-    <Compile Include="ICallable.cs" />
-    <Compile Include="Call.cs">
+    <Compile Include="UnaryOperators\PrefixOperator.cs" />
+    <Compile Include="UnaryOperators\Call.cs">
       <DependentUpon>PostfixOperator.cs</DependentUpon>
     </Compile>
-    <Compile Include="UnaryOperators\PrefixOperator.cs" />
-    <Compile Include="PostfixOperator.cs" />
+    <Compile Include="UnaryOperators\PostfixOperator.cs" />
+    <Compile Include="UnaryOperators\UnaryOperator.cs" />
+    <Compile Include="UnaryOperators\ICallable.cs">
+      <DependentUpon>PostfixOperator.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ProjectExtensions>

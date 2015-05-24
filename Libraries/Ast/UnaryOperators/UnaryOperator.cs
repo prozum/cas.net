@@ -1,0 +1,23 @@
+﻿using System;
+
+namespace Ast
+{
+    public abstract class UnaryOperator : Expression
+    {
+        public Expression Child;
+
+        public override Scope CurScope
+        {
+            get { return base.CurScope; }
+            set
+            {
+                base.CurScope = value;
+                if (Child != null)
+                {
+                    Child.CurScope = value;
+                }
+            }
+        }
+    }
+}
+

@@ -17,6 +17,20 @@ namespace Ast
 
         public int Count { get { return Items.Count; }}
 
+        public override Scope CurScope
+        {
+            get { return base.CurScope; }
+            set
+            {
+                base.CurScope = value;
+
+                foreach (var item in Items)
+                {
+                    item.CurScope = value;
+                }
+            }
+        }
+
         public List() : this(new List<Expression> ()) {}
         public List(List<Expression> items)
         {
