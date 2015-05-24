@@ -12,11 +12,13 @@ namespace Ast
 
         public override Expression Evaluate()
         {
-            Variable @var;
+            string identifier;
             Scope scope;
+            Expression expr;
 
             Expression res;
 
+            // Find Variable & Scope
             if (Left is Dot)
             {
                 scope = (Left as Dot).VariabelScope;
@@ -34,9 +36,26 @@ namespace Ast
 
             if (res is Error)
                 return res;
-                
+             
+
+            // Find Identifier & Expression
             if (res is Variable)
-                @var = (Variable)res;
+            {
+                identifier = (res as Variable).Identifier;
+                expr = Right.Evaluate();
+            }
+            else if (res is Call)
+            {
+                var call = (Call)res;
+
+                if (call.Child is Variable)
+                {
+                    identifier = (call.Child as Variable).Identifier;
+                    expr = new VarFunc(identifier, Right, call.Arguments, scope);
+                }
+                else
+                    return new Error(call.Child, "is not a variable");
+            }
             else
                 return new Error(res, " is not a variable");
 
@@ -64,13 +83,10 @@ namespace Ast
 //                return @var;
 //            }
 
-            // Variable
-            res = Right.Evaluate();
-
             if (res is Error)
                 return res;
 
-            scope.SetVar(@var.Identifier, res);
+            scope.SetVar(identifier, expr);
 
             return res;
         }

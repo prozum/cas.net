@@ -89,6 +89,10 @@ public class Calculator : Window
             {
                 defStore.AppendValues(@var.Value.ToString(), "System Magic");
             }
+            else if (@var.Value is VarFunc)
+            {
+                defStore.AppendValues(@var.Value.ToString(), (@var.Value as VarFunc).Definition.ToString());
+            }
             else
             {
                 var iter = defStore.AppendValues(@var.Key, @var.Value.Value.ToString());

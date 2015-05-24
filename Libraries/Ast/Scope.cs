@@ -90,7 +90,7 @@ namespace Ast
 
             foreach (var expr in Expressions)
             {
-                var res = expr.ReduceEvaluate();
+                var res = expr.Evaluate();
 
                 if (GetBool("debug"))
                     SideEffects.Add(new DebugData("Debug: " + expr + " = " + res));
@@ -144,7 +144,8 @@ namespace Ast
             if (CurScope != null)
                 return CurScope.GetVar(identifier);
 
-            return new Error(identifier + " is not defined");
+            Errors.Add(new ErrorData(identifier + " is not defined"));
+            return Constant.Null;
         }
 
         public decimal GetReal(string identifier)

@@ -3,16 +3,19 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class VarFunc : Expression, ICallable
+    public class VarFunc : Scope, ICallable
     {
+        public Stack<Scope> CallStack = new Stack<Scope>();
         public string Identifier;
         public List Arguments;
         public Expression Definition;
 
-        public VarFunc() : this(null, null) { }
-        public VarFunc(string identifier, Scope scope)
+        public VarFunc() : this(null, null, null, null) { }
+        public VarFunc(string identifier, Expression definition, List args, Scope scope)
         {
             Identifier = identifier;
+            Definition = definition;
+            Arguments = args;
             CurScope = scope;
         }
 
@@ -22,12 +25,12 @@ namespace Ast
         { 
             get 
             {
-                if (CallStack == null)
+                if (CallStack.Count > 0)
+                    return CallStack.Peek();
+                else
                     return base.CurScope;
-                return CallStack.Peek(); 
             }
         }
-        public Stack<Scope> CallStack;
 
         public bool IsArgumentsValid(List args)
         {
@@ -45,12 +48,12 @@ namespace Ast
             if (CallStack.Count > MaxFunctionRecursion)
                 return new Error(this, "Maximum function recursion exceeded");;
 
-            var callScope = new Scope(CurScope);
+            var callScope = new Scope(this);
             CallStack.Push(callScope);
 
             for (int i = 0; i < args.Count; i++)
             {
-                var arg = (Variable)args[i];
+                var arg = (Variable)Arguments[i];
                 callScope.SetVar(arg.Identifier, args[i].Evaluate());
             }
 
@@ -59,34 +62,6 @@ namespace Ast
 
             return res;
         }
-
-//        public override Expression Value
-//        {
-//            get
-//            {
-//                if (Definition)
-//                    return _value;
-//
-//                var @var = CurScope.GetVar(Identifier);
-//
-//                if (@var is Error)
-//                    return @var;
-//
-//                if (@var is VarFunc)
-//                {
-//                    return @var;
-//                }
-//
-//                return new Error(this, "Variable is not a function or list");
-//            }
-//
-//            set
-//            {
-//                CallStack = new Stack<Scope>();
-//                Definition = true;
-//                _value = value;
-//            }
-//        }
 
         public override string ToString()
         {

@@ -801,53 +801,51 @@ namespace Ast
             }
         }
             
-        public Expression ParseFunction(string identifier)
-        {
-            List res = ParseList();
-            var args = res.Items;
-                
-            switch (identifier.ToLower())
-            {
-                case "abs":
-                    return new AbsFunc(CurScope);
-                case "sin":
-                    return new SinFunc(CurScope);
-                case "cos":
-                    return new CosFunc(CurScope);
-                case "tan":
-                    return new TanFunc(CurScope);
-                case "asin":
-                    return new AsinFunc(CurScope);
-                case "acos":
-                    return new AcosFunc(CurScope);
-                case "atan":
-                    return new AtanFunc(CurScope);
-                case "sqrt":
-                    return new SqrtFunc(CurScope);
-                case "reduce":
-                    return new ReduceFunc(CurScope);
-                case "expand":
-                    return new ExpandFunc(CurScope);
-                case "range":
-                    return new RangeFunc(CurScope);
-                case "solve":
-                    return new SolveFunc(CurScope);
-                case "type":
-                    return new TypeFunc(CurScope);
-                case "eval":
-                    return new EvalFunc(CurScope);
-                case "print":
-                    return new PrintFunc(CurScope);
-                case "plot":
-                    return new PlotFunc(CurScope);
-                case "paraplot":
-                    return new ParaPlotFunc(CurScope);
-                case "line":
-                    return new LineFunc(CurScope);
-                default:
-                    return new VarFunc(identifier.ToLower(), CurScope);
-            }
-        }
+//        public Expression ParseFunction(string identifier)
+//        {
+//            List res = ParseList();
+//            var args = res.Items;
+//                
+//            switch (identifier.ToLower())
+//            {
+//                case "abs":
+//                    return new AbsFunc(CurScope);
+//                case "sin":
+//                    return new SinFunc(CurScope);
+//                case "cos":
+//                    return new CosFunc(CurScope);
+//                case "tan":
+//                    return new TanFunc(CurScope);
+//                case "asin":
+//                    return new AsinFunc(CurScope);
+//                case "acos":
+//                    return new AcosFunc(CurScope);
+//                case "atan":
+//                    return new AtanFunc(CurScope);
+//                case "sqrt":
+//                    return new SqrtFunc(CurScope);
+//                case "reduce":
+//                    return new ReduceFunc(CurScope);
+//                case "expand":
+//                    return new ExpandFunc(CurScope);
+//                case "range":
+//                    return new RangeFunc(CurScope);
+//                case "solve":
+//                    return new SolveFunc(CurScope);
+//                case "type":
+//                    return new TypeFunc(CurScope);
+//                case "eval":
+//                    return new EvalFunc(CurScope);
+//                case "print":
+//                    return new PrintFunc(CurScope);
+//                case "plot":
+//                    return new PlotFunc(CurScope);
+//                case "paraplot":
+//                    return new ParaPlotFunc(CurScope);
+//                case "line":
+//                    return new LineFunc(CurScope);
+//            }
+//        }
 
         public ErrorData ReportError(ErrorData error)
         {
