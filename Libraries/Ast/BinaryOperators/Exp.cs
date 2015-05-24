@@ -89,11 +89,11 @@ namespace Ast
                 var args = new List<Expression>();
                 args.Add(other);
 
-                var answer = new SqrtFunc(args, other.CurScope);
-                var answers = new Ast.List();
+                var answer = new SqrtFunc(other.CurScope);
+                var answers = new List();
 
-                answers.items.Add(answer);
-                answers.items.Add(new Mul(new Integer(-1), answer).Reduce());
+                answers.Items.Add(answer);
+                answers.Items.Add(new Mul(new Integer(-1), answer).Reduce());
                 return answers;
             }
 
