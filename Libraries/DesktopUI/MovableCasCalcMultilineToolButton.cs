@@ -47,7 +47,7 @@ namespace DesktopUI
                 case PlatformID.WinCE:
                 case PlatformID.Win32NT: // <- if one, this is the one we really need
                     {
-                        byte[] buffer = File.ReadAllBytes("..\\..\\..\\Ressources\\Icons\\Gnome-accessories-calculator.png");
+                        byte[] buffer = File.ReadAllBytes("..\\..\\..\\Ressources\\Icons\\Gnome-utilities-terminal.png");
                         Pixbuf pixbuf = new Pixbuf(buffer);
                         pixbuf = pixbuf.ScaleSimple(25, 25, InterpType.Bilinear);
                         image.Pixbuf = pixbuf;
@@ -57,7 +57,7 @@ namespace DesktopUI
                 case PlatformID.Unix:
                 case PlatformID.MacOSX:
                     {
-                        byte[] buffer = File.ReadAllBytes("../../../Ressources/Icons/Gnome-accessories-calculator.svg");
+                        byte[] buffer = File.ReadAllBytes("../../../Ressources/Icons/Gnome-utilities-terminal.svg");
                         Pixbuf pixbuf = new Pixbuf(buffer);
                         pixbuf = pixbuf.ScaleSimple(25, 25, InterpType.Bilinear);
                         image.Pixbuf = pixbuf;
@@ -70,6 +70,5 @@ namespace DesktopUI
                     }
             }
         }
-
     }
 }
