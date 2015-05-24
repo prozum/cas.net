@@ -52,6 +52,7 @@ namespace Ast
                 {
                     identifier = (call.Child as Variable).Identifier;
                     expr = new VarFunc(identifier, Right, call.Arguments, scope);
+                   
                 }
                 else
                     return new Error(call.Child, "is not a variable");
@@ -59,36 +60,12 @@ namespace Ast
             else
                 return new Error(res, " is not a variable");
 
-
-//            if (@var is SysFunc)
-//            {
-//                return new Error(this, "Cannot override system function");
-//            }
-//
-//            if (@var is VarFunc)
-//            {
-//                var varfunc = (VarFunc)@var;
-//
-//                foreach (var arg in varfunc.Arguments)
-//                {
-//                    if (!(arg is Variable))
-//                        return new Error(this, "All arguments must be symbols");
-//                }
-//
-//                Right.CurScope = varfunc;
-//                varfunc.Value = Right;
-//               
-//                scope.SetVar(varfunc);
-//
-//                return @var;
-//            }
-
             if (res is Error)
                 return res;
 
             scope.SetVar(identifier, expr);
 
-            return res;
+            return expr;
         }
 
         protected override Expression ExpandHelper(Expression left, Expression right)
