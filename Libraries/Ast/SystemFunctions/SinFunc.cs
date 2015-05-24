@@ -5,48 +5,35 @@ namespace Ast
 {
     public class SinFunc : SysFunc, IInvertable
     {
-        public SinFunc() : this(null, null) { }
-        public SinFunc(List<Expression> args, Scope scope)
-            : base("sin", args, scope)
+        public SinFunc() : this(null) { }
+        public SinFunc(Scope scope) : base("sin", scope)
         {
-            ValidArguments = new List<ArgKind>()
+            ValidArguments = new List<ArgumentType>()
                 {
-                    ArgKind.Real
+                    ArgumentType.Real
                 };
         }
 
-        public override Expression Evaluate()
+        public override Expression Call(List args)
         {
-            if (!IsArgumentsValid())
-                return new ArgumentError(this);
+            var res = args[0].Evaluate();
 
-            var res = Arguments[0].Evaluate();
-
-            var deg = GetBool("deg");
+            var deg = CurScope.GetBool("deg");
 
             if (res is Real)
             {
-                return ReturnValue(new Irrational(Math.Sin((double) ((deg ? Constant.DegToRad.@decimal  : 1) * (res as Real)) ))).Evaluate();
+                return new Irrational(Math.Sin((double) ((deg ? Constant.DegToRad.@decimal  : 1) * (res as Real)) )).Evaluate();
             }
 
-            return new Error(this, "Could not take Sin of: " + Arguments[0]);
-        }
-
-        public override Expression Reduce()
-        {
-            return ReduceHelper<SinFunc>();
-        }
-
-        public override Expression Clone()
-        {
-            return MakeClone<SinFunc>();
+            return new Error(this, "Could not take Sin of: " + args[0]);
         }
 
         public Expression InvertOn(Expression other)
         {
-            List<Expression> newArgs = new List<Expression>();
-            newArgs.Add(other);
-            return new AsinFunc(newArgs, CurScope);
+            throw new NotImplementedException();
+//            List<Expression> newArgs = new List<Expression>();
+//            newArgs.Add(other);
+//            return new AsinFunc(newArgs, CurScope);
         }
     }
 }

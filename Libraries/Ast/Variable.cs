@@ -68,8 +68,6 @@ namespace Ast
             res.Exponent = Exponent.Clone() as Real;
             res.CurScope = CurScope;
             res.Position = Position;
-            res.Definition = Definition;
-            res._value = Value.Clone();
 
             return res;
         }
@@ -81,33 +79,19 @@ namespace Ast
 
         public override Expression Evaluate()
         {
-            var value = Value;
+            var val = Value;
 
-            if (value.Value is Number)
-                value = Prefix * value ^ Exponent;
+            if (val.Value is Number)
+                val = Prefix * val ^ Exponent;
 
-            return value.ReduceEvaluate();
+            return val.ReduceEvaluate();
         }
 
-        protected bool Definition = false;
-        protected Expression _value = null;
         public override Expression Value
         {
             get
             {
-                if (Definition)
-                    return _value;
-
                 return CurScope.GetVar(Identifier);
-            }
-
-            set
-            {
-                if (value != null)
-                {
-                    Definition = true;
-                    _value = value;
-                }
             }
         }
 

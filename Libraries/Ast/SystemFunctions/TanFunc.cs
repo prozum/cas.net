@@ -5,48 +5,35 @@ namespace Ast
 {
     public class TanFunc : SysFunc, IInvertable
     {
-        public TanFunc() : this(null, null) { }
-        public TanFunc(List<Expression> args, Scope scope)
-            : base("tan", args, scope)
+        public TanFunc() : this(null) { }
+        public TanFunc(Scope scope) : base("tan", scope)
         {
-            ValidArguments = new List<ArgKind>()
+            ValidArguments = new List<ArgumentType>()
                 {
-                    ArgKind.Real
+                    ArgumentType.Real
                 };
         }
 
-        public override Expression Evaluate()
+        public override Expression Call(List args)
         {
-            if (!IsArgumentsValid())
-                return new ArgumentError(this);
+            var res = args[0].Evaluate();
 
-            var res = Arguments[0].Evaluate();
-
-            var deg = GetBool("deg");
+            var deg = CurScope.GetBool("deg");
 
             if (res is Real)
             {
-                return ReturnValue(new Irrational(Math.Tan((double) ((deg ? Constant.DegToRad.@decimal  : 1) * (res as Real)) ))).Evaluate();
+                return new Irrational(Math.Tan((double) ((deg ? Constant.DegToRad.@decimal  : 1) * (res as Real)) )).Evaluate();
             }
 
-            return new Error(this, "Could not take Tan of: " + Arguments[0]);
-        }
-
-        public override Expression Reduce()
-        {
-            return ReduceHelper<TanFunc>();
-        }
-
-        public override Expression Clone()
-        {
-            return MakeClone<TanFunc>();
+            return new Error(this, "Could not take Tan of: " + args[0]);
         }
 
         public Expression InvertOn(Expression other)
         {
-            List<Expression> newArgs = new List<Expression>();
-            newArgs.Add(other);
-            return new AtanFunc(newArgs, CurScope);
+            throw new NotImplementedException();
+//            List<Expression> newArgs = new List<Expression>();
+//            newArgs.Add(other);
+//            return new AtanFunc(newArgs, CurScope);
         }
     }
 }

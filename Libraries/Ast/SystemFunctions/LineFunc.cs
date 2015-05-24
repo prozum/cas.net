@@ -5,43 +5,26 @@ namespace Ast
 {
     public class LineFunc : SysFunc
     {
-        public decimal x1;
-        public decimal y1;
-
-        public decimal x2;
-        public decimal y2;
-
-        public LineFunc() : this(null, null) { }
-        public LineFunc(List<Expression> args, Scope scope)
-            : base("line", args, scope)
+        public LineFunc() : this(null) { }
+        public LineFunc(Scope scope) : base("line", scope)
         {
-            ValidArguments = new List<ArgKind>()
+            ValidArguments = new List<ArgumentType>()
                 {
-                    ArgKind.Real,
-                    ArgKind.Real,
-                    ArgKind.Real,
-                    ArgKind.Real,
+                    ArgumentType.Real,
+                    ArgumentType.Real,
+                    ArgumentType.Real,
+                    ArgumentType.Real,
                 };
-
-            if (IsArgumentsValid())
-            {
-                x1 = args[0] as Real;
-                y1 = args[1] as Real;
-                x2 = args[2] as Real;
-                y2 = args[3] as Real;
-            }
         }
 
-        public override Expression Evaluate()
+        public override Expression Call(List args)
         {
-
+            var x1 = args[0] as Real;
+            var y1 = args[1] as Real;
+            var x2 = args[2] as Real;
+            var y2 = args[3] as Real;
             CurScope.SideEffects.Add(new LineData(x1,y1,x2,y2));
             return new Null();
-        }
-
-        public override Expression Clone()
-        {
-            return MakeClone<LineFunc>();
         }
     }
 }

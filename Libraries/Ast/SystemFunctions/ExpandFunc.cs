@@ -5,24 +5,19 @@ namespace Ast
 {
     public class ExpandFunc : SysFunc
     {
-        public ExpandFunc() : this(null, null) { }
-        public ExpandFunc(List<Expression> args, Scope scope)
-            : base("expand", args, scope)
+        public ExpandFunc() : this(null) { }
+        public ExpandFunc(Scope scope)
+            : base("expand", scope)
         {
-            ValidArguments = new List<ArgKind>()
+            ValidArguments = new List<ArgumentType>()
                 {
-                    ArgKind.Expression
+                    ArgumentType.Expression
                 };
         }
 
-        public override Expression Evaluate()
+        public override Expression Call(List args)
         {
-            return Arguments[0].Expand();
-        }
-
-        public override Expression Clone()
-        {
-            return MakeClone<ExpandFunc>();
+            return args[0].Expand();
         }
     }
 }

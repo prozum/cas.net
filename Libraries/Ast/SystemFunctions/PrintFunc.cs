@@ -5,31 +5,22 @@ namespace Ast
 {
     public class PrintFunc : SysFunc
     {
-        public PrintFunc() : this(null, null) { }
-        public PrintFunc(List<Expression> args, Scope scope)
-            : base("print", args, scope)
+        public PrintFunc() : this(null) { }
+        public PrintFunc(Scope scope) : base("print", scope)
         {
-            ValidArguments = new List<ArgKind>()
+            ValidArguments = new List<ArgumentType>()
             {
-                ArgKind.Expression
+                ArgumentType.Expression
             };
         }
 
-        public override Expression Evaluate()
+        public override Expression Call(List args)
         {
-            if (!IsArgumentsValid())
-                return new ArgumentError(this);
-
-            var res = Arguments[0].Evaluate().ToString();
+            var res = args[0].Evaluate().ToString();
 
             CurScope.SideEffects.Add(new PrintData(res));
 
             return new Text(res);
-        }
-
-        public override Expression Clone()
-        {
-            return MakeClone<PrintFunc>();
         }
     }
 }

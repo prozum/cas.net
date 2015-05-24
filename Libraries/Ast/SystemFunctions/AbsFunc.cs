@@ -5,22 +5,21 @@ namespace Ast
 {
     public class AbsFunc : SysFunc
     {
-        public AbsFunc() : this(null, null) { }
-        public AbsFunc(List<Expression> args, Scope scope)
-            : base("abs", args, scope)
+        public AbsFunc() : this(null) { }
+        public AbsFunc(Scope scope) : base("abs", scope)
         {
-            ValidArguments = new List<ArgKind>()
+            ValidArguments = new List<ArgumentType>()
                 {
-                    ArgKind.Expression
+                    ArgumentType.Expression
                 };
         }
 
-        public override Expression Evaluate()
+        public override Expression Call(List args)
         {
-            if (!IsArgumentsValid())
+            if (!IsArgumentsValid(args))
                 return new ArgumentError(this);
 
-            var res = ReturnValue(Arguments[0]).Evaluate();
+            var res = args[0].Evaluate();
 
             if (res is INegative)
             {
@@ -38,17 +37,7 @@ namespace Ast
                                         
             }
 
-            return new Error(this, "Could not take Abs of: " + Arguments[0]);
-        }
-
-        public override Expression Reduce()
-        {
-            return ReduceHelper<AbsFunc>();
-        }
-
-        public override Expression Clone()
-        {
-            return MakeClone<AbsFunc>();
+            return new Error(this, "Could not take Abs of: " + args[0]);
         }
     }
 }

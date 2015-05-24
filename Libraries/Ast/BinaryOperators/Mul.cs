@@ -140,17 +140,18 @@ namespace Ast
         {
             if (left.Identifier == right.Identifier && left.GetType() == right.GetType())
             {
-                if (left is Func)
-                {
-                    if ((left as Func).CompareArgsTo(right as Func))
-                    {
-                        return true;
-                    }
-                }
-                else
-                {
-                    return true;
-                }
+//                if (left is Func)
+//                {
+//                    if ((left as Func).CompareArgsTo(right as Func))
+//                    {
+//                        return true;
+//                    }
+//                }
+//                else
+//                {
+//                    return true;
+//                }
+                return true;
             }
 
             return false;

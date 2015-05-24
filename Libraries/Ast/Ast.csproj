@@ -43,7 +43,6 @@
     <Compile Include="Func.cs">
       <DependentUpon>Variable.cs</DependentUpon>
     </Compile>
-    <Compile Include="Operator.cs" />
     <Compile Include="Error.cs" />
     <Compile Include="Self.cs" />
     <Compile Include="Types\Boolean.cs" />
@@ -80,24 +79,60 @@
     <Compile Include="BinaryOperators\LesserEqual.cs" />
     <Compile Include="BinaryOperators\NotEqual.cs" />
     <Compile Include="BinaryOperators\Sub.cs" />
-    <Compile Include="SystemFunctions\AbsFunc.cs" />
-    <Compile Include="SystemFunctions\AcosFunc.cs" />
-    <Compile Include="SystemFunctions\AsinFunc.cs" />
-    <Compile Include="SystemFunctions\AtanFunc.cs" />
-    <Compile Include="SystemFunctions\CosFunc.cs" />
-    <Compile Include="SystemFunctions\ExpandFunc.cs" />
-    <Compile Include="SystemFunctions\LineFunc.cs" />
-    <Compile Include="SystemFunctions\PlotFunc.cs" />
-    <Compile Include="SystemFunctions\PrintFunc.cs" />
-    <Compile Include="SystemFunctions\RangeFunc.cs" />
-    <Compile Include="SystemFunctions\ReduceFunc.cs" />
-    <Compile Include="SystemFunctions\SinFunc.cs" />
-    <Compile Include="SystemFunctions\SolveFunc.cs" />
-    <Compile Include="SystemFunctions\SqrtFunc.cs" />
-    <Compile Include="SystemFunctions\TanFunc.cs" />
-    <Compile Include="SystemFunctions\TypeFunc.cs" />
-    <Compile Include="SystemFunctions\EvalFunc.cs" />
-    <Compile Include="SystemFunctions\ParaPlotFunc.cs" />
+    <Compile Include="SystemFunctions\AbsFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SystemFunctions\AcosFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SystemFunctions\AsinFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SystemFunctions\AtanFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SystemFunctions\CosFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SystemFunctions\ExpandFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SystemFunctions\LineFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SystemFunctions\PlotFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SystemFunctions\PrintFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SystemFunctions\RangeFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SystemFunctions\ReduceFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SystemFunctions\SinFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SystemFunctions\SolveFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SystemFunctions\SqrtFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SystemFunctions\TanFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SystemFunctions\TypeFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SystemFunctions\EvalFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SystemFunctions\ParaPlotFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
     <Compile Include="KeyExpressions\ForExpr.cs" />
     <Compile Include="KeyExpressions\IfExpr.cs" />
     <Compile Include="KeyExpressions\WhileExpr.cs" />
@@ -108,7 +143,6 @@
     <Compile Include="UnaryOperators\Minus.cs" />
     <Compile Include="UnaryOperators\Negation.cs" />
     <Compile Include="UnaryOperators\Referation.cs" />
-    <Compile Include="UnaryOperators\UnaryOperator.cs" />
     <Compile Include="Parser\Parser.cs" />
     <Compile Include="Parser\Scanner.cs" />
     <Compile Include="Parser\Token.cs" />
@@ -141,6 +175,12 @@
     <Compile Include="VarFunc.cs">
       <DependentUpon>Variable.cs</DependentUpon>
     </Compile>
+    <Compile Include="ICallable.cs" />
+    <Compile Include="Call.cs">
+      <DependentUpon>PostfixOperator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UnaryOperators\PrefixOperator.cs" />
+    <Compile Include="PostfixOperator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ProjectExtensions>

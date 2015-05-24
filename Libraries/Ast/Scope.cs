@@ -7,7 +7,7 @@ namespace Ast
     {
         public List<Expression> Expressions = new List<Expression>();
 
-        public Dictionary<string,Variable> Locals;
+        public Dictionary<string,Expression> Locals;
         public List<EvalData> SideEffects;
 
         public List<Expression> Returns;
@@ -55,7 +55,7 @@ namespace Ast
             SideEffects = new List<EvalData>();
             Errors = new List<ErrorData>();
 
-            Locals =  new Dictionary<string,Variable>();
+            Locals =  new Dictionary<string,Expression>();
             Returns = new List<Expression>();
             Return = new Boolean(false);
         }
@@ -74,7 +74,7 @@ namespace Ast
             }
             else
             {
-                Locals =  new Dictionary<string,Variable>();
+                Locals =  new Dictionary<string,Expression>();
                 Returns = new List<Expression>();
                 Return = new Boolean(false);
             }
@@ -124,42 +124,22 @@ namespace Ast
             return false;
         }
 
-        public Variable SetVar(Variable @var)
+        public void SetVar(string identifier, Expression expr)
         {
-            return SetVar(@var.Identifier, @var);
-        }
-
-        public Variable SetVar(string identifier, Expression expr)
-        {
-            Variable @var;
-
-            if (expr is Variable)
-            {
-                @var = (Variable)expr;
-                @var.CurScope = this;
-            }
-            else
-            {
-                @var = new Variable(identifier, this);
-                @var.Value = expr;
-            }
-
             if (Locals.ContainsKey(identifier))
                 Locals.Remove(identifier);
 
-            Locals.Add(identifier, @var);
-
-            return @var;
+            Locals.Add(identifier, expr);
         }
 
         // TODO Fix position
         public Expression GetVar(Variable @var) { return GetVar(@var.Identifier); }
         public Expression GetVar(string identifier)
         {
-            Variable @var;
+            Expression expr;
 
-            if (Locals.TryGetValue(identifier, out @var))
-                return @var;
+            if (Locals.TryGetValue(identifier, out expr))
+                return expr;
 
             if (CurScope != null)
                 return CurScope.GetVar(identifier);
@@ -169,12 +149,12 @@ namespace Ast
 
         public decimal GetReal(string identifier)
         {
-            Variable @var;
+            Expression expr;
 
-            if (Locals.TryGetValue(identifier, out @var))
+            if (Locals.TryGetValue(identifier, out expr))
             {
-                if (@var.Value is Real)
-                    return @var.Value as Real;
+                if (expr is Real)
+                    return expr as Real;
             }
 
             if (CurScope != null)
@@ -185,12 +165,12 @@ namespace Ast
 
         public Int64 GetInt(string identifier)
         {
-            Variable @var;
+            Expression expr;
 
-            if (Locals.TryGetValue(identifier, out @var))
+            if (Locals.TryGetValue(identifier, out expr))
             {
-                if (@var.Value is Integer)
-                    return (@var.Value as Integer).@int;
+                if (expr is Integer)
+                    return Value as Integer;
             }
 
             if (CurScope != null)
@@ -201,12 +181,12 @@ namespace Ast
 
         public bool GetBool(string identifier)
         {
-            Variable @var;
+            Expression expr;
 
-            if (Locals.TryGetValue(identifier, out @var))
+            if (Locals.TryGetValue(identifier, out expr))
             {
-                if (@var.Value is Boolean)
-                    return (@var.Value as Boolean).@bool;
+                if (expr is Boolean)
+                    return (expr as Boolean).@bool;
             }
 
             if (CurScope != null)
@@ -217,12 +197,12 @@ namespace Ast
 
         public string GetText(string identifier)
         {
-            Variable @var;
+            Expression expr;
 
-            if (Locals.TryGetValue(identifier, out @var))
+            if (Locals.TryGetValue(identifier, out expr))
             {
-                if (@var.Value is Text)
-                    return (@var.Value as Text).@string;
+                if (expr is Text)
+                    return expr as Text;
             }
 
             if (CurScope != null)

@@ -5,22 +5,21 @@ namespace Ast
 {
     public class EvalFunc : SysFunc
     {
-        public EvalFunc() : this(null, null) { }
-        public EvalFunc(List<Expression> args, Scope scope)
-            : base("eval", args, scope)
+        public EvalFunc() : this(null) { }
+        public EvalFunc(Scope scope) : base("eval", scope)
         {
-            ValidArguments = new List<ArgKind>()
+            ValidArguments = new List<ArgumentType>()
                 {
-                    ArgKind.Expression
+                    ArgumentType.Text
                 };
         }
 
-        public override Expression Evaluate()
+        public override Expression Call(List args)
         {
-            if (!IsArgumentsValid())
+            if (!IsArgumentsValid(args))
                 return new ArgumentError(this);
 
-            var arg = Arguments[0].Evaluate();
+            var arg = args[0].Evaluate();
 
             if (arg is Error)
                 return arg;
@@ -30,16 +29,11 @@ namespace Ast
 
             var res = Evaluator.Eval(arg as Text);
 
-            res.Position.i += Arguments[0].Position.i;
-            res.Position.Line += Arguments[0].Position.Line - 1;
-            res.Position.Column += Arguments[0].Position.Column;
+            res.Position.i += args[0].Position.i;
+            res.Position.Line += args[0].Position.Line - 1;
+            res.Position.Column += args[0].Position.Column;
 
             return res;
-        }
-    
-        public override Expression Clone()
-        {
-            return MakeClone<EvalFunc>();
         }
     }
         

@@ -3,81 +3,87 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public abstract class SysFunc : Func
+    public enum ArgumentType
     {
-        public List<ArgKind> ValidArguments;
+        Expression,
+        Real,
+        Number,
+        Text,
+        Variable,
+        Function,
+        Equation,
+        List
+    }
 
-        public SysFunc(string identifier, List<Expression> args, Scope scope)
-            : base(identifier, args, scope) { }
+    public abstract class SysFunc : Expression, ICallable
+    {
+        public List<ArgumentType> ValidArguments;
+        public string Identifier;
+
+        public SysFunc(string identifier, Scope scope)
+        {
+            Identifier = identifier;
+            CurScope = scope;
+        }
+
+        public abstract Expression Call(List args);
 
         public override string ToString ()
         {
-            string str = "";
-
-            if (Prefix.CompareTo(Constant.MinusOne))
-            {
-                str += "-" + Identifier + '[';
-            }
-            else if (!Prefix.CompareTo(Constant.One))
-            {
-                str += Prefix.ToString() + Identifier + '[';
-            }
-            else
-            {
-                str += Identifier + '[';
-            }
+            string str = Identifier + '[';
 
             for (int i = 0; i < ValidArguments.Count; i++) 
             {
-                str += Arguments[i].ToString ();
+                str += ValidArguments[i].ToString ();
 
-                if (i < Arguments.Count - 1) 
+                if (i < ValidArguments.Count - 1) 
                 {
                     str += ',';
                 }
             }
 
-            str += ']';
-
-            if (!Exponent.CompareTo(Constant.One))
-            {
-                str += '^' + Exponent.ToString();
-            }
-
-            return str;
+            return str + ']';
         }
 
-        public bool IsArgumentsValid()
+        public bool IsArgumentsValid(List args)
         {
-            if (Arguments.Count != ValidArguments.Count)
+            if (args.Count != ValidArguments.Count)
                 return false;
 
-            for (int i = 0; i < Arguments.Count; i++)
+            for (int i = 0; i < args.Count; i++)
             {
                 switch (ValidArguments[i])
                 {
-                    case ArgKind.Expression:
-                        if (!(Arguments[i].Value is Expression))
+                    case ArgumentType.Expression:
+                        if (args[i].Value is Error)
                             return false;
                         break;
-                    case ArgKind.Real:
-                        if (!(Arguments[i].Evaluate() is Real))
+                    case ArgumentType.Real:
+                        if (!(args[i].Evaluate() is Real))
                             return false;
                         break;
-                    case ArgKind.Variable:
-                        if (!(Arguments[i] is Variable))
+                    case ArgumentType.Number:
+                        if (!(args[i].Evaluate() is Number))
                             return false;
                         break;
-                    case ArgKind.Function:
-                        if (!(Arguments[i] is Func))
+                    case ArgumentType.Text:
+                        if (!(args[i].Evaluate() is Text))
                             return false;
                         break;
-                    case ArgKind.Equation:
-                        if (!(Arguments[i].Value is Equal))
+                    case ArgumentType.Variable:
+                        if (!(args[i] is Variable))
                             return false;
                         break;
-                    case ArgKind.List:
-                        if (!(Arguments[i].Value is List))
+                    case ArgumentType.Function:
+                        if (!(args[i] is ICallable))
+                            return false;
+                        break;
+                    case ArgumentType.Equation:
+                        if (!(args[i].Value is Equal))
+                            return false;
+                        break;
+                    case ArgumentType.List:
+                        if (!(args[i].Evaluate() is List))
                             return false;
                         break;
                 }

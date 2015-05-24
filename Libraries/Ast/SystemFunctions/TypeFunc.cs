@@ -5,19 +5,18 @@ namespace Ast
 {
     public class TypeFunc : SysFunc
     {
-        public TypeFunc() : this(null, null) { }
-        public TypeFunc(List<Expression> args, Scope scope)
-            : base("type", args, scope)
+        public TypeFunc() : this(null) { }
+        public TypeFunc(Scope scope) : base("type", scope)
         {
-            ValidArguments = new List<ArgKind>()
+            ValidArguments = new List<ArgumentType>()
                 {
-                    ArgKind.Expression
+                    ArgumentType.Expression
                 };
         }
 
-        public override Expression Evaluate()
+        public override Expression Call(List args)
         {
-            var res = Arguments[0].Evaluate();
+            var res = args[0].Evaluate();
 
             if (res is Error)
                 return res;
@@ -25,10 +24,6 @@ namespace Ast
                 return new Text(res.GetType().Name);
         }
 
-        public override Expression Clone()
-        {
-            return MakeClone<TypeFunc>();
-        }
 
         public override bool CompareTo(Expression other)
         {

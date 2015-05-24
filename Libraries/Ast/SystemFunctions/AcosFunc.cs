@@ -5,51 +5,42 @@ namespace Ast
 {
     public class AcosFunc : SysFunc, IInvertable
     {
-        public AcosFunc() : this(null, null) { }
-        public AcosFunc(List<Expression> args, Scope scope)
-            : base("acos", args, scope)
+        public AcosFunc() : this(null) { }
+        public AcosFunc(Scope scope)
+            : base("acos", scope)
         {
-            ValidArguments = new List<ArgKind>()
+            ValidArguments = new List<ArgumentType>()
                 {
-                    ArgKind.Real
+                    ArgumentType.Real
                 };
         }
 
-        public override Expression Evaluate()
+        public override Expression Call(List args)
         {
-            if (!IsArgumentsValid())
+            if (!IsArgumentsValid(args))
                 return new ArgumentError(this);
 
-            var res = Arguments[0].Evaluate();
+            var res = args[0].Evaluate();
 
-            var deg = GetBool("deg");
+            var deg = CurScope.GetBool("deg");
 
             if (res is Real)
             {
                 double value = res as Real;
 
                 if (value >= -1 && value <= 1)
-                    return ReturnValue(new Irrational((decimal)Math.Acos(value) * (deg ? Constant.RadToDeg.@decimal  : 1))).Evaluate();
+                    return new Irrational((decimal)Math.Acos(value) * (deg ? Constant.RadToDeg.@decimal  : 1)).Evaluate();
             }
 
-            return new Error(this, "Could not take ACos of: " + Arguments[0]);
-        }
-
-        public override Expression Reduce()
-        {
-            return ReduceHelper<AcosFunc>();
-        }
-
-        public override Expression Clone()
-        {
-            return MakeClone<AcosFunc>();
+            return new Error(this, "Could not take ACos of: " + args[0]);
         }
 
         public Expression InvertOn(Expression other)
         {
-            List<Expression> newArgs = new List<Expression>();
-            newArgs.Add(other);
-            return new CosFunc(newArgs, CurScope);
+            throw new NotImplementedException();
+            //List<Expression> newArgs = new List<Expression>();
+            //newArgs.Add(other);
+            return new CosFunc(CurScope);
         }
     }
 }

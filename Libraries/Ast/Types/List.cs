@@ -3,46 +3,85 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class List : Expression
+    public class List : Expression, ICallable
     {
-        public List<Expression> items;
+        public List<Expression> Items;
 
         const int MaxItemPrint = 10;
+
+        public Expression this[int i]
+        {
+            get { return Items[i]; }
+            set { Items[i] = value; }
+        }
+
+        public int Count { get { return Items.Count; }}
 
         public List() : this(new List<Expression> ()) {}
         public List(List<Expression> items)
         {
-            this.items = items;
+            this.Items = items;
         }
 
         public override Expression Evaluate()
         {
             var res = new List();
 
-            foreach (var item in items)
+            foreach (var item in Items)
             {
-                res.items.Add(item.Evaluate());
+                res.Items.Add(item.Evaluate());
             }
 
             return res;
+        }
+
+        public bool IsArgumentsValid(List args)
+        {
+            if (args.Count != 1 || !(args[0].Evaluate() is Integer))
+            {
+                CurScope.Errors.Add(new ErrorData(this,"Valid args: [Integer]"));
+                return false;
+            }
+
+            return true;
+        }
+
+        public Expression Call(List args)
+        {
+            var @long = (args[0].Evaluate() as Integer).@int;
+
+            if (@long < 0)
+                return new Error(this, "Cannot access with negative integer");
+
+            int @int;
+
+            if (@long > int.MaxValue)
+                return new Error(this, "Integer is too big");
+            else
+                @int = (int)@long;
+
+            if (@int > Count - 1)
+                return new Error(this, "Cannot access item " + (@int + 1).ToString() + " in list with " + Count + " items");
+            else
+                return this[@int];
         }
 
         public override string ToString()
         {
             string str = "[";
 
-            for (int i = 0; i < items.Count; i++) 
+            for (int i = 0; i < Items.Count; i++) 
             {
                 if (i >= MaxItemPrint - 1)
                 {
-                    str += "..." + items[items.Count - 1].ToString();
+                    str += "..." + Items[Items.Count - 1].ToString();
                     break;
                 }
                 else
                 {
-                    str += items[i].ToString ();
+                    str += Items[i].ToString ();
 
-                    if (i < items.Count - 1) 
+                    if (i < Items.Count - 1) 
                     {
                         str += ',';
                     }
@@ -56,7 +95,7 @@ namespace Ast
 
         public override bool ContainsVariable(Variable other)
         {
-            foreach (var item in items)
+            foreach (var item in Items)
             {
                 if (item.ContainsVariable(other))
                 {
@@ -71,9 +110,9 @@ namespace Ast
         {
             var res = new List();
 
-            foreach (var item in items)
+            foreach (var item in Items)
             {
-                res.items.Add(item.Clone());
+                res.Items.Add(item.Clone());
             }
 
             return res;

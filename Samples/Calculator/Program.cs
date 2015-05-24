@@ -87,12 +87,12 @@ public class Calculator : Window
         {
             if (def.Value is VarFunc)
             {
-                defStore.AppendValues(def.Value.ToString(), def.Value.Value.ToString());
+                defStore.AppendValues(def.ToString(), def.Value.ToString());
             }
             else
             {
                 var iter = defStore.AppendValues(def.Key, def.Value.Value.ToString());
-                UpdateScope(def.Value, iter);
+                //UpdateScope(def.Value, iter);
             }
         }
     }
@@ -108,7 +108,7 @@ public class Calculator : Window
             else
             {
                 var subIter = defStore.AppendValues(iter, def.Key, def.Value.Value.ToString());
-                UpdateScope(def.Value, subIter);
+                //UpdateScope(def.Value, subIter);
             }
         }
     }

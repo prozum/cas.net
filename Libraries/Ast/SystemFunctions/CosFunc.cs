@@ -5,48 +5,39 @@ namespace Ast
 {
     public class CosFunc : SysFunc, IInvertable
     {
-        public CosFunc() : this(null, null) { }
-        public CosFunc(List<Expression> args, Scope scope)
-            : base("cos", args, scope)
+        public CosFunc() : this(null) { }
+        public CosFunc(Scope scope)
+            : base("cos", scope)
         {
-            ValidArguments = new List<ArgKind>()
+            ValidArguments = new List<ArgumentType>()
                 {
-                    ArgKind.Real
+                    ArgumentType.Real
                 };
         }
 
-        public override Expression Evaluate()
+        public override Expression Call(List args)
         {
-            if (!IsArgumentsValid())
+            if (!IsArgumentsValid(args))
                 return new ArgumentError(this);
 
-            var res = Arguments[0].Evaluate();
+            var res = args[0].Evaluate();
 
-            var deg = GetBool("deg");
+            var deg = CurScope.GetBool("deg");
 
             if (res is Real)
             {
-                return ReturnValue(new Irrational(Math.Cos((double) ((deg ? Constant.DegToRad.@decimal  : 1) * (res as Real)) ))).Evaluate();
+                return new Irrational(Math.Cos((double) ((deg ? Constant.DegToRad.@decimal  : 1) * (res as Real)) )).Evaluate();
             }
 
-            return new Error(this, "Could not take Cos of: " + Arguments[0]);
-        }
-
-        public override Expression Reduce()
-        {
-            return ReduceHelper<CosFunc>();
-        }
-
-        public override Expression Clone()
-        {
-            return MakeClone<CosFunc>();
+            return new Error(this, "Could not take Cos of: " + args[0]);
         }
 
         public Expression InvertOn(Expression other)
         {
-            List<Expression> newArgs = new List<Expression>();
-            newArgs.Add(other);
-            return new AcosFunc(newArgs, CurScope);
+            throw new NotImplementedException();
+//            List<Expression> newArgs = new List<Expression>();
+//            newArgs.Add(other);
+//            return new AcosFunc(newArgs, CurScope);
         }
     }
 }

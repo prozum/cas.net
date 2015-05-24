@@ -19,7 +19,7 @@ namespace Ast
     /// <summary>
     /// A Operator which evaluates two expressions.
     /// </summary>
-    public abstract class BinaryOperator : Operator
+    public abstract class BinaryOperator : Expression
     {
         public abstract string Identifier { get; }
         public abstract int Priority { get; }

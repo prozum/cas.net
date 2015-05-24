@@ -15,7 +15,7 @@ namespace Ast
 
         public override Expression Evaluate()
         {
-            foreach (var value in List.items)
+            foreach (var value in List.Items)
             {
                 ForScope.SetVar(Var, value);
                 var res = ForScope.Evaluate();

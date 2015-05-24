@@ -5,31 +5,24 @@ namespace Ast
 {
     public class PlotFunc : SysFunc
     {
-        public Expression expr;
-        public Variable @var;
-
-        public PlotFunc() : this(null, null) { }
-        public PlotFunc(List<Expression> args, Scope scope)
-            : base("plot", args, scope)
+        public PlotFunc() : this(null) { }
+        public PlotFunc(Scope scope) : base("plot", scope)
         {
-            ValidArguments = new List<ArgKind>()
+            ValidArguments = new List<ArgumentType>()
                 {
-                    ArgKind.Expression,
-                    ArgKind.Variable
+                    ArgumentType.Expression,
+                    ArgumentType.Variable
                 };
-
-            if (IsArgumentsValid())
-            {
-                expr = args[0];
-                @var = (Variable)args[1];
-            }
         }
 
-        public override Expression Evaluate()
+        public override Expression Call(List args)
         {
+            Expression expr = args[0];
+            Variable @var = (Variable)args[1];
+
             List<Real> xList = new List<Real>();
 
-            foreach (var x in (@var.Value as List).items)
+            foreach (var x in (@var.Value as List).Items)
             {
                 if (x is Real)
                     xList.Add(x as Real);
@@ -58,11 +51,6 @@ namespace Ast
 
             CurScope.SideEffects.Add(new PlotData(xList, yList, null));
             return new Null();
-        }
-
-        public override Expression Clone()
-        {
-            return MakeClone<PlotFunc>();
         }
     }
 }

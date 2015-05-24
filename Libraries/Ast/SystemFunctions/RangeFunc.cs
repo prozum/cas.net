@@ -5,45 +5,36 @@ namespace Ast
 {
     public class RangeFunc : SysFunc
     {
-        public RangeFunc() : this(null, null) { }
-        public RangeFunc(List<Expression> args, Scope scope)
-            : base("range", args, scope)
+        public RangeFunc() : this(null) { }
+        public RangeFunc(Scope scope) : base("range", scope)
         {
-            ValidArguments = new List<ArgKind>()
+            ValidArguments = new List<ArgumentType>()
                 {
-                    ArgKind.Real,
-                    ArgKind.Real,
-                    ArgKind.Real
+                    ArgumentType.Real,
+                    ArgumentType.Real,
+                    ArgumentType.Real
                 };
         }
 
-        public override Expression Evaluate()
+        public override Expression Call(List args)
         {
-            if (!IsArgumentsValid())
-                return new ArgumentError(this);
-
             Decimal start;
             Decimal end;
             Decimal step;
 
-            start = Arguments[0].Evaluate() as Real;
+            start = args.Evaluate() as Real;
 
-            end = Arguments[1].Evaluate() as Real;
+            end = args.Evaluate() as Real;
 
-            step = Arguments[2].Evaluate() as Real;
+            step = args.Evaluate() as Real;
 
             var list = new Ast.List ();
             for (Decimal i = start; i <= end; i += step)
             {
-                list.items.Add(new Irrational(i));
+                list.Items.Add(new Irrational(i));
             }
 
             return list;
-        }
-
-        public override Expression Clone()
-        {
-            return MakeClone<RangeFunc>();
         }
     }
 }

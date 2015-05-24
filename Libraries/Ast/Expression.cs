@@ -113,11 +113,6 @@ namespace Ast
             return this + other.Evaluate();
         }
 
-        public virtual Expression AddWith(Operator other)
-        {
-            return this + other.Evaluate();
-        }
-
         public virtual Expression AddWith(Scope other)
         {
             return this + other.Evaluate();

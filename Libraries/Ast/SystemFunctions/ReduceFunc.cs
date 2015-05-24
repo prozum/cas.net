@@ -5,27 +5,18 @@ namespace Ast
 {
     public class ReduceFunc : SysFunc
     {
-        public ReduceFunc() : this(null, null) { }
-        public ReduceFunc(List<Expression> args, Scope scope)
-            : base("reduce", args, scope)
+        public ReduceFunc() : this(null) { }
+        public ReduceFunc(Scope scope) : base("reduce", scope)
         {
-            ValidArguments = new List<ArgKind>()
+            ValidArguments = new List<ArgumentType>()
                 {
-                    ArgKind.Expression
+                    ArgumentType.Expression
                 };
         }
 
-        public override Expression Evaluate()
+        public override Expression Call(List args)
         {
-            if (!IsArgumentsValid())
-                return new ArgumentError(this);
-
-            return Arguments[0].Reduce();
-        }
-
-        public override Expression Clone()
-        {
-            return MakeClone<ReduceFunc>();
+            return args[0].Reduce();
         }
     }
 }

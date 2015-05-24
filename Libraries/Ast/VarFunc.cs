@@ -3,10 +3,18 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class VarFunc : Func
+    public class VarFunc : Expression, ICallable
     {
-        public VarFunc() : this(null, null, null) { }
-        public VarFunc(string identifier, List<Expression> args, Scope scope) : base(identifier, args, scope) { }
+        public string Identifier;
+        public List Arguments;
+        public Expression Definition;
+
+        public VarFunc() : this(null, null) { }
+        public VarFunc(string identifier, Scope scope)
+        {
+            Identifier = identifier;
+            CurScope = scope;
+        }
 
         public readonly int MaxFunctionRecursion = 5;
 
@@ -21,118 +29,64 @@ namespace Ast
         }
         public Stack<Scope> CallStack;
 
-        public override Expression Evaluate()
+        public bool IsArgumentsValid(List args)
         {
-            if (Definition)
-                return Value.Evaluate();
-
-            var val = Value;
-
-            if (val is VarFunc)
+            if (args.Count != Arguments.Count)
             {
-                var def = (VarFunc)val;
-
-                if (def.Definition)
-                {
-                    if (def.CallStack.Count > MaxFunctionRecursion)
-                        return new Error(this, "Maximum function recursion exceeded");
-
-
-                    if (Arguments.Count != def.Arguments.Count)
-                        return new Error(Identifier + " takes " + def.Arguments.Count.ToString() + " arguments. Not " + Arguments.Count.ToString() + ".");
-
-                    var callScope = new Scope(CurScope);
-                    def.CallStack.Push(callScope);
-
-
-                    for (int i = 0; i < Arguments.Count; i++)
-                    {
-                        var arg = (Variable)def.Arguments[i];
-                        callScope.SetVar(arg.Identifier, Arguments[i].Evaluate());
-                    }
-
-                    var res = def.Evaluate();
-                    def.CallStack.Pop();
-                    return res;
-                }
+                CurScope.Errors.Add(new ErrorData(this, Identifier + " takes " + Arguments.Count.ToString() + " arguments. Not " + args.Count.ToString() + "."));
+                return false;
             }
 
-
-            //return val.Evaluate();
-            throw new Exception("Not good");
+            return true;
         }
 
-        public override Expression Value
+        public Expression Call(List args)
         {
-            get
+            if (CallStack.Count > MaxFunctionRecursion)
+                return new Error(this, "Maximum function recursion exceeded");;
+
+            var callScope = new Scope(CurScope);
+            CallStack.Push(callScope);
+
+            for (int i = 0; i < args.Count; i++)
             {
-                if (Definition)
-                    return _value;
-
-                var @var = CurScope.GetVar(Identifier);
-
-                if (@var is Error)
-                    return @var;
-
-                if (@var is VarFunc)
-                {
-                    return @var;
-                }
-
-                if (@var.Value is List)
-                {
-                    var list = (List)@var.Value;
-
-                    if (Arguments.Count != 1 || !(Arguments[0].Evaluate() is Integer))
-                        return new Error(list, "Valid args: [Integer]");
-
-                    var @long = (Arguments[0].Evaluate() as Integer).@int;
-
-                    if (@long < 0)
-                        return new Error(list, "Cannot access with negative integer");
-
-                    int @int;
-
-                    if (@long > int.MaxValue)
-                        return new Error(list, "Integer is too big");
-                    else
-                        @int = (int)@long;
-
-                    if (@int > list.items.Count - 1)
-                        return new Error(list, "Cannot access item " + (@int + 1).ToString() + " in list with " + list.items.Count + " items");
-                    else
-                        return list.items[@int];
-                }
-
-                return new Error(this, "Variable is not a function or list");
+                var arg = (Variable)args[i];
+                callScope.SetVar(arg.Identifier, args[i].Evaluate());
             }
 
-            set
-            {
-                CallStack = new Stack<Scope>();
-                Definition = true;
-                _value = value;
-            }
+            var res = Definition.Evaluate();
+            CallStack.Pop();
+
+            return res;
         }
 
-        public override Expression Clone()
-        {
-            return MakeClone<VarFunc>();
-        }
-
-        public override Expression Reduce()
-        {
-            if (Prefix.CompareTo(Constant.Zero))
-            {
-                return new Integer(0);
-            }
-            if (Exponent.CompareTo(Constant.Zero))
-            {
-                return new Integer(1);
-            }
-
-            return Value;
-        }
+//        public override Expression Value
+//        {
+//            get
+//            {
+//                if (Definition)
+//                    return _value;
+//
+//                var @var = CurScope.GetVar(Identifier);
+//
+//                if (@var is Error)
+//                    return @var;
+//
+//                if (@var is VarFunc)
+//                {
+//                    return @var;
+//                }
+//
+//                return new Error(this, "Variable is not a function or list");
+//            }
+//
+//            set
+//            {
+//                CallStack = new Stack<Scope>();
+//                Definition = true;
+//                _value = value;
+//            }
+//        }
 
         public override string ToString()
         {
@@ -150,25 +104,25 @@ namespace Ast
             return str;
         }
 
-        public override bool ContainsVariable(Variable other)
-        {
-            if (base.ContainsVariable(other))
-            {
-                return true;
-            }
-            else
-            {
-                foreach (var item in (this as Func).Arguments)
-                {
-                    if (item.ContainsVariable(other))
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
+//        public override bool ContainsVariable(Variable other)
+//        {
+//            if (base.ContainsVariable(other))
+//            {
+//                return true;
+//            }
+//            else
+//            {
+//                foreach (var item in (this as Func).Arguments)
+//                {
+//                    if (item.ContainsVariable(other))
+//                    {
+//                        return true;
+//                    }
+//                }
+//            }
+//
+//            return false;
+//        }
     }
 }
 

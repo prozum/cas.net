@@ -5,51 +5,42 @@ namespace Ast
 {
     public class AsinFunc : SysFunc, IInvertable
     {
-        public AsinFunc() : this(null, null) { }
-        public AsinFunc(List<Expression> args, Scope scope)
-            : base("asin", args, scope)
+        public AsinFunc() : this(null) { }
+        public AsinFunc(Scope scope)
+            : base("asin", scope)
         {
-            ValidArguments = new List<ArgKind>()
+            ValidArguments = new List<ArgumentType>()
                 {
-                    ArgKind.Real
+                    ArgumentType.Real
                 };
         }
 
-        public override Expression Evaluate()
+        public override Expression Call(List args)
         {
-            if (!IsArgumentsValid())
+            if (!IsArgumentsValid(args))
                 return new ArgumentError(this);
 
-            var res = Arguments[0].Evaluate();
+            var res = args[0].Evaluate();
 
-            var deg = GetBool("deg");
+            var deg = CurScope.GetBool("deg");
 
             if (res is Real)
             {
                 double value = res as Real;
 
                 if (value >= -1 && value <= 1)
-                    return ReturnValue(new Irrational((decimal)Math.Asin(value) * (deg ? Constant.RadToDeg.@decimal  : 1))).Evaluate();
+                    return new Irrational((decimal)Math.Asin(value) * (deg ? Constant.RadToDeg.@decimal  : 1)).Evaluate();
             }
 
-            return new Error(this, "Could not take ASin of: " + Arguments[0]);
-        }
-
-        public override Expression Reduce()
-        {
-            return ReduceHelper<AsinFunc>();
-        }
-
-        public override Expression Clone()
-        {
-            return MakeClone<AsinFunc>();
+            return new Error(this, "Could not take ASin of: " + args[0]);
         }
 
         public Expression InvertOn(Expression other)
         {
-            List<Expression> newArgs = new List<Expression>();
-            newArgs.Add(other);
-            return new SinFunc(newArgs, CurScope);
+            throw new NotImplementedException();
+//            List<Expression> newArgs = new List<Expression>();
+//            newArgs.Add(other);
+//            return new SinFunc(newArgs, CurScope);
         }
     }
 }

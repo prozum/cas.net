@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class Negation : UnaryOperator
+    public class Negation : PrefixOperator
     {
         public Negation() : base("!") { }
 

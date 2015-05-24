@@ -17,30 +17,45 @@ namespace Ast
                 Variable @var;
                 Scope scope;
 
-                var res = Left;
+                if (Left is Scope)
+                {
+                    scope = (Scope)Left;
+                    scope.Evaluate();
+                }
+                else
+                {
+                    var left = Left.Value;
 
-                if (res is Variable)
-                    res = CurScope.GetVar((res as Variable).Identifier);
-                else if (res is Scope)
-                    res.Evaluate();
-                else if (res is Dot)
-                    res = res.Evaluate();
+                    if (left is Error)
+                        return left;
 
-                if (res is Error)
-                    return res;
+                    if (left is Scope)
+                        scope = (Scope)left;
+                    else
+                        return new Error(this, "left operator must be a Scope");
+                }
 
-                if (!(res is Scope))
-                    return new Error(this, "left operator must be a Scope");
-                scope = (Scope)res;
- 
                 if (Right is Variable)
-                    @var = Right as Variable;
-                else if (Right is Self)
-                    return scope;
+                    @var = (Variable)Right;
                 else
                     return new Error(this, "right operator must be a Variable");
 
-                return scope.GetVar(@var).Value;
+                @var.CurScope = scope;
+
+                return @var.Value;
+            }
+        }
+
+        public Scope VariabelScope
+        {
+            get
+            {
+                var res = Left.Value;
+
+                if (res is Scope)
+                    return res as Scope;
+                else
+                    return null;
             }
         }
 

@@ -85,17 +85,18 @@ namespace Ast
 
         public Expression InvertOn(Expression other)
         {
+            throw new NotImplementedException();
             //When right is 2, the invert is sqrt. x^2 -> sqrt[x], -sqrt[x]
             if (Right.CompareTo(Constant.Two))
             {
                 var args = new List<Expression>();
                 args.Add(other);
 
-                var answer = new SqrtFunc(args, other.CurScope);
+                /////var answer = new SqrtFunc(args, other.CurScope);
                 var answers = new Ast.List();
 
-                answers.items.Add(answer);
-                answers.items.Add(new Mul(new Integer(-1), answer).Reduce());
+                //answers.Items.Add(answer);
+                //answers.Items.Add(new Mul(new Integer(-1), answer).Reduce());
                 return answers;
             }
             else

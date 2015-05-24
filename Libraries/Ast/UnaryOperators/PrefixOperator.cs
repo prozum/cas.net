@@ -2,7 +2,7 @@
 
 namespace Ast
 {
-    public abstract class UnaryOperator : Operator
+    public abstract class PrefixOperator : Expression
     {
         public string Identifier;
 
@@ -22,7 +22,7 @@ namespace Ast
             }
         }
 
-        protected UnaryOperator(string sym)
+        protected PrefixOperator(string sym)
         {
             this.Identifier = sym;
         }

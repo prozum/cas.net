@@ -2,7 +2,7 @@
 
 namespace Ast
 {
-    public class Referation : UnaryOperator
+    public class Referation : PrefixOperator
     {
         public Referation() : base("~") { }
 

@@ -5,36 +5,29 @@ namespace Ast
 {
     public class ParaPlotFunc : SysFunc
     {
-        public Expression expr1;
-        public Expression expr2;
-        public Variable @var;
-
-        public ParaPlotFunc() : this(null, null) { }
-        public ParaPlotFunc(List<Expression> args, Scope scope)
-            : base("paraplot", args, scope)
+        public ParaPlotFunc() : this(null) { }
+        public ParaPlotFunc(Scope scope)
+            : base("paraplot", scope)
         {
-            ValidArguments = new List<ArgKind>()
+            ValidArguments = new List<ArgumentType>()
                 {
-                    ArgKind.Expression,
-                    ArgKind.Expression,
-                    ArgKind.Variable
+                    ArgumentType.Expression,
+                    ArgumentType.Expression,
+                    ArgumentType.Variable
                 };
-
-            if (IsArgumentsValid())
-            {
-                expr1 = args[0];
-                expr2 = args[1];
-                @var = (Variable)args[2];
-            }
         }
 
-        public override Expression Evaluate()
+        public override Expression Call(List args)
         {
+            Expression expr1 = args[0];
+            Expression expr2 = args[1];
+            Variable @var = (Variable)args[2];
+
             List<Real> xList = new List<Real>();
             List<Real> yList = new List<Real>();
             List<Real> zList = new List<Real>();
 
-            foreach (var z in (@var.Value.Value as List).items)
+            foreach (var z in (@var.Value.Value as List).Items)
             {
                 if (z is Real)
                     zList.Add(z as Real);
@@ -71,11 +64,6 @@ namespace Ast
 
             CurScope.SideEffects.Add(new PlotData(xList, yList, zList));
             return new Null();
-        }
-
-        public override Expression Clone()
-        {
-            return MakeClone<ParaPlotFunc>();
         }
     }
 }

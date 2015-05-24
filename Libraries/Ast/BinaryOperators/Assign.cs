@@ -15,57 +15,64 @@ namespace Ast
             Variable @var;
             Scope scope;
 
-            Expression res = Left;
+            Expression res;
 
-//            if (res is Dot)
-//            {
-//                res = new Variable( (res as Dot).Right.Value);
-//            }
+            if (Left is Dot)
+            {
+                scope = (Left as Dot).VariabelScope;
+
+                if (scope == null)
+                    return new Error(Left.ToString() + " is not a valid scope");
+
+                res = (Left as Dot).Right;
+            }
+            else
+            {
+                res = Left;
+                scope = CurScope;
+            }
 
             if (res is Error)
                 return res;
-
+                
             if (res is Variable)
-            {
                 @var = (Variable)res;
-                scope = @var.CurScope;
-            }
             else
                 return new Error(res, " is not a variable");
 
 
-            if (@var is SysFunc)
-            {
-                return new Error(this, "Cannot override system function");
-            }
-
-            if (@var is VarFunc)
-            {
-                var varfunc = (VarFunc)@var;
-
-                foreach (var arg in varfunc.Arguments)
-                {
-                    if (!(arg is Variable))
-                        return new Error(this, "All arguments must be symbols");
-                }
-
-                Right.CurScope = varfunc;
-                varfunc.Value = Right;
-               
-                scope.SetVar(varfunc);
-
-                return @var;
-            }
+//            if (@var is SysFunc)
+//            {
+//                return new Error(this, "Cannot override system function");
+//            }
+//
+//            if (@var is VarFunc)
+//            {
+//                var varfunc = (VarFunc)@var;
+//
+//                foreach (var arg in varfunc.Arguments)
+//                {
+//                    if (!(arg is Variable))
+//                        return new Error(this, "All arguments must be symbols");
+//                }
+//
+//                Right.CurScope = varfunc;
+//                varfunc.Value = Right;
+//               
+//                scope.SetVar(varfunc);
+//
+//                return @var;
+//            }
 
             // Variable
-            @var.Value = Right.Evaluate();
+            res = Right.Evaluate();
 
-            if (@var.Value is Error)
-                return @var.Value;
+            if (res is Error)
+                return res;
 
-            scope.SetVar(@var.Identifier, @var);
+            scope.SetVar(@var.Identifier, res);
 
-            return @var.Value;
+            return res;
         }
 
         protected override Expression ExpandHelper(Expression left, Expression right)

@@ -20,6 +20,7 @@ namespace Ast
             SetVar("deg", new Boolean(true));
             SetVar("debug", new Boolean(true));
             SetVar("pi", new Irrational((decimal)Math.PI));
+            SetVar("sin", new SinFunc(this));
         }
 
         public void Parse(string parseString)

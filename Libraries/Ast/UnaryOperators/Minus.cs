@@ -2,7 +2,7 @@
 
 namespace Ast
 {
-    public class Minus : UnaryOperator
+    public class Minus : PrefixOperator
     {
         public Minus() : base("-") { }
 

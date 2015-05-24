@@ -5,63 +5,56 @@ namespace Ast
 {
     public class SqrtFunc : SysFunc, IInvertable
     {
-        public SqrtFunc() : this(null, null) { }
-        public SqrtFunc(List<Expression> args, Scope scope)
-            : base("sqrt", args, scope)
+        public SqrtFunc() : this(null) { }
+        public SqrtFunc(Scope scope)
+            : base("sqrt", scope)
         {
-            ValidArguments = new List<ArgKind>()
+            ValidArguments = new List<ArgumentType>()
                 {
-                    ArgKind.Expression
+                    ArgumentType.Expression
                 };
         }
 
-        public override Expression Evaluate()
+        public override Expression Call(List args)
         {
-            if (!IsArgumentsValid())
-                return new ArgumentError(this);
-
-            var res = Arguments[0].Evaluate();
+            var res = args[0].Evaluate();
 
             if (res is Real)
             {
                 if ((res as Real).IsNegative())
-                    return ReturnValue(new Complex(new Integer(0), new Irrational(Math.Sqrt((double)(Real)(res as Real).ToNegative()))));
+                    return new Complex(new Integer(0), new Irrational(Math.Sqrt((double)(Real)(res as Real).ToNegative())));
                 else
-                    return ReturnValue(new Irrational(Math.Sqrt((double)(res as Real)))).Evaluate();
+                    return new Irrational(Math.Sqrt((double)(res as Real))).Evaluate();
             }
 
-            return new Error(this, "Could not take Sqrt of: " + Arguments[0]);
+            return new Error(this, "Could not take Sqrt of: " + args[0]);
         }
 
         public override Expression Reduce()
         {
-            if (Exponent.CompareTo(Constant.Two))
-            {
-                return Arguments[0];
-            }
-            else
-            {
-                var simplified = ReduceHelper<SqrtFunc>();
-
-                if (simplified.Arguments[0] is Exp && (simplified.Arguments[0] as Exp).Right.CompareTo(Constant.Two))
-                {
-                    return (simplified.Arguments[0] as Exp).Left;
-                }
-                else if (simplified.Arguments[0] is Variable && (simplified.Arguments[0] as Variable).Exponent.CompareTo(Constant.Two))
-                {
-                    var res = simplified.Arguments[0].Clone() as Variable;
-                    res.Exponent = new Integer(1);
-
-                    return res;
-                }
-
-                return simplified;
-            }
-        }
-
-        public override Expression Clone()
-        {
-            return MakeClone<SqrtFunc>();
+            throw new NotImplementedException();
+//            if (Exponent.CompareTo(Constant.Two))
+//            {
+//                return Arguments[0];
+//            }
+//            else
+//            {
+//                var simplified = ReduceHelper<SqrtFunc>();
+//
+//                if (simplified.Arguments[0] is Exp && (simplified.Arguments[0] as Exp).Right.CompareTo(Constant.Two))
+//                {
+//                    return (simplified.Arguments[0] as Exp).Left;
+//                }
+//                else if (simplified.Arguments[0] is Variable && (simplified.Arguments[0] as Variable).Exponent.CompareTo(Constant.Two))
+//                {
+//                    var res = simplified.Arguments[0].Clone() as Variable;
+//                    res.Exponent = new Integer(1);
+//
+//                    return res;
+//                }
+//
+//                return simplified;
+//            }
         }
 
         public Expression InvertOn(Expression other)

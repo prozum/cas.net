@@ -8,26 +8,23 @@ namespace Ast
         Equal equal;
         Variable sym;
 
-        public SolveFunc() : this(null, null) { }
-        public SolveFunc(List<Expression> args, Scope scope)
-            : base("solve", args, scope)
+        public SolveFunc() : this(null) { }
+        public SolveFunc(Scope scope)
+            : base("solve", scope)
         {
-            ValidArguments = new List<ArgKind>()
+            ValidArguments = new List<ArgumentType>()
                 {
-                    ArgKind.Equation,
-                    ArgKind.Variable
+                    ArgumentType.Equation,
+                    ArgumentType.Variable
                 };
         }
 
-        public override Expression Evaluate()
+        public override Expression Call(List args)
         {
             Equal solved;
 
-            if (!IsArgumentsValid())
-                return new ArgumentError(this);
-
-            equal = (Equal)Arguments[0];
-            sym = (Variable)Arguments[1];
+            equal = (Equal)args[0];
+            sym = (Variable)args[1];
 
             if (equal.Right.ContainsVariable(sym))
             {
@@ -49,13 +46,13 @@ namespace Ast
                         if (solved == null)
                             return new Error(this, " could not solve " + sym.ToString());
                     }
-                    else if (solved.Left is Func)
-                    {
-                        solved = InvertFunction(solved.Left, solved.Right);
-
-                        if (solved == null)
-                            return new Error(this, " could not solve " + sym.ToString());
-                    }
+//                    else if (solved.Left is Func)
+//                    {
+//                        solved = InvertFunction(solved.Left, solved.Right);
+//
+//                        if (solved == null)
+//                            return new Error(this, " could not solve " + sym.ToString());
+//                    }
                     else
                     {
                         return new Error(this, " could not solve " + sym.ToString());
@@ -127,19 +124,14 @@ namespace Ast
 
         private Equal InvertFunction(Expression left, Expression right)
         {
-            Func func = left as Func;
-
-            if (func.ContainsVariable(sym))
-            {
-                return new Equal(func.Arguments[0], (func as IInvertable).InvertOn(right));
-            }
+//            Func func = left as Func;
+//
+//            if (func.ContainsVariable(sym))
+//            {
+//                return new Equal(func.Arguments[0], (func as IInvertable).InvertOn(right));
+//            }
 
             return null;
-        }
-
-        public override Expression Clone()
-        {
-            return MakeClone<SolveFunc>();
         }
     }
 }
