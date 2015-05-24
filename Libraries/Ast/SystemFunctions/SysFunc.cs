@@ -55,49 +55,58 @@ namespace Ast
 
         public bool IsArgumentsValid(List args)
         {
-            if (args.Count != ValidArguments.Count)
-                return false;
+            bool valid = true;
 
+            if (args.Count != ValidArguments.Count)
+                valid = false;
+                
             for (int i = 0; i < args.Count; i++)
             {
+                if (!valid)
+                    break;
+
                 switch (ValidArguments[i])
                 {
                     case ArgumentType.Expression:
                         if (args[i].Value is Error)
-                            return false;
+                            valid = false;
                         break;
                     case ArgumentType.Real:
                         if (!(args[i].Evaluate() is Real))
-                            return false;
+                            valid = false;
                         break;
                     case ArgumentType.Number:
                         if (!(args[i].Evaluate() is Number))
-                            return false;
+                            valid = false;
                         break;
                     case ArgumentType.Text:
                         if (!(args[i].Evaluate() is Text))
-                            return false;
+                            valid = false;
                         break;
                     case ArgumentType.Variable:
                         if (!(args[i] is Variable))
-                            return false;
+                            valid = false;
                         break;
                     case ArgumentType.Function:
                         if (!(args[i] is ICallable))
-                            return false;
+                            valid = false;
                         break;
                     case ArgumentType.Equation:
                         if (!(args[i].Value is Equal))
-                            return false;
+                            valid = false;
                         break;
                     case ArgumentType.List:
                         if (!(args[i].Evaluate() is List))
-                            return false;
+                            valid = false;
                         break;
                 }
             }
 
-            return true;
+            if (valid)
+                return true;
+
+            CurScope.Errors.Add(new ErrorData(new ArgumentError(this)));
+            return false;
         }
     }
 }

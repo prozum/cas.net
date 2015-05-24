@@ -16,9 +16,6 @@ namespace Ast
 
         public override Expression Call(List args)
         {
-            if (!IsArgumentsValid(args))
-                return new ArgumentError(this);
-
             var res = args[0].Evaluate();
 
             if (res is INegative)
