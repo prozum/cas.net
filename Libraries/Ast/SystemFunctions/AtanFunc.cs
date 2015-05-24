@@ -42,6 +42,7 @@ namespace Ast
             return MakeClone<AtanFunc>();
         }
 
+        //atan[x] -> tan[other]
         public Expression InvertOn(Expression other)
         {
             List<Expression> newArgs = new List<Expression>();

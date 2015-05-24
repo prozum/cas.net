@@ -42,6 +42,7 @@ namespace Ast
             return MakeClone<CosFunc>();
         }
 
+        //cos[x] -> acos[other]
         public Expression InvertOn(Expression other)
         {
             List<Expression> newArgs = new List<Expression>();

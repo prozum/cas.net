@@ -29,7 +29,7 @@ namespace Ast
                 double value = res as Real;
 
                 if (value >= -1 && value <= 1)
-                    return ReturnValue(new Irrational((decimal)Math.Acos(value) * (deg ? Constant.RadToDeg.@decimal  : 1))).Evaluate();
+                    return ReturnValue(new Irrational((decimal)Math.Acos(value) * (deg ? Constant.RadToDeg.@decimal : 1))).Evaluate();
             }
 
             return new Error(this, "Could not take ACos of: " + Arguments[0]);
@@ -45,6 +45,7 @@ namespace Ast
             return MakeClone<AcosFunc>();
         }
 
+        //acos[x] -> cos[other]
         public Expression InvertOn(Expression other)
         {
             List<Expression> newArgs = new List<Expression>();

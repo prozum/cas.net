@@ -174,7 +174,7 @@ namespace Ast
             }
         }
 
-        //Returns to Variables added together. 2x+3x -> 5x
+        //Returns two Variables added together. 2x+3x -> 5x
         private Expression VariableOperation(Variable left, Variable right)
         {
             var res = left.Clone();

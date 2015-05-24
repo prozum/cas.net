@@ -35,6 +35,7 @@ namespace Ast
 
         public override Expression Reduce()
         {
+            // sqrt[x]^2 -> x
             if (Exponent.CompareTo(Constant.Two))
             {
                 return Arguments[0];
@@ -43,10 +44,12 @@ namespace Ast
             {
                 var simplified = ReduceHelper<SqrtFunc>();
 
+                // sqrt[x^2] -> x
                 if (simplified.Arguments[0] is Exp && (simplified.Arguments[0] as Exp).Right.CompareTo(Constant.Two))
                 {
                     return (simplified.Arguments[0] as Exp).Left;
                 }
+                // sqrt[x^2] -> x
                 else if (simplified.Arguments[0] is Variable && (simplified.Arguments[0] as Variable).Exponent.CompareTo(Constant.Two))
                 {
                     var res = simplified.Arguments[0].Clone() as Variable;

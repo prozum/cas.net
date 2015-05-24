@@ -17,6 +17,9 @@ namespace Ast
 
         public override Expression Evaluate()
         {
+            if (!IsArgumentsValid())
+                return new ArgumentError(this);
+
             return Arguments[0].Expand();
         }
 

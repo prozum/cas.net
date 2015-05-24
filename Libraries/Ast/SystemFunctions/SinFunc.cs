@@ -42,6 +42,7 @@ namespace Ast
             return MakeClone<SinFunc>();
         }
 
+        //sin[x] -> asin[other]
         public Expression InvertOn(Expression other)
         {
             List<Expression> newArgs = new List<Expression>();
