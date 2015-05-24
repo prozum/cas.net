@@ -83,15 +83,15 @@ public class Calculator : Window
     {
         defStore.Clear();
 
-        foreach (var def in eval.Locals)
+        foreach (var @var in eval.Locals)
         {
-            if (def.Value is VarFunc)
+            if (@var.Value is SysFunc)
             {
-                defStore.AppendValues(def.ToString(), def.Value.ToString());
+                defStore.AppendValues(@var.Value.ToString(), "System Magic");
             }
             else
             {
-                var iter = defStore.AppendValues(def.Key, def.Value.Value.ToString());
+                var iter = defStore.AppendValues(@var.Key, @var.Value.Value.ToString());
                 //UpdateScope(def.Value, iter);
             }
         }
