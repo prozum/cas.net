@@ -44,6 +44,11 @@ namespace Ast
             return true;
         }
 
+        public override Expression Evaluate()
+        {
+            return this;
+        }
+
         public Expression Call(List args)
         {
             if (CallStack.Count > MaxFunctionRecursion)

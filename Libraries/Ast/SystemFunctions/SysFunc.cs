@@ -34,6 +34,11 @@ namespace Ast
             return func;
         }
 
+        public override Expression Evaluate()
+        {
+            return this;
+        }
+
         public abstract Expression Call(List args);
 
         public override string ToString ()
