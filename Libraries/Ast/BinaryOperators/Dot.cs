@@ -36,13 +36,30 @@ namespace Ast
                 }
 
                 if (Right is Variable)
+                {
                     @var = (Variable)Right;
-                else
-                    return new Error(this, "right operator must be a Variable");
 
-                @var.CurScope = scope;
+                    @var.CurScope = scope;
 
-                return @var.Value;
+                    return @var.Value;
+                }
+                else if (Right is Call)
+                {
+                    var call = (Call)Right;
+
+                    if (call.Child is Variable)
+                    {
+                        @var = (Variable)call.Child;
+
+                        @var.CurScope = scope;
+
+                        call.Child = @var.Value;
+
+                        return call;
+                    }
+                }
+
+                return new Error(this, "right operator must be a Variable/Function");
             }
         }
 

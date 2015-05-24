@@ -6,24 +6,10 @@ using System.Threading.Tasks;
 
 namespace Ast
 {
-    public class Variable : Scope, INegative
+    public class Variable : Expression, INegative
     {
         public string Identifier;
         public Real Prefix, Exponent;
-
-        public override Scope CurScope
-        {
-            get
-            {
-                return base.CurScope;
-            }
-            set
-            {
-                base.CurScope = value;
-                if (value != null)
-                    SideEffects = value.SideEffects;
-            }
-        }
 
         public Variable() : this(null, null) { }
         public Variable(string identifier, Scope scope)

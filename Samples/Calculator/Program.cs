@@ -7,20 +7,20 @@ using System.Globalization;
 
 public class Calculator : Window
 {
-    Evaluator eval;
+    Evaluator Eval;
 
-    Grid grid;
+    Grid Grid;
 
-    TreeStore defStore;
-    TreeView defTree;
+    TreeStore DefinitionStore;
+    TreeView DefinitionTree;
 
-    TextView textView;
-    TextBuffer buffer;
+    TextView OutpuView;
+    TextBuffer Buffer;
 
-    TextView input;
-    Button evalButton;
+    TextView InputView;
+    Button EvalButton;
 
-    DrawView draw;
+    DrawView DrawView;
 
     static void Main(string[] args)
     {
@@ -33,34 +33,34 @@ public class Calculator : Window
 
     public void EvaluateInput()
     {
-        TextIter insertIter = buffer.StartIter;
+        TextIter insertIter = Buffer.StartIter;
 
-        if (input.Buffer.Text.Length == 0)
+        if (InputView.Buffer.Text.Length == 0)
         {
-            buffer.InsertWithTagsByName(ref insertIter, "No input\n", "error");
+            Buffer.InsertWithTagsByName(ref insertIter, "No input\n", "error");
             return;
         }
 
-        eval.Parse(input.Buffer.Text);
+        Eval.Parse(InputView.Buffer.Text);
 
-        var res = eval.Evaluate();
+        var res = Eval.Evaluate();
 
         if (!(res is Null || res is Error))
-            buffer.Insert(ref insertIter, "ret: " + res.ToString() + "\n");
+            Buffer.Insert(ref insertIter, "ret: " + res.ToString() + "\n");
 
-        foreach(var data in eval.SideEffects)
+        foreach(var data in Eval.SideEffects)
         {
 
             if (data is PrintData)
-                buffer.Insert(ref insertIter, data.ToString() + "\n");
+                Buffer.Insert(ref insertIter, data.ToString() + "\n");
             else if (data is ErrorData)
-                buffer.InsertWithTagsByName(ref insertIter, data.ToString() + "\n", "error");
-            else if (data is DebugData && eval.GetBool("debug"))
-                buffer.InsertWithTagsByName(ref insertIter, data.ToString() + "\n", "debug");
+                Buffer.InsertWithTagsByName(ref insertIter, data.ToString() + "\n", "error");
+            else if (data is DebugData && Eval.GetBool("debug"))
+                Buffer.InsertWithTagsByName(ref insertIter, data.ToString() + "\n", "debug");
             else if (data is PlotData)
             {
-                draw.Plot(data as PlotData);
-                draw.Show();
+                DrawView.Plot(data as PlotData);
+                DrawView.Show();
             }
         }
     }
@@ -69,50 +69,67 @@ public class Calculator : Window
     {
         CellRenderer renderer;
 
-        defStore = new TreeStore(typeof(string), typeof(string));
-        defTree = new TreeView(defStore);
-        defTree.Expand = true;
+        DefinitionStore = new TreeStore(typeof(string), typeof(string));
+        DefinitionTree = new TreeView(DefinitionStore);
+        DefinitionTree.Expand = true;
 
         renderer = new CellRendererText();
-        defTree.AppendColumn("Variable", renderer, "text", 0);
+        DefinitionTree.AppendColumn("Variable", renderer, "text", 0);
         renderer = new CellRendererText();
-        defTree.AppendColumn("Value", renderer, "text", 1);
+        DefinitionTree.AppendColumn("Value", renderer, "text", 1);
     }
 
     public void UpdateDefinitions()
     {
-        defStore.Clear();
+        TreeIter iter;
+        DefinitionStore.Clear();
 
-        foreach (var @var in eval.Locals)
+        foreach (var @var in Eval.Locals)
         {
             if (@var.Value is SysFunc)
             {
-                defStore.AppendValues(@var.Value.ToString(), "System Magic");
+                iter = DefinitionStore.AppendValues(@var.Value.ToString(), "System Magic");
+                //UpdateScope(@var.Value as Scope, iter);
             }
             else if (@var.Value is VarFunc)
             {
-                defStore.AppendValues(@var.Value.ToString(), (@var.Value as VarFunc).Definition.ToString());
+                DefinitionStore.AppendValues(@var.Value.ToString(), (@var.Value as VarFunc).Definition.ToString());
+            }
+            else if (@var.Value is Scope)
+            {
+                iter = DefinitionStore.AppendValues(@var.Key, @var.Value.ToString());
+                UpdateScope(@var.Value as Scope, iter);
             }
             else
             {
-                var iter = defStore.AppendValues(@var.Key, @var.Value.Value.ToString());
-                //UpdateScope(def.Value, iter);
+                DefinitionStore.AppendValues(@var.Key, @var.Value.ToString());
             }
         }
     }
 
-    public void UpdateScope(Variable scope, TreeIter iter)
+    public void UpdateScope(Scope scope, TreeIter lastIter)
     {
-        foreach (var def in scope.Locals)
+        TreeIter iter;
+
+        foreach (var @var in scope.Locals)
         {
-            if (def.Value is VarFunc)
+            if (@var.Value is SysFunc)
             {
-                defStore.AppendValues(iter, def.Value.ToString(), def.Value.Value.ToString());
+                iter = DefinitionStore.AppendValues(lastIter, @var.Value.ToString(), "System Magic");
+                //UpdateScope(@var.Value as Scope, iter);
+            }
+            else if (@var.Value is VarFunc)
+            {
+                DefinitionStore.AppendValues(lastIter, @var.Value.ToString(), (@var.Value as VarFunc).Definition.ToString(), lastIter);
+            }
+            else if (@var.Value is Scope)
+            {
+                iter = DefinitionStore.AppendValues(lastIter, @var.Key, @var.Value.ToString());
+                UpdateScope(@var.Value as Scope, iter);
             }
             else
             {
-                var subIter = defStore.AppendValues(iter, def.Key, def.Value.Value.ToString());
-                //UpdateScope(def.Value, subIter);
+                DefinitionStore.AppendValues(lastIter, @var.Key, @var.Value.ToString());
             }
         }
     }
@@ -123,41 +140,41 @@ public class Calculator : Window
 
         SetSizeRequest(500, 500);
 
-        grid = new Grid ();
-        Add (grid);
+        Grid = new Grid ();
+        Add (Grid);
 
-        input = new TextView ();
-        grid.Attach (input, 0, 0, 1, 1);
+        InputView = new TextView ();
+        Grid.Attach (InputView, 0, 0, 1, 1);
 
-        evalButton = new Button("Evaluate");
-        evalButton.Clicked += (o, a) => EvaluateInput();
-        evalButton.Clicked += (o, a) => UpdateDefinitions();
-        grid.Attach(evalButton, 0, 1, 1, 1); 
+        EvalButton = new Button("Evaluate");
+        EvalButton.Clicked += (o, a) => EvaluateInput();
+        EvalButton.Clicked += (o, a) => UpdateDefinitions();
+        Grid.Attach(EvalButton, 0, 1, 1, 1); 
 
 
-        textView = new TextView();
-        textView.Expand = true;
-        textView.Editable = false;
+        OutpuView = new TextView();
+        OutpuView.Expand = true;
+        OutpuView.Editable = false;
         var sw = new ScrolledWindow ();
-        sw.Add(textView);
-        grid.Attach (sw, 0, 2, 1, 1);
-        buffer = textView.Buffer;
+        sw.Add(OutpuView);
+        Grid.Attach (sw, 0, 2, 1, 1);
+        Buffer = OutpuView.Buffer;
 
-        draw = new DrawView();
-        grid.Attach(draw, 0, 3, 1, 1);
+        DrawView = new DrawView();
+        Grid.Attach(DrawView, 0, 3, 1, 1);
 
         var infoTag = new TextTag ("debug");
         infoTag.Foreground = "blue";
         var errorTag = new TextTag ("error");
         errorTag.Foreground = "red";
-        buffer.TagTable.Add(infoTag);
-        buffer.TagTable.Add(errorTag);
+        Buffer.TagTable.Add(infoTag);
+        Buffer.TagTable.Add(errorTag);
 
 
         CreateDefTree();
-        grid.Attach(defTree, 1, 0, 1, 3);
+        Grid.Attach(DefinitionTree, 1, 0, 1, 3);
 
-        eval = new Evaluator ();
+        Eval = new Evaluator ();
         UpdateDefinitions();
 
         ShowAll ();
