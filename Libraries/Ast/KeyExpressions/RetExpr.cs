@@ -14,7 +14,7 @@ namespace Ast
             
         public override Expression Evaluate()
         {
-            var res = Expression.Evaluate();
+            var res = Expression.ReduceEvaluate();
 
             if (res is Error)
             {

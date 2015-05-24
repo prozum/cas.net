@@ -19,7 +19,7 @@ namespace Ast
 
             for (int i = 0; i < Conditions.Count; i++)
             {
-                res = Conditions[i].Evaluate();
+                res = Conditions[i].ReduceEvaluate();
 
                 if (CurScope.GetBool("debug"))
                     CurScope.SideEffects.Add(new DebugData("Debug if cond["+i+"]: "+Conditions[i]+" = "+res));
@@ -35,7 +35,7 @@ namespace Ast
                     // If true
                     if (res as Boolean)
                     {
-                        res = Expressions[i].Evaluate();
+                        res = Expressions[i].ReduceEvaluate();
                         if (CurScope.GetBool("debug"))
                             CurScope.SideEffects.Add(new DebugData("Debug if expr[" + i + "]: " + Expressions[i] + " = " + res));
                         return new Null();
