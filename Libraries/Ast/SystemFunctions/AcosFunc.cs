@@ -35,6 +35,7 @@ namespace Ast
             return new Error(this, "Could not take ACos of: " + args[0]);
         }
 
+        //acos[x] -> cos[other]
         public Expression InvertOn(Expression other)
         {
             throw new NotImplementedException();

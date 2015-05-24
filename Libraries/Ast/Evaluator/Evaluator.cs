@@ -9,7 +9,7 @@ namespace Ast
 
         public static Expression Eval(string parseString)
         {
-            return new Evaluator(parseString).ReduceEvaluate();
+            return new Evaluator(parseString).Evaluate();
         }
 
         public Evaluator () : this(null) {}

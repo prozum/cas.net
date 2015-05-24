@@ -38,11 +38,9 @@ namespace Ast
             {
                 return new Div(new Exp((left as BinaryOperator).Left, right).Reduce(), new Exp((left as BinaryOperator).Right, right).Reduce());
             }
+
             //Couldn't expand.
-            else
-            {
-                return new Exp(left.Expand(), right.Expand());
-            }
+            return new Exp(left.Expand(), right.Expand());
         }
 
         protected override Expression ReduceHelper(Expression left, Expression right)
@@ -85,24 +83,22 @@ namespace Ast
 
         public Expression InvertOn(Expression other)
         {
-            throw new NotImplementedException();
-            //When right is 2, the invert is sqrt. x^2 -> sqrt[x], -sqrt[x]
+            //When right is 2, the invert is sqrt. x^2 -> sqrt[other], -sqrt[other]
             if (Right.CompareTo(Constant.Two))
             {
                 var args = new List<Expression>();
                 args.Add(other);
 
-                /////var answer = new SqrtFunc(args, other.CurScope);
+                var answer = new SqrtFunc(args, other.CurScope);
                 var answers = new Ast.List();
 
-                //answers.Items.Add(answer);
-                //answers.Items.Add(new Mul(new Integer(-1), answer).Reduce());
+                answers.items.Add(answer);
+                answers.items.Add(new Mul(new Integer(-1), answer).Reduce());
                 return answers;
             }
-            else
-            {
-                return null;
-            }
+
+            //Couln't InvertOn.
+            return null;
         }
 
         internal override Expression CurrectOperator()

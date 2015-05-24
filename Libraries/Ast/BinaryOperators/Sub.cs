@@ -20,7 +20,7 @@ namespace Ast
             return new Sub(left.Expand(), right.Expand());
         }
 
-        //Returns the Add version of the Sub. Is done, so Sub don't need to implement rules itself.
+        //Returns the Add version of the Sub. This is done, so Sub doesn't need to implement rules itself.
         protected override Expression ReduceHelper(Expression left, Expression right)
         {
             var newRight = new Mul(new Integer(-1), right).Reduce();

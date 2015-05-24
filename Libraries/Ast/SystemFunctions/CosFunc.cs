@@ -32,6 +32,7 @@ namespace Ast
             return new Error(this, "Could not take Cos of: " + args[0]);
         }
 
+        //cos[x] -> acos[other]
         public Expression InvertOn(Expression other)
         {
             throw new NotImplementedException();

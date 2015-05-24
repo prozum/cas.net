@@ -20,7 +20,7 @@ namespace Ast
 
             while (i++ < MaxIterations)
             {
-                var res = Condition.Evaluate();
+                var res = Condition.ReduceEvaluate();
 
                 if (res is Boolean)
                 {

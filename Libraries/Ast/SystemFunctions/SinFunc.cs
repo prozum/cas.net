@@ -28,6 +28,7 @@ namespace Ast
             return new Error(this, "Could not take Sin of: " + args[0]);
         }
 
+        //sin[x] -> asin[other]
         public Expression InvertOn(Expression other)
         {
             throw new NotImplementedException();

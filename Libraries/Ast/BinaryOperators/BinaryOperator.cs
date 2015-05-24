@@ -3,9 +3,7 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    /// <summary>
-    /// A BinaryOperator which sides can be swapped without effecting the result.
-    /// </summary>
+    // A BinaryOperator which sides can be swapped without effecting the result.
     public interface ISwappable
     {
         Expression Left { get; set; }
@@ -16,9 +14,8 @@ namespace Ast
         string ToStringParent();
     }
 
-    /// <summary>
-    /// A Operator which evaluates two expressions.
-    /// </summary>
+
+    // A Operator which evaluates two expressions.
     public abstract class BinaryOperator : Expression
     {
         public abstract string Identifier { get; }
@@ -95,29 +92,29 @@ namespace Ast
 
         public override bool CompareTo(Expression other)
         {
-            var thisSimplified = Reduce();
-            var otherSimplified = other.Reduce();
+            var thisReduced = Reduce();
+            var otherReduced = other.Reduce();
 
             //When this changes type after reduction.
-            if (!(thisSimplified is BinaryOperator))
+            if (!(thisReduced is BinaryOperator))
             {
-                return thisSimplified.CompareTo(otherSimplified);
+                return thisReduced.CompareTo(otherReduced);
             }
-            else if (thisSimplified is BinaryOperator && otherSimplified is BinaryOperator)
+            else if (thisReduced is BinaryOperator && otherReduced is BinaryOperator)
             {
-                if (thisSimplified is ISwappable)
+                if (thisReduced is ISwappable)
                 {
-                    return CompareSwappables(thisSimplified as ISwappable, otherSimplified as BinaryOperator);
+                    return CompareSwappables(thisReduced as ISwappable, otherReduced as BinaryOperator);
                 }
                 else
                 {
-                    return CompareSides(thisSimplified as BinaryOperator, otherSimplified as BinaryOperator);
+                    return CompareSides(thisReduced as BinaryOperator, otherReduced as BinaryOperator);
                 }
             }
             else
             {
-                var thisEval = thisSimplified.Evaluate();
-                var otherEval = otherSimplified.Evaluate();
+                var thisEval = thisReduced.Evaluate();
+                var otherEval = otherReduced.Evaluate();
 
                 return thisEval.CompareTo(otherEval);
             }
@@ -127,7 +124,7 @@ namespace Ast
         {
             if ((exp1 as BinaryOperator).Left is ISwappable || (exp1 as BinaryOperator).Right is ISwappable)
             {
-                return SwappableCompareAlorithem(exp1, exp2);
+                return SwappableCompareAlgorithem(exp1, exp2);
             }
             else if (CompareSides(exp1 as BinaryOperator, exp2) || CompareSides(exp1.Swap().Reduce() as BinaryOperator, exp2))
             {
@@ -137,7 +134,7 @@ namespace Ast
             return false;
         }
 
-        private bool SwappableCompareAlorithem(ISwappable exp1, BinaryOperator exp2)
+        private bool SwappableCompareAlgorithem(ISwappable exp1, BinaryOperator exp2)
         {
             BinaryOperator modified = (exp1 as BinaryOperator).Clone() as BinaryOperator;
 
@@ -147,7 +144,7 @@ namespace Ast
             }
 
             //Transforms modified until modified == exp2 or modified == exp1
-            //When modified == exp2 then exp1's result is the same as exp2, aka they are the same
+            //When modified == exp2 then exp1s result is the same as exp2, aka they are the same
             //When modified == exp1 then the loop is done, and it found no matching trees.
             do
             {
@@ -327,6 +324,23 @@ namespace Ast
             return Evaluate() ^ other;
         }
 
+        #endregion
+
+        #region ModWith
+        public override Expression ModWith(Integer other)
+        {
+            return Evaluate() % other;
+        }
+
+        public override Expression ModWith(Rational other)
+        {
+            return Evaluate() % other;
+        }
+
+        public override Expression ModWith(Irrational other)
+        {
+            return Evaluate() % other;
+        }
         #endregion
 
         #region GreaterThan

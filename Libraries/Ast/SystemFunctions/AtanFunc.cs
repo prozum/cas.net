@@ -31,6 +31,7 @@ namespace Ast
             return new Error(this, "Could not take ATan of: " + args[0]);
         }
 
+        //atan[x] -> tan[other]
         public Expression InvertOn(Expression other)
         {
             throw new NotImplementedException();

@@ -31,6 +31,8 @@ namespace Ast
         public Expression Parent;
         public Pos Position;
 
+        Expression _reducedForm = null;
+
         public virtual Expression Value
         {
             get { return this; }
@@ -39,7 +41,10 @@ namespace Ast
 
         public Expression ReduceEvaluate()
         {
-            return ReduceCurrectOp().Evaluate();
+            if (_reducedForm == null)
+                _reducedForm = ReduceCurrectOp();
+
+            return _reducedForm.Evaluate();
         }
 
         public virtual Expression Evaluate()

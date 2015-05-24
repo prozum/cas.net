@@ -163,6 +163,7 @@ namespace Ast
             return res;
         }
 
+        // returns a expression, where the symbols exponent and prefix has been seperated from the symbol.
         public Expression SeberateNumbers()
         {
             var thisClone = Clone() as Variable;

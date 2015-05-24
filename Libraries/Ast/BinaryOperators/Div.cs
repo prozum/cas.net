@@ -17,7 +17,7 @@ namespace Ast
 
         protected override Expression ExpandHelper(Expression left, Expression right)
         {
-            //When left is add or sub expand. (x+y)/z -> x/z + y/z
+            //When left is add or sub then expand. (x+y)/z -> x/z + y/z
             if (left is Add)
             {
                 return new Add(new Div((left as BinaryOperator).Left, right).Reduce(), new Div((left as BinaryOperator).Right, right).Reduce());
@@ -50,7 +50,7 @@ namespace Ast
             {
                 return new Div((left as Div).Left, new Mul((left as Div).Right, right));
             }
-            //When left is div, convert two divs to one. x/(y/z) -> (x*z)/y
+            //When rihgt is div, convert two divs to one. x/(y/z) -> (x*z)/y
             else if (right is Div)
             {
                 return new Div(new Mul(left, (right as Div).Right), (right as Div).Left);

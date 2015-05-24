@@ -15,7 +15,7 @@ namespace Ast
             return Left * Right;
         }
 
-        //Multiplies one side into the other, it is Add or Sub. (x+y)*z -> xz + yz
+        //Multiplies one side into the other, if it is Add or Sub. (x+y)*z -> x*z + y*z
         protected override Expression ExpandHelper(Expression left, Expression right)
         {
             if (left is Add)
@@ -34,11 +34,8 @@ namespace Ast
             {
                 return new Sub(new Mul((right as BinaryOperator).Left, left).Reduce(), new Mul((right as BinaryOperator).Right, left).Reduce());
             }
-            else
-            {
-                return new Mul(left.Expand(), right.Expand());
-            }
 
+            return new Mul(left.Expand(), right.Expand());
         }
 
         protected override Expression ReduceHelper(Expression left, Expression right)
@@ -335,10 +332,8 @@ namespace Ast
             {
                 return new Mul(new Mul(Left, (Right as Mul).Left), (Right as Mul).Right);
             }
-            else
-            {
-                return this;
-            }
+
+            return this;
         }
     }
 }
