@@ -22,11 +22,11 @@ namespace Ast
             Decimal end;
             Decimal step;
 
-            start = args.Evaluate() as Real;
+            start = args[0].Evaluate() as Real;
 
-            end = args.Evaluate() as Real;
+            end = args[1].Evaluate() as Real;
 
-            step = args.Evaluate() as Real;
+            step = args[2].Evaluate() as Real;
 
             var list = new Ast.List ();
             for (Decimal i = start; i <= end; i += step)

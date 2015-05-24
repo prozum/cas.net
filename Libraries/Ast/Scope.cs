@@ -214,12 +214,11 @@ namespace Ast
             
         public override string ToString()
         {
-            string str;
-            if (CurScope == null)
-                str = "Global Scope: {";
-            else
-                str = "{";
+            if (Expressions.Count == 0)
+                return "";
 
+            string str = "{";
+                
             for (int i = 0; i < Expressions.Count; i++) 
             {
                 if (i >= MaxStatementPrint)
