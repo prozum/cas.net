@@ -83,7 +83,7 @@ namespace Ast
         public override Expression Evaluate()
         {
             if (Error)
-                return new Null();
+                return Constant.Null;
 
             Returns.Clear();
             Return.@bool = false;
@@ -99,7 +99,7 @@ namespace Ast
                     Errors.Add(new ErrorData(res as Error));
 
                 if (Error)
-                    return new Null();
+                    return Constant.Null;
 
                 if (!(res is Null))
                     Returns.Add(res);
@@ -111,7 +111,7 @@ namespace Ast
             switch (Returns.Count)
             {
                 case 0:
-                    return new Null();
+                    return Constant.Null;
                 case 1:
                     return Returns[0];
                 default:

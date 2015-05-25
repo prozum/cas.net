@@ -41,13 +41,13 @@ namespace Ast
             var val = Value;
 
             if (CurScope.Error)
-                return new Null();
+                return Constant.Null;
 
             if (val is Call)
                 val = val.Evaluate().Value;
 
             if (CurScope.Error)
-                return new Null();
+                return Constant.Null;
 
             if (!(val is ICallable))
             {

@@ -63,7 +63,7 @@ namespace Ast
             }
 
             CurScope.SideEffects.Add(new PlotData(xList, yList, zList));
-            return new Null();
+            return Constant.Null;
         }
     }
 }

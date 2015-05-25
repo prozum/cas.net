@@ -23,11 +23,11 @@ namespace Ast
                 if (res is Error)
                 {
                     CurScope.Errors.Add(new ErrorData(res as Error));
-                    return new Null();
+                    return Constant.Null;
                 }
             }
 
-            return new Null();
+            return Constant.Null;
         }
     }
 }

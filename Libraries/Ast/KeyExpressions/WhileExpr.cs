@@ -30,7 +30,7 @@ namespace Ast
                 else if (res is Error)
                 {
                     CurScope.Errors.Add(new ErrorData(res as Error));
-                    return new Null();
+                    return Constant.Null;
                 }
 
                 Expression.Evaluate();
@@ -39,7 +39,7 @@ namespace Ast
             if (i > MaxIterations)
                 CurScope.Errors.Add(new ErrorData("while: Overflow!"));
 
-            return new Null();
+            return Constant.Null;
 
         }
 

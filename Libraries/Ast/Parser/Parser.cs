@@ -615,7 +615,7 @@ namespace Ast
                     PostfixStack.Pop();
                     ExprStack.Pop();
                     BinaryStack.Pop();
-                    return new Null();
+                    return Constant.Null;
                 }
             }
                 
@@ -700,7 +700,7 @@ namespace Ast
             BinaryOperator curOp, nextOp, top;
 
             if (exprs.Count == 0)
-                return new Null();
+                return Constant.Null;
 
             if (exprs.Count == 1 && biops.Count == 0)
                 return exprs.Dequeue();
@@ -708,7 +708,7 @@ namespace Ast
             if (exprs.Count != 1 + biops.Count)
             {
                 ReportError("Missing operand");
-                return new Null();
+                return Constant.Null;
             }
                
 
@@ -771,7 +771,7 @@ namespace Ast
                     else
                     {
                         ReportError("Int overflow");
-                        return new Null();
+                        return Constant.Null;
                     }
                 
                 case TokenKind.DECIMAL:
@@ -780,7 +780,7 @@ namespace Ast
                     else
                     {
                         ReportError("Decimal overflow");
-                        return new Null();
+                        return Constant.Null;
                     }
                 case TokenKind.IMAG_INT:
                     if (Int64.TryParse(CurToken.Value, out intRes))
@@ -788,7 +788,7 @@ namespace Ast
                     else
                     {
                         ReportError("Imaginary int overflow");
-                        return new Null();
+                        return Constant.Null;
                     }
                 
                 case TokenKind.IMAG_DEC:
@@ -797,7 +797,7 @@ namespace Ast
                     else
                     {
                         ReportError("Imaginary decimal overflow");
-                        return new Null();
+                        return Constant.Null;
                     }
                 
                 default:

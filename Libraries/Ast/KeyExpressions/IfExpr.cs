@@ -27,7 +27,7 @@ namespace Ast
                 if (res is Error)
                 {
                     CurScope.Errors.Add(new ErrorData(res as Error));
-                    return new Null();
+                    return Constant.Null;
                 }
 
                 if (res is Boolean)
@@ -38,13 +38,13 @@ namespace Ast
                         res = Expressions[i].ReduceEvaluate();
                         if (CurScope.GetBool("debug"))
                             CurScope.SideEffects.Add(new DebugData("Debug if expr[" + i + "]: " + Expressions[i] + " = " + res));
-                        return new Null();
+                        return Constant.Null;
                     }
                 }
                 else
                 {
                     CurScope.Errors.Add(new ErrorData("Condition " + i + ": " + Conditions[i] + " does not return bool"));
-                    return new Null();
+                    return Constant.Null;
                 }
             }
 
@@ -55,7 +55,7 @@ namespace Ast
                     CurScope.SideEffects.Add(new DebugData("Debug if["+(Expressions.Count-1)+"]: "+Expressions[Expressions.Count-1]+" = "+res));
             }
 
-            return new Null();
+            return Constant.Null;
         }
 
         public override string ToString()
