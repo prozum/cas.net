@@ -128,7 +128,13 @@ namespace CAS.NET.Desktop
             vbox.PackStart(toolbar, false, false, 2);
             scrolledWindow.Add(textviews);
             vbox.Add(scrolledWindow);
-            vbox.PackEnd(scrolleddefbox, false, false, 2);
+            //vbox.PackEnd(scrolleddefbox, false, false, 2);
+
+            Window defWin = new Window("Definitions");
+            defWin.WidthRequest = 300;
+            defWin.HeightRequest = 450;
+            defWin.Add(scrolleddefbox);
+            defWin.ShowAll();
 
             Add(vbox);
             SetSizeRequest(600, 600);
