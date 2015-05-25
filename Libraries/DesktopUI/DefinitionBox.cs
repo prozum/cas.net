@@ -4,57 +4,91 @@ using Gtk;
 
 namespace DesktopUI
 {
-	public class DefinitionBox : TreeView
+	public class DefinitionBox : Grid
 	{
         CellRenderer renderer;
-        ListStore list;
+
+        TreeStore DefinitionStore;
+        TreeView DefinitionTree;
 
         readonly Evaluator Eval;
 
         // Constructor for the definition box, used to show declared variables.
-		public DefinitionBox (Evaluator Eval) : base()
+        public DefinitionBox(Evaluator Eval)
+            : base()
 		{
-            renderer = new CellRendererText();
-            AppendColumn("Variable", renderer, "text", 0);
+            DefinitionStore = new TreeStore(typeof(string), typeof(string));
+            DefinitionTree = new TreeView(DefinitionStore);
+            Expand = true;
 
             renderer = new CellRendererText();
-            AppendColumn("Value", renderer, "text", 1);
-
-            list = new ListStore(typeof(string), typeof(string));
-            Model = list;
+            DefinitionTree.AppendColumn("Variable", renderer, "text", 0);
+            renderer = new CellRendererText();
+            DefinitionTree.AppendColumn("Value", renderer, "text", 1);
 
             this.Eval = Eval;
-            this.Eval.Locals.Clear();
+
+            Add(DefinitionTree);
+
+            UpdateDefinitions();
 		}
 
-        // Updates all elements on update
-		public void Update()
+		public void UpdateDefinitions()
 		{
-            list.Clear();
+            TreeIter iter;
+            DefinitionStore.Clear();
 
             foreach (var def in Eval.Locals)
             {
                 if(def.Value is SysFunc)
                 {
-                    list.AppendValues(def.Value.ToString(), "System Magic");
+                    iter = DefinitionStore.AppendValues(def.Value.ToString(), "System Magic");
+                    UpdateScope(def.Value as Scope, iter);
                 }
                 else if(def.Value is VarFunc)
                 {
-                    list.AppendValues(def.Value.ToString(), (def.Value as VarFunc).Definition.ToString());
+                    iter = DefinitionStore.AppendValues(def.Value.ToString(), (def.Value as VarFunc).Definition.ToString());
+                    UpdateScope(def.Value as Scope, iter);
                 }
                 else if(def.Value is Scope)
                 {
-                    list.AppendValues(def.Key, def.Value.ToString());
+                    iter = DefinitionStore.AppendValues(def.Key, def.Value.ToString());
+                    UpdateScope(def.Value as Scope, iter);
                 }
                 else
                 {
-                    list.AppendValues(def.Key, def.Value.Value.ToString());
+                    DefinitionStore.AppendValues(def.Key, def.Value.Value.ToString());
                 }
-
-                //list.AppendValues(def.Value.ToString(), def.Value.Value.ToString());
-            }
-  
+            }  
 			ShowAll ();
 		}
+
+        public void UpdateScope(Scope scope, TreeIter lastIter)
+        {
+            TreeIter iter;
+
+            foreach (var def in scope.Locals)
+            {
+                if (def.Value is SysFunc)
+                {
+                    iter = DefinitionStore.AppendValues(lastIter, def.Value.ToString(), "System Magic");
+                    UpdateScope(def.Value as Scope, iter);
+                }
+                else if (def.Value is VarFunc)
+                {
+                    iter = DefinitionStore.AppendValues(lastIter, def.Value.ToString(), (def.Value as VarFunc).Definition.ToString());
+                    UpdateScope(def.Value as Scope, iter);
+                }
+                else if (def.Value is Scope)
+                {
+                    iter = DefinitionStore.AppendValues(lastIter, def.Key.ToString(), def.Value.ToString());
+                    UpdateScope(def.Value as Scope, iter);
+                }
+                else
+                {
+                    DefinitionStore.AppendValues(lastIter, def.Key, def.Value.ToString());
+                }
+            }
+        }
 	}
 }

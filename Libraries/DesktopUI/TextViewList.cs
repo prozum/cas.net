@@ -107,7 +107,6 @@ namespace DesktopUI
             MovableCasCalcView MovCasCalcView = new MovableCasCalcView(Eval);
             MovCasCalcView.calcview.input.Activated += delegate
             {
-                MovCasCalcView.calcview.eval.Locals.Clear();
                 MovCasCalcView.calcview.Evaluate();
                 Reevaluate();
                 MovCasCalcView.ShowAll();
@@ -138,7 +137,6 @@ namespace DesktopUI
             //MovCasCalcView.calcview.input.IsEditable = !locked;
             MovCasCalcView.calcview.input.Activated += delegate
             {
-                MovCasCalcView.calcview.eval.CurScope.Locals.Clear();
                 MovCasCalcView.calcview.Evaluate();
                 MovCasCalcView.ShowAll();
             };
@@ -164,7 +162,6 @@ namespace DesktopUI
             
             movCasCalcMultiView.calcview.evaluateButton.Clicked += delegate
             {
-                movCasCalcMultiView.calcview.eval.Locals.Clear();
                 movCasCalcMultiView.calcview.Evaluate();
                 Reevaluate();
                 movCasCalcMultiView.ShowAll();
@@ -193,7 +190,6 @@ namespace DesktopUI
 
             movCasCalcMultiView.calcview.evaluateButton.Clicked += delegate
             {
-                movCasCalcMultiView.calcview.eval.CurScope.Locals.Clear();
                 movCasCalcMultiView.calcview.Evaluate();
                 movCasCalcMultiView.ShowAll();
             };

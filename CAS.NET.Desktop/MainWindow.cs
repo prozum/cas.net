@@ -156,7 +156,7 @@ namespace CAS.NET.Desktop
 
         public bool DefBoxUpdate()
         {
-            DefBox.Update();
+            DefBox.UpdateDefinitions();
             return true;
         }
     }
