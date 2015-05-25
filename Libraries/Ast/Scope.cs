@@ -90,7 +90,7 @@ namespace Ast
 
             foreach (var expr in Expressions)
             {
-                var res = expr.ReduceEvaluate();
+                var res = expr.Evaluate();
 
                 if (GetBool("debug"))
                     SideEffects.Add(new DebugData("Debug: " + expr + " = " + res));

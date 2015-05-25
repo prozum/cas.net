@@ -81,14 +81,9 @@ namespace Ast
             return Value.Evaluate();
         }
 
-        protected override Expression ExpandHelper(Expression left, Expression right)
-        {
-            return new Dot(left, right);
-        }
-
         protected override Expression ReduceHelper(Expression left, Expression right)
         {
-            return new Dot(left, right);
+            return Value;
         }
     }
 }
