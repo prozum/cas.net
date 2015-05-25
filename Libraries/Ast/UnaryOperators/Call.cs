@@ -12,10 +12,6 @@ namespace Ast
             {
                 return Child.Value;
             }
-            set
-            {
-                base.Value = value;
-            }
         }
 
         public Call(List args, Scope scope) 
@@ -59,25 +55,17 @@ namespace Ast
 
         public override Expression Reduce()
         {
-            var resCall = new Call(Arguments, CurScope);
-
-            resCall.Child = Child.Reduce();
-
-            if (resCall.Value is SysFunc)
+            if (Value is SysFunc)
             {
-                Expression resExp = (resCall.Value as SysFunc).Reduce(Arguments, CurScope);
+                Expression resExp = (Value as SysFunc).Reduce(Arguments, CurScope);
 
-                if (resExp is SysFunc)
-                {
-                    return resCall;
-                }
-                else
+                if (!(resExp is SysFunc))
                 {
                     return resExp;
                 }
             }
 
-            return resCall;
+            return this;
         }
 
         public override string ToString()
