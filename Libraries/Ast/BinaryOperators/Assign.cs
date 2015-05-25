@@ -8,7 +8,10 @@ namespace Ast
         public override int Priority { get{ return 0; } }
 
         public Assign() { }
-        public Assign(Expression left, Expression right) : base(left, right) { }
+        public Assign(Expression left, Expression right, Scope scope) : base(left, right) 
+        {
+            CurScope = scope;
+        }
 
         public override Expression Evaluate()
         {
@@ -70,22 +73,22 @@ namespace Ast
 
         protected override Expression ExpandHelper(Expression left, Expression right)
         {
-            return new Assign(left, right);
+            return new Assign(left, right, CurScope);
         }
 
         protected override Expression ReduceHelper(Expression left, Expression right)
         {
-            return new Assign(left, right);
+            return new Assign(left, right, CurScope);
         }
 
         public override Expression Clone()
         {
-            return new Assign(Left.Clone(), Right.Clone());
+            return new Assign(Left.Clone(), Right.Clone(), CurScope);
         }
 
         internal override Expression CurrectOperator()
         {
-            return new Assign(Left.CurrectOperator(), Right.CurrectOperator());
+            return new Assign(Left.CurrectOperator(), Right.CurrectOperator(), CurScope);
         }
     }
 }

@@ -29,27 +29,14 @@ namespace Ast
             return new Error(this, "Could not take Sqrt of: " + args[0]);
         }
 
-        public override Expression Reduce()
+        public override Expression Reduce(List args, Scope scope)
         {
-            throw new NotImplementedException();
-//            var simplified = ReduceHelper<SqrtFunc>();
-//
-//            // sqrt[x^2] -> x
-//            if (simplified.Arguments[0] is Exp && (simplified.Arguments[0] as Exp).Right.CompareTo(Constant.Two))
-//            {
-//                return (simplified.Arguments[0] as Exp).Left;
-//            }
-//            // sqrt[x^2] -> x
-//            else if (simplified.Arguments[0] is Variable && (simplified.Arguments[0] as Variable).Exponent.CompareTo(Constant.Two))
-//            {
-//                var res = simplified.Arguments[0].Clone() as Variable;
-//                res.Exponent = new Integer(1);
-//
-//                return res;
-//            }
+            var reduced = args.Reduce() as List;
 
-//            return simplified;
+            if (reduced[0] is Exp && (reduced[0] as Exp).Right.CompareTo(Constant.Two))
+                return (reduced[0] as Exp).Left;
 
+            return this;
         }
 
 

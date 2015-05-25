@@ -190,6 +190,9 @@
     <Compile Include="UnaryOperators\ICallable.cs">
       <DependentUpon>PostfixOperator.cs</DependentUpon>
     </Compile>
+    <Compile Include="SystemFunctions\CloneFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ProjectExtensions>
