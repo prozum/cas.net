@@ -35,13 +35,22 @@ namespace Ast
             return new Error(this, "Could not take ACos of: " + args[0]);
         }
 
+        public override Expression Reduce(List args, Scope scope)
+        {
+            var reduced = args.Reduce() as List;
+
+            if (reduced[0] is Call && (reduced[0] as Call).Child.Value is CosFunc)
+                return (reduced[0] as Call).Arguments[0];
+
+            return this;
+        }
+
         //acos[x] -> cos[other]
         public Expression InvertOn(Expression other)
         {
-            throw new NotImplementedException();
-            //List<Expression> newArgs = new List<Expression>();
-            //newArgs.Add(other);
-            return new CosFunc(CurScope);
+            var arg = new List();
+            arg.Items.Add(other);
+            return SysFunc.MakeFunction<CosFunc>(arg, other.CurScope);
         }
     }
 }

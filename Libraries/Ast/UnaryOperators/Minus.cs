@@ -10,6 +10,13 @@ namespace Ast
         {
             return Child.Evaluate().Minus();
         }
+
+        public override Expression Reduce()
+        {
+            var res = new Minus();
+            res.Child = Child.Reduce();
+            return res;
+        }
     }
 }
 

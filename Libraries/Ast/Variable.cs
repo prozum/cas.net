@@ -112,6 +112,14 @@ namespace Ast
             return this;
         }
 
+        public Expression Reduce(List args, Scope scope)
+        {
+            if (Value is SysFunc)
+                return (Value as SysFunc).Reduce(args, scope);
+
+            return Value.Reduce();
+        }
+
         public override bool ContainsVariable(Variable other)
         {
             if (Identifier == other.Identifier && this.GetType() == other.GetType())

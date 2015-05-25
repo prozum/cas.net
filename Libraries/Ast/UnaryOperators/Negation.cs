@@ -11,6 +11,13 @@ namespace Ast
         {
             return Child.Evaluate().Negation();
         }
+
+        public override Expression Reduce()
+        {
+            var res = new Negation();
+            res.Child = Child.Reduce();
+            return res;
+        }
     }
 }
 

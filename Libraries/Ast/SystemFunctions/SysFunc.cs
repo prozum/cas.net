@@ -26,7 +26,7 @@ namespace Ast
             CurScope = scope;
         }
 
-        public Call MakeFunction<T> (List args, Scope scope) where T : SysFunc, new()
+        public static Call MakeFunction<T> (List args, Scope scope) where T : SysFunc, new()
         {
             var func = new Call(args, scope);
             func.Child = new T();
@@ -40,6 +40,11 @@ namespace Ast
         }
 
         public abstract Expression Call(List args);
+
+        public virtual Expression Reduce(List args, Scope scope)
+        {
+            return this;
+        }
 
         public override string ToString ()
         {

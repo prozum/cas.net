@@ -18,6 +18,11 @@ namespace Ast
                 }
             }
         }
+
+        public override bool ContainsVariable(Variable other)
+        {
+            return Child.ContainsVariable(other);
+        }
     }
 }
 
