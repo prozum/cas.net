@@ -22,6 +22,7 @@ namespace Ast
             SetVar("pi", new Irrational((decimal)Math.PI));
 
             SetVar("print", new PrintFunc(this));
+            SetVar("dir", new DirFunc(this));
             SetVar("range", new RangeFunc(this));
 
             var scope = new Scope(this);

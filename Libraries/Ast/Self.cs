@@ -15,7 +15,15 @@ namespace Ast
 
         public override Expression Evaluate()
         {
-            return CurScope;
+            return Value;
+        }
+
+        public override Expression Value
+        {
+            get
+            {
+                return CurScope;
+            }
         }
     }
 }

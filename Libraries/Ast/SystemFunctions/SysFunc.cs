@@ -11,6 +11,7 @@ namespace Ast
         Text,
         Variable,
         Function,
+        Scope,
         Equation,
         List
     }
@@ -99,6 +100,10 @@ namespace Ast
                         break;
                     case ArgumentType.Function:
                         if (!(args[i] is ICallable))
+                            valid = false;
+                        break;
+                    case ArgumentType.Scope:
+                        if (!(args[i].Value is Scope))
                             valid = false;
                         break;
                     case ArgumentType.Equation:
