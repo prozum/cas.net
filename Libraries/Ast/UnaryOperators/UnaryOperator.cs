@@ -23,6 +23,14 @@ namespace Ast
         {
             return Child.ContainsVariable(other);
         }
+
+        public override bool CompareTo(Expression other)
+        {
+            if (GetType() == other.GetType() && Child.CompareTo((other as UnaryOperator).Child))
+                return true;
+
+            return false;
+        }
     }
 }
 

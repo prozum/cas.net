@@ -68,6 +68,11 @@ namespace Ast
             return this;
         }
 
+        public override bool CompareTo(Expression other)
+        {
+            return base.CompareTo(other) && Arguments.CompareTo((other as Call).Arguments);
+        }
+
         public override string ToString()
         {
             return Child.ToString() + Arguments.ToString();
