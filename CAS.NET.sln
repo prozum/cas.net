@@ -55,8 +55,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientServer", "Tests\Clien
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CAS.NET.Desktop", "CAS.NET.Desktop\CAS.NET.Desktop.csproj", "{F70D0BA1-7DD0-4AB5-AD42-F70A073716F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CAS.NET.Mobile", "CAS.NET.Mobile\CAS.NET.Mobile.csproj", "{E7552B0B-3C50-4739-8AE5-25768BAC332D}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resources", "Resources", "{5481AAC8-C613-4063-9106-01712CD51B20}"
 	ProjectSection(SolutionItems) = preProject
 		Ressources\calcy.png = Ressources\calcy.png
@@ -77,6 +75,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{C36DB2
 	ProjectSection(SolutionItems) = preProject
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CAS.NET.Android", "CAS.NET.Android\CAS.NET.Android.csproj", "{48BCABD0-AB3E-4F7F-8749-3D7708835977}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -166,6 +166,18 @@ Global
 		{3E0FBD2D-3E67-45BE-BCB0-B6B298718749}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{3E0FBD2D-3E67-45BE-BCB0-B6B298718749}.Release|x86.ActiveCfg = Release|Any CPU
 		{3E0FBD2D-3E67-45BE-BCB0-B6B298718749}.Release|x86.Build.0 = Release|Any CPU
+		{48BCABD0-AB3E-4F7F-8749-3D7708835977}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48BCABD0-AB3E-4F7F-8749-3D7708835977}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48BCABD0-AB3E-4F7F-8749-3D7708835977}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{48BCABD0-AB3E-4F7F-8749-3D7708835977}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{48BCABD0-AB3E-4F7F-8749-3D7708835977}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{48BCABD0-AB3E-4F7F-8749-3D7708835977}.Debug|x86.Build.0 = Debug|Any CPU
+		{48BCABD0-AB3E-4F7F-8749-3D7708835977}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48BCABD0-AB3E-4F7F-8749-3D7708835977}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48BCABD0-AB3E-4F7F-8749-3D7708835977}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{48BCABD0-AB3E-4F7F-8749-3D7708835977}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{48BCABD0-AB3E-4F7F-8749-3D7708835977}.Release|x86.ActiveCfg = Release|Any CPU
+		{48BCABD0-AB3E-4F7F-8749-3D7708835977}.Release|x86.Build.0 = Release|Any CPU
 		{5150E825-D811-4D68-8C0E-86A1F8573561}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5150E825-D811-4D68-8C0E-86A1F8573561}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5150E825-D811-4D68-8C0E-86A1F8573561}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -328,16 +340,6 @@ Global
 		{E53A7020-0343-4C86-936B-5076B167E2AD}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{E53A7020-0343-4C86-936B-5076B167E2AD}.Release|x86.ActiveCfg = Release|Any CPU
 		{E53A7020-0343-4C86-936B-5076B167E2AD}.Release|x86.Build.0 = Release|Any CPU
-		{E7552B0B-3C50-4739-8AE5-25768BAC332D}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{E7552B0B-3C50-4739-8AE5-25768BAC332D}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{E7552B0B-3C50-4739-8AE5-25768BAC332D}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{E7552B0B-3C50-4739-8AE5-25768BAC332D}.Debug|x86.ActiveCfg = Debug|x86
-		{E7552B0B-3C50-4739-8AE5-25768BAC332D}.Debug|x86.Build.0 = Debug|x86
-		{E7552B0B-3C50-4739-8AE5-25768BAC332D}.Release|Any CPU.ActiveCfg = Release|x86
-		{E7552B0B-3C50-4739-8AE5-25768BAC332D}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{E7552B0B-3C50-4739-8AE5-25768BAC332D}.Release|Mixed Platforms.Build.0 = Release|x86
-		{E7552B0B-3C50-4739-8AE5-25768BAC332D}.Release|x86.ActiveCfg = Release|x86
-		{E7552B0B-3C50-4739-8AE5-25768BAC332D}.Release|x86.Build.0 = Release|x86
 		{F1256681-1F4E-495B-A32C-3D5662E78FCC}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{F1256681-1F4E-495B-A32C-3D5662E78FCC}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{F1256681-1F4E-495B-A32C-3D5662E78FCC}.Debug|Mixed Platforms.Build.0 = Debug|x86
