@@ -26,7 +26,12 @@ namespace Ast
 
         public override bool CompareTo(Expression other)
         {
-            Expression evalOther = other.Evaluate();
+            Expression evalOther;
+
+            if (other is Variable && !(other as Variable).IsDefined)
+                return false;
+
+            evalOther = other.Evaluate();
 
             if (evalOther is Real)
             {

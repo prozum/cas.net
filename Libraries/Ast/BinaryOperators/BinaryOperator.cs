@@ -110,13 +110,8 @@ namespace Ast
                     return CompareSides(thisReduced as BinaryOperator, otherReduced as BinaryOperator);
                 }
             }
-            else
-            {
-                var thisEval = thisReduced.Evaluate();
-                var otherEval = otherReduced.Evaluate();
 
-                return thisEval.CompareTo(otherEval);
-            }
+            return false;
         }
 
         private bool CompareSwappables(ISwappable exp1, BinaryOperator exp2)
@@ -191,10 +186,14 @@ namespace Ast
 
         public override Expression Reduce()
         {
+            Expression res;
             var prev = ToString();
             var prevType = GetType();
             //Reduces the whole expression.
-            Expression res = ReduceHelper(Left.Reduce(), Right.Reduce());
+            if (this is Dot)
+                res = ReduceHelper(Left, Right);
+            else
+                res = ReduceHelper(Left.Reduce(), Right.Reduce());
 
             //If the reduction did something, aka res is different from this, then reduce again.
             if (prevType != res.GetType() || prev != res.ToString())

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public class Exp : BinaryOperator, IInvertable
+    public class Exp : BinaryOperator//, IInvertable
     {
         public override string Identifier { get { return "^"; } }
         public override int Priority { get{ return 50; } }
@@ -86,6 +86,7 @@ namespace Ast
             return new Exp(Left.Clone(), Right.Clone());
         }
 
+        /*
         public Expression InvertOn(Expression other)
         {
             //When right is 2, the invert is sqrt. x^2 -> sqrt[other], -sqrt[other]
@@ -105,6 +106,7 @@ namespace Ast
             //Couln't InvertOn.
             return null;
         }
+         */
 
         internal override Expression CurrectOperator()
         {
