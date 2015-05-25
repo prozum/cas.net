@@ -125,6 +125,10 @@ namespace Ast
                         Eat();
                         CurScope.Expressions.Add(new RetExpr(ParseExpr(), CurScope));
                         break;
+                    case TokenKind.IMPORT:
+                        Eat();
+                        CurScope.Expressions.Add(new ImportExpr(ParseExpr(), CurScope));
+                        break;
 
                     case TokenKind.ELIF:
                     case TokenKind.ELSE:

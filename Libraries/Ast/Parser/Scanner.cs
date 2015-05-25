@@ -290,6 +290,8 @@ namespace Ast
                     return new Token(TokenKind.WHILE, identifier, startPos);
                 case "ret":
                     return new Token(TokenKind.RET, identifier, startPos);
+                case "import":
+                    return new Token(TokenKind.IMPORT, identifier, startPos);
                 case "and":
                     return new Token(TokenKind.AND, identifier, startPos);
                 case "or":
