@@ -65,17 +65,26 @@ namespace Ast
             var @long = (args[0].Evaluate() as Integer).@int;
 
             if (@long < 0)
-                return new Error(this, "Cannot access with negative integer");
+            {
+                CurScope.Errors.Add(new ErrorData(this, "Cannot access with negative integer"));
+                return Constant.Null;
+            }
 
             int @int;
 
             if (@long > int.MaxValue)
-                return new Error(this, "Integer is too big");
+            {
+                CurScope.Errors.Add(new ErrorData(this, "Integer is too big"));
+                return Constant.Null;
+            }
             else
                 @int = (int)@long;
 
             if (@int > Count - 1)
-                return new Error(this, "Cannot access item " + (@int + 1).ToString() + " in list with " + Count + " items");
+            {
+                CurScope.Errors.Add(new ErrorData(this, "Cannot access item " + (@int + 1).ToString() + " in list with " + Count + " items"));
+                return Constant.Null;
+            }
             else
                 return this[@int];
         }
