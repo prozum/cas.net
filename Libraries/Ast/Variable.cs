@@ -100,7 +100,8 @@ namespace Ast
                     return true;
                 }
 
-                return Value.CompareTo(otherReduced.Value);
+                if (IsDefined && (otherReduced as Variable).IsDefined)
+                    return Value.CompareTo(otherReduced.Value);
             }
 
             if (IsDefined)

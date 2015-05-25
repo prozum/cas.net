@@ -110,13 +110,8 @@ namespace Ast
                     return CompareSides(thisReduced as BinaryOperator, otherReduced as BinaryOperator);
                 }
             }
-            else
-            {
-                var thisEval = thisReduced.Evaluate();
-                var otherEval = otherReduced.Evaluate();
 
-                return thisEval.CompareTo(otherEval);
-            }
+            return false;
         }
 
         private bool CompareSwappables(ISwappable exp1, BinaryOperator exp2)

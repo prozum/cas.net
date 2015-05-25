@@ -306,36 +306,36 @@ namespace Ast.Tests
 
         #region Program Defined Functions
         #region Sin, ASin
-        [TestCase(1, "sin[90]")]
-        [TestCase(0.5, "sin[30]")]
-        [TestCase(0, "sin[0]")]
-        [TestCase(90, "asin[1]")]
-        [TestCase(30, "asin[0.5]")]
-        [TestCase(0, "asin[0]")]
+        [TestCase(1, "tri.sin[90]")]
+        [TestCase(0.5, "tri.sin[30]")]
+        [TestCase(0, "tri.sin[0]")]
+        [TestCase(90, "tri.asin[1]")]
+        [TestCase(30, "tri.asin[0.5]")]
+        [TestCase(0, "tri.asin[0]")]
         #endregion
 
         #region Cos, ACos
         //[TestCase(0, "cos(90)")] works, but precision
-        [TestCase(0.5, "cos[60]")]
-        [TestCase(1, "cos[0]")]
-        [TestCase(0, "acos[1]")]
-        [TestCase(60, "acos[0.5]")]
-        [TestCase(90, "acos[0]")]
+        [TestCase(0.5, "tri.cos[60]")]
+        [TestCase(1, "tri.cos[0]")]
+        [TestCase(0, "tri.acos[1]")]
+        [TestCase(60, "tri.acos[0.5]")]
+        [TestCase(90, "tri.acos[0]")]
         #endregion
 
         #region Tan, ATan
-        [TestCase(1, "tan[45]")]
-        //[TestCase(0.5, "tan[26.57]")] Unpresition gives wrong actual. Is right calculation
-        [TestCase(0, "tan[0]")]
-        [TestCase(45, "atan[1]")]
-        //[TestCase(26.57, "atan[0.5]")] Unpresition gives wrong actual. Is right calculation
-        [TestCase(0, "atan[0]")]
+        [TestCase(1, "tri.tan[45]")]
+        //[TestCase(0.5, "tri.tan[26.57]")] Unpresition gives wrong actual. Is right calculation
+        [TestCase(0, "tri.tan[0]")]
+        [TestCase(45, "tri.atan[1]")]
+        //[TestCase(26.57, "tri.atan[0.5]")] Unpresition gives wrong actual. Is right calculation
+        [TestCase(0, "tri.atan[0]")]
         #endregion
 
         #region Sqrt
-        [TestCase(2, "sqrt[4]")]
-        [TestCase(2, "sqrt[2]^2")]
-        [TestCase(2, "sqrt[2]*sqrt[2]")]
+        [TestCase(2, "math.sqrt[4]")]
+        [TestCase(2, "math.sqrt[2]^2")]
+        [TestCase(2, "math.sqrt[2]*sqrt[2]")]
         #endregion
         #endregion
         #endregion
@@ -365,7 +365,7 @@ namespace Ast.Tests
             }
             else
             {
-                Assert.Fail();
+                Assert.Fail(res.GetType().ToString());
             }
         }
 
