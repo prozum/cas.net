@@ -73,6 +73,14 @@ namespace Ast
             return val.ReduceEvaluate();
         }
 
+        public bool IsDefined
+        {
+            get
+            {
+                return CurScope.IsDefined(Identifier);
+            }
+        }
+
         public override Expression Value
         {
             get
@@ -83,19 +91,22 @@ namespace Ast
 
         public override bool CompareTo(Expression other)
         {
-            var otherSimplified = other.Reduce();
+            var otherReduced = other.Reduce();
 
-            if (otherSimplified is Variable)
+            if (otherReduced is Variable)
             {
-                if (Identifier == (otherSimplified as Variable).Identifier && Prefix.CompareTo((otherSimplified as Variable).Prefix) && Exponent.CompareTo((otherSimplified as Variable).Exponent))
+                if (Identifier == (otherReduced as Variable).Identifier && Prefix.CompareTo((otherReduced as Variable).Prefix) && Exponent.CompareTo((otherReduced as Variable).Exponent))
                 {
                     return true;
                 }
 
-                return Value.CompareTo(otherSimplified.Value);
+                return Value.CompareTo(otherReduced.Value);
             }
 
-            return otherSimplified.CompareTo(this.Value);
+            if (IsDefined)
+                return otherReduced.CompareTo(Value);
+
+            return false;
         }
 
         public override Expression Reduce()

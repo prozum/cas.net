@@ -35,7 +35,7 @@ namespace Ast.Tests
         #endregion
         public void ExpCompareTo(string inputString)
         {
-            var res = Evaluator.Eval("ret " + inputString);
+            var res = Evaluator.Eval(inputString);
             Assert.IsTrue(res is Boolean);
             Assert.IsTrue((res as Boolean).@bool == true);
         }
@@ -101,7 +101,7 @@ namespace Ast.Tests
         #endregion
         public void Reduce(string expected, string inputString)
         {
-            var redString = "ret reduce[" + inputString + "]";
+            var redString = "sys.reduce[" + inputString + "]";
             var res = Evaluator.Eval(redString);
             Assert.AreEqual(expected, res.ToString());
         }
@@ -341,7 +341,7 @@ namespace Ast.Tests
         #endregion
         public void Evaluate(dynamic expected, string calculation)
         {
-            var res = Evaluator.Eval("ret " + calculation);
+            var res = Evaluator.Eval(calculation);
             
             if (res is Integer)
             {
@@ -387,7 +387,7 @@ namespace Ast.Tests
         #endregion
         public void Solve(string expected, string inputString)
         {
-            var testString = "ret solve[" + inputString + ",x]";
+            var testString = "math.solve[" + inputString + ",x]";
 
             Assert.AreEqual(expected, Evaluator.Eval(testString).ToString());
         }

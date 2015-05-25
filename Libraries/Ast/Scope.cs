@@ -90,7 +90,7 @@ namespace Ast
 
             foreach (var expr in Expressions)
             {
-                var res = expr.Evaluate();
+                var res = expr.ReduceEvaluate();
 
                 if (GetBool("debug"))
                     SideEffects.Add(new DebugData("Debug: " + expr + " = " + res));
@@ -240,6 +240,17 @@ namespace Ast
             str += "}";
 
             return str;
+        }
+
+        public bool IsDefined(string identifier)
+        {
+            if (Locals.ContainsKey(identifier))
+                return true;
+
+            if (CurScope != null)
+                return CurScope.IsDefined(identifier);
+
+            return false;
         }
     }
 }
