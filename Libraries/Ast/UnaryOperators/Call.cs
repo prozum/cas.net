@@ -30,7 +30,7 @@ namespace Ast
             var val = Child.Value;
 
             if (val is Call)
-                val = val.Evaluate();
+                val = val.Evaluate().Value;
 
             if (CurScope.Error)
                 return new Null();

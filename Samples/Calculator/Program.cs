@@ -89,11 +89,12 @@ public class Calculator : Window
             if (@var.Value is SysFunc)
             {
                 iter = DefinitionStore.AppendValues(@var.Value.ToString(), "System Magic");
-                //UpdateScope(@var.Value as Scope, iter);
+                UpdateScope(@var.Value as Scope, iter);
             }
             else if (@var.Value is VarFunc)
             {
-                DefinitionStore.AppendValues(@var.Value.ToString(), (@var.Value as VarFunc).Definition.ToString());
+                iter = DefinitionStore.AppendValues(@var.Value.ToString(), (@var.Value as VarFunc).Definition.ToString());
+                UpdateScope(@var.Value as Scope, iter);
             }
             else if (@var.Value is Scope)
             {
@@ -116,11 +117,12 @@ public class Calculator : Window
             if (@var.Value is SysFunc)
             {
                 iter = DefinitionStore.AppendValues(lastIter, @var.Value.ToString(), "System Magic");
-                //UpdateScope(@var.Value as Scope, iter);
+                UpdateScope(@var.Value as Scope, iter);
             }
             else if (@var.Value is VarFunc)
             {
-                DefinitionStore.AppendValues(lastIter, @var.Value.ToString(), (@var.Value as VarFunc).Definition.ToString(), lastIter);
+                iter = DefinitionStore.AppendValues(lastIter, @var.Value.ToString(), (@var.Value as VarFunc).Definition.ToString(), lastIter);
+                UpdateScope(@var.Value as Scope, iter);
             }
             else if (@var.Value is Scope)
             {

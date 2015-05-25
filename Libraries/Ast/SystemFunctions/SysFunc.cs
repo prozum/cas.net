@@ -15,7 +15,7 @@ namespace Ast
         List
     }
 
-    public abstract class SysFunc : Expression, ICallable
+    public abstract class SysFunc : Scope, ICallable
     {
         public List<ArgumentType> ValidArguments;
         public string Identifier;
