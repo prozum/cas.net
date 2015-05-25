@@ -45,7 +45,7 @@ public class Calculator : Window
 
         var res = Eval.Evaluate();
 
-        if (!(res is Null))
+        if (!(res is Null || res is Error))
             Buffer.Insert(ref insertIter, "ret: " + res.ToString() + "\n");
 
         foreach(var data in Eval.SideEffects)

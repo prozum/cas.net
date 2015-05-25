@@ -16,8 +16,12 @@ namespace Ast
         {
             var res = Expression.Value;
 
-            if (CurScope.Error)
-                return Constant.Null;
+
+            if (res is Error)
+            {
+                CurScope.Errors.Add(new ErrorData(res as Error));
+                return new Null();
+            }
 
             if (res is Scope)
             {
@@ -33,7 +37,7 @@ namespace Ast
                 CurScope.Errors.Add(new ErrorData(Expression, "is not a Scope"));
             }
 
-            return Constant.Null;
+            return new Null();
         }
 
         public override string ToString()

@@ -52,10 +52,7 @@ namespace Ast
         public Expression Call(List args)
         {
             if (CallStack.Count > MaxFunctionRecursion)
-            {
-                CurScope.Errors.Add(new ErrorData(this, "Maximum function recursion exceeded"));
-                return Constant.Null;
-            }
+                return new Error(this, "Maximum function recursion exceeded");;
 
             // TODO add definition locals. Etc. deg 
             var callScope = new Scope(CurScope);

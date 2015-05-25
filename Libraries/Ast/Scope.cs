@@ -95,6 +95,9 @@ namespace Ast
                 if (GetBool("debug"))
                     SideEffects.Add(new DebugData("Debug: " + expr + " = " + res));
 
+                if (res is Error)
+                    Errors.Add(new ErrorData(res as Error));
+
                 if (Error)
                     return Constant.Null;
 

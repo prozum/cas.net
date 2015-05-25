@@ -8,7 +8,7 @@ namespace Ast
         public override int Priority { get{ return 30; } }
 
         public Add() { }
-        public Add(Expression left, Expression right, Scope scope) : base(left, right, scope) { }
+        public Add(Expression left, Expression right) : base(left, right) { }
 
         public override Expression Evaluate()
         {
@@ -17,7 +17,7 @@ namespace Ast
 
         protected override Expression ExpandHelper(Expression left, Expression right)
         {
-            return new Add(left.Expand(), right.Expand(), CurScope);
+            return new Add(left.Expand(), right.Expand());
         }
 
         protected override Expression ReduceHelper(Expression left, Expression right)
@@ -55,12 +55,12 @@ namespace Ast
             //When the sides are the same. "(x*y)+(y*x) -> 2xy"
             else if (left.CompareTo(Right))
             {
-                return new Mul(new Integer(2), left, CurScope);
+                return new Mul(new Integer(2), left);
             }
             //Couldn't reduce
             else
             {
-                return new Add(left, right, CurScope);
+                return new Add(left, right);
             }
         }
 
@@ -96,17 +96,17 @@ namespace Ast
                 //When other is the same as left. ((x*y)+y)+(x*y) -> 2(x*y)+y
                 if (Left.CompareTo(other))
                 {
-                    return new Add(new Mul(new Integer(2), other, CurScope), Right, CurScope);
+                    return new Add(new Mul(new Integer(2), other), Right);
                 }
                 //When other is the same as right. (y+(x*y))+(x*y) -> y+2(x*y)
                 else if (Right.CompareTo(other))
                 {
-                    return new Add(Left, new Mul(new Integer(2), other, CurScope), CurScope);
+                    return new Add(Left, new Mul(new Integer(2), other));
                 }
                 //Couldn't reduce
                 else
                 {
-                    return new Add(this, other, CurScope);
+                    return new Add(this, other);
                 }
             }
         }
@@ -116,17 +116,17 @@ namespace Ast
             //When left is real, add other to left. (5+x)+5 -> 10+x
             if (Left is Real)
             {
-                return new Add(Left + other, Right, CurScope);
+                return new Add(Left + other, Right);
             }
             //When right is real, add other to right. (x+5)+5 -> x+10
             else if (Right is Real)
             {
-                return new Add(Left, Right + other, CurScope);
+                return new Add(Left, Right + other);
             }
             //Couldn't reduce
             else
             {
-                return new Add(this, other, CurScope);
+                return new Add(this, other);
             }
         }
 
@@ -135,22 +135,22 @@ namespace Ast
             //When left and other are the same variable, and there exponent are the same. "(x^2+x)+x^2 -> 2x^2+x"
             if (Left is Variable && CompareVariables(Left as Variable, other))
             {
-                return new Add(VariableOperation(Left as Variable, other), Right, CurScope);
+                return new Add(VariableOperation(Left as Variable, other), Right);
             }
             //When right and other are the same variable, and there exponent are the same. "(x+x^2)+x^2 -> x+2x^2"
             else if (Right is Variable && CompareVariables(Right as Variable, other))
             {
-                return new Add(Left, VariableOperation(Right as Variable, other), CurScope);
+                return new Add(Left, VariableOperation(Right as Variable, other));
             }
             //When left is add, go into that add and check if other can be reduced with left's sides.
             else if (Left is Add)
             {
-                var res = new Add((Left as Add).ReduceMultiAdd(other), Right, CurScope);
+                var res = new Add((Left as Add).ReduceMultiAdd(other), Right);
 
                 //If true then Couldn't reduce
-                if (res.ToString() == new Add(new Add(Left, other, CurScope), Right, CurScope).ToString())
+                if (res.ToString() == new Add(new Add(Left, other), Right).ToString())
                 {
-                    res = new Add(this, other, CurScope);
+                    res = new Add(this, other);
                 }
 
                 return res;
@@ -158,12 +158,12 @@ namespace Ast
             //When right is add, go into that add and check if other can be reduced with right's sides.
             else if (Right is Add)
             {
-                var res = new Add(Left, (Right as Add).ReduceMultiAdd(other), CurScope);
+                var res = new Add(Left, (Right as Add).ReduceMultiAdd(other));
 
                 //If true then Couldn't reduce
-                if (res.ToString() == new Add(Left, new Add(Right, other, CurScope), CurScope).ToString())
+                if (res.ToString() == new Add(Left, new Add(Right, other)).ToString())
                 {
-                    res = new Add(this, other, CurScope);
+                    res = new Add(this, other);
                 }
 
                 return res;
@@ -171,7 +171,7 @@ namespace Ast
             //Couldn't reduce
             else
             {
-                return new Add(this, other, CurScope);
+                return new Add(this, other);
             }
         }
 
@@ -190,25 +190,25 @@ namespace Ast
             //When right is negative, return a sub, with right as positive. 2+(-2) -> 2-2.
             if (Right is INegative && (Right as INegative).IsNegative())
             {
-                return new Sub(Left.CurrectOperator(), (Right as INegative).ToNegative(), CurScope);
+                return new Sub(Left.CurrectOperator(), (Right as INegative).ToNegative());
             }
 
-            return new Add(Left.CurrectOperator(), Right.CurrectOperator(), CurScope);
+            return new Add(Left.CurrectOperator(), Right.CurrectOperator());
         }
 
         public override Expression Clone()
         {
-            return new Add(Left.Clone(), Right.Clone(), CurScope);
+            return new Add(Left.Clone(), Right.Clone());
         }
 
         public Expression InvertOn(Expression other)
         {
-            return new Sub(other, Right, CurScope);
+            return new Sub(other, Right);
         }
 
         public BinaryOperator Swap()
         {
-            return new Add(Right, Left, CurScope);
+            return new Add(Right, Left);
         }
 
         public BinaryOperator Transform()
@@ -216,12 +216,12 @@ namespace Ast
             //When left is add, make right add instead. (x+y)+z -> x+(y+z)
             if (Left is Add)
             {
-                return new Add((Left as Add).Left, new Add((Left as Add).Right, Right, CurScope), CurScope);
+                return new Add((Left as Add).Left, new Add((Left as Add).Right, Right));
             }
             //When right is add, make right add instead. x+(y+z) -> (x+y)+z
             else if (Right is Add)
             {
-                return new Add(new Add(Left, (Right as Add).Left, CurScope), (Right as Add).Right, CurScope);
+                return new Add(new Add(Left, (Right as Add).Left), (Right as Add).Right);
             }
             else
             {

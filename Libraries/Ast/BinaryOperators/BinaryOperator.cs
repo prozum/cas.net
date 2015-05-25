@@ -67,12 +67,11 @@ namespace Ast
             }
         }
 
-        internal BinaryOperator() : this(null, null, null) { }
-        internal BinaryOperator(Expression left, Expression right, Scope scope)
+        internal BinaryOperator() : this(null, null) { }
+        internal BinaryOperator(Expression left, Expression right)
         {
             Left = left;
             Right = right;
-            CurScope = scope;
         }
 
         public override string ToString()

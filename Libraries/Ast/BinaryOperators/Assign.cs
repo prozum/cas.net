@@ -8,7 +8,7 @@ namespace Ast
         public override int Priority { get{ return 0; } }
 
         public Assign() { }
-        public Assign(Expression left, Expression right, Scope scope) : base(left, right, scope) 
+        public Assign(Expression left, Expression right, Scope scope) : base(left, right) 
         {
             CurScope = scope;
         }
@@ -27,10 +27,7 @@ namespace Ast
                 scope = (Left as Dot).VariabelScope;
 
                 if (scope == null)
-                {
-                    CurScope.Errors.Add(new ErrorData(Left, " is not a valid scope"));
-                    return Constant.Null;
-                }
+                    return new Error(Left.ToString() + " is not a valid scope");
 
                 res = (Left as Dot).Right;
             }
@@ -40,8 +37,8 @@ namespace Ast
                 scope = CurScope;
             }
 
-            if (CurScope.Error)
-                return Constant.Null;
+            if (res is Error)
+                return res;
              
 
             // Find Identifier & Expression
@@ -61,19 +58,13 @@ namespace Ast
                    
                 }
                 else
-                {
-                    CurScope.Errors.Add(new ErrorData(call.Child, "is not a variable"));
-                    return Constant.Null;
-                }
+                    return new Error(call.Child, "is not a variable");
             }
             else
-            {
-                CurScope.Errors.Add(new ErrorData(res, " is not a variable"));
-                return Constant.Null;
-            }
+                return new Error(res, " is not a variable");
 
-            if (CurScope.Error)
-                return Constant.Null;
+            if (res is Error)
+                return res;
 
             scope.SetVar(identifier, expr);
 

@@ -8,7 +8,7 @@ namespace Ast
         public override int Priority { get{ return 30; } }
 
         public Sub() { }
-        public Sub(Expression left, Expression right, Scope scope) : base(left, right, scope) { }
+        public Sub(Expression left, Expression right) : base(left, right) { }
 
         public override Expression Evaluate()
         {
@@ -17,29 +17,29 @@ namespace Ast
 
         protected override Expression ExpandHelper(Expression left, Expression right)
         {
-            return new Sub(left.Expand(), right.Expand(), CurScope);
+            return new Sub(left.Expand(), right.Expand());
         }
 
         //Returns the Add version of the Sub. This is done, so Sub doesn't need to implement rules itself.
         protected override Expression ReduceHelper(Expression left, Expression right)
         {
-            var newRight = new Mul(new Integer(-1), right, CurScope).Reduce();
-            return new Add(left, newRight, CurScope);
+            var newRight = new Mul(new Integer(-1), right).Reduce();
+            return new Add(left, newRight);
         }
 
         public override Expression Clone()
         {
-            return new Sub(Left.Clone(), Right.Clone(), CurScope);
+            return new Sub(Left.Clone(), Right.Clone());
         }
 
         public Expression InvertOn(Expression other)
         {
-            return new Add(other, Right, CurScope);
+            return new Add(other, Right);
         }
 
         public BinaryOperator Swap()
         {
-            return new Add(new Mul(new Integer(-1), Right, CurScope), Left, CurScope);
+            return new Add(new Mul(new Integer(-1), Right), Left);
         }
 
         public BinaryOperator Transform()
@@ -52,10 +52,10 @@ namespace Ast
             //When right is negative, return a Add, with right as positive. 2-(-2) -> 2+2.
             if (Right is INegative && (Right as INegative).IsNegative())
             {
-                return new Add(Left.CurrectOperator(), (Right as INegative).ToNegative(), CurScope);
+                return new Add(Left.CurrectOperator(), (Right as INegative).ToNegative());
             }
 
-            return new Sub(Left.CurrectOperator(), Right.CurrectOperator(), CurScope);
+            return new Sub(Left.CurrectOperator(), Right.CurrectOperator());
         }
     }
 }

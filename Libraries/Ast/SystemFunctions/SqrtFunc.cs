@@ -10,7 +10,7 @@ namespace Ast
         {
             ValidArguments = new List<ArgumentType>()
                 {
-                    ArgumentType.Number
+                    ArgumentType.Expression
                 };
         }
 
@@ -26,8 +26,7 @@ namespace Ast
                     return new Irrational(Math.Sqrt((double)(res as Real))).Evaluate();
             }
 
-            CurScope.Errors.Add(new ErrorData(this, "Could not take Sqrt of: " + args[0]));
-            return Constant.Null;
+            return new Error(this, "Could not take Sqrt of: " + args[0]);
         }
 
         public override Expression Reduce(List args, Scope scope)
@@ -43,7 +42,7 @@ namespace Ast
 
         public Expression InvertOn(Expression other)
         {
-            return new Exp(other, new Integer(2), CurScope);
+            return new Exp(other, new Integer(2));
         }
     }
 }

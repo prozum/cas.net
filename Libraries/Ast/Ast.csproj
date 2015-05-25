@@ -41,6 +41,7 @@
     <Compile Include="Expression.cs" />
     <Compile Include="Constant.cs" />
     <Compile Include="Scope.cs" />
+    <Compile Include="Error.cs" />
     <Compile Include="Self.cs" />
     <Compile Include="Types\Boolean.cs" />
     <Compile Include="Types\Number.cs" />

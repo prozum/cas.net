@@ -9,7 +9,7 @@ namespace Ast
         public override int Priority { get{ return 50; } }
 
         public Exp() { }
-        public Exp(Expression left, Expression right, Scope scope) : base(left, right, scope) { }
+        public Exp(Expression left, Expression right) : base(left, right) { }
 
         public override Expression Evaluate()
         {
@@ -21,26 +21,26 @@ namespace Ast
             //(x+y)^2 -> x^2 + y^2 + 2xy
             if (left is Add && Right.CompareTo(Constant.Two))
             {
-                return new Add(new Add(new Exp((left as BinaryOperator).Left, right, CurScope).Reduce(), new Exp((left as BinaryOperator).Right, right, CurScope).Reduce(), CurScope), new Mul(new Integer(2), new Mul((left as BinaryOperator).Left, (left as BinaryOperator).Right, CurScope), CurScope).Reduce(), CurScope);
+                return new Add(new Add(new Exp((left as BinaryOperator).Left, right).Reduce(), new Exp((left as BinaryOperator).Right, right).Reduce()), new Mul(new Integer(2), new Mul((left as BinaryOperator).Left, (left as BinaryOperator).Right)).Reduce());
             }
             //(x-y)^2 -> x^2 - y^2 + 2xy
             else if (left is Sub && Right.CompareTo(Constant.Two))
             {
-                return new Sub(new Add(new Exp((left as BinaryOperator).Left, right, CurScope).Reduce(), new Exp((left as BinaryOperator).Right, right, CurScope).Reduce(), CurScope), new Mul(new Integer(2), new Mul((left as BinaryOperator).Left, (left as BinaryOperator).Right, CurScope), CurScope).Reduce(), CurScope);
+                return new Sub(new Add(new Exp((left as BinaryOperator).Left, right).Reduce(), new Exp((left as BinaryOperator).Right, right).Reduce()), new Mul(new Integer(2), new Mul((left as BinaryOperator).Left, (left as BinaryOperator).Right)).Reduce());
             }
             //(x*y)^z -> x^z * y^z
             else if (left is Mul)
             {
-                return new Mul(new Exp((left as BinaryOperator).Left, right, CurScope).Reduce(), new Exp((left as BinaryOperator).Right, right, CurScope).Reduce(), CurScope);
+                return new Mul(new Exp((left as BinaryOperator).Left, right).Reduce(), new Exp((left as BinaryOperator).Right, right).Reduce());
             }
             //(x/y)^z -> x^z / y^z
             else if (left is Div)
             {
-                return new Div(new Exp((left as BinaryOperator).Left, right, CurScope).Reduce(), new Exp((left as BinaryOperator).Right, right, CurScope).Reduce(), CurScope);
+                return new Div(new Exp((left as BinaryOperator).Left, right).Reduce(), new Exp((left as BinaryOperator).Right, right).Reduce());
             }
 
             //Couldn't expand.
-            return new Exp(left.Expand(), right.Expand(), CurScope);
+            return new Exp(left.Expand(), right.Expand());
         }
 
         protected override Expression ReduceHelper(Expression left, Expression right)
@@ -68,7 +68,7 @@ namespace Ast
             }
 
             //Couldn't reduce.
-            return new Exp(left, right, CurScope);
+            return new Exp(left, right);
         }
 
         //Multipies Variable's exponent with a real, and returns Variable.
@@ -83,7 +83,7 @@ namespace Ast
 
         public override Expression Clone()
         {
-            return new Exp(Left.Clone(), Right.Clone(), CurScope);
+            return new Exp(Left.Clone(), Right.Clone());
         }
 
         /*
@@ -110,7 +110,7 @@ namespace Ast
 
         internal override Expression CurrectOperator()
         {
-            return new Exp(Left.CurrectOperator(), Right.CurrectOperator(), CurScope);
+            return new Exp(Left.CurrectOperator(), Right.CurrectOperator());
         }
     }
 }

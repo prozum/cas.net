@@ -27,10 +27,7 @@ namespace Ast
                 if (x is Real)
                     xList.Add(x as Real);
                 else
-                {
-                    CurScope.Errors.Add(new ErrorData(this, "List must only contain real numbers"));
-                    return Constant.Null;
-                }
+                    return new Error(this, "List must only contain real numbers");
             }
 
 
@@ -44,16 +41,12 @@ namespace Ast
 
                 var res = expr.Evaluate();
 
-                if (CurScope.Error)
-                    return Constant.Null;
-
+                if (res is Error)
+                    return res;
                 if (res is Real)
                     yList.Add(res as Real);
                 else
-                {
-                    CurScope.Errors.Add(new ErrorData(this, "Argument 1 does not return a real number"));
-                    return Constant.Null;
-                }
+                    return new Error(this, "Argument 1 does not return a real number");
             }
 
             CurScope.SideEffects.Add(new PlotData(xList, yList, null));

@@ -8,26 +8,26 @@ namespace Ast
         public override int Priority { get{ return 0; } }
 
         public Equal() { }
-        public Equal(Expression left, Expression right, Scope scope) : base(left, right, scope) { }
+        public Equal(Expression left, Expression right) : base(left, right) { }
 
         protected override Expression ExpandHelper(Expression left, Expression right)
         {
-            return new Equal(left, right, CurScope);
+            return new Equal(left, right);
         }
 
         protected override Expression ReduceHelper(Expression left, Expression right)
         {
-            return new Equal(left, right, CurScope);
+            return new Equal(left, right);
         }
 
         public override Expression Clone()
         {
-            return new Equal(Left.Clone(), Right.Clone(), CurScope);
+            return new Equal(Left.Clone(), Right.Clone());
         }
 
         internal override Expression CurrectOperator()
         {
-            return new Equal(Left.CurrectOperator(), Right.CurrectOperator(), CurScope);
+            return new Equal(Left.CurrectOperator(), Right.CurrectOperator());
         }
     }
 }

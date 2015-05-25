@@ -8,7 +8,7 @@ namespace Ast
         public override int Priority { get{ return 20; } }
 
         public BooleanEqual() { }
-        public BooleanEqual(Expression left, Expression right, Scope scope) : base(left, right, scope) { }
+        public BooleanEqual(Expression left, Expression right) : base(left, right) { }
 
         public override Expression Evaluate()
         {
@@ -17,22 +17,22 @@ namespace Ast
 
         public override Expression Clone()
         {
-            return new BooleanEqual(Left.Clone(), Right.Clone(), CurScope);
+            return new BooleanEqual(Left.Clone(), Right.Clone());
         }
 
         internal override Expression CurrectOperator()
         {
-            return new BooleanEqual(Left.CurrectOperator(), Right.CurrectOperator(), CurScope);
+            return new BooleanEqual(Left.CurrectOperator(), Right.CurrectOperator());
         }
 
         protected override Expression ExpandHelper(Expression left, Expression right)
         {
-            return new BooleanEqual(left, right, CurScope);
+            return new BooleanEqual(left, right);
         }
 
         protected override Expression ReduceHelper(Expression left, Expression right)
         {
-            return new BooleanEqual(left, right, CurScope);
+            return new BooleanEqual(left, right);
         }
     }
 }

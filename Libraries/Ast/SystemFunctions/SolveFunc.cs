@@ -6,7 +6,7 @@ namespace Ast
     public class SolveFunc : SysFunc
     {
         Equal equal;
-        Variable @var;
+        Variable sym;
 
         public SolveFunc() : this(null) { }
         public SolveFunc(Scope scope)
@@ -24,49 +24,42 @@ namespace Ast
             Equal solved;
 
             equal = (Equal)args[0];
-            @var = (Variable)args[1];
+            sym = (Variable)args[1];
 
-            if (equal.Right.ContainsVariable(@var))
+            if (equal.Right.ContainsVariable(sym))
             {
-                solved = new Equal(new Sub(equal.Left, equal.Right, CurScope).Reduce().Expand(), new Integer(0), CurScope);
+                solved = new Equal(new Sub(equal.Left, equal.Right).Reduce().Expand(), new Integer(0));
             }
             else
             {
                 solved = equal;
             }
 
-            while (!((solved.Left is Variable) && solved.Left.CompareTo(@var)))
+            while (!((solved.Left is Variable) && solved.Left.CompareTo(sym)))
             {
                 if (solved.Left is BinaryOperator && solved.Left is IInvertable)
                 {
                     solved = InvertOperator(solved.Left, solved.Right);
 
                     if (solved == null)
-                    {
-                        CurScope.Errors.Add(new ErrorData(this, " could not solve " + @var));
-                        return Constant.Null;
-                    }
+                        return new Error(this, " could not solve " + sym.ToString());
                 }
                 else if (solved.Left is Call && (solved.Left as Call).Child.Value is IInvertable)
                 {
                     solved = InvertFunction((solved.Left as Call), solved.Right);
 
                     if (solved == null)
-                    {
-                        CurScope.Errors.Add(new ErrorData(this, " could not solve " + @var));
-                        return Constant.Null;
-                    }
+                        return new Error(this, " could not solve " + sym.ToString());
                 }
-                else if (solved.Left is Variable && (solved.Left as Variable).Identifier == @var.Identifier)
+                else if (solved.Left is Variable && (solved.Left as Variable).Identifier == sym.Identifier)
                 {
                     var newLeft = (solved.Left as Variable).SeberateNumbers();
 
-                    solved = new Equal(newLeft, solved.Right, CurScope);
+                    solved = new Equal(newLeft, solved.Right);
                 }
                 else
                 {
-                    CurScope.Errors.Add(new ErrorData(this, " could not solve " + @var));
-                    return Constant.Null;
+                    return new Error(this, " could not solve " + sym.ToString());
                 }
             }
 
@@ -77,30 +70,30 @@ namespace Ast
         {
             BinaryOperator op = left as BinaryOperator;
 
-            if (op.Right.ContainsVariable(@var) && op.Left.ContainsVariable(@var))
+            if (op.Right.ContainsVariable(sym) && op.Left.ContainsVariable(sym))
             {
                 return BothSideSymbolSolver(left, right);
             }
-            else if (op.Left.ContainsVariable(@var))
+            else if (op.Left.ContainsVariable(sym))
             {
                 var inverted = (op as IInvertable).InvertOn(right);
 
                 if (inverted == null)
                     return null;
 
-                return new Equal(op.Left, inverted, CurScope);
+                return new Equal(op.Left, inverted);
             }
-            else if (op.Right.ContainsVariable(@var))
+            else if (op.Right.ContainsVariable(sym))
             {
                 if (op is ISwappable)
                 {
-                    return new Equal((op as ISwappable).Swap(), right, CurScope);
+                    return new Equal((op as ISwappable).Swap(), right);
                 }
                 else if (op is Div)
                 {
                     if (!right.CompareTo(Constant.Zero))
                     {
-                        return new Equal(op.Right, new Div(op.Left, right, CurScope), CurScope);
+                        return new Equal(op.Right, new Div(op.Left, right));
                     }
                 }
             }
@@ -112,13 +105,13 @@ namespace Ast
         {
             var leftSimplified = left.Reduce();
 
-            if (leftSimplified is BinaryOperator && ((leftSimplified as BinaryOperator).Left.ContainsVariable(@var) && (leftSimplified as BinaryOperator).Right.ContainsVariable(@var)))
+            if (leftSimplified is BinaryOperator && ((leftSimplified as BinaryOperator).Left.ContainsVariable(sym) && (leftSimplified as BinaryOperator).Right.ContainsVariable(sym)))
             {
                 return null;
             }
             else
             {
-                return new Equal(leftSimplified, right, CurScope);
+                return new Equal(leftSimplified, right);
             }
         }
 
@@ -126,9 +119,9 @@ namespace Ast
         {
             SysFunc func = call.Child.Value as SysFunc;
 
-            if (call.ContainsVariable(@var))
+            if (call.ContainsVariable(sym))
             {
-                return new Equal(call.Arguments[0], (func as IInvertable).InvertOn(right), CurScope);
+                return new Equal(call.Arguments[0], (func as IInvertable).InvertOn(right));
             }
 
             return null;

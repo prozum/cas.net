@@ -8,7 +8,7 @@ namespace Ast
         public override int Priority { get{ return 100; } }
 
         public Dot() { }
-        public Dot(Expression left, Expression right, Scope scope) : base(left, right, scope) { }
+        public Dot(Expression left, Expression right) : base(left, right) { }
 
         public override Expression Value
         {
@@ -26,16 +26,13 @@ namespace Ast
                 {
                     var left = Left.Value;
 
-                    if (CurScope.Error)
-                        return Constant.Null;
+                    if (left is Error)
+                        return left;
 
                     if (left is Scope)
                         scope = (Scope)left;
                     else
-                    {
-                        CurScope.Errors.Add(new ErrorData(this, "left operator must be a Scope"));
-                        return Constant.Null;
-                    }
+                        return new Error(this, "left operator must be a Scope");
                 }
 
                 if (Right is Variable)
@@ -60,8 +57,7 @@ namespace Ast
                     }
                 }
 
-                CurScope.Errors.Add(new ErrorData(this, "right operator must be a Variable/Function"));
-                return Constant.Null;
+                return new Error(this, "right operator must be a Variable/Function");
             }
         }
 

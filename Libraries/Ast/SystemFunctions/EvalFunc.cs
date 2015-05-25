@@ -16,10 +16,16 @@ namespace Ast
 
         public override Expression Call(List args)
         {
+            if (!IsArgumentsValid(args))
+                return new ArgumentError(this);
+
             var arg = args[0].Evaluate();
 
-            if (CurScope.Error)
-                return Constant.Null;
+            if (arg is Error)
+                return arg;
+
+            if (!(arg is Text))
+                return new Error("Argument must be Text");
 
             var res = Evaluator.Eval(arg as Text);
 
