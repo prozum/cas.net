@@ -61,6 +61,11 @@ namespace Ast
             {
                 return VariableOperation(left as Variable, right as Real);
             }
+            //When left i Variable and right is real, multiply left's exponent with right.
+            else if (left is Call && left.Value is SqrtFunc && right.CompareTo(Constant.Two))
+            {
+                return (left as Call).Arguments[0];
+            }
 
             //Couldn't reduce.
             return new Exp(left, right);

@@ -109,7 +109,7 @@ namespace Ast
                 return Prefix;
             }
 
-            return Value.Reduce();
+            return this;
         }
 
         public Expression Reduce(List args, Scope scope)

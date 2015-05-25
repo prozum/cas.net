@@ -6,6 +6,18 @@ namespace Ast
     {
         public List Arguments;
 
+        public override Expression Value
+        {
+            get
+            {
+                return Child.Value;
+            }
+            set
+            {
+                base.Value = value;
+            }
+        }
+
         public Call(List args, Scope scope) 
         {
             Arguments = args;
@@ -47,17 +59,25 @@ namespace Ast
 
         public override Expression Reduce()
         {
-            var res = new Call(Arguments, CurScope);
+            var resCall = new Call(Arguments, CurScope);
 
-            if (Child is Variable)
+            resCall.Child = Child.Reduce();
+
+            if (resCall.Value is SysFunc)
             {
-                res.Child = new Variable();
-                res.Child.Value = (Child as Variable).Reduce(Arguments, CurScope);
-            }
-            else
-                res.Child = Child.Reduce();
+                Expression resExp = (resCall.Value as SysFunc).Reduce(Arguments, CurScope);
 
-            return res;
+                if (resExp is SysFunc)
+                {
+                    return resCall;
+                }
+                else
+                {
+                    return resExp;
+                }
+            }
+
+            return resCall;
         }
 
         public override string ToString()
