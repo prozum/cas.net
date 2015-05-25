@@ -109,7 +109,15 @@ namespace Ast
                 return Prefix;
             }
 
-            return this;
+            return Value.Reduce();
+        }
+
+        public Expression Reduce(List args, Scope scope)
+        {
+            if (Value is SysFunc)
+                return (Value as SysFunc).Reduce(args, scope);
+
+            return Value.Reduce();
         }
 
         public override bool ContainsVariable(Variable other)

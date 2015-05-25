@@ -44,6 +44,7 @@ namespace Ast
             scope.SetVar("eval", new EvalFunc(this));
             scope.SetVar("type", new TypeFunc(this));
             scope.SetVar("expand", new ExpandFunc(this));
+            scope.SetVar("reduce", new ReduceFunc(this));
 
             scope = new Scope(this);
             SetVar("draw", scope);

@@ -22,8 +22,6 @@ namespace Ast
         {
             return Child.Value;
         }
-
-
     }
 }
 

@@ -45,9 +45,36 @@ namespace Ast
             return (val as ICallable).Call(Arguments);
         }
 
+        public override Expression Reduce()
+        {
+            var res = new Call(Arguments, CurScope);
+
+            if (Child is Variable)
+            {
+                res.Child = new Variable();
+                res.Child.Value = (Child as Variable).Reduce(Arguments, CurScope);
+            }
+            else
+                res.Child = Child.Reduce();
+
+            return res;
+        }
+
         public override string ToString()
         {
             return Child.ToString() + Arguments.ToString();
+        }
+
+        public override bool ContainsVariable(Variable other)
+        {
+            foreach (var arg in Arguments.Items)
+            {
+                if (!arg.ContainsVariable(other))
+                    return false;
+
+            }
+
+            return true;
         }
     }
 }

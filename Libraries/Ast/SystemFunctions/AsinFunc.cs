@@ -35,13 +35,22 @@ namespace Ast
             return new Error(this, "Could not take ASin of: " + args[0]);
         }
 
+        public override Expression Reduce(List args, Scope scope)
+        {
+            var reduced = args.Reduce() as List;
+
+            if (reduced[0] is Call && (reduced[0] as Call).Child.Value is SinFunc)
+                return (reduced[0] as Call).Arguments[0];
+
+            return this;
+        }
+
         //asin[x] -> sin[other]
         public Expression InvertOn(Expression other)
         {
-            throw new NotImplementedException();
-//            List<Expression> newArgs = new List<Expression>();
-//            newArgs.Add(other);
-//            return new SinFunc(newArgs, CurScope);
+            var arg = new List();
+            arg.Items.Add(other);
+            return SysFunc.MakeFunction<SinFunc>(arg, other.CurScope);
         }
     }
 }

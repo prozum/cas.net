@@ -37,26 +37,19 @@ namespace Ast
 
             while (!((solved.Left is Variable) && solved.Left.CompareTo(sym)))
             {
-                if (solved.Left is IInvertable)
+                if (solved.Left is BinaryOperator && solved.Left is IInvertable)
                 {
-                    if (solved.Left is BinaryOperator)
-                    {
-                        solved = InvertOperator(solved.Left, solved.Right);
+                    solved = InvertOperator(solved.Left, solved.Right);
 
-                        if (solved == null)
-                            return new Error(this, " could not solve " + sym.ToString());
-                    }
-//                    else if (solved.Left is Func)
-//                    {
-//                        solved = InvertFunction(solved.Left, solved.Right);
-//
-//                        if (solved == null)
-//                            return new Error(this, " could not solve " + sym.ToString());
-//                    }
-                    else
-                    {
+                    if (solved == null)
                         return new Error(this, " could not solve " + sym.ToString());
-                    }
+                }
+                else if (solved.Left is Call && (solved.Left as Call).Child.Value is IInvertable)
+                {
+                    solved = InvertFunction((solved.Left as Call), solved.Right);
+
+                    if (solved == null)
+                        return new Error(this, " could not solve " + sym.ToString());
                 }
                 else if (solved.Left is Variable && (solved.Left as Variable).Identifier == sym.Identifier)
                 {
@@ -122,14 +115,14 @@ namespace Ast
             }
         }
 
-        private Equal InvertFunction(Expression left, Expression right)
+        private Equal InvertFunction(Call call, Expression right)
         {
-//            Func func = left as Func;
-//
-//            if (func.ContainsVariable(sym))
-//            {
-//                return new Equal(func.Arguments[0], (func as IInvertable).InvertOn(right));
-//            }
+            SysFunc func = call.Child.Value as SysFunc;
+
+            if (call.ContainsVariable(sym))
+            {
+                return new Equal(call.Arguments[0], (func as IInvertable).InvertOn(right));
+            }
 
             return null;
         }
