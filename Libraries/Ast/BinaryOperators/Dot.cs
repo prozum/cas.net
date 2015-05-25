@@ -53,8 +53,6 @@ namespace Ast
 
                         @var.CurScope = scope;
 
-                        call.Child = @var.Value;
-
                         return call;
                     }
                 }

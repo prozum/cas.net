@@ -431,7 +431,7 @@ namespace Ast
                         break;
                     
                     case TokenKind.IDENTIFIER:
-                        SetupExpr(new Variable(CurToken.Value, CurScope),true);
+                        SetupExpr(new Variable(CurToken.Value, CurScope), true);
                         break;
 
                     case TokenKind.TRUE:
