@@ -194,7 +194,7 @@ namespace Ast
             var prev = ToString();
             var prevType = GetType();
             //Reduces the whole expression.
-            var res = ReduceHelper(Left.Reduce(), Right.Reduce());
+            Expression res = ReduceHelper(Left.Reduce(), Right.Reduce());
 
             //If the reduction did something, aka res is different from this, then reduce again.
             if (prevType != res.GetType() || prev != res.ToString())

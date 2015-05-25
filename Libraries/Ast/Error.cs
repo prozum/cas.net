@@ -9,7 +9,7 @@ namespace Ast
 
         public Error(string msg) 
         {
-            this.ErrorMessage = msg;
+            ErrorMessage = msg;
         }
             
         public Error (Expression expr, string msg)
