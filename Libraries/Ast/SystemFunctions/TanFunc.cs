@@ -25,7 +25,8 @@ namespace Ast
                 return new Irrational(Math.Tan((double) ((deg ? Constant.DegToRad.@decimal  : 1) * (res as Real)) )).Evaluate();
             }
 
-            return new Error(this, "Could not take Tan of: " + args[0]);
+            CurScope.Errors.Add(new ErrorData(this, "Could not take Tan of: " + args[0]));
+            return Constant.Null;
         }
 
         public override Expression Reduce(List args, Scope scope)

@@ -8,7 +8,7 @@ namespace Ast
         public override int Priority { get{ return 10; } }
 
         public And() { }
-        public And(Expression left, Expression right) : base(left, right) { }
+        public And(Expression left, Expression right, Scope scope) : base(left, right, scope) { }
 
         public override Expression Evaluate()
         {
@@ -17,12 +17,12 @@ namespace Ast
 
         protected override Expression ExpandHelper(Expression left, Expression right)
         {
-            return new And(left, right);
+            return new And(left, right, CurScope);
         }
 
         protected override Expression ReduceHelper(Expression left, Expression right)
         {
-            return new And(left, right);
+            return new And(left, right, CurScope);
         }
     }
 }

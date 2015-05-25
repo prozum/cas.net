@@ -18,13 +18,11 @@ namespace Ast
             foreach (var value in List.Items)
             {
                 ForScope.SetVar(Var, value);
+
                 var res = ForScope.Evaluate();
 
-                if (res is Error)
-                {
-                    CurScope.Errors.Add(new ErrorData(res as Error));
+                if (CurScope.Error)
                     return Constant.Null;
-                }
             }
 
             return Constant.Null;

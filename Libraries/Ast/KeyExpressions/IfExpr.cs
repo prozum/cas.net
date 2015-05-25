@@ -23,12 +23,9 @@ namespace Ast
 
                 if (CurScope.GetBool("debug"))
                     CurScope.SideEffects.Add(new DebugData("Debug if cond["+i+"]: "+Conditions[i]+" = "+res));
-                    
-                if (res is Error)
-                {
-                    CurScope.Errors.Add(new ErrorData(res as Error));
+
+                if (CurScope.Error)
                     return Constant.Null;
-                }
 
                 if (res is Boolean)
                 {

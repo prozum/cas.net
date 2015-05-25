@@ -16,11 +16,8 @@ namespace Ast
         {
             var res = Expression.Evaluate();
 
-            if (res is Error)
-            {
-                CurScope.Errors.Add(new ErrorData(res as Error));
+            if (CurScope.Error)
                 return Constant.Null;
-            }
 
             CurScope.Returns.Clear();
             CurScope.Returns.Add(res);

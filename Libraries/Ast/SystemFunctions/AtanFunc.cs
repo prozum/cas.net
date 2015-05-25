@@ -16,9 +16,6 @@ namespace Ast
 
         public override Expression Call(List args)
         {
-            if (!IsArgumentsValid(args))
-                return new ArgumentError(this);
-
             var res = args[0].Evaluate();
 
             var deg = CurScope.GetBool("deg");
@@ -28,7 +25,8 @@ namespace Ast
                 return new Irrational((decimal)Math.Atan((double)(res as Real)) * (deg ? Constant.RadToDeg.@decimal  : 1) ).Evaluate();
             }
 
-            return new Error(this, "Could not take ATan of: " + args[0]);
+            CurScope.Errors.Add(new ErrorData(this, "Could not take ATan of: " + args[0]));
+            return Constant.Null;
         }
 
         public override Expression Reduce(List args, Scope scope)

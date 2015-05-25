@@ -79,8 +79,7 @@ namespace Ast
                 switch (ValidArguments[i])
                 {
                     case ArgumentType.Expression:
-                        if (args[i].Value is Error)
-                            valid = false;
+                        // Always valid
                         break;
                     case ArgumentType.Real:
                         if (!(args[i].Evaluate() is Real))
@@ -120,7 +119,7 @@ namespace Ast
             if (valid)
                 return true;
 
-            CurScope.Errors.Add(new ErrorData(new ArgumentError(this)));
+            CurScope.Errors.Add(new ArgErrorData(this));
             return false;
         }
     }

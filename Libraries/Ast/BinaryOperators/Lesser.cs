@@ -11,7 +11,7 @@ namespace Ast
         public override int Priority { get{ return 20; } }
 
         public Lesser() { }
-        public Lesser(Expression left, Expression right) : base(left, right) { }
+        public Lesser(Expression left, Expression right, Scope scope) : base(left, right, scope) { }
 
         public override Expression Evaluate()
         {
@@ -20,22 +20,22 @@ namespace Ast
 
         public override Expression Clone()
         {
-            return new Lesser(Left.Clone(), Right.Clone());
+            return new Lesser(Left.Clone(), Right.Clone(), CurScope);
         }
 
         internal override Expression CurrectOperator()
         {
-            return new Lesser(Left.CurrectOperator(), Right.CurrectOperator());
+            return new Lesser(Left.CurrectOperator(), Right.CurrectOperator(), CurScope);
         }
 
         protected override Expression ExpandHelper(Expression left, Expression right)
         {
-            return new Lesser(left, right);
+            return new Lesser(left, right, CurScope);
         }
 
         protected override Expression ReduceHelper(Expression left, Expression right)
         {
-            return new Lesser(left, right);
+            return new Lesser(left, right, CurScope);
         }
     }
 }

@@ -4,24 +4,28 @@ namespace Ast
 {
     public class ErrorData : EvalData
     {
-        public string msg;
+        public string ErrorMessage;
         public Pos Position;
 
-        public ErrorData(string err)
+        public ErrorData(string msg)
         {
-            this.msg = err;
+            ErrorMessage = msg;
         }
 
-        public ErrorData(Error err)
+        public ErrorData(Expression expr, string msg)
         {
-            this.msg = err.ErrorMessage;
-            this.Position = err.Position;
+            if (expr is Variable)
+                ErrorMessage = (expr as Variable).Identifier + ": " + msg;
+            else
+                ErrorMessage = expr.GetType().Name + ": " + msg;
+                
+            Position = expr.Position;
         }
 
-        public ErrorData(Expression expr, string err)
+        public ErrorData(Pos pos, string msg)
         {
-            this.msg = err;
-            this.Position = expr.Position;
+            Position = pos;
+            ErrorMessage = msg;
         }
 
         public override string ToString()
@@ -30,9 +34,27 @@ namespace Ast
 
             str += "[" + Position.Column;
             str += ";" + Position.Line + "]";
-            str += msg;
+            str += ErrorMessage;
 
             return str;
+        }
+    }
+
+    public class ArgErrorData: ErrorData
+    {
+        public ArgErrorData(SysFunc func) : base(func, "Valid arguments: ")
+        {
+            ErrorMessage += "[";
+            for(int i = 0; i < func.ValidArguments.Count; i++)
+            {
+                ErrorMessage += func.ValidArguments[i].ToString();
+
+                if (i < func.ValidArguments.Count -1) 
+                {
+                    ErrorMessage += ',';
+                }
+            }
+            ErrorMessage += "]";
         }
     }
 }

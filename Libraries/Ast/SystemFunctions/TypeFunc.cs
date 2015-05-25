@@ -18,10 +18,10 @@ namespace Ast
         {
             var res = args[0].Evaluate();
 
-            if (res is Error)
-                return res;
-            else
-                return new Text(res.GetType().Name);
+            if (CurScope.Error)
+                return Constant.Null;
+
+            return new Text(res.GetType().Name);
         }
 
 

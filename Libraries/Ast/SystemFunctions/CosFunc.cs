@@ -17,9 +17,6 @@ namespace Ast
 
         public override Expression Call(List args)
         {
-            if (!IsArgumentsValid(args))
-                return new ArgumentError(this);
-
             var res = args[0].Evaluate();
 
             var deg = CurScope.GetBool("deg");
@@ -29,7 +26,8 @@ namespace Ast
                 return new Irrational(Math.Cos((double) ((deg ? Constant.DegToRad.@decimal  : 1) * (res as Real)) )).Evaluate();
             }
 
-            return new Error(this, "Could not take Cos of: " + args[0]);
+            CurScope.Errors.Add(new ErrorData(this, "Could not take Cos of: " + args[0]));
+            return Constant.Null;
         }
 
         public override Expression Reduce(List args, Scope scope)

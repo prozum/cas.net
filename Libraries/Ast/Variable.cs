@@ -156,12 +156,12 @@ namespace Ast
                 {
                     if (!Exponent.CompareTo(Constant.One))
                     {
-                        res = new Exp(res, Exponent);
+                        res = new Exp(res, Exponent, CurScope);
                     }
 
                     if (!Prefix.CompareTo(Constant.One))
                     {
-                        return new Mul(Prefix, res);
+                        return new Mul(Prefix, res, CurScope);
                     }
                 }
             }

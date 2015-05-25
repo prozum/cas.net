@@ -49,7 +49,8 @@ namespace Ast
 
         public virtual Expression Evaluate()
         {
-            return new Error(this, "This type cannot evaluate");
+            CurScope.Errors.Add(new ErrorData(this, "This type cannot evaluate"));
+            return Constant.Null;
         }
 
         internal virtual Expression CurrectOperator()
@@ -74,7 +75,8 @@ namespace Ast
 
         public virtual Expression Clone()
         {
-            return new Error(this, "Cannot clone");
+            CurScope.Errors.Add(new ErrorData(this, "Cannot clone"));
+            return Constant.Null;
         }
 
         public virtual bool CompareTo(Expression other)
@@ -90,27 +92,32 @@ namespace Ast
         #region AddWith
         public virtual Expression AddWith(Integer other)
         {
-            return new Error(this, "Don't support adding " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support adding " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression AddWith(Rational other)
         {
-            return new Error(this, "Don't support adding " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support adding " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression AddWith(Irrational other)
         {
-            return new Error(this, "Don't support adding " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support adding " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression AddWith(Boolean other)
         {
-            return new Error(this, "Don't support adding " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support adding " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression AddWith(Complex other)
         {
-            return new Error(this, "Don't support adding " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support adding " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression AddWith(Variable other)
@@ -125,7 +132,8 @@ namespace Ast
 
         public virtual Expression AddWith(List other)
         {
-            return new Error(this, "Don't support adding " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support adding " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression AddWith(Text other)
@@ -135,7 +143,8 @@ namespace Ast
 
         public virtual Expression AddWith(Null other)
         {
-            return new Error(this, "Don't support adding " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support adding " + other.GetType().Name));
+            return Constant.Null;
         }
 
         #endregion
@@ -143,42 +152,50 @@ namespace Ast
         #region SubWith
         public virtual Expression SubWith(Integer other)
         {
-            return new Error(this, "Don't support subbing " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support subbing " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression SubWith(Rational other)
         {
-            return new Error(this, "Don't support subbing " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support subbing " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression SubWith(Irrational other)
         {
-            return new Error(this, "Don't support subbing " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support subbing " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression SubWith(Boolean other)
         {
-            return new Error(this, "Don't support subbing " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support subbing " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression SubWith(Complex other)
         {
-            return new Error(this, "Don't support subbing " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support subbing " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression SubWith(List other)
         {
-            return new Error(this, "Don't support subbing " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support subbing " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression SubWith(Text other)
         {
-            return new Error(this, "Don't support subbing " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support subbing " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression SubWith(Null other)
         {
-            return new Error(this, "Don't support subbing " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support subbing " + other.GetType().Name));
+            return Constant.Null;
         }
 
         #endregion
@@ -186,42 +203,50 @@ namespace Ast
         #region MulWith
         public virtual Expression MulWith(Integer other)
         {
-            return new Error(this, "Don't support multipying " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support multipying " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression MulWith(Rational other)
         {
-            return new Error(this, "Don't support multipying " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support multipying " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression MulWith(Irrational other)
         {
-            return new Error(this, "Don't support multipying " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support multipying " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression MulWith(Boolean other)
         {
-            return new Error(this, "Don't support multipying " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support multipying " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression MulWith(Complex other)
         {
-            return new Error(this, "Don't support multipying " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support multipying " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression MulWith(List other)
         {
-            return new Error(this, "Don't support multipying " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support multipying " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression MulWith(Text other)
         {
-            return new Error(this, "Don't support multipying " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support multipying " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression MulWith(Null other)
         {
-            return new Error(this, "Don't support multipying " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support multipying " + other.GetType().Name));
+            return Constant.Null;
         }
 
         #endregion
@@ -229,42 +254,50 @@ namespace Ast
         #region DivWith
         public virtual Expression DivWith(Integer other)
         {
-            return new Error(this, "Don't support diving " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support diving " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression DivWith(Rational other)
         {
-            return new Error(this, "Don't support diving " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support diving " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression DivWith(Irrational other)
         {
-            return new Error(this, "Don't support diving " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support diving " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression DivWith(Boolean other)
         {
-            return new Error(this, "Don't support diving " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support diving " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression DivWith(Complex other)
         {
-            return new Error(this, "Don't support diving " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support diving " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression DivWith(List other)
         {
-            return new Error(this, "Don't support diving " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support diving " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression DivWith(Text other)
         {
-            return new Error(this, "Don't support diving " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support diving " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression DivWith(Null other)
         {
-            return new Error(this, "Don't support diving " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support diving " + other.GetType().Name));
+            return Constant.Null;
         }
 
         #endregion
@@ -272,42 +305,50 @@ namespace Ast
         #region ModWith
         public virtual Expression ModWith(Integer other)
         {
-            return new Error(this, "Don't support modulo " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support modulo " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression ModWith(Rational other)
         {
-            return new Error(this, "Don't support modulo " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support modulo " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression ModWith(Irrational other)
         {
-            return new Error(this, "Don't support modulo " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support modulo " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression ModWith(Boolean other)
         {
-            return new Error(this, "Don't support modulo " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support modulo " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression ModWith(Complex other)
         {
-            return new Error(this, "Don't support modulo " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support modulo " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression ModWith(List other)
         {
-            return new Error(this, "Don't support modulo " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support modulo " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression ModWith(Text other)
         {
-            return new Error(this, "Don't support modulo " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support modulo " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression ModWith(Null other)
         {
-            return new Error(this, "Don't support modulo " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support modulo " + other.GetType().Name));
+            return Constant.Null;
         }
 
         #endregion
@@ -315,42 +356,50 @@ namespace Ast
         #region ExpWith
         public virtual Expression ExpWith(Integer other)
         {
-            return new Error(this, "Don't support powering " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support powering " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression ExpWith(Rational other)
         {
-            return new Error(this, "Don't support powering " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support powering " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression ExpWith(Irrational other)
         {
-            return new Error(this, "Don't support powering " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support powering " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression ExpWith(Boolean other)
         {
-            return new Error(this, "Don't support powering " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support powering " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression ExpWith(Complex other)
         {
-            return new Error(this, "Don't support powering " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support powering " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression ExpWith(List other)
         {
-            return new Error(this, "Don't support powering " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support powering " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression ExpWith(Text other)
         {
-            return new Error(this, "Don't support powering " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support powering " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression ExpWith(Null other)
         {
-            return new Error(this, "Don't support powering " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support powering " + other.GetType().Name));
+            return Constant.Null;
         }
 
         #endregion
@@ -358,42 +407,50 @@ namespace Ast
         #region AndWith
         public virtual Expression AndWith(Integer other)
         {
-            return new Error(this, "Don't support and with " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support and with " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression AndWith(Rational other)
         {
-            return new Error(this, "Don't support and with " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support and with " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression AndWith(Irrational other)
         {
-            return new Error(this, "Don't support and with " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support and with " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression AndWith(Boolean other)
         {
-            return new Error(this, "Don't support and with " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support and with " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression AndWith(Complex other)
         {
-            return new Error(this, "Don't support and with " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support and with " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression AndWith(List other)
         {
-            return new Error(this, "Don't support and with " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support and with " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression AndWith(Text other)
         {
-            return new Error(this, "Don't support and with " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support and with " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression AndWith(Null other)
         {
-            return new Error(this, "Don't support and with " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support and with " + other.GetType().Name));
+            return Constant.Null;
         }
 
         #endregion
@@ -401,42 +458,50 @@ namespace Ast
         #region OrWith
         public virtual Expression OrWith(Integer other)
         {
-            return new Error(this, "Don't support or with " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support or with " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression OrWith(Rational other)
         {
-            return new Error(this, "Don't support or with " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support or with " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression OrWith(Irrational other)
         {
-            return new Error(this, "Don't support or with " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support or with " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression OrWith(Boolean other)
         {
-            return new Error(this, "Don't support or with "+ other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support or with " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression OrWith(Complex other)
         {
-            return new Error(this, "Don't support or with " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support or with " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression OrWith(List other)
         {
-            return new Error(this, "Don't support or with " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support or with " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression OrWith(Text other)
         {
-            return new Error(this, "Don't support or with " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support or with " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression OrWith(Null other)
         {
-            return new Error(this, "Don't support or with " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support or with " + other.GetType().Name));
+            return Constant.Null;
         }
 
         #endregion
@@ -444,42 +509,50 @@ namespace Ast
         #region GreaterThan
         public virtual Expression GreaterThan(Integer other)
         {
-            return new Error(this, "Don't support greater than " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support greater than " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression GreaterThan(Rational other)
         {
-            return new Error(this, "Don't support greater than " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support greater than " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression GreaterThan(Irrational other)
         {
-            return new Error(this, "Don't support greater than " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support greater than " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression GreaterThan(Boolean other)
         {
-            return new Error(this, "Don't support greater than " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support greater than " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression GreaterThan(Complex other)
         {
-            return new Error(this, "Don't support greater than " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support greater than " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression GreaterThan(List other)
         {
-            return new Error(this, "Don't support greater than " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support greater than " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression GreaterThan(Text other)
         {
-            return new Error(this, "Don't support greater than " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support greater than " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression GreaterThan(Null other)
         {
-            return new Error(this, "Don't support greater than " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support greater than " + other.GetType().Name));
+            return Constant.Null;
         }
 
         #endregion
@@ -487,42 +560,50 @@ namespace Ast
         #region LesserThan
         public virtual Expression LesserThan(Integer other)
         {
-            return new Error(this, "Don't support lesser than " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support lesser than " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression LesserThan(Rational other)
         {
-            return new Error(this, "Don't support lesser than " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support lesser than " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression LesserThan(Irrational other)
         {
-            return new Error(this, "Don't support lesser than " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support lesser than " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression LesserThan(Boolean other)
         {
-            return new Error(this, "Don't support lesser than " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support lesser than " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression LesserThan(Complex other)
         {
-            return new Error(this, "Don't support lesser than " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support lesser than " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression LesserThan(List other)
         {
-            return new Error(this, "Don't support lesser than " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support lesser than " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression LesserThan(Text other)
         {
-            return new Error(this, "Don't support lesser than " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support lesser than " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression LesserThan(Null other)
         {
-            return new Error(this, "Don't support lesser than " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support lesser than " + other.GetType().Name));
+            return Constant.Null;
         }
 
         #endregion
@@ -530,42 +611,50 @@ namespace Ast
         #region GreaterThanOrEqualTo
         public virtual Expression GreaterThanOrEqualTo(Integer other)
         {
-            return new Error(this, "Don't support greater than or equal to " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support greater than or equal to " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression GreaterThanOrEqualTo(Rational other)
         {
-            return new Error(this, "Don't support greater than or equal to " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support greater than or equal to " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression GreaterThanOrEqualTo(Irrational other)
         {
-            return new Error(this, "Don't support greater than or equal to " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support greater than or equal to " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression GreaterThanOrEqualTo(Boolean other)
         {
-            return new Error(this, "Don't support greater than or equal to " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support greater than or equal to " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression GreaterThanOrEqualTo(Complex other)
         {
-            return new Error(this, "Don't support greater than or equal to " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support greater than or equal to " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression GreaterThanOrEqualTo(List other)
         {
-            return new Error(this, "Don't support greater than or equal to " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support greater than or equal to " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression GreaterThanOrEqualTo(Text other)
         {
-            return new Error(this, "Don't support greater than or equal to " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support greater than or equal to " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression GreaterThanOrEqualTo(Null other)
         {
-            return new Error(this, "Don't support greater than or equal to " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support greater than or equal to " + other.GetType().Name));
+            return Constant.Null;
         }
 
         #endregion
@@ -573,42 +662,50 @@ namespace Ast
         #region LesserThanOrEqualTo
         public virtual Expression LesserThanOrEqualTo(Integer other)
         {
-            return new Error(this, "Don't support lesser than or equal " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support lesser than or equal " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression LesserThanOrEqualTo(Rational other)
         {
-            return new Error(this, "Don't support lesser than or equal " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support lesser than or equal " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression LesserThanOrEqualTo(Irrational other)
         {
-            return new Error(this, "Don't support lesser than or equal " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support lesser than or equal " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression LesserThanOrEqualTo(Boolean other)
         {
-            return new Error(this, "Don't support lesser than or equal " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support lesser than or equal " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression LesserThanOrEqualTo(Complex other)
         {
-            return new Error(this, "Don't support lesser than or equal " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support lesser than or equal " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression LesserThanOrEqualTo(List other)
         {
-            return new Error(this, "Don't support lesser than or equal " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support lesser than or equal " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression LesserThanOrEqualTo(Text other)
         {
-            return new Error(this, "Don't support lesser than or equal " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support lesser than or equal " + other.GetType().Name));
+            return Constant.Null;
         }
 
         public virtual Expression LesserThanOrEqualTo(Null other)
         {
-            return new Error(this, "Don't support lesser than or equal " + other.GetType().Name);
+            CurScope.Errors.Add(new ErrorData(this, "Don't support lesser than or equal " + other.GetType().Name));
+            return Constant.Null;
         }
 
         #endregion
@@ -616,12 +713,14 @@ namespace Ast
 
         public virtual Expression Minus()
         {
-            return new Error(this, "Don't support minus");
+            CurScope.Errors.Add(new ErrorData(this, "Don't support minus"));
+            return Constant.Null;
         }
 
         public virtual Expression Negation()
         {
-            return new Error(this, "Don't support negation");
+            CurScope.Errors.Add(new ErrorData(this, "Don't support negation"));
+            return Constant.Null;
         }
 
         #region Binary Operator Overload
@@ -629,11 +728,6 @@ namespace Ast
         {
             left = left.Evaluate();
             right = right.Evaluate();
-
-            if (left is Error)
-                return left;
-            else if (right is Error)
-                return right;
 
             return left.AddWith(right);
         }
@@ -643,11 +737,6 @@ namespace Ast
             left = left.Evaluate();
             right = right.Evaluate();
 
-            if (left is Error)
-                return left;
-            else if (right is Error)
-                return right;
-
             return left.SubWith(right);
         }
 
@@ -655,11 +744,6 @@ namespace Ast
         {
             left = left.Evaluate();
             right = right.Evaluate();
-
-            if (left is Error)
-                return left;
-            else if (right is Error)
-                return right;
 
             return left.MulWith(right);
         }
@@ -669,13 +753,11 @@ namespace Ast
             left = left.Evaluate();
             right = right.Evaluate();
 
-            if (left is Error)
-                return left;
-            else if (right is Error)
-                return right;
-
             if (right.CompareTo(Constant.Zero))
-                return new Error(left, "Cannot divide with 0");
+            {
+                left.CurScope.Errors.Add(new ErrorData(left, "Cannot divide with 0"));
+                return Constant.Null;
+            }
 
             return left.DivWith(right);
         }
@@ -685,13 +767,12 @@ namespace Ast
             left = left.Evaluate();
             right = right.Evaluate();
 
-            if (left is Error)
-                return left;
-            else if (right is Error)
-                return right;
 
             if (right.CompareTo(Constant.Zero))
-                return new Error(left, "Cannot modulo with 0");
+            {
+                left.CurScope.Errors.Add(new ErrorData(left, "Cannot modulo with 0"));
+                return Constant.Null;
+            }
 
             return left.ModWith(right);
         }
@@ -701,11 +782,6 @@ namespace Ast
             left = left.Evaluate();
             right = right.Evaluate();
 
-            if (left is Error)
-                return left;
-            else if (right is Error)
-                return right;
-
             return left.ExpWith(right);
         }
 
@@ -713,11 +789,6 @@ namespace Ast
         {
             left = left.Evaluate();
             right = right.Evaluate();
-
-            if (left is Error)
-                return left;
-            else if (right is Error)
-                return right;
 
             return left.AndWith(right);
         }
@@ -727,11 +798,6 @@ namespace Ast
             left = left.Evaluate();
             right = right.Evaluate();
 
-            if (left is Error)
-                return left;
-            else if (right is Error)
-                return right;
-
             return left.OrWith(right);
         }
 
@@ -739,11 +805,6 @@ namespace Ast
         {
             left = left.Evaluate();
             right = right.Evaluate();
-
-            if (left is Error)
-                return left;
-            else if (right is Error)
-                return right;
 
             return left.GreaterThan(right);
         }
@@ -753,11 +814,6 @@ namespace Ast
             left = left.Evaluate();
             right = right.Evaluate();
 
-            if (left is Error)
-                return left;
-            else if (right is Error)
-                return right;
-
             return left.LesserThan(right);
         }
 
@@ -766,11 +822,6 @@ namespace Ast
             left = left.Evaluate();
             right = right.Evaluate();
 
-            if (left is Error)
-                return left;
-            else if (right is Error)
-                return right;
-
             return left.GreaterThanOrEqualTo(right);
         }
 
@@ -778,11 +829,6 @@ namespace Ast
         {
             left = left.Evaluate();
             right = right.Evaluate();
-
-            if (left is Error)
-                return left;
-            else if (right is Error)
-                return right;
 
             return left.LesserThanOrEqualTo(right);
         }

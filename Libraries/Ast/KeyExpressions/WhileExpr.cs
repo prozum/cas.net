@@ -22,18 +22,19 @@ namespace Ast
             {
                 var res = Condition.ReduceEvaluate();
 
+                if (CurScope.Error)
+                    return Constant.Null;
+
                 if (res is Boolean)
                 {
                     if (!(res as Boolean).@bool)
                         break;
                 }
-                else if (res is Error)
-                {
-                    CurScope.Errors.Add(new ErrorData(res as Error));
-                    return Constant.Null;
-                }
 
                 Expression.Evaluate();
+
+                if (CurScope.Error)
+                    return Constant.Null;
             }
 
             if (i > MaxIterations)

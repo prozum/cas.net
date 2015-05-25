@@ -17,9 +17,6 @@ namespace Ast
 
         public override Expression Call(List args)
         {
-            if (!IsArgumentsValid(args))
-                return new ArgumentError(this);
-
             var res = args[0].Evaluate();
 
             var deg = CurScope.GetBool("deg");
@@ -31,8 +28,9 @@ namespace Ast
                 if (value >= -1 && value <= 1)
                     return new Irrational((decimal)Math.Asin(value) * (deg ? Constant.RadToDeg.@decimal  : 1)).Evaluate();
             }
-
-            return new Error(this, "Could not take ASin of: " + args[0]);
+                
+            CurScope.Errors.Add(new ErrorData(this, "Could not take ASin of: " + args[0]));
+            return Constant.Null;
         }
 
         public override Expression Reduce(List args, Scope scope)

@@ -18,7 +18,10 @@ namespace Ast
         public override Expression Call(List args)
         {
             return args[0].Expand();
-                return new ArgumentError(this);
+            {
+                CurScope.Errors.Add(new ArgErrorData(this));
+                return new Null();
+            }
 
         }
     }
