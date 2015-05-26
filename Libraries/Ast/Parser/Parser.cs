@@ -481,9 +481,8 @@ namespace Ast
                             ReportError("Unexpected ']' in " + CurContext);
                         break;
                     case TokenKind.CURLY_END:
-                        if (CurContext == ParseContext.ScopeMulti)
+                        if (CurContext == ParseContext.ScopeMulti || CurContext == ParseContext.ScopeSingle)
                             done = true;
-
                         else
                             ReportError("Unexpected '}' in " + CurContext);
                         break;
