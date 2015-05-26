@@ -9,6 +9,9 @@ using System.Collections.Generic;
  * deserialising strings back into objects.
  */
 
+/*
+ * Not all elements are implementes in the final product
+ */
 
 namespace ImEx
 {
