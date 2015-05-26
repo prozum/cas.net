@@ -3,12 +3,12 @@ using Gtk;
 
 namespace DesktopUI
 {
+    // Menu item for logging out, resetting the user and hiding all menus
     public class LogoutMenuItem : MenuItem
     {
         Menu menu;
         User user;
 
-        // Constructor for the logout menu item
         public LogoutMenuItem(User user, Menu menu)
             : base("Logout")
         {

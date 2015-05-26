@@ -9,6 +9,7 @@ using Gdk;
 
 namespace DesktopUI
 {
+    // Inserts a multiline view when pressed
     public class MovableCasCalcMultilineToolButton : ToolButton
     {
         TextViewList textviews;
@@ -29,6 +30,7 @@ namespace DesktopUI
             };
         }
 
+        // Inserts the widget when the butten is pressed
         private void OnActivated()
         {
             textviews.InsertCalcMultilineView(-1);
