@@ -46,6 +46,7 @@ namespace Ast
                 res = Expressions[Expressions.Count - 1].Evaluate();
                 if (CurScope.GetBool("debug"))
                     CurScope.SideEffects.Add(new DebugData("Debug if["+(Expressions.Count-1)+"]: "+Expressions[Expressions.Count-1]+" = "+res));
+                return res;
             }
 
             return Constant.Null;

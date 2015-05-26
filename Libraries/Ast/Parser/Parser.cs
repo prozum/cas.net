@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Ast
 {
+
     public enum ParseContext
     {
         List,
@@ -91,7 +92,7 @@ namespace Ast
                 cx = ParseContext.ScopeSingle;
                 ScopeStack.Push(new Scope(CurScope, share));
             }
-
+                
             ContextStack.Push(cx);
             ParseKeyExpressions();
             ContextStack.Pop();
