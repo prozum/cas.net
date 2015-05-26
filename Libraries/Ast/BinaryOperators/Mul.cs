@@ -50,6 +50,11 @@
                 {
                     return right;
                 }
+                //Both real, calculate. 5*5 -> 25.
+                else if (right is Real)
+                {
+                    return left * right;
+                }
                 //Right is Variable. Multiplies left with right's prefix. 4*3x -> (4*3)x
                 else if (right is Variable)
                 {
@@ -70,6 +75,11 @@
                 {
                     return left;
                 }
+                //Both real, calculate. 5*5 -> 25.
+                else if (left is Real)
+                {
+                    return left * right;
+                }
                 //Left is Variable. Multiplies right with left's prefix. 3x*4 -> (4*3)x
                 else if (left is Variable)
                 {
@@ -77,11 +87,6 @@
                     (res as Variable).Prefix = ((res as Variable).Prefix * right) as Real;
                     return res;
                 }
-            }
-            //Both real, calculate. 5*5 -> 25.
-            else if (right is Real)
-            {
-                return left * right;
             }
             //When left is Mul, go into that Mul, and check if right can be reduced with left's sides.
             else if (left is Mul)
