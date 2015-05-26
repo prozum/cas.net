@@ -25,13 +25,15 @@ namespace Ast.Tests
         [TestCase("x+y+z==z+x+y")]
         [TestCase("x+y+z+q+b==b+q+z+y+x")]
         [TestCase("x+y+z+q+b==b+x+q+y+z")]
-        //[TestCase("a+b+c+d+e+f+g+h+i+j+k+l+m+n+o+p+q+r+s+t+u+v+w+x+y+z==z+a+y+b+x+c+w+d+v+e+u+f+t+g+s+h+r+i+q+j+p+k+o+m+n")]
         [TestCase("x-y==-y+x")]
         [TestCase("x*(z/y)==(x*z)/y")]
         [TestCase("x*(z/y)==(z/y)*x")]
         [TestCase("x^2==x*x")]
         [TestCase("x^2+x==x*x+x")]
         [TestCase("x+x^2==x*x+x")]
+        [TestCase("[1,2,3,4,5]==[1,2,3,4,5]")]
+        [TestCase("[1+1,2-2,2*2,4/4]==[2,0,4,1]")]
+        [TestCase("[x+x,x-x,x*x,x/x]==[2*x,0,x^2,1]")]
         #endregion
         public void ExpCompareTo(string inputString)
         {
@@ -89,127 +91,20 @@ namespace Ast.Tests
         [TestCase("x*y*z^2", "x*y*z*z")]
         [TestCase("x/(y*z)", "x/y/z")]
         [TestCase("x/(y*z)", "(x/y)/z")]
-        [TestCase("(x*z)/y", "x/(y/z)")]
+        [TestCase("x*z/y", "x/(y/z)")]
         [TestCase("x/(y*z*q)", "x/y/z/q")]
-        [TestCase("(x*q)/(z*y)", "(x/y)/(z/q)")]
-        [TestCase("(x*z)/(y*q)", "x/(y/z)/q")]
-        [TestCase("(z*q*x)/y", "x/((y/z)/q)")]
-        [TestCase("(x*z)/(y*q)", "(x/(y/z))/q")]
-        [TestCase("(x+y)^2", "x^2+y^2+2*x*y")]
-        [TestCase("(x-y)^2", "x^2+y^2-2*x*y")]
+        [TestCase("x*q/(z*y)", "(x/y)/(z/q)")]
+        [TestCase("x*z/(y*q)", "x/(y/z)/q")]
+        [TestCase("z*q*x/y", "x/((y/z)/q)")]
+        [TestCase("x*z/(y*q)", "(x/(y/z))/q")]
         #endregion
         #endregion
         public void Reduce(string expected, string inputString)
         {
-            var redString = "sys.reduce[" + inputString + "]";
+            var redString = "import math; reduce[" + inputString + "]";
             var res = Evaluator.Eval(redString);
             Assert.AreEqual(expected, res.ToString());
         }
-
-
-        //public void Expand(string expected, string inputString)
-        //{
-        //    var simString = "Expand[" + inputString + "]";
-        //    var res = eval.Evaluation(simString);
-        //    Assert.AreEqual(expected, res.ToString());
-        //}
-
-        /*
-        #region Parse Test Cases
-
-        #region Numbers
-        #region Positive
-        [TestCase("{1}", "1")]
-        [TestCase("{1}", "(1)")]
-        [TestCase("{1+1}", "1+1")]
-        [TestCase("{1+1}", "(1)+1")]
-        [TestCase("{1+1}", "1+(1)")]
-        [TestCase("{1+1}", "(1+1)")]
-        [TestCase("{1-1}", "(1)-1")]
-        [TestCase("{1-1}", "1-(1)")]
-        [TestCase("{1-1}", "(1-1)")]
-        [TestCase("{1*1}", "(1)*1")]
-        [TestCase("{1*1}", "1*(1)")]
-        [TestCase("{1*1}", "(1*1)")]
-        [TestCase("{1/1}", "(1)/1")]
-        [TestCase("{1/1}", "1/(1)")]
-        [TestCase("{1/1}", "(1/1)")]
-        #endregion
-
-        #region Negative
-        [TestCase("{-1}", "-1")]
-        [TestCase("{-1+-1}", "-1+-1")]
-        [TestCase("{-1--1}", "-1--1")]
-        [TestCase("{-1*-1}", "-1*-1")]
-        [TestCase("{-1/-1}", "-1/-1")]
-        [TestCase("{-1^-1}", "-1^-1")]
-        #endregion
-        #endregion
-
-        #region Symbols
-        #region Positive
-        [TestCase("{x}", "x")]
-        [TestCase("{x}", "(x)")]
-        [TestCase("{x+x}", "x+x")]
-        [TestCase("{x+x}", "(x)+x")]
-        [TestCase("{x+x}", "x+(x)")]
-        [TestCase("{x+x}", "(x+x)")]
-        [TestCase("{x-x}", "(x)-x")]
-        [TestCase("{x-x}", "x-(x)")]
-        [TestCase("{x-x}", "(x-x)")]
-        [TestCase("{x*x}", "(x)*x")]
-        [TestCase("{x*x}", "x*(x)")]
-        [TestCase("{x*x}", "(x*x)")]
-        [TestCase("{x/x}", "(x)/x")]
-        [TestCase("{x/x}", "x/(x)")]
-        [TestCase("{x/x}", "(x/x)")]
-        #endregion
-
-        #region Negative
-        [TestCase("{-x}", "-x")]
-        [TestCase("{-x+-x}", "-x+-x")]
-        [TestCase("{-x--x}", "-x--x")]
-        [TestCase("{-x*-x}", "-x*-x")]
-        [TestCase("{-x/-x}", "-x/-x")]
-        [TestCase("{-x^-x}", "-x^-x")]
-        #endregion
-        #endregion
-
-        #region Functions
-        #region Positive
-        [TestCase("{f[x]}", "f[x]")]
-        [TestCase("{f[x]}", "(f[x])")]
-        [TestCase("{f[x]+f[x]}", "f[x]+f[x]")]
-        [TestCase("{f[x]+f[x]}", "(f[x])+f[x]")]
-        [TestCase("{f[x]+f[x]}", "f[x]+(f[x])")]
-        [TestCase("{f[x]+f[x]}", "(f[x]+f[x])")]
-        [TestCase("{f[x]-f[x]}", "(f[x])-f[x]")]
-        [TestCase("{f[x]-f[x]}", "f[x]-(f[x])")]
-        [TestCase("{f[x]-f[x]}", "(f[x]-f[x])")]
-        [TestCase("{f[x]*f[x]}", "(f[x])*f[x]")]
-        [TestCase("{f[x]*f[x]}", "f[x]*(f[x])")]
-        [TestCase("{f[x]*f[x]}", "(f[x]*f[x])")]
-        [TestCase("{f[x]/f[x]}", "(f[x])/f[x]")]
-        [TestCase("{f[x]/f[x]}", "f[x]/(f[x])")]
-        [TestCase("{f[x]/f[x]}", "(f[x]/f[x])")]
-        [TestCase("{reduce[sqrt[2]^2]}", "reduce[sqrt[2]^2]")]
-        #endregion
-
-        #region Negative
-        [TestCase("{-f[x]}", "-f[x]")]
-        [TestCase("{-f[x]+-f[x]}", "-f[x]+-f[x]")]
-        [TestCase("{-f[x]--f[x]}", "-f[x]--f[x]")]
-        [TestCase("{-f[x]*-f[x]}", "-f[x]*-f[x]")]
-        [TestCase("{-f[x]/-f[x]}", "-f[x]/-f[x]")]
-        [TestCase("{-f[x]^-f[x]}", "-f[x]^-f[x]")]
-        #endregion
-        #endregion
-        #endregion
-        public void Parse(string expected, string inputString)
-        {
-            Assert.AreEqual(expected, parser.Parse(inputString).ToString());
-        }
-        */
 
         #region Evaluate Test Cases
 
@@ -301,47 +196,65 @@ namespace Ast.Tests
         [TestCase(-0.5, "1/2-1")]
         [TestCase(-1, "1/2-1.5")]
         #endregion
+
+        #region Mul
+        [TestCase(3, "2*1.5")]
+        [TestCase(1, "2*1/2")]
+        [TestCase(3, "1.5*2")]
+        [TestCase(0.75, "1.5*1/2")]
+        [TestCase(1, "1/2*2")]
+        [TestCase(0.75, "1/2*1.5")]
+        #endregion
+
+        #region Div
+        [TestCase(4, "2/0.5")]
+        [TestCase(4, "2/(1/2)")]
+        [TestCase(0.25, "0.5/2")]
+        [TestCase(3, "1.5/(1/2)")]
+        [TestCase(0.25, "(1/2)/2")]
+        [TestCase(1, "(1/2)/0.5")]
+        #endregion
         #endregion
         #endregion
 
         #region Program Defined Functions
         #region Sin, ASin
-        [TestCase(1, "tri.sin[90]")]
-        [TestCase(0.5, "tri.sin[30]")]
-        [TestCase(0, "tri.sin[0]")]
-        [TestCase(90, "tri.asin[1]")]
-        [TestCase(30, "tri.asin[0.5]")]
-        [TestCase(0, "tri.asin[0]")]
+        [TestCase(1, "sin[90]")]
+        [TestCase(0.5, "sin[30]")]
+        [TestCase(0, "sin[0]")]
+        [TestCase(90, "asin[1]")]
+        [TestCase(30, "asin[0.5]")]
+        [TestCase(0, "asin[0]")]
         #endregion
 
         #region Cos, ACos
-        //[TestCase(0, "cos(90)")] works, but precision
-        [TestCase(0.5, "tri.cos[60]")]
-        [TestCase(1, "tri.cos[0]")]
-        [TestCase(0, "tri.acos[1]")]
-        [TestCase(60, "tri.acos[0.5]")]
-        [TestCase(90, "tri.acos[0]")]
+        [TestCase(0, "cos[90]")]
+        [TestCase(0.5, "cos[60]")]
+        [TestCase(1, "cos[0]")]
+        [TestCase(0, "acos[1]")]
+        [TestCase(60, "acos[0.5]")]
+        [TestCase(90, "acos[0]")]
         #endregion
 
         #region Tan, ATan
-        [TestCase(1, "tri.tan[45]")]
-        //[TestCase(0.5, "tri.tan[26.57]")] Unpresition gives wrong actual. Is right calculation
-        [TestCase(0, "tri.tan[0]")]
-        [TestCase(45, "tri.atan[1]")]
-        //[TestCase(26.57, "tri.atan[0.5]")] Unpresition gives wrong actual. Is right calculation
-        [TestCase(0, "tri.atan[0]")]
+        [TestCase(1, "tan[45]")]
+        [TestCase(0.5, "tan[26.57]")]
+        [TestCase(0, "tan[0]")]
+        [TestCase(45, "atan[1]")]
+        [TestCase(26.57, "atan[0.5]")]
+        [TestCase(0, "atan[0]")]
         #endregion
 
         #region Sqrt
-        [TestCase(2, "math.sqrt[4]")]
-        [TestCase(2, "math.sqrt[2]^2")]
-        [TestCase(2, "math.sqrt[2]*sqrt[2]")]
+        [TestCase(2, "sqrt[4]")]
+        [TestCase(2, "sqrt[2]^2")]
+        [TestCase(2, "sqrt[2]*sqrt[2]")]
         #endregion
         #endregion
         #endregion
         public void Evaluate(dynamic expected, string calculation)
         {
-            var res = Evaluator.Eval(calculation);
+            var res = Evaluator.Eval("import math; import trig; " + calculation);
             
             if (res is Integer)
             {
@@ -370,20 +283,18 @@ namespace Ast.Tests
         }
 
         #region Solve Test Cases
-        [TestCase("x=0", "x=0")]
-        [TestCase("x=0", "0=x")]
-        [TestCase("x=-3", "3+x=0")]
-        [TestCase("x=-3", "x+3=0")]
-        [TestCase("x=3", "3-x=0")]
-        [TestCase("x=3", "x-3=0")]
-        [TestCase("x=2", "3*x=6")]
-        [TestCase("x=2", "x*3=6")]
-        [TestCase("x=2", "6/x=3")]
-        [TestCase("x=6", "x/3=2")]
-        [TestCase("x=[sqrt[4],-sqrt[4]]", "x^2=4")]
-        [TestCase("x=2", "x^3=8")]
-        [TestCase("x=4", "x+x=8")]
-        [TestCase("x=2", "x*x^2=8")]
+        [TestCase("0", "x=0")]
+        [TestCase("0", "0=x")]
+        [TestCase("-3", "3+x=0")]
+        [TestCase("-3", "x+3=0")]
+        [TestCase("3", "3-x=0")]
+        [TestCase("3", "x-3=0")]
+        [TestCase("2", "3*x=6")]
+        [TestCase("2", "x*3=6")]
+        [TestCase("2", "6/x=3")]
+        [TestCase("6", "x/3=2")]
+        [TestCase("[sqrt[4],-sqrt[4]]", "x^2=4")]
+        [TestCase("4", "x+x=8")]
         #endregion
         public void Solve(string expected, string inputString)
         {

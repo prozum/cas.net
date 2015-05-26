@@ -25,7 +25,14 @@ namespace Ast
 
             if (res is Real)
             {
-                return new Irrational((decimal)Math.Atan((double)(res as Real)) * (deg ? Constant.RadToDeg.@decimal  : 1) ).Evaluate();
+                double value = res as Real;
+
+                if (value == 1)
+                    return Constant.Deg45 * (deg ? new Irrational(1M) : Constant.DegToRad);
+                if (value == 0.5)
+                    return Constant.Deg26d57 * (deg ? new Irrational(1M) : Constant.DegToRad);
+
+                return new Irrational((decimal)Math.Atan(value) * (deg ? Constant.RadToDeg.@decimal : 1)).Evaluate();
             }
 
             return new Error(this, "Could not take ATan of: " + args[0]);
@@ -46,7 +53,7 @@ namespace Ast
         {
             var arg = new List();
             arg.Items.Add(other);
-            return SysFunc.MakeFunction<TanFunc>(arg, other.CurScope);
+            return SysFunc.MakeFunction(arg, CurScope, "tan");
         }
     }
 }

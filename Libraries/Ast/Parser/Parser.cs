@@ -48,9 +48,11 @@ namespace Ast
         {
             Errors.Clear();
 
+
             Tokens = Scanner.Tokenize(parseString, Errors);
             if (Errors.Count > 0)
                 return Errors[0];
+
 
             ParseScope(false, global);
 
@@ -73,7 +75,7 @@ namespace Ast
         public Scope ParseScope(bool share = false, Scope global = null)
         {
             ParseContext cx;
-
+            
             while (Eat(TokenKind.NEW_LINE));
 
             if (global != null)

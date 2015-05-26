@@ -13,6 +13,9 @@
         {
             var res = new Minus();
             res.Child = Child.Reduce();
+            if (res.Child is Variable)
+                return (res.Child as Variable).ToNegative();
+
             return res;
         }
     }

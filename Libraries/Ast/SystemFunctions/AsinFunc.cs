@@ -28,6 +28,10 @@ namespace Ast
             {
                 double value = res as Real;
 
+                if (value == 1)
+                    return Constant.Deg90 * (deg ? new Irrational(1M) : Constant.DegToRad);
+                if (value == 0.5)
+                    return Constant.Deg30 * (deg ? new Irrational(1M) : Constant.DegToRad);
                 if (value >= -1 && value <= 1)
                     return new Irrational((decimal)Math.Asin(value) * (deg ? Constant.RadToDeg.@decimal  : 1)).Evaluate();
             }
@@ -50,7 +54,7 @@ namespace Ast
         {
             var arg = new List();
             arg.Items.Add(other);
-            return SysFunc.MakeFunction<SinFunc>(arg, other.CurScope);
+            return SysFunc.MakeFunction(arg, CurScope, "sin");
         }
     }
 }

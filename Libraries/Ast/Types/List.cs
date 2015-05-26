@@ -48,6 +48,17 @@ namespace Ast
             return res;
         }
 
+        public override Expression Reduce()
+        {
+            var res = new List<Expression>();
+            foreach (var item in Items)
+            {
+                res.Add(item.Reduce());
+            }
+
+            return new List(res);
+        }
+
         public bool IsArgumentsValid(List args)
         {
             if (args.Count != 1 || !(args[0].Evaluate() is Integer))

@@ -27,11 +27,11 @@ namespace Ast
 
             if (equal.Right.ContainsVariable(@var))
             {
-                solved = new Equal(new Sub(equal.Left, equal.Right).Reduce().Expand(), new Integer(0));
+                solved = new Equal(new Sub(equal.Left, equal.Right).Expand(), new Integer(0));
             }
             else
             {
-                solved = equal;
+                solved = (equal.Expand() as Equal);
             }
 
             while (!((solved.Left is Variable) && solved.Left.CompareTo(@var)))
@@ -62,7 +62,7 @@ namespace Ast
                 }
             }
 
-            return solved.Reduce();
+            return solved.Right.ReduceCurrectOp();
         }
 
         private Equal InvertOperator(Expression left, Expression right)

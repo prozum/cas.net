@@ -22,7 +22,10 @@ namespace Ast
 
             if (res is Real)
             {
-                return new Irrational(Math.Tan((double) ((deg ? Constant.DegToRad.@decimal  : 1) * (res as Real)) )).Evaluate();
+                if (res.CompareTo(Constant.Deg26d57))
+                    return Constant.Half;
+
+                return new Irrational(Math.Tan((double)((deg ? Constant.DegToRad.@decimal : 1) * (res as Real)))).Evaluate();
             }
 
             return new Error(this, "Could not take Tan of: " + args[0]);
@@ -43,7 +46,7 @@ namespace Ast
         {
             var arg = new List();
             arg.Items.Add(other);
-            return SysFunc.MakeFunction<AtanFunc>(arg, other.CurScope);
+            return SysFunc.MakeFunction(arg, CurScope, "atan");
         }
     }
 }

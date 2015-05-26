@@ -15,7 +15,7 @@ namespace Ast
 
         public override Expression Call(List args)
         {
-            return args[0].Reduce();
+            return args[0].ReduceCurrectOp();
         }
     }
 }

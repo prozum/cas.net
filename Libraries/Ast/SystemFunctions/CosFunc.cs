@@ -26,7 +26,12 @@ namespace Ast
 
             if (res is Real)
             {
-                return new Irrational(Math.Cos((double) ((deg ? Constant.DegToRad.@decimal  : 1) * (res as Real)) )).Evaluate();
+                double value = res as Real;
+
+                if (value == (90 * (deg ? 1.0 : (double)Constant.DegToRad.@decimal)))
+                    return Constant.Zero;
+
+                return new Irrational(Math.Cos((double)(deg ? Constant.DegToRad.@decimal : 1) * value)).Evaluate();
             }
 
             return new Error(this, "Could not take Cos of: " + args[0]);
@@ -47,7 +52,7 @@ namespace Ast
         {
             var arg = new List();
             arg.Items.Add(other);
-            return SysFunc.MakeFunction<AcosFunc>(arg, other.CurScope);
+            return SysFunc.MakeFunction(arg, CurScope, "acos");
         }
     }
 }
