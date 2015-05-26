@@ -15,6 +15,7 @@
         public override Expression Evaluate()
         {
             int i = 0;
+            var resList = new List();
 
             while (i++ < MaxIterations)
             {
@@ -29,13 +30,18 @@
                         break;
                 }
 
-                WhileScope.Evaluate();
+                res = WhileScope.Evaluate();
+
+                if (res is Error)
+                    return res;
+
+                resList.Items.Add(res);
             }
 
             if (i > MaxIterations)
                 return new Error(this, "Overflow");
 
-            return Constant.Null;
+            return resList;
 
         }
 

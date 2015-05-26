@@ -198,17 +198,17 @@ namespace Ast
             Expression cond;
             Expression expr;
 
-            var stmt = new IfExpr(CurScope);
+            var ifexpr = new IfExpr(CurScope);
 
             cond = ParseColon();
             if (Error)
                 return null;
-            stmt.Conditions.Add(cond);
+            ifexpr.Conditions.Add(cond);
 
             expr = ParseScope(true);
             if (Error)
                 return null;
-            stmt.Expressions.Add(expr);
+            ifexpr.Expressions.Add(expr);
 
             while (Eat(TokenKind.NEW_LINE));
             while (Eat(TokenKind.ELIF))
@@ -216,12 +216,12 @@ namespace Ast
                 cond = ParseColon();
                 if (Error)
                     return null;
-                stmt.Conditions.Add(cond);
+                ifexpr.Conditions.Add(cond);
 
                 expr = ParseScope(true);
                 if (Error)
                     return null;
-                stmt.Expressions.Add(expr);
+                ifexpr.Expressions.Add(expr);
 
                 while (Eat(TokenKind.NEW_LINE));
             }
@@ -234,19 +234,19 @@ namespace Ast
                 expr = ParseScope(true);
                 if (Error)
                     return null;
-                stmt.Expressions.Add(expr);
+                ifexpr.Expressions.Add(expr);
             }
 
-            return stmt;
+            return ifexpr;
         }
 
         public ForExpr ParseFor()
         {
-            var stmt = new ForExpr(CurScope);
+            var forexpr = new ForExpr(CurScope);
 
             if (Peek(TokenKind.IDENTIFIER))
             {
-                stmt.Var = CurToken.Value;
+                forexpr.Var = CurToken.Value;
                 Eat();
             }
             else
@@ -261,22 +261,15 @@ namespace Ast
                 return null;
             }
 
-            var list = ParseColon().Evaluate();
-
+            forexpr.List = ParseColon();
             if (Error)
                 return null;
 
-            if (list is List)
-                stmt.List = list as List;
-            else
-            {
-                ReportError("For: " + list + " is not a list");
+            forexpr.ForScope = ParseScope();
+            if (Error)
                 return null;
-            }
 
-            stmt.ForScope = ParseScope();
-
-            return stmt;
+            return forexpr;
         }
 
         public WhileExpr ParseWhile()
@@ -284,20 +277,20 @@ namespace Ast
             Expression cond;
             Scope scope;
 
-            var stmt = new WhileExpr(CurScope);
+            var whileexpr = new WhileExpr(CurScope);
 
             cond = ParseColon();
             if (Error)
                 return null;
-            stmt.Condition = cond;
+            whileexpr.Condition = cond;
 
             scope = ParseScope();
             if (Error)
                 return null;
-            stmt.WhileScope = scope;
-            stmt.Condition.CurScope = scope;
+            whileexpr.WhileScope = scope;
+            whileexpr.Condition.CurScope = scope;
 
-            return stmt;
+            return whileexpr;
         }
 
         public Expression ParseColon()
