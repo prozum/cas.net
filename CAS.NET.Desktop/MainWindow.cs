@@ -157,7 +157,7 @@ namespace CAS.NET.Desktop
                 }
             }
 
-            GLib.Timeout.Add (2000, new GLib.TimeoutHandler (DefBoxUpdate));
+            GLib.Timeout.Add(2000, new GLib.TimeoutHandler(DefBoxUpdate));
         }
 
         public bool DefBoxUpdate()

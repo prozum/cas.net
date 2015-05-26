@@ -48,9 +48,9 @@ namespace DesktopUI
             entryFasitSet.Text = facit;
 
             labelFacitGet = new Label("Result:");
-            labelFacitSet = new Label("Set result:");
+            labelFacitSet = new Label("Set facit:");
 
-            checkShowCorrect = new CheckButton();
+            checkShowCorrect = new CheckButton("Show students if correct");
             labelCorrect = new Label("");
 
             entryFasitGet.Changed += delegate
@@ -74,9 +74,12 @@ namespace DesktopUI
             {
                 Attach(labelFacitSet, 1, 1, 1, 1);
                 Attach(entryFasitSet, 2, 1, 1, 1);
-                Attach(checkShowCorrect, 1, 2, 2, 1);
+                Attach(labelFacitGet, 1, 2, 1, 1);
+                Attach(entryFasitGet, 2, 2, 1, 1);
+
+                Attach(checkShowCorrect, 1, 3, 2, 1);
             }
-            if (user.privilege == 0)
+            if (user.privilege <= 0)
             {
                 Attach(labelFacitGet, 1, 1, 1, 1);
                 Attach(entryFasitGet, 2, 1, 1, 1);
