@@ -11,7 +11,13 @@ namespace Ast
         {
             ErrorMessage = msg;
         }
-            
+
+        public Error(Pos pos, string msg)
+        {
+            Position = pos;
+            ErrorMessage = msg;
+        }
+
         public Error (Expression expr, string msg)
         {
             if (expr is Variable)

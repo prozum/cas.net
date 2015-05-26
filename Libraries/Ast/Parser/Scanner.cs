@@ -12,7 +12,7 @@ namespace Ast
         static char[] Chars;
         static Pos Position;
 
-        static List<ErrorData> Errors; 
+        static List<Error> Errors; 
 
         public static char CharNext(bool consume = true)
         {
@@ -29,7 +29,7 @@ namespace Ast
                 return EOS;
         }
 
-        public static Queue<Token> Tokenize(string tokenString, List<ErrorData> errors)
+        public static Queue<Token> Tokenize(string tokenString, List<Error> errors)
         {
             var res = new Queue<Token> ();
 
@@ -313,7 +313,7 @@ namespace Ast
 
         public static void ReportError(string msg)
         {
-            var error = new ErrorData("Scanner: " + msg);
+            var error = new Error("Scanner: " + msg);
             error.Position = Position;
             Errors.Add(error);
         }

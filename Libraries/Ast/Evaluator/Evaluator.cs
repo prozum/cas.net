@@ -5,7 +5,7 @@ namespace Ast
 {
     public class Evaluator : Scope
     {
-        private Parser _parser = new Parser();
+        public Parser Parser = new Parser();
 
         public static Expression Eval(string parseString)
         {
@@ -57,11 +57,11 @@ namespace Ast
 
         }
 
-        public void Parse(string parseString)
+        public Error Parse(string parseString)
         {
             Expressions.Clear();
             SideEffects.Clear();
-            _parser.Parse(parseString, this);
+            return Parser.Parse(parseString, this);
         }
 
     }

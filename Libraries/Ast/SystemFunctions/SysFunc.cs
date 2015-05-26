@@ -120,8 +120,12 @@ namespace Ast
             if (valid)
                 return true;
 
-            CurScope.Errors.Add(new ErrorData(new ArgumentError(this)));
             return false;
+        }
+
+        public Error GetArgumentError(List args)
+        {
+            return new ArgumentError(this);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Ast
         public List<Expression> Conditions = new List<Expression>();
         public List<Expression> Expressions = new List<Expression>();
 
-        public IfExpr (Scope scope)
+        public IfExpr(Scope scope)
         { 
             CurScope = scope;
         }
@@ -25,10 +25,7 @@ namespace Ast
                     CurScope.SideEffects.Add(new DebugData("Debug if cond["+i+"]: "+Conditions[i]+" = "+res));
                     
                 if (res is Error)
-                {
-                    CurScope.Errors.Add(new ErrorData(res as Error));
-                    return Constant.Null;
-                }
+                    return res;
 
                 if (res is Boolean)
                 {
@@ -42,10 +39,7 @@ namespace Ast
                     }
                 }
                 else
-                {
-                    CurScope.Errors.Add(new ErrorData("Condition " + i + ": " + Conditions[i] + " does not return bool"));
-                    return Constant.Null;
-                }
+                    return new Error(this, "Condition " + i + ": " + Conditions[i] + " does not return bool");
             }
 
             if (Expressions.Count > Conditions.Count)

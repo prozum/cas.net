@@ -5,7 +5,7 @@ namespace Ast
     public class WhileExpr : Expression
     {
         public Expression Condition;
-        public Expression Expression;
+        public Expression WhileScope;
 
         readonly int MaxIterations = 10000;
 
@@ -22,22 +22,20 @@ namespace Ast
             {
                 var res = Condition.ReduceEvaluate();
 
+                if (res is Error)
+                    return res;
+
                 if (res is Boolean)
                 {
                     if (!(res as Boolean).@bool)
                         break;
                 }
-                else if (res is Error)
-                {
-                    CurScope.Errors.Add(new ErrorData(res as Error));
-                    return Constant.Null;
-                }
 
-                Expression.Evaluate();
+                WhileScope.Evaluate();
             }
 
             if (i > MaxIterations)
-                CurScope.Errors.Add(new ErrorData("while: Overflow!"));
+                return new Error(this, "Overflow");
 
             return Constant.Null;
 
@@ -45,7 +43,7 @@ namespace Ast
 
         public override string ToString()
         {
-            return Expression.ToString();
+            return WhileScope.ToString();
         }
     }
 }

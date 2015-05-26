@@ -13,23 +13,7 @@ namespace Ast
         public List<Expression> Returns;
         public Boolean Return;
 
-        public List<ErrorData> Errors;
-        public bool Error 
-        { 
-            get 
-            {
-                if (Errors.Count > 0)
-                {
-                    foreach (var error in Errors)
-                    {
-                        SideEffects.Add(error);
-                    }
-                    return true;
-                }
-                else
-                    return false;
-            }
-        }
+        public Error Error;
 
         public override Scope CurScope
         {
@@ -53,7 +37,7 @@ namespace Ast
         public Scope()
         {
             SideEffects = new List<EvalData>();
-            Errors = new List<ErrorData>();
+            Error = null;
 
             Locals =  new Dictionary<string,Expression>();
             Returns = new List<Expression>();
@@ -64,7 +48,7 @@ namespace Ast
         {
             CurScope = scope;
             SideEffects = scope.SideEffects;
-            Errors = scope.Errors;
+            Error = scope.Error;
 
             if (share)
             {
@@ -82,9 +66,6 @@ namespace Ast
 
         public override Expression Evaluate()
         {
-            if (Error)
-                return Constant.Null;
-
             Returns.Clear();
             Return.@bool = false;
 
@@ -96,10 +77,7 @@ namespace Ast
                     SideEffects.Add(new DebugData("Debug: " + expr + " = " + res));
 
                 if (res is Error)
-                    Errors.Add(new ErrorData(res as Error));
-
-                if (Error)
-                    return Constant.Null;
+                    return res;
 
                 if (!(res is Null))
                     Returns.Add(res);
@@ -144,8 +122,7 @@ namespace Ast
             if (CurScope != null)
                 return CurScope.GetVar(identifier);
 
-            Errors.Add(new ErrorData(identifier + " is not defined"));
-            return Constant.Null;
+            return new Error(identifier + " is not defined");
         }
 
         public decimal GetReal(string identifier)

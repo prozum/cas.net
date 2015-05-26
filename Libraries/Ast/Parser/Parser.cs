@@ -36,26 +36,29 @@ namespace Ast
 
         Queue<Token> Tokens;
         Token CurToken { get { return Tokens.Count > 0 ? Tokens.Peek() : EOS; } }
-        bool Error { get { return CurScope.Errors.Count > 0; } }
+        List<Error> Errors = new List<Error>();
+        bool Error { get { return Errors.Count > 0; } }
         bool ExpectPrefix = true;
 
-        public void Parse(string parseString)
+        public Error Parse(string parseString)
         {
-            Parse(parseString, new Scope());
+            return Parse(parseString, new Scope());
         }
 
-        public void Parse(string parseString, Scope global)
+        public Error Parse(string parseString, Scope global)
         {
-            global.Errors.Clear();
+            Errors.Clear();
 
-            Tokens = Scanner.Tokenize(parseString, global.Errors);
-            if (global.Errors.Count > 0)
-                return;
+            Tokens = Scanner.Tokenize(parseString, Errors);
+            if (Errors.Count > 0)
+                return Errors[0];
 
             ParseScope(false, global);
 
-            if (global.Errors.Count > 0)
-                Clear();
+            if (Errors.Count > 0)
+                return Errors[0];
+
+            return null;
         }
 
         public void Clear()
@@ -292,7 +295,7 @@ namespace Ast
             scope = ParseScope();
             if (Error)
                 return null;
-            stmt.Expression = scope;
+            stmt.WhileScope = scope;
             stmt.Condition.CurScope = scope;
 
             return stmt;
@@ -851,19 +854,19 @@ namespace Ast
 //            }
 //        }
 
-        public ErrorData ReportError(ErrorData error)
+        public Error ReportError(Error error)
         {
-            CurScope.Errors.Add(error);
+            Errors.Add(error);
 
             return error;
         }
 
-        public ErrorData ReportError(string msg)
+        public Error ReportError(string msg)
         {
-            var error = new ErrorData(msg);
+            var error = new Error(msg);
             error.Position = CurToken.Position;
 
-            CurScope.Errors.Add(error);
+            Errors.Add(error);
 
             return error;
         }

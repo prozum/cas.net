@@ -40,23 +40,20 @@ namespace Ast
         {
             var val = Value;
 
-            if (CurScope.Error)
-                return Constant.Null;
+            if (val is Error)
+                return val;
 
             if (val is Call)
                 val = val.Evaluate().Value;
 
-            if (CurScope.Error)
-                return Constant.Null;
+            if (val is Error)
+                return val;
 
             if (!(val is ICallable))
-            {
-                CurScope.Errors.Add(new ErrorData(val, "is not callable"));
-                return Constant.Null;
-            }
+                return new Error(val, "is not callable");
 
             if (!(val as ICallable).IsArgumentsValid(Arguments))
-                return Constant.Null;
+                return (val as ICallable).GetArgumentError(Arguments);
 
 
             return (val as ICallable).Call(Arguments);

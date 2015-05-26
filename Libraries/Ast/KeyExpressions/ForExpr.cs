@@ -5,8 +5,8 @@ namespace Ast
     public class ForExpr : Expression
     {
         public string Var;
-        public List List;
-        public Scope ForScope;
+        public Expression List;
+        public Expression ForScope;
 
         public ForExpr (Scope scope) 
         { 
@@ -15,16 +15,21 @@ namespace Ast
 
         public override Expression Evaluate()
         {
-            foreach (var value in List.Items)
+            var list = List.Evaluate();
+
+            if (list is Error)
+                return list;
+
+            if (!(list is List))
+                return new Error(this, list.ToString() + " is not a list");
+
+            foreach (var value in (list as List).Items)
             {
-                ForScope.SetVar(Var, value);
-                var res = ForScope.Evaluate();
+                (ForScope as Scope).SetVar(Var, value);
+                var res = (ForScope as Scope).Evaluate();
 
                 if (res is Error)
-                {
-                    CurScope.Errors.Add(new ErrorData(res as Error));
-                    return Constant.Null;
-                }
+                    return res;
             }
 
             return Constant.Null;
