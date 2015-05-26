@@ -50,6 +50,12 @@ namespace DesktopUI
                     hbox.Add(GetFeedback);
                     vbox.Add(hbox);
                 }
+                else
+                {
+                    MessageDialog ms = new MessageDialog(this, DialogFlags.DestroyWithParent, MessageType.Error, ButtonsType.Close, "No assignment");
+                    ms.Run();
+                    ms.Destroy();
+                }
             }
 
             scrolledWindow.Add(vbox);

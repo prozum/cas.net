@@ -55,6 +55,12 @@ namespace DesktopUI
             this.textviews.Redraw();
             this.textviews.Reevaluate();
             this.textviews.ShowAll();
+
+            MessageDialog ms = new MessageDialog(this, DialogFlags.DestroyWithParent, MessageType.Info, ButtonsType.Close, "God feedback");
+            ms.Run();
+            ms.Destroy();
+
+            Destroy();
         }
     }
 }

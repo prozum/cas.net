@@ -86,6 +86,10 @@ namespace DesktopUI
                     string Assignment = Export.Serialize(metaTypeList);
                     this.user.teacher.AddAssignment(Assignment, name.Text, grad.Text);
 
+                    MessageDialog ms = new MessageDialog(this, DialogFlags.DestroyWithParent, MessageType.Info, ButtonsType.Close, "Added assignment");
+                    ms.Run();
+                    ms.Destroy();
+
                     Destroy();
                 }
                 else
