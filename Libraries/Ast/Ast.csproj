@@ -35,6 +35,16 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BinaryOperators\ISwappablecs.cs" />
+    <Compile Include="IInvertable.cs">
+      <DependentUpon>Expression.cs</DependentUpon>
+    </Compile>
+    <Compile Include="INegative.cs">
+      <DependentUpon>Expression.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SystemFunctions\NRootFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
     <Compile Include="Types\Null.cs" />
     <Compile Include="Variable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

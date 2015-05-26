@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Ast
+﻿namespace Ast
 {
     public class Exp : BinaryOperator//, IInvertable
     {

@@ -1,20 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Ast
+﻿namespace Ast
 {
-    // A BinaryOperator which sides can be swapped without effecting the result.
-    public interface ISwappable
-    {
-        Expression Left { get; set; }
-        Expression Right { get; set; }
-
-        BinaryOperator Swap();
-        BinaryOperator Transform();
-        string ToStringParent();
-    }
-
-
     // A Operator which evaluates two expressions.
     public abstract class BinaryOperator : Expression
     {
