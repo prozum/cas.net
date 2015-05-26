@@ -7,6 +7,7 @@ namespace DesktopUI
 {
     // The base element for widgets.
     // All cas widgets inherit from this
+    // A simple widget for writing and formatting text
     public class CasTextView : TextView
     {
         public bool locked = false;
@@ -16,7 +17,6 @@ namespace DesktopUI
         public TextTag italicTag = new TextTag("ItalicTag");
         public TextTag underlineTag = new TextTag("UnderlineTag");
 
-        // Constructor for castextview, adds all tags to the textview
         public CasTextView(string serializedString, bool locked)
             : base()
         {
@@ -36,7 +36,7 @@ namespace DesktopUI
             ShowAll();
         }
 
-        // A simplified constructor, used for TaskGen.
+        // This simplified constructor is currently only used by taskgen
         public CasTextView(string TaskString)
             : base()
         {
@@ -44,6 +44,7 @@ namespace DesktopUI
             ShowAll();
         }
 
+        // A method for serializing the content of the TextView, making it easy to save to file an server
         public string SerializeCasTextView()
         {
             TextIter startIter, endIter;

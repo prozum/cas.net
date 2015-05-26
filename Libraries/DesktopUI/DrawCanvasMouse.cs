@@ -2,6 +2,7 @@
 
 namespace DesktopUI
 {
+    // Used by drawcanvas
     public class DrawCanvasMouse
     {
         /* Contains input device's x- and y-coordinate */

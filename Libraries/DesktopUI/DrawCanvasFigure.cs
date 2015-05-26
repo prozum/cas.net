@@ -4,6 +4,7 @@ using Cairo;
 
 namespace DesktopUI
 {
+    // Used by drawcanvas
     public class DrawCanvasFigure
     {
         private List<double> X;
