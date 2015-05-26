@@ -134,20 +134,15 @@ namespace DesktopUI
         {
             MovableCasCalcView MovCasCalcView = new MovableCasCalcView(Eval);
             MovCasCalcView.calcview.input.Text = input;
-            //MovCasCalcView.calcview.input.IsEditable = !locked;
+            MovCasCalcView.calcview.input.IsEditable = !locked;
             MovCasCalcView.calcview.input.Activated += delegate
             {
                 MovCasCalcView.calcview.Evaluate();
                 MovCasCalcView.ShowAll();
             };
 
-            //MovCasCalcView.Attach(AddLockCheckButton(MovCasCalcView), 1, 100, 1, 1);
+            MovCasCalcView.Attach(AddLockCheckButton(MovCasCalcView), 1, 100, 1, 1);
             MovCasCalcView.Attach(AddCommandButtons(MovCasCalcView), 100, 1, 1, 1);
-
-            //if (user.privilege <= 0 && locked == true)
-            //{
-            //    MovCasCalcView.calcview.input.IsEditable = false;
-            //}
 
             castextviews.Add(MovCasCalcView);
 
@@ -195,6 +190,8 @@ namespace DesktopUI
             };
 
             movCasCalcMultiView.Attach(AddCommandButtons(movCasCalcMultiView), 100, 1, 1, 1);
+            movCasCalcMultiView.Attach(AddLockCheckButton(movCasCalcMultiView), 1, 100, 1, 1);
+
             castextviews.Add(movCasCalcMultiView);
             
             Clear();
@@ -207,7 +204,7 @@ namespace DesktopUI
         {
             MovableDrawCanvas movableDrawCanvas = new MovableDrawCanvas();
 
-            //movableDrawCanvas.Attach(AddLockCheckButton(movableDrawCanvas), 1, 100, 1, 1);
+            movableDrawCanvas.Attach(AddLockCheckButton(movableDrawCanvas), 1, 100, 1, 1);
             movableDrawCanvas.Attach(AddCommandButtons(movableDrawCanvas), 100, 1, 1, 1);
 
             if (pos == -1)

@@ -34,12 +34,15 @@ namespace DesktopUI
 
                     Button GetAssignment = new Button("Get Assignment");
                     GetAssignment.Clicked += (sender, e) => new StudentGetAssignmentWindow(this.user, ref this.textviews, assignment);
+                    GetAssignment.Clicked += (sender, e) => this.Destroy();
 
                     Button AddCompleted = new Button("Add Completed");
                     AddCompleted.Clicked += (sender, e) => new StudentAddCompletedWindow(this.user, this.textviews, assignment);
+                    AddCompleted.Clicked += (sender, e) => this.Destroy();
 
                     Button GetFeedback = new Button("Get Feedback");
                     GetFeedback.Clicked += (sender, e) => new StudentGetFeedbackWindow(this.user, ref this.textviews, assignment);
+                    GetFeedback.Clicked += (sender, e) => this.Destroy();
 
                     hbox.Add(label);
                     hbox.Add(GetAssignment);

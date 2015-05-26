@@ -20,6 +20,7 @@ namespace Account
             client.Credentials = new NetworkCredential(username, password);
         }
 
+		// add completed assignment
         public string AddCompleted(string file, string filename)
         {
             client.Headers.Add("Checksum", Checksum.GetMd5Hash(file));
@@ -30,9 +31,19 @@ namespace Account
 
             client.Headers.Clear();
 
+			if (response == "Failed")
+			{
+				return null;
+			}
+			else if (response == "Corruption")
+			{
+				return null;
+			}
+
             return response;
         }
 
+		// get assignment list
         public string[] GetAssignmentList()
         {
             string response = client.UploadString(host, "StudentGetAssignmentList");
@@ -64,6 +75,7 @@ namespace Account
 			return null;
         }
 
+		// get a specific assignment
         public string GetAssignment(string filename)
         {
             client.Headers.Add("Filename", filename);
@@ -86,7 +98,6 @@ namespace Account
                     return this.GetAssignment(filename);
                 }
             }
-            Console.WriteLine("noice");
             return null;
         }
 

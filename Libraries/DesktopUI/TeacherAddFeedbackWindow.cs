@@ -101,7 +101,7 @@ namespace DesktopUI
 						button.Clicked += delegate
 							{
                                 this.user.teacher.AddFeedback(feedbackString, this.Filename, StudentList[j], className);
-								Destroy();
+                                Destroy();
 							};
 						grid.Attach(button, 1, 1+i, 1, 1);
 				}          
