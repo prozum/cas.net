@@ -72,14 +72,6 @@
             return this;
         }
 
-        public override Expression Expand()
-        {
-            if (Child is Variable && (Child as Variable).IsDefined)
-                return Value;
-
-            return this;
-        }
-
         public override bool CompareTo(Expression other)
         {
             return base.CompareTo(other) && Arguments.CompareTo((other as Call).Arguments);
@@ -96,7 +88,6 @@
             {
                 if (!arg.ContainsVariable(other))
                     return false;
-
             }
 
             return true;

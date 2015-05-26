@@ -20,6 +20,7 @@ namespace Account
 			client.Credentials = new NetworkCredential(username, password);
         }
 
+		// add a new assignment
         public string AddAssignment(string file, string filename, string grade)
         {
 			client.Headers.Add ("Checksum", Checksum.GetMd5Hash (file));
@@ -31,9 +32,19 @@ namespace Account
 
 			client.Headers.Clear();
 
+			if (response == "Failed")
+			{
+				return null;
+			}
+			else if (response == "Corruption")
+			{
+				return null;
+			}
+
 			return response;
         }
 
+		// get a specific completed assignment
         public string GetCompleted(string student, string filename, string grade)
         {
 			client.Headers.Add ("Student", student);
@@ -62,6 +73,7 @@ namespace Account
 			return null;
         }
 
+		// get list of assignments
         public string[] GetAssignmentList()
         {
 			string response = client.UploadString(host, "TeacherGetAssignmentList");
@@ -91,6 +103,7 @@ namespace Account
 			return null;
         }
 
+		// get list of completed assignments
 		public string[] GetCompletedList(string filename, string grade)
 		{
 			client.Headers.Add("Filename", filename);
@@ -119,6 +132,7 @@ namespace Account
 			return null;
 		}
 
+		// add feedback to an assignment
 		public string AddFeedback(string file, string filename, string username, string grade)
         {
 			client.Headers.Add ("Checksum", Checksum.GetMd5Hash (file));
@@ -130,6 +144,15 @@ namespace Account
             string response = client.UploadString(host, "AddFeedback");
 
 			client.Headers.Clear();
+
+			if (response == "Failed")
+			{
+				return null;
+			}
+			else if (response == "Corruption")
+			{
+				return null;
+			}
 
 			return response;
         }
