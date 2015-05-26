@@ -1,10 +1,5 @@
-﻿using System;
-
-namespace Ast
+﻿namespace Ast
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public class GreaterEqual : BinaryOperator
     {
         public override string Identifier { get { return ">="; } }

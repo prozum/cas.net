@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-
     public enum ParseContext
     {
         List,

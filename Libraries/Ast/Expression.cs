@@ -1,29 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 namespace Ast
 {
-    /// <summary>
-    /// A Expression which has a Inverted form. Invertable Expression are used to solve equations.
-    /// </summary>
-    public interface IInvertable
-    {
-        Expression InvertOn(Expression other);
-    }
-
-    /// <summary>
-    /// A Expression which can be negative.
-    /// </summary>
-    public interface INegative
-    {
-        bool IsNegative();
-        Expression ToNegative();
-    }
-
-    /// <summary>
-    /// Expression is a expression which must have a return value.
-    /// </summary>
     public abstract class Expression
     {
         public virtual Scope CurScope { get; set; }
