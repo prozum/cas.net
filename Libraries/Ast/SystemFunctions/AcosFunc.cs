@@ -28,8 +28,12 @@ namespace Ast
             {
                 double value = res as Real;
 
+                if (value == 0.5)
+                    return Constant.Deg60 * (deg ? new Irrational(1M) : Constant.DegToRad);
+                if (value == 0)
+                    return Constant.Deg90 * (deg ? new Irrational(1M) : Constant.DegToRad);
                 if (value >= -1 && value <= 1)
-                    return new Irrational((decimal)Math.Acos(value) * (deg ? Constant.RadToDeg.@decimal  : 1)).Evaluate();
+                    return new Irrational((decimal)Math.Acos(value) * (deg ? Constant.RadToDeg.@decimal : 1)).Evaluate();
             }
 
             return new Error(this, "Could not take ACos of: " + args[0]);
@@ -50,7 +54,7 @@ namespace Ast
         {
             var arg = new List();
             arg.Items.Add(other);
-            return SysFunc.MakeFunction<CosFunc>(arg, other.CurScope);
+            return SysFunc.MakeFunction(arg, CurScope, "cos");
         }
     }
 }

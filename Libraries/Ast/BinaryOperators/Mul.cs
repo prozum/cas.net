@@ -55,6 +55,11 @@
                 {
                     return left * right;
                 }
+                //Right is add, calculate. 5*(x+x) -> 5x+5x.
+                else if (right is Add)
+                {
+                    return new Add(new Mul(left, (right as BinaryOperator).Left), new Mul(left, (right as BinaryOperator).Right));
+                }
                 //Right is Variable. Multiplies left with right's prefix. 4*3x -> (4*3)x
                 else if (right is Variable)
                 {
@@ -79,6 +84,11 @@
                 else if (left is Real)
                 {
                     return left * right;
+                }
+                //Left is add, calculate. 5*(x+x) -> 5x+5x.
+                else if (left is Add)
+                {
+                    return new Add(new Mul(right, (left as BinaryOperator).Left), new Mul(right, (left as BinaryOperator).Right));
                 }
                 //Left is Variable. Multiplies right with left's prefix. 3x*4 -> (4*3)x
                 else if (left is Variable)

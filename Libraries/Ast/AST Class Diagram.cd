@@ -1,0 +1,756 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Ast.Variable" Collapsed="true">
+    <Position X="68.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AKCBIAAAAAACAAQkQAAAggACAgCAAAIAUgAgYAAAEBA=</HashCode>
+      <FileName>Variable.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ast.VarFunc" Collapsed="true">
+    <Position X="62" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAQIAAAAAACAAEAAAIAgAAAAAAAAAAIIAAQAAAAAA=</HashCode>
+      <FileName>VarFunc.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ast.Add" Collapsed="true">
+    <Position X="89.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAUAAAAAAAAAEAAAAAgQBEAABAAAAAAAAQAAAADA=</HashCode>
+      <FileName>BinaryOperators\Add.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ast.And" Collapsed="true">
+    <Position X="89.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAQAAAAAAAAAEAAAAAgAAAAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>BinaryOperators\And.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Assign" Collapsed="true">
+    <Position X="87.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAAAAAAEAAAAAgAAEAAAAAAAAAAAQAAAABA=</HashCode>
+      <FileName>BinaryOperators\Assign.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.BinaryOperator" Collapsed="true">
+    <Position X="88.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AaOIIQAAAAAAAAQkQBAIgAAAAAACAQgASgCAYAAAEAQ=</HashCode>
+      <FileName>BinaryOperators\BinaryOperator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.BooleanEqual" Collapsed="true">
+    <Position X="88.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAQAAAAAAAAAEAAAAAgAAEAAAAAAAAAAAQAAAABA=</HashCode>
+      <FileName>BinaryOperators\BooleanEqual.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Div" Collapsed="true">
+    <Position X="87.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAQAAAAAAAAAEAAAAAgABEAAAAAAAAAAAQAAAADA=</HashCode>
+      <FileName>BinaryOperators\Div.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ast.Dot" Collapsed="true">
+    <Position X="91.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAEAAAAAgAAAAAAAAAAAAAgQAAAAAA=</HashCode>
+      <FileName>BinaryOperators\Dot.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Equal" Collapsed="true">
+    <Position X="87.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAQAAAAAAAAAEAAAAAAAAEAAAAAAAAAAAQAAAABA=</HashCode>
+      <FileName>BinaryOperators\Equal.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Exp" Collapsed="true">
+    <Position X="91.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAQAAAAAAAAAEAAAAAgAAEAAAAAAAAAAAQAAAADA=</HashCode>
+      <FileName>BinaryOperators\Exp.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ast.Greater" Collapsed="true">
+    <Position X="91.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAQAAAAAAAAAEAAAAAgAAEAAAAAAAAAAAQAAAABA=</HashCode>
+      <FileName>BinaryOperators\Greater.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.GreaterEqual" Collapsed="true">
+    <Position X="85.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAQAAAAAAAAAEAAAAAgAAEAAAAAAAAAAAQAAAABA=</HashCode>
+      <FileName>BinaryOperators\GreaterEqual.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Lesser" Collapsed="true">
+    <Position X="85.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAQAAAAAAAAAEAAAAAgAAEAAAAAAAAAAAQAAAABA=</HashCode>
+      <FileName>BinaryOperators\Lesser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.LesserEqual" Collapsed="true">
+    <Position X="89.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAQAAAAAAAAAEAAAAAgAAEAAAAAAAAAAAQAAAABA=</HashCode>
+      <FileName>BinaryOperators\LesserEqual.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Mod" Collapsed="true">
+    <Position X="91.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAQAAAAAAAAAEAAAAAgAAAAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>BinaryOperators\Mod.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Mul" Collapsed="true">
+    <Position X="85.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAQAAAAAQAAAEAAAAAgQBEAABAAAAAQAAQAAgABA=</HashCode>
+      <FileName>BinaryOperators\Mul.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ast.NotEqual" Collapsed="true">
+    <Position X="89.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAQAAAAAAAAAEAAAAAgAAEAAAAAAAAAAAQAAAABA=</HashCode>
+      <FileName>BinaryOperators\NotEqual.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Or" Collapsed="true">
+    <Position X="85.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAQAAAAAAAAAEAAAAAgAAAAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>BinaryOperators\Or.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Sub" Collapsed="true">
+    <Position X="87.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAQAAAAAAAAAEAAAAAgQAEAABAAAAAAAAQAAAABA=</HashCode>
+      <FileName>BinaryOperators\Sub.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ast.DebugData" Collapsed="true">
+    <Position X="53.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>Evaluator\DebugData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.DrawData" Collapsed="true">
+    <Position X="50" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Evaluator\DrawData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.CircleData" Collapsed="true">
+    <Position X="49" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAAAAAAABgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Evaluator\CircleData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.DotData" Collapsed="true">
+    <Position X="51" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAQBhAAAAAAA=</HashCode>
+      <FileName>Evaluator\DotData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.LineData" Collapsed="true">
+    <Position X="50" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAwAAAACAAQAAAAAAAAA=</HashCode>
+      <FileName>Evaluator\LineData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.PlotData" Collapsed="true">
+    <Position X="49" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgAQAAAAA=</HashCode>
+      <FileName>Evaluator\PlotData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.TextData" Collapsed="true">
+    <Position X="51" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>Evaluator\TextData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.EvalData" Collapsed="true">
+    <Position X="52.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Evaluator\EvalData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.ErrorData" Collapsed="true">
+    <Position X="51.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAkAAAAAAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>Evaluator\ErrorData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.PrintData" Collapsed="true">
+    <Position X="52.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>Evaluator\PrintData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Evaluator" Collapsed="true">
+    <Position X="65.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Evaluator\Evaluator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.WidgetData" Collapsed="true">
+    <Position X="56.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgABEEABAAAAAAAAEAAAABAAAAAAAAgA=</HashCode>
+      <FileName>Evaluator\WidgetData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.WindowData" Collapsed="true">
+    <Position X="57.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>Evaluator\WidgetData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.LayoutData" Collapsed="true">
+    <Position X="54.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAABAAAAAAEBAAAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Evaluator\WidgetData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.RelativeData" Collapsed="true">
+    <Position X="53.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Evaluator\WidgetData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.GridData" Collapsed="true">
+    <Position X="55.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Evaluator\WidgetData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.VBoxData" Collapsed="true">
+    <Position X="53.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Evaluator\WidgetData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.HBoxData" Collapsed="true">
+    <Position X="55.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Evaluator\WidgetData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.LabelData" Collapsed="true">
+    <Position X="59.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>Evaluator\WidgetData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.TextViewData" Collapsed="true">
+    <Position X="59.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>Evaluator\WidgetData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.EntryData" Collapsed="true">
+    <Position X="59.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Evaluator\WidgetData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.ButtonData" Collapsed="true">
+    <Position X="57.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Evaluator\WidgetData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.ImageData" Collapsed="true">
+    <Position X="57.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Evaluator\WidgetData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.ListViewData" Collapsed="true">
+    <Position X="57.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Evaluator\WidgetData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.ForExpr" Collapsed="true">
+    <Position X="72.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAhAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>KeyExpressions\ForExpr.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.IfExpr" Collapsed="true">
+    <Position X="70.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEABAAAgAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>KeyExpressions\IfExpr.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.ImportExpr" Collapsed="true">
+    <Position X="70.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAgAAAAAAAAAQAAAAAAAAAAA=</HashCode>
+      <FileName>KeyExpressions\ImportExpr.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.RetExpr" Collapsed="true">
+    <Position X="68.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAgAAAAAAAAAQAAAAAAAAAAA=</HashCode>
+      <FileName>KeyExpressions\RetExpr.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.WhileExpr" Collapsed="true">
+    <Position X="70.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAEAgAAAgAAAAAAAAAAAAAAACAAAAA=</HashCode>
+      <FileName>KeyExpressions\WhileExpr.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Parser" Collapsed="true">
+    <Position X="95" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAwCUAAXCkEARACABDIAAgCEBAACAgAIAAAAARFAAE=</HashCode>
+      <FileName>Parser\Parser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Scanner" Collapsed="true">
+    <Position X="93.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAABAAAAUAgAgAIAgAAEAAAAgAAgBAAQAAAAAA=</HashCode>
+      <FileName>Parser\Scanner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Token" Collapsed="true">
+    <Position X="95" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAkAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Parser\Token.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.SysFunc" Collapsed="true">
+    <Position X="63.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIABQIAAAAAACAAEAAAABgAAAAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>SystemFunctions\SysFunc.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ast.AbsFunc" Collapsed="true">
+    <Position X="62.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SystemFunctions\AbsFunc.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.AcosFunc" Collapsed="true">
+    <Position X="66.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAQAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SystemFunctions\AcosFunc.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ast.AsinFunc" Collapsed="true">
+    <Position X="62.75" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAQAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SystemFunctions\AsinFunc.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ast.AtanFunc" Collapsed="true">
+    <Position X="61" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAQAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SystemFunctions\AtanFunc.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ast.CloneFunc" Collapsed="true">
+    <Position X="64.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SystemFunctions\CloneFunc.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.CosFunc" Collapsed="true">
+    <Position X="61" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAQAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SystemFunctions\CosFunc.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ast.DirFunc" Collapsed="true">
+    <Position X="64.75" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SystemFunctions\DirFunc.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.EvalFunc" Collapsed="true">
+    <Position X="63.75" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SystemFunctions\EvalFunc.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.ExpandFunc" Collapsed="true">
+    <Position X="61" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SystemFunctions\ExpandFunc.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.LineFunc" Collapsed="true">
+    <Position X="64.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SystemFunctions\LineFunc.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.NRootFunc" Collapsed="true">
+    <Position X="61" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SystemFunctions\NRootFunc.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.ParaPlotFunc" Collapsed="true">
+    <Position X="64.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SystemFunctions\ParaPlotFunc.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.PlotFunc" Collapsed="true">
+    <Position X="61" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SystemFunctions\PlotFunc.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.PrintFunc" Collapsed="true">
+    <Position X="64.75" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SystemFunctions\PrintFunc.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.RangeFunc" Collapsed="true">
+    <Position X="62.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SystemFunctions\RangeFunc.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.ReduceFunc" Collapsed="true">
+    <Position X="66.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SystemFunctions\ReduceFunc.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.SinFunc" Collapsed="true">
+    <Position X="62.75" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAQAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SystemFunctions\SinFunc.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ast.SolveFunc" Collapsed="true">
+    <Position X="66.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAQIAAAACAAAAAAAAAAAAAACAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>SystemFunctions\SolveFunc.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.SqrtFunc" Collapsed="true">
+    <Position X="66.5" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAQAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SystemFunctions\SqrtFunc.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ast.TanFunc" Collapsed="true">
+    <Position X="62.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAQAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SystemFunctions\TanFunc.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ast.TypeFunc" Collapsed="true">
+    <Position X="66.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SystemFunctions\TypeFunc.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Boolean" Collapsed="true">
+    <Position X="68.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAEAAAAAoAAAAAAABAAAABAAAAAAJg=</HashCode>
+      <FileName>Types\Boolean.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.List" Collapsed="true">
+    <Position X="72.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQIAAAAAACAAECAAIAgQAAAAAAAAAAggAAAAAABA=</HashCode>
+      <FileName>Types\List.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ast.Null" Collapsed="true">
+    <Position X="68.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Types\Null.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Number" Collapsed="true">
+    <Position X="81.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Types\Number.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Complex" Collapsed="true">
+    <Position X="80.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQkYAAAAAABAAAAAAAAAAAAAAAgABA=</HashCode>
+      <FileName>Types\Complex.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Integer" Collapsed="true">
+    <Position X="82.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAIAAAAAAAAAAgQCAAAAAAAAAAAAAIAAAAAAAAEBQ=</HashCode>
+      <FileName>Types\Integer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Irrational" Collapsed="true">
+    <Position X="81.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAABA=</HashCode>
+      <FileName>Types\Irrational.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Real" Collapsed="true">
+    <Position X="82.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACCBIAAAAAAAAAQkQAAAhAABAACAAAAIQAAAIAAAEQQ=</HashCode>
+      <FileName>Types\Real.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ast.Rational" Collapsed="true">
+    <Position X="83.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AYCAKAAAAAAAAAAgQAAAAAAAAAAAAAAIAAAAACAAEBQ=</HashCode>
+      <FileName>Types\Rational.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Text" Collapsed="true">
+    <Position X="70.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAACAQkAAAAAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Types\Text.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.PostfixOperator" Collapsed="true">
+    <Position X="76" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UnaryOperators\PostfixOperator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Call" Collapsed="true">
+    <Position X="76" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAQEAAAIAgAAAAAAAAAAIgAgAAAAAAA=</HashCode>
+      <FileName>UnaryOperators\Call.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.PrefixOperator" Collapsed="true">
+    <Position X="78.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQEAAAAAAAAAAAAAAAAAgAAQAAAAAA=</HashCode>
+      <FileName>UnaryOperators\PrefixOperator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Minus" Collapsed="true">
+    <Position X="77.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UnaryOperators\Minus.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Negation" Collapsed="true">
+    <Position X="78.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UnaryOperators\Negation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Referation" Collapsed="true">
+    <Position X="79.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>UnaryOperators\Referation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.UnaryOperator" Collapsed="true">
+    <Position X="77.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIQAAAAIAAAAAAAAAAAAAgAAAAAAAAA=</HashCode>
+      <FileName>UnaryOperators\UnaryOperator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Constant" Collapsed="true">
+    <Position X="93.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAgAAAAAQAAACAAAAoAAAAAAIA=</HashCode>
+      <FileName>Constant.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Error" Collapsed="true">
+    <Position X="74.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAQEAAAAAgAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Error.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.ArgumentError" Collapsed="true">
+    <Position X="74.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Error.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Expression" Collapsed="true">
+    <Position X="71.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AaCAIAAABAAAAAQgYAWLwoABEAIAAIAAQgEoIQAAFRw=</HashCode>
+      <FileName>Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Scope" Collapsed="true">
+    <Position X="63.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gACBAAAAIAAgAQAMAAAIAgAAAAhAAAAAAggAEgCAAAA=</HashCode>
+      <FileName>Scope.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ast.Self" Collapsed="true">
+    <Position X="72.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAgAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Self.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="Ast.Pos" Collapsed="true">
+    <Position X="93.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAIAAAAAABAAA=</HashCode>
+      <FileName>Parser\Token.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Interface Name="Ast.ISwappable" Collapsed="true">
+    <Position X="95" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAADAAAACACAAAAAAAA=</HashCode>
+      <FileName>BinaryOperators\ISwappablecs.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ast.ICallable" Collapsed="true">
+    <Position X="93.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQIAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UnaryOperators\ICallable.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ast.IInvertable" Collapsed="true">
+    <Position X="95" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IInvertable.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Ast.INegative" Collapsed="true">
+    <Position X="93.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>INegative.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="Ast.ParseContext" Collapsed="true">
+    <Position X="95" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAggAAAAACAAAAAAAAAAAAgAAAAAAAAAIAAAAAAAAAI=</HashCode>
+      <FileName>Parser\Parser.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Ast.TokenKind" Collapsed="true">
+    <Position X="93.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAQEAgQCKBaEnIEAQWAQCATAAAloAIQOAAkAQCAIACA=</HashCode>
+      <FileName>Parser\Token.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Ast.ArgumentType" Collapsed="true">
+    <Position X="93.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAEAAACIAEAAAAAAQAAQACAAAAAI=</HashCode>
+      <FileName>SystemFunctions\SysFunc.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

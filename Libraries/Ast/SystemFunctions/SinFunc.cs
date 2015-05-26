@@ -43,7 +43,7 @@ namespace Ast
         {
             var arg = new List();
             arg.Items.Add(other);
-            return SysFunc.MakeFunction<AsinFunc>(arg, other.CurScope);
+            return SysFunc.MakeFunction(arg, CurScope, "asin");
         }
     }
 }

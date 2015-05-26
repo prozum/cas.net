@@ -17,8 +17,8 @@
             if (res is Error)
                 return res;
 
-            CurScope.Returns.Clear();
-            CurScope.Returns.Add(res);
+            CurScope.Returns.Items.Clear();
+            CurScope.Returns.Items.Add(res);
             CurScope.Return.@bool = true;
 
             return res;

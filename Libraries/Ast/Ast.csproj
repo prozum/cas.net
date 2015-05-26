@@ -205,6 +205,9 @@
       <DependentUpon>SysFunc.cs</DependentUpon>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="AST Class Diagram.cd" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ProjectExtensions>
     <MonoDevelop>

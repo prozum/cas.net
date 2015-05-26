@@ -26,11 +26,10 @@ namespace Ast
             CurScope = scope;
         }
 
-        public static Call MakeFunction<T> (List args, Scope scope) where T : SysFunc, new()
+        public static Call MakeFunction(List args, Scope scope, string name)
         {
             var func = new Call(args, scope);
-            func.Child = new T();
-            func.Child.CurScope = scope;
+            func.Child = new Variable(name, scope);
             return func;
         }
 
@@ -78,7 +77,7 @@ namespace Ast
                 switch (ValidArguments[i])
                 {
                     case ArgumentType.Expression:
-                        if (args[i].Value is Error)
+                        if (args[i] is Error)
                             valid = false;
                         break;
                     case ArgumentType.Real:

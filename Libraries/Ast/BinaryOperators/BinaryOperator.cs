@@ -61,12 +61,16 @@
 
         public override string ToString()
         {
-            if (Parent is BinaryOperator && Priority < (Parent as BinaryOperator).Priority)
-            {
-                return '(' + Left.ToString() + Identifier + Right.ToString() + ')';
-            } 
-                
-            return Left.ToString() + Identifier + Right.ToString();
+            var left = Left.ToString();
+            var right = Right.ToString();
+
+            if (Left is BinaryOperator && Priority > (Left as BinaryOperator).Priority)
+                left = '(' + left + ')';
+
+            if (Right is BinaryOperator && Priority >= (Right as BinaryOperator).Priority && GetType() != Right.GetType())
+                right = '(' + right + ')';
+
+            return left + Identifier + right;
         }
 
         public string ToStringParent()
