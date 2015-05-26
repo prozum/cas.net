@@ -20,9 +20,6 @@
 
         protected override Expression ReduceHelper(Expression left, Expression right)
         {
-            if (left is Real && right is Real)
-                return left % right;
-
             return new Mod(left, right);
         }
     }

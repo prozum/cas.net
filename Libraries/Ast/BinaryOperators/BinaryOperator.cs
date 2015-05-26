@@ -96,7 +96,10 @@
                 }
             }
 
-            return false;
+            var thisEval = thisReduced.Evaluate();
+            var otherEval = otherReduced.Evaluate();
+
+            return thisEval.CompareTo(otherEval);
         }
 
         private bool CompareSwappables(ISwappable exp1, BinaryOperator exp2)
