@@ -59,7 +59,8 @@ namespace DesktopUI
                 {
                     DefinitionStore.AppendValues(def.Key, def.Value.Value.ToString());
                 }
-            }  
+            }
+            QueueDraw();
 			ShowAll ();
 		}
 

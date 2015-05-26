@@ -35,6 +35,7 @@ namespace Ast
             scope.SetVar("sqrt", new SqrtFunc(this));
             scope.SetVar("expand", new ExpandFunc(this));
             scope.SetVar("reduce", new ReduceFunc(this));
+            scope.SetVar("range", new RangeFunc(this));
 
             scope = new Scope(this);
             SetVar("trig", scope);

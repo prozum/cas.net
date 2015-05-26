@@ -239,6 +239,20 @@ namespace DesktopUI
             ShowAll();
         }
 
+        public void InsertResult(int pos)
+        {
+            MovableCasResult movableCasResult = new MovableCasResult(user, "", "");
+
+            movableCasResult.Attach(AddLockCheckButton(movableCasResult), 1, 100, 1, 1);
+            movableCasResult.Attach(AddCommandButtons(movableCasResult), 100, 1, 1, 1);
+
+            castextviews.Insert(pos, movableCasResult);
+
+            Clear();
+            Redraw();
+            ShowAll();
+        }
+
         // Moves a widget, and switches it's position with one of it's neighbors.
         public void Move(int ID, int UpOrDown)
         {
@@ -327,7 +341,9 @@ namespace DesktopUI
             Button buttonCalcel = new Button("Cancel");
             Button buttonTextView = new Button("TextView");
             Button buttonCalcView = new Button("CalcView");
-            Button buttonDrawCanvas = new Button("DrawCanvas");
+            Button buttonMultiline = new Button("Multiline CalcView");
+            Button buttonResultView = new Button("ResultView");
+            //Button buttonDrawCanvas = new Button("DrawCanvas");
 
             Window window = new Window("Insert new widget");
 
@@ -337,7 +353,9 @@ namespace DesktopUI
 
             vbox.PackStart(buttonTextView, false, false, 2);
             vbox.PackStart(buttonCalcView, false, false, 2);
-            vbox.PackStart(buttonDrawCanvas, false, false, 2);
+            vbox.PackStart(buttonMultiline, false, false, 2);
+            vbox.PackStart(buttonResultView, false, false, 2);
+            //vbox.PackStart(buttonDrawCanvas, false, false, 2);
 
             vbox.PackEnd(buttonCalcel, false, false, 2);
 
@@ -372,9 +390,9 @@ namespace DesktopUI
                 buttonCalcel.Click();
             };
 
-            buttonDrawCanvas.Clicked += delegate
+            buttonMultiline.Clicked += delegate
             {
-                InsertDrawCanvas(_id + 1);
+                InsertCalcMultilineView(_id + 1);
                 Clear();
                 Reevaluate();
                 Redraw();
@@ -382,6 +400,28 @@ namespace DesktopUI
                 _id++;
                 buttonCalcel.Click();
             };
+
+            buttonResultView.Clicked += delegate
+            {
+                InsertResult(_id + 1);
+                Clear();
+                Reevaluate();
+                Redraw();
+
+                _id++;
+                buttonCalcel.Click();
+            };
+
+            //buttonDrawCanvas.Clicked += delegate
+            //{
+            //    InsertDrawCanvas(_id + 1);
+            //    Clear();
+            //    Reevaluate();
+            //    Redraw();
+
+            //    _id++;
+            //    buttonCalcel.Click();
+            //};
         }
 
         // Adds a lock button for teachers, so that they can set id the student can edit the content of the widget 
@@ -419,7 +459,7 @@ namespace DesktopUI
 
             VBox vbox = new VBox();
 
-            if (user.privilege == 1 || (user.privilege == 0 && movableCasTextView.textview.locked == false))
+            if (user.privilege == 1 || (user.privilege <= 0 && movableCasTextView.textview.locked == false))
             {
 
                 ButtonMoveUp.Clicked += delegate

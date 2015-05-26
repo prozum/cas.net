@@ -10,6 +10,7 @@ namespace DesktopUI
         Menu menu;
         Entry entryUsername = new Entry();
         Entry entryPassword = new Entry();
+        Label errorLabel = new Label("Type your username and\npassword to log in");
 
         // Constructor for the login screen
         // Builds all elements of the window, and displays it to the user
@@ -27,7 +28,7 @@ namespace DesktopUI
             Label labUsername = new Label("Username");
             Label labPassword = new Label("Password");
 
-            Table table = new Table(2, 3, false);
+            Table table = new Table(2, 2, false);
 
             table.Attach(labUsername, 0, 1, 0, 1, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
             table.Attach(labPassword, 0, 1, 1, 2, Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 5, 5);
@@ -58,6 +59,7 @@ namespace DesktopUI
             hbox.Add(buttonLogin);
 
             vbox.Add(table);
+            vbox.Add(errorLabel);
             vbox.Add(hbox);
 
             Add(vbox);
@@ -78,15 +80,28 @@ namespace DesktopUI
             client.Encoding = System.Text.Encoding.UTF8;
             client.Credentials = new NetworkCredential(username, password);
 
-            user.privilege = int.Parse(client.UploadString(host, command), System.Globalization.NumberStyles.AllowLeadingSign);
-
-            if (user.privilege >= 0)
+            try
             {
-                user.Login(username, password, host);
-                user.ShowMenuItems(ref menu);
-            }
+                user.privilege = int.Parse(client.UploadString(host, command), System.Globalization.NumberStyles.AllowLeadingSign);
 
-            Destroy();
+                if (user.privilege >= 0)
+                {
+                    user.Login(username, password, host);
+                    user.ShowMenuItems(ref menu);
+
+                    Destroy();
+                }
+                else
+                {
+                    errorLabel.Text = "Invalid user!\nPlease check your username\nand password, and try again";
+                    errorLabel.Show();
+                }
+            }
+            catch (Exception)
+            {
+                errorLabel.Text = "Server is down or not found!";
+                errorLabel.Show();
+            }
         }
     }
 }

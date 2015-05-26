@@ -10,10 +10,11 @@ namespace Ast
         public Dictionary<string,Expression> Locals;
         public List<EvalData> SideEffects;
 
-        public List<Expression> Returns;
+        public List Returns = new List();
         public Boolean Return;
 
         public Error Error;
+        public bool Shared;
 
         public override Scope CurScope
         {
@@ -37,11 +38,10 @@ namespace Ast
         public Scope()
         {
             SideEffects = new List<EvalData>();
-            Error = null;
-
             Locals =  new Dictionary<string,Expression>();
-            Returns = new List<Expression>();
             Return = new Boolean(false);
+
+            Error = null;
         }
 
         public Scope(Scope scope, bool share = false)
@@ -49,24 +49,23 @@ namespace Ast
             CurScope = scope;
             SideEffects = scope.SideEffects;
             Error = scope.Error;
+            Shared = share;
 
-            if (share)
+            if (Shared)
             {
                 Locals = scope.Locals;
-                Returns = scope.Returns;
                 Return = scope.Return;
             }
             else
             {
                 Locals =  new Dictionary<string,Expression>();
-                Returns = new List<Expression>();
                 Return = new Boolean(false);
             }
         }
 
         public override Expression Evaluate()
         {
-            Returns.Clear();
+            Returns.Items.Clear();
             Return.@bool = false;
 
             foreach (var expr in Expressions)
@@ -79,11 +78,14 @@ namespace Ast
                 if (res is Error)
                     return res;
 
-                if (!(res is Null))
-                    Returns.Add(res);
-
                 if (Return)
+                {
+                    CurScope.Returns.Items.Add(Returns[0]);
                     break;
+                }
+
+                if (!(res is Null))
+                    Returns.Items.Add(res);
             }
 
             switch (Returns.Count)
@@ -93,7 +95,7 @@ namespace Ast
                 case 1:
                     return Returns[0];
                 default:
-                    return new List(Returns);
+                    return Returns;
             }
         }
 
