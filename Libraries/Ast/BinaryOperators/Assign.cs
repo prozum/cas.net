@@ -76,11 +76,6 @@ namespace Ast
             return new Assign(left, right, CurScope);
         }
 
-        protected override Expression ReduceHelper(Expression left, Expression right)
-        {
-            return new Assign(left, right, CurScope);
-        }
-
         public override Expression Clone()
         {
             return new Assign(Left.Clone(), Right.Clone(), CurScope);
