@@ -11,9 +11,15 @@ namespace CAS.NET.Server
 
         public Database(string db)
         {
-			// create tables
+
+			// checks if MySQL connection is valid
             this.db = db;
-            CreateUserDB(db);
+			conn = new MySqlConnection(db);
+			conn.Open();
+			conn.Close();
+
+			// create tables
+			CreateUserDB(db);
             CreateAssignmentDB(db);
             CreateCompletedDB(db);
             CreateFeedbackDB(db);
@@ -650,7 +656,7 @@ namespace CAS.NET.Server
 			}
 		}
 
-		// creates db called mydb
+		// creates database mydb
 		public void CreateDB()
 		{
 			try
