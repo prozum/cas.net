@@ -86,7 +86,6 @@ namespace Account
                     return this.GetAssignment(filename);
                 }
             }
-            Console.WriteLine("noice");
             return null;
         }
 
