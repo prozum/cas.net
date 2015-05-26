@@ -13,7 +13,6 @@ namespace DesktopUI
 
         static Image image = new Image();
 
-        // Constructor for the italic button
         public ItalicToolButton(ref TextViewList textviews)
             : base(image, "Italic")
         {
@@ -94,7 +93,6 @@ namespace DesktopUI
                     }
             }
         }
-
     }
 }
 

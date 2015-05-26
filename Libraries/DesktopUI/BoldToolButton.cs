@@ -13,7 +13,6 @@ namespace DesktopUI
 
         static Image image = new Image();
 
-        // Constructor for the bold button
         public BoldToolButton(ref TextViewList textviews)
             : base(image, "Bold")
         {
@@ -58,11 +57,40 @@ namespace DesktopUI
         // This is needed as gtk.stock images doesn't work on windows.
         void SetIcon()
         {
-            byte[] buffer = File.ReadAllBytes("../../../Ressources/Icons/Gnome-format-text-bold.png");
-            Pixbuf pixbuf = new Pixbuf(buffer);
-            pixbuf = pixbuf.ScaleSimple(25, 25, InterpType.Bilinear);
-            image.Pixbuf = pixbuf;
+            OperatingSystem os = Environment.OSVersion;
+            PlatformID pid = os.Platform;
+
+            switch (pid)
+            {
+                case PlatformID.Win32S:
+                case PlatformID.Win32Windows:
+                case PlatformID.WinCE:
+                case PlatformID.Win32NT: // <- if one, this is the one we really need
+                    {
+                        byte[] buffer = File.ReadAllBytes("..\\..\\..\\Ressources\\Icons\\Gnome-format-text-bold.png");
+                        Pixbuf pixbuf = new Pixbuf(buffer);
+                        pixbuf = pixbuf.ScaleSimple(25, 25, InterpType.Bilinear);
+                        image.Pixbuf = pixbuf;
+
+                        break;
+                    }
+                case PlatformID.Unix:
+                case PlatformID.MacOSX:
+                    {
+                        byte[] buffer = File.ReadAllBytes("../../../Ressources/Icons/Gnome-format-text-bold.svg");
+                        Pixbuf pixbuf = new Pixbuf(buffer);
+                        pixbuf = pixbuf.ScaleSimple(25, 25, InterpType.Bilinear);
+                        image.Pixbuf = pixbuf;
+
+                        break;
+                    }
+                default:
+                    {
+                        break;
+                    }
+            }
         }
+
     }
 }
 

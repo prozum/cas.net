@@ -7,6 +7,8 @@ using Draw;
 
 namespace DesktopUI
 {
+    // A movable version of the drawview
+    // Currently not used
     public class MovableDrawView : MovableCasTextView
     {
         DrawView drawView;

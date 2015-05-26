@@ -12,22 +12,24 @@ namespace ImEx
 {
     public class MetaType
     {
+        // All are public for JSON to properly access them
         public Type type;
-
         public string metastring;
-
         public bool locked;
 
+        // Empty constructor, for when setting the type, string and lock seperately.
         public MetaType()
         {
         }
 
+        // Constructor used for serializing an object when all important elements are serializable.
         public MetaType(object o)
         {
             this.type = o.GetType();
             this.metastring = Export.Serialize(o);
         }
 
+        // Constructor used when creating metatype where elements are known beforehand
         public MetaType(Type t, string s, bool locked)
         {
             this.type = t;

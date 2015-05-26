@@ -2,11 +2,11 @@
 
 namespace DesktopUI
 {
+    // A movable version of drawcanvas
     public class MovableDrawCanvas : MovableCasTextView
     {
         public DrawCanvas canvas;
 
-        // Constructor for movabledrawcanvs
         public MovableDrawCanvas()
             : base("", false)
         {

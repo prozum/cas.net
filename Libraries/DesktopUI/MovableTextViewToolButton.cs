@@ -5,12 +5,12 @@ using System.IO;
 
 namespace DesktopUI
 {
+    // Inserts a TextView
     public class MovableTextViewToolButton : ToolButton
     {
         TextViewList textviews;
         static Image image = new Image();
 
-        // Constructor for movabletextviewtoolbutton
         public MovableTextViewToolButton(ref TextViewList textviews)
             : base(image, "Movable Text View")
         {

@@ -2,6 +2,7 @@
 
 namespace DesktopUI
 {
+    // A movable version of the result view
     public class MovableCasResult : MovableCasTextView
     {
         public CasResult casresult;

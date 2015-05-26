@@ -14,7 +14,6 @@ namespace DesktopUI
         string Filename;
         string[] StudentList;
 
-        // Constructor for teachergetcomplatedlistwindow
         public TeacherGetCompletedListWindow(User user, ref TextViewList textviews, string Filename)
             : base("Get List of Completed Students")
         {
@@ -36,6 +35,7 @@ namespace DesktopUI
                 Destroy();
             };
 
+            // Gets the completed task from the server
             Button DownloadButton = new Button("List of Completed Students");
             DownloadButton.Clicked += (sender, e) =>
             {
@@ -53,6 +53,10 @@ namespace DesktopUI
                     button.Clicked += delegate
                     {
                         string completed = this.user.teacher.GetCompleted(button.TooltipText, this.Filename, GradeEntry.Text);
+                        MessageDialog ms = new MessageDialog(this, DialogFlags.DestroyWithParent, MessageType.Info, ButtonsType.Close, "Got assignment");
+                        ms.Run();
+                        ms.Destroy();
+
                         LoadWorkspace(completed);
                     };
                     grid.Attach(button, 1, 1 + i, 1, 1);

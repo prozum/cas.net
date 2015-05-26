@@ -8,7 +8,6 @@ namespace DesktopUI
     {
         public CasCalcView calcview;
 
-        // Constructor for movalbecascalcview
         public MovableCasCalcView(Evaluator Eval)
             : base("", false)
         {

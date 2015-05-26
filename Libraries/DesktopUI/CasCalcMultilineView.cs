@@ -9,6 +9,7 @@ using Draw;
 
 namespace DesktopUI
 {
+    // A CalcView with multiple lines
     public class CasCalcMultilineView : Grid
     {
         public Evaluator eval;
@@ -31,6 +32,7 @@ namespace DesktopUI
             ShowAll();
         }
 
+        // Is run every thime the content of the multiline is evaluated
         public void Evaluate()
         {
             if (!string.IsNullOrEmpty(input.Buffer.Text))
@@ -44,6 +46,8 @@ namespace DesktopUI
                 eval.Parse(input.Buffer.Text);
 
                 var res = eval.Evaluate();
+
+                // Resets the graph, should it be used, in case it is no longer used
                 drawView.xList.Clear();
                 drawView.xList.Clear();
                 drawView.Hide();
@@ -82,6 +86,7 @@ namespace DesktopUI
             }
         }
 
+        // Serializes the content of the TextView, so that it can be exported to a file or server
         public string SerializeCasTextView()
         {
             TextIter startIter, endIter;

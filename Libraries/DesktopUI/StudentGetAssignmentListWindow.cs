@@ -12,7 +12,6 @@ namespace DesktopUI
         User user;
         TextViewList textviews;
 
-        // Constructor for studentgetassignmentlistwindow
         public StudentGetAssignmentListWindow(User user, ref TextViewList textviews)
             : base("Get Assignment List")
         {
@@ -24,6 +23,7 @@ namespace DesktopUI
             ScrolledWindow scrolledWindow = new ScrolledWindow();
             VBox vbox = new VBox(false, 2);
                                    
+            // For each task on the server that the student has access to, creates a line where the student can get the assignment, upload the completed assignment, and get feedback should any have been given
             foreach (var assignment in assignmentList)
             {
                 if (!string.IsNullOrEmpty(assignment))
@@ -49,6 +49,12 @@ namespace DesktopUI
                     hbox.Add(AddCompleted);
                     hbox.Add(GetFeedback);
                     vbox.Add(hbox);
+                }
+                else
+                {
+                    MessageDialog ms = new MessageDialog(this, DialogFlags.DestroyWithParent, MessageType.Error, ButtonsType.Close, "No assignment");
+                    ms.Run();
+                    ms.Destroy();
                 }
             }
 

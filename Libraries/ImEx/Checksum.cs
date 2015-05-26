@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 
 /* Usage:
- * TODO: BRB in 100 commits;
+ * Used for generating checksum for comparing files when sending them between server and client;
  */
 
 namespace ImEx
@@ -11,7 +11,7 @@ namespace ImEx
     public static class Checksum
     {
         // MD5 Checksum
-        // Generates a 128 bit (16 byte) hash in hexadecimal form
+        // Generates a 128 bit hash in hexadecimal form
         public static string GetMd5Hash(string hashableString)
         {
             using (MD5 md5Hash = MD5.Create())

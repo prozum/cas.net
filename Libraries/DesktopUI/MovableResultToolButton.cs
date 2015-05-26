@@ -5,6 +5,7 @@ using Gdk;
 
 namespace DesktopUI
 {
+    // Inserts the result widget
     public class MovableResultToolButton : ToolButton
     {
         TextViewList textviews;
@@ -25,6 +26,7 @@ namespace DesktopUI
             };
         }
 
+        // Inserts the resultview when clicked
         void OnActivated()
         {
             textviews.InsertResult("", "");

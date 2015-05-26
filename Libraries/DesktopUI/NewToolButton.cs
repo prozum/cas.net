@@ -10,7 +10,6 @@ namespace DesktopUI
     {
         static Image image = new Image();
 
-        // Constructor for newtoolbutton
         public NewToolButton(TextViewList textviews)
             : base(image, "New")
         {
