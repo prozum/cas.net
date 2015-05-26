@@ -1,6 +1,6 @@
 ﻿namespace Ast
 {
-    public class Exp : BinaryOperator//, IInvertable
+    public class Exp : BinaryOperator, IInvertable
     {
         public override string Identifier { get { return "^"; } }
         public override int Priority { get{ return 50; } }
@@ -83,27 +83,27 @@
             return new Exp(Left.Clone(), Right.Clone());
         }
 
-        /*
         public Expression InvertOn(Expression other)
         {
             //When right is 2, the invert is sqrt. x^2 -> sqrt[other], -sqrt[other]
             if (Right.CompareTo(Constant.Two))
             {
-                var args = new List<Expression>();
-                args.Add(other);
+                var args = new List();
+                args.Items.Add(other);
 
-                var answer = new SqrtFunc(other.CurScope);
+                var answer1 = SysFunc.MakeFunction<SqrtFunc>(args, other.CurScope);
+                var answer2 = new Minus();
+                answer2.Child = answer1;
                 var answers = new List();
 
-                answers.Items.Add(answer);
-                answers.Items.Add(new Mul(new Integer(-1), answer).Reduce());
+                answers.Items.Add(answer1);
+                answers.Items.Add(answer2);
                 return answers;
             }
 
             //Couln't InvertOn.
             return null;
         }
-         */
 
         internal override Expression CurrectOperator()
         {
