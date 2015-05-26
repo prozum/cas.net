@@ -49,14 +49,11 @@ namespace Ast
         {
             Errors.Clear();
 
-
             Tokens = Scanner.Tokenize(parseString, Errors);
             if (Errors.Count > 0)
                 return Errors[0];
-
-
+                
             ParseScope(false, global);
-
             if (Errors.Count > 0)
                 return Errors[0];
 
