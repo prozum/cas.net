@@ -77,7 +77,7 @@ namespace Ast
                 switch (ValidArguments[i])
                 {
                     case ArgumentType.Expression:
-                        if (args[i].Value is Error)
+                        if (args[i] is Error)
                             valid = false;
                         break;
                     case ArgumentType.Real:
