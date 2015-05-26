@@ -14,6 +14,7 @@ namespace CAS.NET.Server
 
 			// checks if MySQL connection is valid
             this.db = db;
+
 			conn = new MySqlConnection(db);
 			conn.Open();
 			conn.Close();
@@ -129,7 +130,7 @@ namespace CAS.NET.Server
 		// adds assignment to database if it doesn't already exist
         public string AddAssignment(string username, string filename, string file, string grade)
         {
-            if (!this.CheckFilenameExists(username, filename))
+			if (!this.CheckFilenameExists(username, filename, grade, "Assignment"))
             {
                 using (conn = new MySqlConnection(db))
                 {
@@ -143,13 +144,22 @@ namespace CAS.NET.Server
                     cmd.ExecuteNonQuery();
                     conn.Close();
                 }
-
-                return "Success";
             }
             else
             {
-                return "Filename already taken";
+				using (conn = new MySqlConnection(db))
+				{
+					conn.Open();
+					var cmd = new MySqlCommand("UPDATE Assignment SET File = @file WHERE Username = @username AND FileName = @filename AND Grade = @grade", conn);
+					cmd.Parameters.AddWithValue("@file", file);
+					cmd.Parameters.AddWithValue("@username", username);
+					cmd.Parameters.AddWithValue("@filename", filename);
+					cmd.Parameters.AddWithValue("@grade", grade);
+					cmd.ExecuteNonQuery();
+				}
             }
+
+			return "Success";
         }
 
 		// returns the assignments a specific teacher has assigned
@@ -311,27 +321,43 @@ namespace CAS.NET.Server
 		// add feedback to a specific assignment
 		public string AddFeedback(string filename, string file, string username, string grade)
         {
-            using (conn = new MySqlConnection(db))
-            {
-                conn.Open();
-                var cmd = new MySqlCommand("INSERT INTO Feedback(Username, FileName, File, Grade) Values(@username, @filename, @file, @grade)", conn);
-                cmd.Parameters.AddWithValue("@username", username);
-                cmd.Parameters.AddWithValue("@filename", filename);
-                cmd.Parameters.AddWithValue("@file", file);
-                cmd.Parameters.AddWithValue("@grade", grade);
-                cmd.ExecuteNonQuery();
-            }
+			if (CheckFilenameExists(username, filename, grade, "Feedback"))
+			{
+				using (conn = new MySqlConnection(db))
+				{
+					conn.Open();
+					var cmd = new MySqlCommand("INSERT INTO Feedback(Username, FileName, File, Grade) Values(@username, @filename, @file, @grade)", conn);
+					cmd.Parameters.AddWithValue("@username", username);
+					cmd.Parameters.AddWithValue("@filename", filename);
+					cmd.Parameters.AddWithValue("@file", file);
+					cmd.Parameters.AddWithValue("@grade", grade);
+					cmd.ExecuteNonQuery();
+				}
 
-            using (conn = new MySqlConnection(db))
-            {
-                conn.Open();
-                var cmd = new MySqlCommand("UPDATE Completed SET FeedbackGiven = @newfeedback WHERE Username = @username AND FileName = @filename AND Grade = @grade", conn);
-                cmd.Parameters.AddWithValue("@newfeedback", 1);
-                cmd.Parameters.AddWithValue("@username", username);
-                cmd.Parameters.AddWithValue("@filename", filename);
-                cmd.Parameters.AddWithValue("@grade", grade);
-                cmd.ExecuteNonQuery();
-            }
+				using (conn = new MySqlConnection(db))
+				{
+					conn.Open();
+					var cmd = new MySqlCommand("UPDATE Completed SET FeedbackGiven = @newfeedback WHERE Username = @username AND FileName = @filename AND Grade = @grade", conn);
+					cmd.Parameters.AddWithValue("@newfeedback", 1);
+					cmd.Parameters.AddWithValue("@username", username);
+					cmd.Parameters.AddWithValue("@filename", filename);
+					cmd.Parameters.AddWithValue("@grade", grade);
+					cmd.ExecuteNonQuery();
+				}
+			}
+			else
+			{
+				using (conn = new MySqlConnection(db))
+				{
+					conn.Open();
+					var cmd = new MySqlCommand("UPDATE Feedback SET File = @file WHERE Username = @username AND FileName = @filename AND Grade = @grade", conn);
+					cmd.Parameters.AddWithValue("@file", file);
+					cmd.Parameters.AddWithValue("@username", username);
+					cmd.Parameters.AddWithValue("@filename", filename);
+					cmd.Parameters.AddWithValue("@grade", grade);
+					cmd.ExecuteNonQuery();
+				}
+			}
 
 			return "Success";
         }
@@ -405,20 +431,39 @@ namespace CAS.NET.Server
 		// add a completed assignment
         public string AddCompleted(string username, string filename, string file, string grade)
         {
-            using (conn = new MySqlConnection(db))
-            {
-                conn.Open();
-                const string stm = "SELECT VERSION()";
+			if (!CheckFilenameExists(username, filename, grade, "Completed"))
+			{
+				using (conn = new MySqlConnection(db))
+				{
+					conn.Open();
+					const string stm = "INSERT INTO Completed(Username, FileName, File, Grade, FeedbackGiven) VALUES(@username, @filename, @file, @grade, @feedback)";
 
-                var cmd = new MySqlCommand(stm, conn);
-                cmd.CommandText = "INSERT INTO Completed(Username, FileName, File, Grade, FeedbackGiven) VALUES(@username, @filename, @file, @grade, @feedback)";
-                cmd.Parameters.AddWithValue("@username", username);
-                cmd.Parameters.AddWithValue("@filename", filename);
-                cmd.Parameters.AddWithValue("@file", file);
-                cmd.Parameters.AddWithValue("@grade", grade);
-                cmd.Parameters.AddWithValue("@feedback", 0);
-                cmd.ExecuteNonQuery();
-            }
+					var cmd = new MySqlCommand(stm, conn);
+					cmd.Parameters.AddWithValue("@username", username);
+					cmd.Parameters.AddWithValue("@filename", filename);
+					cmd.Parameters.AddWithValue("@file", file);
+					cmd.Parameters.AddWithValue("@grade", grade);
+					cmd.Parameters.AddWithValue("@feedback", 0);
+					cmd.ExecuteNonQuery();
+				}
+			}
+			else if (CheckCompletedOverwritable(username, filename, grade))
+			{
+				using (conn = new MySqlConnection(db))
+				{
+					conn.Open();
+					const string stm = "UPDATE Completed SET File = @Newfile WHERE Username = @username AND Grade = @grade AND FileName = @filename AND FeedbackGiven = @feedback";
+
+					var cmd = new MySqlCommand(stm, conn);
+					cmd.Parameters.AddWithValue("@username", username);
+					cmd.Parameters.AddWithValue("@filename", filename);
+					cmd.Parameters.AddWithValue("@Newfile", file);
+					cmd.Parameters.AddWithValue("@grade", grade);
+					cmd.Parameters.AddWithValue("@feedback", 0);
+
+					cmd.ExecuteNonQuery();
+				}
+			}
 
 			return "Success";
         }
@@ -505,29 +550,44 @@ namespace CAS.NET.Server
         }
 
 		// checks if a filename is already taken
-        public bool CheckFilenameExists(string username, string filename)
-        {
-            const string stm = "SELECT * FROM Assignment WHERE Username = @username AND FileName = @filename";
+		public bool CheckFilenameExists(string username, string filename, string grade, string table)
+		{
+			string stm = "SELECT * FROM " + table + " WHERE Username = @username AND Grade = @grade AND FileName = @filename";
 
-            using (conn = new MySqlConnection (db)) {
-                conn.Open ();
+			using (conn = new MySqlConnection (db)) {
+				conn.Open ();
+				var cmd = new MySqlCommand (stm, conn);
+				cmd.Parameters.AddWithValue ("@username", username);
+				cmd.Parameters.AddWithValue ("@filename", filename);
+				cmd.Parameters.AddWithValue ("@grade", grade);
+				cmd.Parameters.AddWithValue("@table", table);
 
-                var cmd = new MySqlCommand (stm, conn);
-                cmd.Parameters.AddWithValue ("@username", username);
-                cmd.Parameters.AddWithValue ("@filename", filename);
+				var rdr = cmd.ExecuteReader ();
 
-                var rdr = cmd.ExecuteReader ();
+				return rdr.HasRows;
+			}
+		}
 
-                if (rdr.HasRows)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        }
+		// checks if completed assignment is overwritable
+		// completed assignment is overwritable if feedback isn't given yet
+		public bool CheckCompletedOverwritable(string username, string filename, string grade)
+		{
+			const string stm = "SELECT * FROM Completed WHERE Username = @username AND FileName = @filename AND Grade = @grade AND FeedbackGiven = @feedback";
+
+			using (conn = new MySqlConnection(db)) {
+				conn.Open();
+
+				var cmd = new MySqlCommand (stm, conn);
+				cmd.Parameters.AddWithValue ("@username", username);
+				cmd.Parameters.AddWithValue ("@filename", filename);
+				cmd.Parameters.AddWithValue ("@grade", grade);
+				cmd.Parameters.AddWithValue ("@feedback", 0);
+
+				var rdr = cmd.ExecuteReader ();
+
+				return rdr.HasRows;
+			}
+		}
 
 		// clean account table
 		public void CleanAccount()
