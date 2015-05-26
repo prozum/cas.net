@@ -4,6 +4,7 @@ using TaskGenLib;
 
 namespace DesktopUI
 {
+    // Opens the taskgen menu for arithmetic tasks
     public class TaskGenAritMenuItem : MenuItem
     {
         TextViewList textviews;

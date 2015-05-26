@@ -13,7 +13,6 @@ namespace DesktopUI
     {
         TextViewList textviews;
 
-        // Constructor for taskgenwindow
         public TaskGenAritWindow(TextViewList textviews)
             : base("TaskGen Arithmetics Window")
         {
@@ -53,6 +52,7 @@ namespace DesktopUI
                 this.Destroy();
             };
 
+            // Generates a number of tasks based on the users input
             buttonOk.Clicked += (sender, e) =>
             {
                 for (int generatedTaskes = 0; generatedTaskes < spinbuttonNumberOfTasks.Value; generatedTaskes++)

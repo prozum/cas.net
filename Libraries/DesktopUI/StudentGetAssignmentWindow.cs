@@ -13,7 +13,6 @@ namespace DesktopUI
         TextViewList textviews;
         string Filename;
 
-        // Constructor for studentgetassignmentwindow
         public StudentGetAssignmentWindow(User user, ref TextViewList textviews, string Filename)
             : base("Get Assignment")
         {
@@ -27,6 +26,8 @@ namespace DesktopUI
             List<MetaType> metaTypeList = ImEx.Import.DeserializeString<List<MetaType>>(assignment);
 
             this.textviews.castextviews.Clear();
+
+            // Loads each element into the workspace
 
             foreach (var metaItem in metaTypeList)
             {

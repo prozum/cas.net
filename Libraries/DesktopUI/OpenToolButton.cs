@@ -8,24 +8,20 @@ using System.IO;
 
 namespace DesktopUI
 {
-    // Opens a saved file
+    // Opens a saved file on the computer
     public class OpenToolButton : ToolButton
     {
         static Image image = new Image();
         TextViewList textviews;
         User user;
 
-        // Constructor for opentoolbutton
         public OpenToolButton(TextViewList textviews, ref User user)
             : base(image, "open")
         {
 
             SetIcon();
-
             this.TooltipText = "Open .CAS file";
-
             this.textviews = textviews;
-
             this.user = user;
 
             this.Clicked += delegate
@@ -89,6 +85,7 @@ namespace DesktopUI
                     break;
             }
 
+            // If anything has been opened, deserializes the content, and rebuilds the workspace with the opened widgets
             if (hasOpenedAnything == true)
             {
                 List<MetaType> metaTypeList = new List<MetaType>();

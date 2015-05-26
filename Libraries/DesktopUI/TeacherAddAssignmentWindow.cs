@@ -11,7 +11,6 @@ namespace DesktopUI
         User user;
         TextViewList textviews;
 
-        // Constructor for teacheraddassignmentwindow
         public TeacherAddAssignmentWindow(User user, TextViewList textviews)
             : base("Add Assignment")
         {
@@ -36,6 +35,8 @@ namespace DesktopUI
             uploadButton.Clicked += delegate
             {
                 List<MetaType> metaTypeList = new List<MetaType>();
+
+                // Packs the workspace into a single string for easy transfer
 
                 foreach (Widget w in this.textviews)
                 {
@@ -77,6 +78,7 @@ namespace DesktopUI
                     }
                 }
                 
+                // Sends the file, if there are anything to send
                 if (metaTypeList.Count != 0
                     && !string.IsNullOrEmpty(name.Text)
                     && !string.IsNullOrEmpty(grad.Text))
