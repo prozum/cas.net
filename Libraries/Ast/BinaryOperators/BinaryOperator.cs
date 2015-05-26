@@ -192,6 +192,8 @@ namespace Ast
             //Reduces the whole expression.
             if (this is Dot)
                 res = ReduceHelper(Left, Right);
+            else if (this is Assign)
+                res = this;
             else
                 res = ReduceHelper(Left.Reduce(), Right.Reduce());
 
