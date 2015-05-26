@@ -321,7 +321,7 @@ namespace CAS.NET.Server
 		// add feedback to a specific assignment
 		public string AddFeedback(string filename, string file, string username, string grade)
         {
-			if (CheckFilenameExists(username, filename, grade, "Feedback"))
+			if (!CheckFilenameExists(username, filename, grade, "Feedback"))
 			{
 				using (conn = new MySqlConnection(db))
 				{
