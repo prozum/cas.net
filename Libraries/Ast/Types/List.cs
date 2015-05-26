@@ -52,12 +52,14 @@ namespace Ast
         public bool IsArgumentsValid(List args)
         {
             if (args.Count != 1 || !(args[0].Evaluate() is Integer))
-            {
-                CurScope.Errors.Add(new ErrorData(this,"Valid args: [Integer]"));
                 return false;
-            }
 
             return true;
+        }
+
+        public Error GetArgumentError(List args)
+        {
+            return new Error(this, "Valid arguments: [Integer]");
         }
 
         public Expression Call(List args)
@@ -68,16 +70,13 @@ namespace Ast
                 return new Error(this, "Cannot access with negative integer");
 
             int @int;
-
             if (@long > int.MaxValue)
                 return new Error(this, "Integer is too big");
-            else
-                @int = (int)@long;
+            @int = (int)@long;
 
             if (@int > Count - 1)
                 return new Error(this, "Cannot access item " + (@int + 1).ToString() + " in list with " + Count + " items");
-            else
-                return this[@int];
+            return this[@int];
         }
 
         public override string ToString()

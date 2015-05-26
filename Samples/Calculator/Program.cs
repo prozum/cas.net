@@ -33,6 +33,7 @@ public class Calculator : Window
 
     public void EvaluateInput()
     {
+        Expression res;
         TextIter insertIter = Buffer.StartIter;
 
         if (InputView.Buffer.Text.Length == 0)
@@ -41,16 +42,21 @@ public class Calculator : Window
             return;
         }
 
-        Eval.Parse(InputView.Buffer.Text);
+        res = Eval.Parse(InputView.Buffer.Text);
 
-        var res = Eval.Evaluate();
+        if (res == null)
+        {
+            res = Eval.Evaluate();
 
-        if (!(res is Null || res is Error))
-            Buffer.Insert(ref insertIter, "ret: " + res.ToString() + "\n");
+            if (!(res is Null || res is Error))
+                Buffer.Insert(ref insertIter, "ret: " + res.ToString() + "\n");
+        }
+
+        if (res is Error)
+            Eval.SideEffects.Add(new ErrorData(res as Error));
 
         foreach(var data in Eval.SideEffects)
         {
-
             if (data is PrintData)
                 Buffer.Insert(ref insertIter, data.ToString() + "\n");
             else if (data is ErrorData)

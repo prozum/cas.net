@@ -10,7 +10,10 @@ namespace Ast
         {
             get
             {
-                return Child.Value;
+                if (Child is Call)
+                    return Child;
+                else
+                    return Child.Value;
             }
         }
 
@@ -35,19 +38,22 @@ namespace Ast
 
         public override Expression Evaluate()
         {
-            var val = Child.Value;
+            var val = Value;
+
+            if (val is Error)
+                return val;
 
             if (val is Call)
                 val = val.Evaluate().Value;
 
-            if (CurScope.Error)
-                return new Null();
+            if (val is Error)
+                return val;
 
             if (!(val is ICallable))
                 return new Error(val, "is not callable");
 
             if (!(val as ICallable).IsArgumentsValid(Arguments))
-                return new Null();
+                return (val as ICallable).GetArgumentError(Arguments);
 
 
             return (val as ICallable).Call(Arguments);

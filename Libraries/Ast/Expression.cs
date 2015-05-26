@@ -416,7 +416,7 @@ namespace Ast
 
         public virtual Expression OrWith(Boolean other)
         {
-            return new Error(this, "Don't support or with "+ other.GetType().Name);
+            return new Error(this, "Don't support or with " + other.GetType().Name);
         }
 
         public virtual Expression OrWith(Complex other)
@@ -628,11 +628,10 @@ namespace Ast
         public static Expression operator +(Expression left, dynamic right)
         {
             left = left.Evaluate();
-            right = right.Evaluate();
-
             if (left is Error)
                 return left;
-            else if (right is Error)
+            right = right.Evaluate();
+            if (right is Error)
                 return right;
 
             return left.AddWith(right);
@@ -641,11 +640,10 @@ namespace Ast
         public static Expression operator -(Expression left, dynamic right)
         {
             left = left.Evaluate();
-            right = right.Evaluate();
-
             if (left is Error)
                 return left;
-            else if (right is Error)
+            right = right.Evaluate();
+            if (right is Error)
                 return right;
 
             return left.SubWith(right);
@@ -654,11 +652,10 @@ namespace Ast
         public static Expression operator *(Expression left, dynamic right)
         {
             left = left.Evaluate();
-            right = right.Evaluate();
-
             if (left is Error)
                 return left;
-            else if (right is Error)
+            right = right.Evaluate();
+            if (right is Error)
                 return right;
 
             return left.MulWith(right);
@@ -667,11 +664,10 @@ namespace Ast
         public static Expression operator /(Expression left, dynamic right)
         {
             left = left.Evaluate();
-            right = right.Evaluate();
-
             if (left is Error)
                 return left;
-            else if (right is Error)
+            right = right.Evaluate();
+            if (right is Error)
                 return right;
 
             if (right.CompareTo(Constant.Zero))
@@ -683,11 +679,10 @@ namespace Ast
         public static Expression operator %(Expression left, dynamic right)
         {
             left = left.Evaluate();
-            right = right.Evaluate();
-
             if (left is Error)
                 return left;
-            else if (right is Error)
+            right = right.Evaluate();
+            if (right is Error)
                 return right;
 
             if (right.CompareTo(Constant.Zero))
@@ -699,11 +694,10 @@ namespace Ast
         public static Expression operator ^(Expression left, dynamic right)
         {
             left = left.Evaluate();
-            right = right.Evaluate();
-
             if (left is Error)
                 return left;
-            else if (right is Error)
+            right = right.Evaluate();
+            if (right is Error)
                 return right;
 
             return left.ExpWith(right);
@@ -712,11 +706,10 @@ namespace Ast
         public static Expression operator &(Expression left, dynamic right)
         {
             left = left.Evaluate();
-            right = right.Evaluate();
-
             if (left is Error)
                 return left;
-            else if (right is Error)
+            right = right.Evaluate();
+            if (right is Error)
                 return right;
 
             return left.AndWith(right);
@@ -725,11 +718,10 @@ namespace Ast
         public static Expression operator |(Expression left, dynamic right)
         {
             left = left.Evaluate();
-            right = right.Evaluate();
-
             if (left is Error)
                 return left;
-            else if (right is Error)
+            right = right.Evaluate();
+            if (right is Error)
                 return right;
 
             return left.OrWith(right);
@@ -738,11 +730,10 @@ namespace Ast
         public static Expression operator >(Expression left, dynamic right)
         {
             left = left.Evaluate();
-            right = right.Evaluate();
-
             if (left is Error)
                 return left;
-            else if (right is Error)
+            right = right.Evaluate();
+            if (right is Error)
                 return right;
 
             return left.GreaterThan(right);
@@ -751,11 +742,10 @@ namespace Ast
         public static Expression operator <(Expression left, dynamic right)
         {
             left = left.Evaluate();
-            right = right.Evaluate();
-
             if (left is Error)
                 return left;
-            else if (right is Error)
+            right = right.Evaluate();
+            if (right is Error)
                 return right;
 
             return left.LesserThan(right);
@@ -764,11 +754,10 @@ namespace Ast
         public static Expression operator >=(Expression left, dynamic right)
         {
             left = left.Evaluate();
-            right = right.Evaluate();
-
             if (left is Error)
                 return left;
-            else if (right is Error)
+            right = right.Evaluate();
+            if (right is Error)
                 return right;
 
             return left.GreaterThanOrEqualTo(right);
@@ -777,11 +766,10 @@ namespace Ast
         public static Expression operator <=(Expression left, dynamic right)
         {
             left = left.Evaluate();
-            right = right.Evaluate();
-
             if (left is Error)
                 return left;
-            else if (right is Error)
+            right = right.Evaluate();
+            if (right is Error)
                 return right;
 
             return left.LesserThanOrEqualTo(right);

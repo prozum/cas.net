@@ -8,7 +8,7 @@ namespace Ast
         public List<Expression> Conditions = new List<Expression>();
         public List<Expression> Expressions = new List<Expression>();
 
-        public IfExpr (Scope scope)
+        public IfExpr(Scope scope)
         { 
             CurScope = scope;
         }
@@ -25,10 +25,7 @@ namespace Ast
                     CurScope.SideEffects.Add(new DebugData("Debug if cond["+i+"]: "+Conditions[i]+" = "+res));
                     
                 if (res is Error)
-                {
-                    CurScope.Errors.Add(new ErrorData(res as Error));
-                    return new Null();
-                }
+                    return res;
 
                 if (res is Boolean)
                 {
@@ -38,14 +35,11 @@ namespace Ast
                         res = Expressions[i].ReduceEvaluate();
                         if (CurScope.GetBool("debug"))
                             CurScope.SideEffects.Add(new DebugData("Debug if expr[" + i + "]: " + Expressions[i] + " = " + res));
-                        return new Null();
+                        return Constant.Null;
                     }
                 }
                 else
-                {
-                    CurScope.Errors.Add(new ErrorData("Condition " + i + ": " + Conditions[i] + " does not return bool"));
-                    return new Null();
-                }
+                    return new Error(this, "Condition " + i + ": " + Conditions[i] + " does not return bool");
             }
 
             if (Expressions.Count > Conditions.Count)
@@ -55,7 +49,7 @@ namespace Ast
                     CurScope.SideEffects.Add(new DebugData("Debug if["+(Expressions.Count-1)+"]: "+Expressions[Expressions.Count-1]+" = "+res));
             }
 
-            return new Null();
+            return Constant.Null;
         }
 
         public override string ToString()

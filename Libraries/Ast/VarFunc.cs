@@ -36,12 +36,14 @@ namespace Ast
         public bool IsArgumentsValid(List args)
         {
             if (args.Count != Arguments.Count)
-            {
-                CurScope.Errors.Add(new ErrorData(this, this.ToString() + " takes " + Arguments.Count.ToString() + " arguments. Not " + args.Count.ToString() + "."));
                 return false;
-            }
 
             return true;
+        }
+
+        public Error GetArgumentError(List args)
+        {
+            return new Error(this, this.ToString() + " takes " + Arguments.Count.ToString() + " arguments. Not " + args.Count.ToString() + ".");
         }
 
         public override Expression Evaluate()

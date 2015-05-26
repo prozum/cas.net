@@ -36,26 +36,29 @@ namespace Ast
 
         Queue<Token> Tokens;
         Token CurToken { get { return Tokens.Count > 0 ? Tokens.Peek() : EOS; } }
-        bool Error { get { return CurScope.Errors.Count > 0; } }
+        List<Error> Errors = new List<Error>();
+        bool Error { get { return Errors.Count > 0; } }
         bool ExpectPrefix = true;
 
-        public void Parse(string parseString)
+        public Error Parse(string parseString)
         {
-            Parse(parseString, new Scope());
+            return Parse(parseString, new Scope());
         }
 
-        public void Parse(string parseString, Scope global)
+        public Error Parse(string parseString, Scope global)
         {
-            global.Errors.Clear();
+            Errors.Clear();
 
-            Tokens = Scanner.Tokenize(parseString, global.Errors);
-            if (global.Errors.Count > 0)
-                return;
+            Tokens = Scanner.Tokenize(parseString, Errors);
+            if (Errors.Count > 0)
+                return Errors[0];
 
             ParseScope(false, global);
 
-            if (global.Errors.Count > 0)
-                Clear();
+            if (Errors.Count > 0)
+                return Errors[0];
+
+            return null;
         }
 
         public void Clear()
@@ -124,6 +127,10 @@ namespace Ast
                     case TokenKind.RET:
                         Eat();
                         CurScope.Expressions.Add(new RetExpr(ParseExpr(), CurScope));
+                        break;
+                    case TokenKind.IMPORT:
+                        Eat();
+                        CurScope.Expressions.Add(new ImportExpr(ParseExpr(), CurScope));
                         break;
 
                     case TokenKind.ELIF:
@@ -288,7 +295,7 @@ namespace Ast
             scope = ParseScope();
             if (Error)
                 return null;
-            stmt.Expression = scope;
+            stmt.WhileScope = scope;
             stmt.Condition.CurScope = scope;
 
             return stmt;
@@ -431,7 +438,7 @@ namespace Ast
                         break;
                     
                     case TokenKind.IDENTIFIER:
-                        SetupExpr(new Variable(CurToken.Value, CurScope),true);
+                        SetupExpr(new Variable(CurToken.Value, CurScope), true);
                         break;
 
                     case TokenKind.TRUE:
@@ -611,7 +618,7 @@ namespace Ast
                     PostfixStack.Pop();
                     ExprStack.Pop();
                     BinaryStack.Pop();
-                    return new Null();
+                    return Constant.Null;
                 }
             }
                 
@@ -696,7 +703,7 @@ namespace Ast
             BinaryOperator curOp, nextOp, top;
 
             if (exprs.Count == 0)
-                return new Null();
+                return Constant.Null;
 
             if (exprs.Count == 1 && biops.Count == 0)
                 return exprs.Dequeue();
@@ -704,7 +711,7 @@ namespace Ast
             if (exprs.Count != 1 + biops.Count)
             {
                 ReportError("Missing operand");
-                return new Null();
+                return Constant.Null;
             }
                
 
@@ -767,7 +774,7 @@ namespace Ast
                     else
                     {
                         ReportError("Int overflow");
-                        return new Null();
+                        return Constant.Null;
                     }
                 
                 case TokenKind.DECIMAL:
@@ -776,7 +783,7 @@ namespace Ast
                     else
                     {
                         ReportError("Decimal overflow");
-                        return new Null();
+                        return Constant.Null;
                     }
                 case TokenKind.IMAG_INT:
                     if (Int64.TryParse(CurToken.Value, out intRes))
@@ -784,7 +791,7 @@ namespace Ast
                     else
                     {
                         ReportError("Imaginary int overflow");
-                        return new Null();
+                        return Constant.Null;
                     }
                 
                 case TokenKind.IMAG_DEC:
@@ -793,7 +800,7 @@ namespace Ast
                     else
                     {
                         ReportError("Imaginary decimal overflow");
-                        return new Null();
+                        return Constant.Null;
                     }
                 
                 default:
@@ -847,19 +854,19 @@ namespace Ast
 //            }
 //        }
 
-        public ErrorData ReportError(ErrorData error)
+        public Error ReportError(Error error)
         {
-            CurScope.Errors.Add(error);
+            Errors.Add(error);
 
             return error;
         }
 
-        public ErrorData ReportError(string msg)
+        public Error ReportError(string msg)
         {
-            var error = new ErrorData(msg);
+            var error = new Error(msg);
             error.Position = CurToken.Position;
 
-            CurScope.Errors.Add(error);
+            Errors.Add(error);
 
             return error;
         }

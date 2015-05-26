@@ -17,16 +17,13 @@ namespace Ast
             var res = Expression.Evaluate();
 
             if (res is Error)
-            {
-                CurScope.Errors.Add(new ErrorData(res as Error));
-                return new Null();
-            }
+                return res;
 
             CurScope.Returns.Clear();
             CurScope.Returns.Add(res);
             CurScope.Return.@bool = true;
 
-            return new Null();
+            return Constant.Null;
         }
 
         public override string ToString()

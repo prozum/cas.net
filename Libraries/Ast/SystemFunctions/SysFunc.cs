@@ -11,6 +11,7 @@ namespace Ast
         Text,
         Variable,
         Function,
+        Scope,
         Equation,
         List
     }
@@ -101,6 +102,10 @@ namespace Ast
                         if (!(args[i] is ICallable))
                             valid = false;
                         break;
+                    case ArgumentType.Scope:
+                        if (!(args[i].Value is Scope))
+                            valid = false;
+                        break;
                     case ArgumentType.Equation:
                         if (!(args[i].Value is Equal))
                             valid = false;
@@ -115,8 +120,12 @@ namespace Ast
             if (valid)
                 return true;
 
-            CurScope.Errors.Add(new ErrorData(new ArgumentError(this)));
             return false;
+        }
+
+        public Error GetArgumentError(List args)
+        {
+            return new ArgumentError(this);
         }
     }
 }

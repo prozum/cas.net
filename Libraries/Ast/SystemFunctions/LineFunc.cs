@@ -24,7 +24,7 @@ namespace Ast
             var x2 = args[2] as Real;
             var y2 = args[3] as Real;
             CurScope.SideEffects.Add(new LineData(x1,y1,x2,y2));
-            return new Null();
+            return Constant.Null;
         }
     }
 }

@@ -190,6 +190,10 @@
     <Compile Include="SystemFunctions\CloneFunc.cs">
       <DependentUpon>SysFunc.cs</DependentUpon>
     </Compile>
+    <Compile Include="KeyExpressions\ImportExpr.cs" />
+    <Compile Include="SystemFunctions\DirFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ProjectExtensions>

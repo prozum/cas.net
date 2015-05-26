@@ -17,6 +17,7 @@ namespace Ast
         IN,
         WHILE,
         RET,
+        IMPORT,
 
         TEXT,
 
