@@ -11,6 +11,7 @@ namespace CAS.NET.Server
 
         public Database(string db)
         {
+			// create tables
             this.db = db;
             CreateUserDB(db);
             CreateAssignmentDB(db);
@@ -18,6 +19,7 @@ namespace CAS.NET.Server
             CreateFeedbackDB(db);
         }
 
+		// creates user table if it doesn't exist
         private void CreateUserDB(string db)
         {
             try
@@ -43,7 +45,7 @@ namespace CAS.NET.Server
             }
         }
 
-
+		// creates assignment table if it doesn't exist
         private void CreateAssignmentDB(string db)
         {
             try
@@ -68,6 +70,7 @@ namespace CAS.NET.Server
             }
         }
 
+		// creates table with completed assignments if it doesn't exist
         private void CreateCompletedDB(string db)
         {
             try
@@ -92,6 +95,7 @@ namespace CAS.NET.Server
             }
         }
 
+		// creates table with feedback if it doesn't exist
         private void CreateFeedbackDB(string db)
         {
             try
@@ -116,6 +120,7 @@ namespace CAS.NET.Server
             }
         }
 
+		// adds assignment to database if it doesn't already exist
         public string AddAssignment(string username, string filename, string file, string grade)
         {
             if (!this.CheckFilenameExists(username, filename))
@@ -141,6 +146,7 @@ namespace CAS.NET.Server
             }
         }
 
+		// returns the assignments a specific teacher has assigned
         public string[] TeacherGetAssignmentList(string username)
         {
             List<string> FileList = new List<string>();
@@ -173,6 +179,7 @@ namespace CAS.NET.Server
             return FileList.ToArray();
         }
 
+		// returns a list of completed assignments, to a specific assignment
 		public string[] GetCompletedList(string filename, string grade)
 		{
 			List<String> FeedbackList = new List<string>();
@@ -260,6 +267,7 @@ namespace CAS.NET.Server
 			return TotalStudents.ToArray();
 		}
 
+		// gets a specific completed assignment
 		public string GetCompleted(string filename, string username, string grade)
         {
             string file;
@@ -294,6 +302,7 @@ namespace CAS.NET.Server
             return file;
         }
 
+		// add feedback to a specific assignment
 		public string AddFeedback(string filename, string file, string username, string grade)
         {
             using (conn = new MySqlConnection(db))
@@ -353,6 +362,7 @@ namespace CAS.NET.Server
             return file;
         }
 
+		// returns a list of the assignments available to a given grade
         public string[] StudentGetAssignmentList(string grade)
         {
             List<string> FileList = new List<string>();
@@ -386,6 +396,7 @@ namespace CAS.NET.Server
             return FileList.ToArray();
         }
 
+		// add a completed assignment
         public string AddCompleted(string username, string filename, string file, string grade)
         {
             using (conn = new MySqlConnection(db))
@@ -406,6 +417,7 @@ namespace CAS.NET.Server
 			return "Success";
         }
 
+		// gets feedback for a specific assignment
 		public string GetFeedback(string username, string filename, string grade)
 		{
 			string file;
@@ -437,6 +449,7 @@ namespace CAS.NET.Server
 			return file;
 		}
 
+		// checks user privilege level
         public int CheckPrivilege(string username, string password)
         {
             const int PrivilegeColumn = 3;
@@ -461,6 +474,7 @@ namespace CAS.NET.Server
             }
         }
 
+		// returns the grade of a given user
         public string GetGrade(string username)
         {
             const int GradeColumn = 2;
@@ -484,6 +498,7 @@ namespace CAS.NET.Server
             return null;
         }
 
+		// checks if a filename is already taken
         public bool CheckFilenameExists(string username, string filename)
         {
             const string stm = "SELECT * FROM Assignment WHERE Username = @username AND FileName = @filename";
@@ -508,6 +523,7 @@ namespace CAS.NET.Server
             }
         }
 
+		// clean account table
 		public void CleanAccount()
 		{
 			try
@@ -532,6 +548,7 @@ namespace CAS.NET.Server
 			}
 		}
 
+		// clean assignment table
 		public void CleanAssignment()
 		{
 			try
@@ -556,6 +573,7 @@ namespace CAS.NET.Server
 			}
 		}
 
+		// clean completed assignments table
 		public void CleanCompleted()
 		{
 			try
@@ -580,6 +598,7 @@ namespace CAS.NET.Server
 			}
 		}
 
+		// clean feedback table
 		public void CleanFeedback()
 		{
 			try
@@ -604,6 +623,7 @@ namespace CAS.NET.Server
 			}
 		}
 
+		// add user to account table
 		public void AddUser(string username, string password, string grade, int privilege)
 		{
 			try
@@ -630,6 +650,7 @@ namespace CAS.NET.Server
 			}
 		}
 
+		// creates db called mydb
 		public void CreateDB()
 		{
 			try

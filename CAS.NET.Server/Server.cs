@@ -116,6 +116,7 @@ namespace CAS.NET.Server
 
         private string TeacherAddAssignment(string username, HttpListenerRequest request, Database db)
         {
+			// make sure the headers aren't empty
 			if (request.Headers["Checksum"] != null && request.Headers["Grade"] != null &&
 				request.Headers["Filename"] != null && request.Headers["File"] != null)
 			{
@@ -195,6 +196,7 @@ namespace CAS.NET.Server
         {   
 			/* teachers can use this to get other classes completed assignments */
 			/* todo fix */
+			// make sure the headers aren't empty
 			if (request.Headers["Grade"] != null && request.Headers["Filename"] != null && request.Headers["Student"] != null)
 			{
 				string student = request.Headers ["Student"];
@@ -215,6 +217,7 @@ namespace CAS.NET.Server
 
 		private string TeacherAddFeedback(HttpListenerRequest request, Database db)
         {
+			// make sure the headers aren't empty
 			if (request.Headers["Checksum"] != null && request.Headers["Grade"] != null &&
 				request.Headers["Filename"] != null && request.Headers["File"] != null &&
 				request.Headers["Student"] != null)
@@ -227,9 +230,6 @@ namespace CAS.NET.Server
 
 				// Prevents the server from saving the files if it's checksum is invalid
 				string checksumNew = Checksum.GetMd5Hash(file);
-
-				Console.WriteLine(checksum);
-				Console.WriteLine(checksumNew);
 
 				if (Checksum.VerifyMd5Hash(checksum, checksumNew) == false)
 				{
@@ -247,6 +247,7 @@ namespace CAS.NET.Server
             string grade = db.GetGrade(username);
             string[] filelist = db.StudentGetAssignmentList(grade);
 
+			// return failed if filelist doesn't contain any filenames
 			if (filelist[0] == "Error")
 			{
 				return "Failed";
@@ -266,6 +267,7 @@ namespace CAS.NET.Server
 
 		private string StudentGetAssignment(string username, HttpListenerRequest request, HttpListenerResponse response, Database db)
         {
+			// make sure the headers aren't empty
 			if (request.Headers["Filename"] != null)
 			{
 				string grade = db.GetGrade(username);
@@ -285,6 +287,7 @@ namespace CAS.NET.Server
 
 		private string StudentAddCompleted(string username, HttpListenerRequest request, Database db)
         {
+			// make sure the headers aren't empty
 			if (request.Headers["Checksum"] != null && request.Headers["Filename"] != null &&
 															request.Headers["File"] != null)
 			{
@@ -309,14 +312,11 @@ namespace CAS.NET.Server
 
 		private string StudentGetFeedback(string username, HttpListenerRequest request, HttpListenerResponse response, Database db)
         {
+			// make sure the header isn't empty
 			if (request.Headers["Filename"] != null)
 			{
 				string grade = db.GetGrade(username);
 				string filename = request.Headers ["Filename"];
-
-				Console.WriteLine(username);
-				Console.WriteLine(filename);
-				Console.WriteLine(grade);
 
 				string file = db.GetFeedback(username, filename, grade);
 				string checksum = Checksum.GetMd5Hash(file);
