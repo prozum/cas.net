@@ -1,20 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Ast
+﻿namespace Ast
 {
-    // A BinaryOperator which sides can be swapped without effecting the result.
-    public interface ISwappable
-    {
-        Expression Left { get; set; }
-        Expression Right { get; set; }
-
-        BinaryOperator Swap();
-        BinaryOperator Transform();
-        string ToStringParent();
-    }
-
-
     // A Operator which evaluates two expressions.
     public abstract class BinaryOperator : Expression
     {
@@ -111,7 +96,10 @@ namespace Ast
                 }
             }
 
-            return false;
+            var thisEval = thisReduced.Evaluate();
+            var otherEval = otherReduced.Evaluate();
+
+            return thisEval.CompareTo(otherEval);
         }
 
         private bool CompareSwappables(ISwappable exp1, BinaryOperator exp2)
@@ -192,6 +180,8 @@ namespace Ast
             //Reduces the whole expression.
             if (this is Dot)
                 res = ReduceHelper(Left, Right);
+            else if (this is Assign)
+                res = this;
             else
                 res = ReduceHelper(Left.Reduce(), Right.Reduce());
 

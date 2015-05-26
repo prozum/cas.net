@@ -1,10 +1,5 @@
-﻿using System;
-
-namespace Ast
+﻿namespace Ast
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public class Lesser : BinaryOperator
     {
         public override string Identifier { get { return "<"; } }

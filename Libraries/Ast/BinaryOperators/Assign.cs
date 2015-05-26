@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Ast
+﻿namespace Ast
 {
     public class Assign : BinaryOperator
     {
@@ -72,11 +70,6 @@ namespace Ast
         }
 
         protected override Expression ExpandHelper(Expression left, Expression right)
-        {
-            return new Assign(left, right, CurScope);
-        }
-
-        protected override Expression ReduceHelper(Expression left, Expression right)
         {
             return new Assign(left, right, CurScope);
         }

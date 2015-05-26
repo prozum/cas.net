@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Ast
+﻿namespace Ast
 {
     public class ForExpr : Expression
     {
@@ -16,6 +14,7 @@ namespace Ast
         public override Expression Evaluate()
         {
             var list = List.Evaluate();
+            var resList = new List();
 
             if (list is Error)
                 return list;
@@ -30,9 +29,11 @@ namespace Ast
 
                 if (res is Error)
                     return res;
+
+                resList.Items.Add(res);
             }
 
-            return Constant.Null;
+            return resList;
         }
     }
 }

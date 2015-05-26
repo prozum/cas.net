@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Ast
 {
@@ -19,34 +18,32 @@ namespace Ast
                 Parse(parseString);
             SetVar("deg", new Boolean(true));
             SetVar("debug", new Boolean(true));
-            SetVar("pi", new Irrational((decimal)Math.PI));
-
-            SetVar("print", new PrintFunc(this));
-            SetVar("dir", new DirFunc(this));
-            SetVar("range", new RangeFunc(this));
 
             var scope = new Scope(this);
+            SetVar("sys", scope);
+            scope.SetVar("print", new PrintFunc(this));
+            scope.SetVar("dir", new DirFunc(this));
+            scope.SetVar("eval", new EvalFunc(this));
+            scope.SetVar("type", new TypeFunc(this));
+            scope.SetVar("clone", new CloneFunc(this));
+
+            scope = new Scope(this);
             SetVar("math", scope);
+            scope.SetVar("pi", new Irrational((decimal)Math.PI));
             scope.SetVar("abs", new AbsFunc(this));
             scope.SetVar("solve", new SolveFunc(this));
             scope.SetVar("sqrt", new SqrtFunc(this));
+            scope.SetVar("expand", new ExpandFunc(this));
+            scope.SetVar("reduce", new ReduceFunc(this));
 
             scope = new Scope(this);
-            SetVar("tri", scope);
+            SetVar("trig", scope);
             scope.SetVar("sin", new SinFunc(this));
             scope.SetVar("cos", new CosFunc(this));
             scope.SetVar("tan", new TanFunc(this));
             scope.SetVar("asin", new AsinFunc(this));
             scope.SetVar("acos", new AcosFunc(this));
             scope.SetVar("atan", new AtanFunc(this));
-
-            scope = new Scope(this);
-            SetVar("sys", scope);
-            scope.SetVar("eval", new EvalFunc(this));
-            scope.SetVar("type", new TypeFunc(this));
-            scope.SetVar("expand", new ExpandFunc(this));
-            scope.SetVar("reduce", new ReduceFunc(this));
-            scope.SetVar("clone", new CloneFunc(this));
 
             scope = new Scope(this);
             SetVar("draw", scope);

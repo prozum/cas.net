@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Ast
+﻿namespace Ast
 {
     public class WhileExpr : Expression
     {
@@ -17,6 +15,7 @@ namespace Ast
         public override Expression Evaluate()
         {
             int i = 0;
+            var resList = new List();
 
             while (i++ < MaxIterations)
             {
@@ -31,13 +30,18 @@ namespace Ast
                         break;
                 }
 
-                WhileScope.Evaluate();
+                res = WhileScope.Evaluate();
+
+                if (res is Error)
+                    return res;
+
+                resList.Items.Add(res);
             }
 
             if (i > MaxIterations)
                 return new Error(this, "Overflow");
 
-            return Constant.Null;
+            return resList;
 
         }
 

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Ast
+﻿namespace Ast
 {
     public class Add : BinaryOperator, ISwappable, IInvertable
     {
