@@ -1,4 +1,6 @@
-﻿namespace Ast
+﻿using System;
+
+namespace Ast
 {
     public class Assign : BinaryOperator
     {
@@ -37,7 +39,6 @@
 
             if (res is Error)
                 return res;
-             
 
             // Find Identifier & Expression
             if (res is Variable)
@@ -61,8 +62,8 @@
             else
                 return new Error(res, " is not a variable");
 
-            if (res is Error)
-                return res;
+            if (expr is Error)
+                return expr;
 
             scope.SetVar(identifier, expr);
 

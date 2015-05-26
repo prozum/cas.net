@@ -65,12 +65,17 @@ namespace Ast
 
         public override Expression Evaluate()
         {
+            Expression res;
+
             Returns.Items.Clear();
             Return.@bool = false;
 
             foreach (var expr in Expressions)
             {
-                var res = expr.ReduceEvaluate();
+                if (GetBool("reduce"))
+                    res = expr.ReduceEvaluate();
+                else
+                    res = expr.Evaluate();
 
                 if (GetBool("debug"))
                     SideEffects.Add(new DebugData("Debug: " + expr + " = " + res));
