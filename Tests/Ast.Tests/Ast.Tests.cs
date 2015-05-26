@@ -302,5 +302,13 @@ namespace Ast.Tests
 
             Assert.AreEqual(expected, Evaluator.Eval(testString).ToString());
         }
+
+        [Test]
+        public void TheHardExpressionToParse()
+        {
+            var expected = "x:=x&x!=x+x/x^x.x*x";
+            var actual = Evaluator.Eval("~(" + expected + ")").ToString();
+            Assert.AreEqual(expected, actual);
+        }
     }
 }
