@@ -19,6 +19,12 @@ namespace Ast
             if (res is Error)
                 return res;
 
+            if (res is VarFunc)
+                res = Expression.Evaluate();
+           
+            if (res is Error)
+                return res;
+
             if (res is Scope)
             {
                 Scope scope = (Scope)res;
