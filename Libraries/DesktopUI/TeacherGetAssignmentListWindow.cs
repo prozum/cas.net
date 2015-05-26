@@ -29,9 +29,11 @@ namespace DesktopUI
 
                     Button GetCompleted = new Button("Get Completed");
                     GetCompleted.Clicked += (sender, e) => new TeacherGetCompletedListWindow(this.user, ref this.textviews, item);
+                    GetCompleted.Clicked += (sender, e) => this.Destroy();
 
                     Button AddFeedback = new Button("Add Feedback");
                     AddFeedback.Clicked += (sender, e) => new TeacherAddFeedbackWindow(this.user, this.textviews, item);
+                    GetCompleted.Clicked += (sender, e) => this.Destroy();
 
                     HBox hbox = new HBox(false, 2);
 

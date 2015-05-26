@@ -32,6 +32,7 @@ namespace DesktopUI
                     MovableCasCalcView calcView = (MovableCasCalcView)w;
                     metaType.type = typeof(MovableCasCalcView);
                     metaType.metastring = calcView.calcview.input.Text;
+                    metaType.locked = calcView.textview.locked;
                     metaTypeList.Add(metaType);
                 }
                 else if (w is MovableCasCalcMulitlineView)
@@ -50,6 +51,7 @@ namespace DesktopUI
                     metaType.type = typeof(MovableCasResult);
                     metaType.metastring = Export.Serialize(casres.casresult.facitContainer);
                     metaType.locked = casres.textview.locked;
+                    metaTypeList.Add(metaType);
                 }
                 else if (w.GetType() == typeof(MovableCasTextView))
                 {
