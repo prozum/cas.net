@@ -15,28 +15,48 @@ using System.Collections.Generic;
 
 namespace ImEx
 {
-
     public static class Import
     {
         // Returns a deserialised string from file to object T
         public static T ReadDeserializedFromCasFile<T>(string fileName, string fileDestination)
         {
-            string serializedString = OpenFileToString(fileName, fileDestination);
-            T deserialisedObject = JsonConvert.DeserializeObject<T>(serializedString);
-            return deserialisedObject;
+            try
+            {
+                string serializedString = OpenFileToString(fileName, fileDestination);
+                T deserialisedObject = JsonConvert.DeserializeObject<T>(serializedString);
+                return deserialisedObject;
+            }
+            catch (Exception)
+            {
+                return default(T);
+            }
         }
 
         // Returns a serialized string. Useful for creating checksums.
         public static string ReadSerializedFromCasFile(string fileName, string fileDestination)
         {
-            return OpenFileToString(fileName, fileDestination);
+            try
+            {
+                return OpenFileToString(fileName, fileDestination);
+            }
+            catch (Exception)
+            {
+                return String.Empty;
+            }
         }
 
         // Used for deserializing an object of type T.
         public static T DeserializeString<T>(string serializedString)
         {
-            T deserializedObject = JsonConvert.DeserializeObject<T>(serializedString);
-            return deserializedObject;
+            try
+            {
+                T deserializedObject = JsonConvert.DeserializeObject<T>(serializedString);
+                return deserializedObject;
+            }
+            catch (Exception)
+            {
+                return default(T);
+            }
         }
 
         // Loads serialized filecontent into strings.

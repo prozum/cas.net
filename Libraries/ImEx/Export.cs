@@ -61,7 +61,14 @@ namespace ImEx
         // Takes a string, and serialize it as Json.
         public static string Serialize (Object serializeObject)
         {
-            return JsonConvert.SerializeObject (serializeObject);
+            try
+            {
+                return JsonConvert.SerializeObject(serializeObject);
+            }
+            catch (Exception)
+            {
+                return String.Empty;
+            }
         }
     }
 }
