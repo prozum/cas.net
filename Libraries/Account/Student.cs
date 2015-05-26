@@ -30,6 +30,15 @@ namespace Account
 
             client.Headers.Clear();
 
+			if (response == "Failed")
+			{
+				return null;
+			}
+			else if (response == "Corruption")
+			{
+				return null;
+			}
+
             return response;
         }
 
