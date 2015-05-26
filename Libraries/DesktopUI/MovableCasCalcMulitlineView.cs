@@ -7,6 +7,7 @@ using Ast;
 
 namespace DesktopUI
 {
+    // The movable version of a multiline view
     public class MovableCasCalcMulitlineView : MovableCasTextView
     {
         public CasCalcMultilineView calcview;

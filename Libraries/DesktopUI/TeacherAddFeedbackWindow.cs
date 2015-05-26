@@ -42,6 +42,8 @@ namespace DesktopUI
 				string feedbackString = String.Empty;
 				List<MetaType> metaTypeList = new List<MetaType>();
 
+                // Packs the workspace into a single string for easy transfer
+
 				foreach (Widget w in this.textviews)
 				{
                     if (w.GetType() == typeof(MovableCasCalcView))

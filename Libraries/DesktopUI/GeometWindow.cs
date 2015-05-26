@@ -3,11 +3,11 @@ using Gtk;
 
 namespace DesktopUI
 {
+    // Window for accessing quick-trigeometry tools
     public class GeometWindow : Window
     {
         TextViewList textviews;
 
-        // Constructor for taskgenwindow
         public GeometWindow(TextViewList textviews)
             : base("Geometry Tools")
         {
@@ -49,7 +49,7 @@ namespace DesktopUI
             {
                 k = 0;
                 double.TryParse(entrySquareCircumference.Text, out k);
-                //Skal bruge 2 inputs
+                //needs two inputs
                 //entrySquareCircumference.Text = Geomet.Square.Circumference(double.Parse(entrySquareCircumference.Text)).ToString();
             };
 
@@ -60,7 +60,7 @@ namespace DesktopUI
             {
                 k = 0;
                 double.TryParse(entrySquareArea.Text, out k);
-                //skal bruge 2 inputs
+                //Needs two inputs
                 //entrySquareCircumference.Text = Geomet.Square.Area(double.Parse(entrySquareCircumference.Text)).ToString();
             };
 
@@ -98,7 +98,7 @@ namespace DesktopUI
             {
                 k = 0;
                 double.TryParse(entrySquareCircumference.Text, out k);
-                //Skal bruge 3 inputs
+                //Needs three inputs
                 //entryCubeVolume.Text = Geomet.Cube.Volume(double.Parse(entryCubeVolume.Text)).ToString();
             };
 
@@ -108,7 +108,7 @@ namespace DesktopUI
             {
                 k = 0;
                 double.TryParse(entrySquareCircumference.Text, out k);
-                //skal bruge 3 inputs
+                //Needs three inputs
                 //entryCubeSurfaceArea.Text = Geomet.Cube.SurfaceArea(double.Parse(entryCubeSurfaceArea.Text)).ToString();
             };
 

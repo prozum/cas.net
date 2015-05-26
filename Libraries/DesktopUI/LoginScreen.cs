@@ -4,6 +4,7 @@ using System.Net;
 
 namespace DesktopUI
 {
+    // Login screen that allows the user to login to the server
     public class LoginScreen : Window
     {
         User user;
@@ -80,6 +81,7 @@ namespace DesktopUI
             client.Encoding = System.Text.Encoding.UTF8;
             client.Credentials = new NetworkCredential(username, password);
 
+            // Tries to connect to the server
             try
             {
                 user.privilege = int.Parse(client.UploadString(host, command), System.Globalization.NumberStyles.AllowLeadingSign);
@@ -97,6 +99,7 @@ namespace DesktopUI
                     errorLabel.Show();
                 }
             }
+            // Catches all problems with connecting to the server on login
             catch (Exception)
             {
                 errorLabel.Text = "Server is down or not found!";

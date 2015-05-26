@@ -48,8 +48,6 @@ namespace FileOperation
                             file = System.IO.File.ReadAllText(filechooser.Filename);
                         }
 
-                        Console.WriteLine("Line loaded::: " + file);
-
                         filechooser.Destroy();
 
                         return file;
@@ -93,7 +91,6 @@ namespace FileOperation
 
                         if (filechooser.Run() == (int)ResponseType.Accept)
                         {
-                            Console.WriteLine(filechooser.Name);
                             if (filechooser.Filename.ToLower().EndsWith(".cas"))
                             {
                                 System.IO.File.WriteAllText(filechooser.Filename, file);

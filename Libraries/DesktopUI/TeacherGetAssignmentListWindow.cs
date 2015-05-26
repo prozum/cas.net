@@ -9,7 +9,6 @@ namespace DesktopUI
         User user;
         TextViewList textviews;
 
-        // Constructor for teachergetassignmentlistwindow
         public TeacherGetAssignmentListWindow(User user, ref TextViewList textviews)
             : base("Assignment List")
         {
@@ -21,6 +20,7 @@ namespace DesktopUI
             ScrolledWindow scrolledWindow = new ScrolledWindow();
             VBox vbox = new VBox(false, 2);
 
+            // Creates a list of lines, where the teacher can get the complete work of the student, and add feedback for it.
             foreach (var item in assignmentList)
             {
                 if (!string.IsNullOrEmpty(item))

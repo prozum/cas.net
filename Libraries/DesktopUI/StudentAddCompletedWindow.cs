@@ -12,7 +12,6 @@ namespace DesktopUI
         TextViewList textviews;
         string Filename;
 
-        // Constructor for studentaddcompletedwindow
         public StudentAddCompletedWindow(User user, TextViewList textviews, string Filename)
             : base("Upload Completed Assignment")
         {
@@ -24,6 +23,7 @@ namespace DesktopUI
 
             List<MetaType> metaTypeList = new List<MetaType>();
 
+            // Packs the file into a single string
             foreach (Widget w in this.textviews)
             {
                 if (w is MovableCasCalcView)

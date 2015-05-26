@@ -13,7 +13,6 @@ namespace DesktopUI
 
         static Image image = new Image();
 
-        // Constructor for underlinetoolbutton
         public UnderlineToolButton(ref TextViewList textviews)
             : base(image, "Underline")
         {

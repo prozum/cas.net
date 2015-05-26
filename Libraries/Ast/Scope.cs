@@ -85,7 +85,9 @@ namespace Ast
 
                 if (Return)
                 {
-                    CurScope.Returns.Items.Add(Returns[0]);
+                    if (Shared)
+                        CurScope.Returns.Items.Add(Returns[0]);
+
                     break;
                 }
 
