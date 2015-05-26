@@ -7,11 +7,11 @@ using Gtk;
 
 namespace DesktopUI
 {
+    // Window for generating unit conversion tests
     public class TaskGenUnitWindow: Window
     {
         TextViewList textviews;
 
-        // Constructor for taskgenwindow
         public TaskGenUnitWindow(TextViewList textviews)
             : base("TaskGen Unit Conversion Window")
         {
@@ -47,17 +47,15 @@ namespace DesktopUI
                 this.Destroy();
             };
 
+            // Generates a number of tasks based on user input
             buttonOk.Clicked += (sender, e) =>
             {
-
                 for (int generatedTaskes = 0; generatedTaskes < spinbuttonNumberOfTasks.Value; generatedTaskes++)
                 {
                     TaskGenLib.Task t = TaskGenLib.TaskGen.MakeUnitTask((int)spinbuttonMinimum.Value, (int)spinbuttonMaximum.Value);
                     textviews.InsertTaskGenTextView(t.TaskDescription);
                     textviews.InsertResult("",t.Solution);
                 }
-
-
                 this.Destroy();
             };
 

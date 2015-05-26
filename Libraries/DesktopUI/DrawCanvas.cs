@@ -6,12 +6,13 @@ using Cairo;
 
 namespace DesktopUI
 {
+    // Not used in the final product
+    // Cant be saved, and goes full on the CPU when used
     public class DrawCanvas : DrawingArea
     {
         private List<DrawCanvasFigure> Figures;
         private DrawCanvasMouse mouse;
 
-        // Constructor for drawcanvas, that allows users to draw with their mouse.
         public DrawCanvas()
             : base()
         {

@@ -12,7 +12,6 @@ namespace DesktopUI
         TextViewList textviews;
         string Filename;
 
-        // Constructor for studentaddcompletedwindow
         public StudentAddCompletedWindow(User user, TextViewList textviews, string Filename)
             : base("Upload Completed Assignment")
         {
@@ -24,6 +23,7 @@ namespace DesktopUI
 
             List<MetaType> metaTypeList = new List<MetaType>();
 
+            // Packs the file into a single string
             foreach (Widget w in this.textviews)
             {
                 if (w is MovableCasCalcView)
@@ -68,7 +68,18 @@ namespace DesktopUI
             {
                 string serializedString = ImEx.Export.Serialize(metaTypeList);
                 this.user.student.AddCompleted(serializedString, this.Filename);
+
+                MessageDialog ms = new MessageDialog(this, DialogFlags.DestroyWithParent, MessageType.Info, ButtonsType.Close, "Upload Successful");
+                ms.Run();
+                ms.Destroy();
             }
+            else
+            {
+                MessageDialog ms = new MessageDialog(this, DialogFlags.DestroyWithParent, MessageType.Warning, ButtonsType.Close, "Upload failed");
+                ms.Run();
+                ms.Destroy();
+            }
+
 
             Destroy();
         }

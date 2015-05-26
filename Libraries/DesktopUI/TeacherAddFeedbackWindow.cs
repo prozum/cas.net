@@ -42,6 +42,8 @@ namespace DesktopUI
 				string feedbackString = String.Empty;
 				List<MetaType> metaTypeList = new List<MetaType>();
 
+                // Packs the workspace into a single string for easy transfer
+
 				foreach (Widget w in this.textviews)
 				{
                     if (w.GetType() == typeof(MovableCasCalcView))
@@ -101,6 +103,11 @@ namespace DesktopUI
 						button.Clicked += delegate
 							{
                                 this.user.teacher.AddFeedback(feedbackString, this.Filename, StudentList[j], className);
+
+                                MessageDialog ms = new MessageDialog(this, DialogFlags.DestroyWithParent, MessageType.Info, ButtonsType.Close, "Added feedback");
+                                ms.Run();
+                                ms.Destroy();
+
                                 Destroy();
 							};
 						grid.Attach(button, 1, 1+i, 1, 1);

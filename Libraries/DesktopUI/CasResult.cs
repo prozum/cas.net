@@ -3,6 +3,7 @@ using Gtk;
 
 namespace DesktopUI
 {
+    // Used for setting results, and can tell students id their answer is correct
     public class CasResult : Grid
     {
         public Entry entryFasitSet;
@@ -20,6 +21,7 @@ namespace DesktopUI
 
         public bool correct = false;
 
+        // Used to save the facit and answer combined, for easy saving with JSON
         public class FacitContainer
         {
 
@@ -55,6 +57,7 @@ namespace DesktopUI
 
             entryFasitGet.Changed += delegate
             {
+                // When getting input, starts a thread to check if the answer is correct
                 facitContainer.answer = entryFasitGet.Text;
                 System.Threading.Thread thread = new System.Threading.Thread(ThreadCheckAnswer);
                 thread.Start();
@@ -88,8 +91,10 @@ namespace DesktopUI
             }
         }
 
+        // Checks if the answer is correct and tells the user
         void ThreadCheckAnswer()
         {
+            // If the answer is correct, there will be a delay of 5 sec. to prevent the user from bruteforcing their way to the answer
             if(entryFasitGet.Text.Equals(facitContainer.facit) == true)
             {
                 System.Threading.Thread.Sleep(5000);

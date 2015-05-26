@@ -11,7 +11,6 @@ namespace DesktopUI
         TextViewList textviews;
         static Image image = new Image();
 
-        // Constructor for calcview button
         public MovableCalcViewToolButton(ref TextViewList textviews)
             : base(image, "Movable Calc View")
         {

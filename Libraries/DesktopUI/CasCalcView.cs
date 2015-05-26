@@ -7,6 +7,7 @@ using Draw;
 
 namespace DesktopUI
 {
+    // A CalcView used for calculating stuff
     public class CasCalcView : Grid
     {
         public Entry input = new Entry();
@@ -15,7 +16,6 @@ namespace DesktopUI
         private List<EvalData> DataList = new List<EvalData>();
         public DrawView drawView;
 
-        // Constructor for calcview
         public CasCalcView(Evaluator Eval)
         {
             this.eval = Eval;

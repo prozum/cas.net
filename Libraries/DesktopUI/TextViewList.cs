@@ -14,7 +14,6 @@ namespace DesktopUI
         User user;
         Window window;
 
-        // Constructor for textviewlist
         public TextViewList(User user, Evaluator Eval, Window window)
             : base()
         {
@@ -151,6 +150,7 @@ namespace DesktopUI
             ShowAll();
         }
 
+        // Inserts an empty multiline calcview at the position
         public void InsertCalcMultilineView(int pos)
         {
             MovableCasCalcMulitlineView movCasCalcMultiView = new MovableCasCalcMulitlineView("",Eval);
@@ -179,6 +179,7 @@ namespace DesktopUI
             ShowAll();
         }
 
+        // Inserts a multiline calcview
         public void InsertCalcMultilineView(string serializedString, bool locked)
         {
             MovableCasCalcMulitlineView movCasCalcMultiView = new MovableCasCalcMulitlineView(serializedString, Eval);
@@ -236,6 +237,7 @@ namespace DesktopUI
             ShowAll();
         }
 
+        // Inserts an empty result block at the position
         public void InsertResult(int pos)
         {
             MovableCasResult movableCasResult = new MovableCasResult(user, "", "");

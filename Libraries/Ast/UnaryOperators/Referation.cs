@@ -18,7 +18,7 @@
 
         public override Expression Evaluate()
         {
-            return Child.Value;
+            return Child;
         }
     }
 }

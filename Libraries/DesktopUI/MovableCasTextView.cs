@@ -9,10 +9,10 @@ namespace DesktopUI
     {
         public CasTextView textview;
 
+        // IDs used for keeping track of widgets
         static int ID = 0;
         public int id_;
 
-        // Constructor for movablecastextview
 		public MovableCasTextView(string serializedString, bool locked)
         {
             id_ = ID++;

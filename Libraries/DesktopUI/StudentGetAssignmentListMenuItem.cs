@@ -12,7 +12,6 @@ namespace DesktopUI
         TextViewList textviews;
         User user;
 
-        // Constructor for studentgetassigmentlistmenuitem
         public StudentGetAssignmentListMenuItem(User user, TextViewList textviews)
             : base("Get List of Assignments")
         {

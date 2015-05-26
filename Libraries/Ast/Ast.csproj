@@ -185,9 +185,7 @@
     <Compile Include="Evaluator\CircleData.cs">
       <DependentUpon>DrawData.cs</DependentUpon>
     </Compile>
-    <Compile Include="VarFunc.cs">
-      <DependentUpon>Variable.cs</DependentUpon>
-    </Compile>
+    <Compile Include="VarFunc.cs" />
     <Compile Include="UnaryOperators\PrefixOperator.cs" />
     <Compile Include="UnaryOperators\Call.cs">
       <DependentUpon>PostfixOperator.cs</DependentUpon>

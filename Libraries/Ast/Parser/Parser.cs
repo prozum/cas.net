@@ -49,17 +49,11 @@ namespace Ast
         {
             Errors.Clear();
 
-            //Generates a queue of tokens from a string.
             Tokens = Scanner.Tokenize(parseString, Errors);
-
-            //Return error if Tokenizer failed
             if (Errors.Count > 0)
                 return Errors[0];
-
-            //Parse global scope
+                
             ParseScope(false, global);
-
-            //Return error if the parsing failed at some point.
             if (Errors.Count > 0)
                 return Errors[0];
 
@@ -80,7 +74,6 @@ namespace Ast
         {
             ParseContext cx;
             
-            //Eat all newlines untill first none NEW_LINE token.
             while (Eat(TokenKind.NEW_LINE));
 
             if (global != null)
@@ -737,8 +730,7 @@ namespace Ast
                         }
                         else
                         {
-                            //Mistakes happen! Should check whole tree and not just top.
-                            left = nextOp;
+                            left = curOp;
                             top.Right = nextOp;
                         }
                     }

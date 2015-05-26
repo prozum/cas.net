@@ -3,12 +3,12 @@ using Gtk;
 
 namespace DesktopUI
 {
+    // Menu item for displaying the login menu
     public class LoginMenuItem : MenuItem
     {
         User user;
         Menu menu;
 
-        // Constructor for login menu
         public LoginMenuItem(User user, Menu menu)
             : base("Login")
         {

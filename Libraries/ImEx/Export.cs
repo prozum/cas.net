@@ -7,6 +7,10 @@ using Newtonsoft.Json;
  * The Export methods are used for serializing an object and save the object to a file.
  */
 
+/*
+ * Not all elements are implemented in the final program
+ */
+
 namespace ImEx
 {
     public static class Export
@@ -57,7 +61,14 @@ namespace ImEx
         // Takes a string, and serialize it as Json.
         public static string Serialize (Object serializeObject)
         {
-            return JsonConvert.SerializeObject (serializeObject);
+            try
+            {
+                return JsonConvert.SerializeObject(serializeObject);
+            }
+            catch (Exception)
+            {
+                return String.Empty;
+            }
         }
     }
 }

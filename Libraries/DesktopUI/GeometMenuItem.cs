@@ -3,6 +3,7 @@ using Gtk;
 
 namespace DesktopUI
 {
+    // Menu item for accessing the Geometry tools
     public class GeometMenuItem : MenuItem
     {
         TextViewList textviews;

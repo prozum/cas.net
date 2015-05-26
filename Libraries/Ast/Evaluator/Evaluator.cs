@@ -16,6 +16,7 @@ namespace Ast
         {
             if (parseString != null)
                 Parse(parseString);
+            SetVar("reduce", new Boolean(true));
             SetVar("deg", new Boolean(true));
             SetVar("debug", new Boolean(true));
 

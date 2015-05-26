@@ -13,7 +13,6 @@ namespace DesktopUI
         static Image image = new Image();
         TextViewList textviews;
 
-        // Constructor for savetoolbutton
         public SaveToolButton(TextViewList textviews)
             : base(image, "Save")
         {
@@ -37,6 +36,7 @@ namespace DesktopUI
 
             List<MetaType> metaTypeList = new List<MetaType>();
 
+            // Saves each widget in a list, before serializing it all into a single string
             foreach (Widget w in textviews)
             {
                 if (w is MovableCasCalcView)

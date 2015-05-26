@@ -5,12 +5,12 @@ using System.IO;
 
 namespace DesktopUI
 {
+    // Button for inserting drawcanvas
     public class MovableDrawCanvasToolButton : ToolButton
     {
         TextViewList textviews;
         static Image image = new Image();
 
-        // Constructor for movabledrawcanvastoolbutton
         public MovableDrawCanvasToolButton(ref TextViewList textviews)
             : base(image, "Movable Draw Canvas")
         {

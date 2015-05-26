@@ -4,6 +4,7 @@ using Gtk;
 
 namespace DesktopUI
 {
+    // A definitionbox containing all currently defined system- and user variables
 	public class DefinitionBox : Grid
 	{
         CellRenderer renderer;
@@ -13,7 +14,6 @@ namespace DesktopUI
 
         readonly Evaluator Eval;
 
-        // Constructor for the definition box, used to show declared variables.
         public DefinitionBox(Evaluator Eval)
             : base()
 		{
@@ -33,6 +33,7 @@ namespace DesktopUI
             UpdateDefinitions();
 		}
 
+        // Updates the difinitions whenever an update happens
 		public void UpdateDefinitions()
 		{
             TreeIter iter;
@@ -64,6 +65,7 @@ namespace DesktopUI
 			ShowAll ();
 		}
 
+        // Updates the scope for the current local
         public void UpdateScope(Scope scope, TreeIter lastIter)
         {
             TreeIter iter;
