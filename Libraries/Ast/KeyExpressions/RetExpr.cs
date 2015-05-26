@@ -23,7 +23,7 @@ namespace Ast
             CurScope.Returns.Add(res);
             CurScope.Return.@bool = true;
 
-            return Constant.Null;
+            return res;
         }
 
         public override string ToString()

@@ -35,7 +35,7 @@ namespace Ast
                         res = Expressions[i].ReduceEvaluate();
                         if (CurScope.GetBool("debug"))
                             CurScope.SideEffects.Add(new DebugData("Debug if expr[" + i + "]: " + Expressions[i] + " = " + res));
-                        return Constant.Null;
+                        return res;
                     }
                 }
                 else
