@@ -21,7 +21,7 @@ namespace Ast
 
             var res = args[0].Evaluate();
 
-            var deg = CurScope.GetBool("deg");
+            var deg = GetBool("deg");
 
             if (res is Real)
             {

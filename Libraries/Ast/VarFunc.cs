@@ -19,7 +19,7 @@ namespace Ast
             CurScope = scope;
         }
 
-        public readonly int MaxFunctionRecursion = 5;
+        public readonly int MaxFunctionRecursion = 1000;
 
         public override Scope CurScope 
         { 

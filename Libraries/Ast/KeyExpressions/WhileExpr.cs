@@ -5,7 +5,7 @@
         public Expression Condition;
         public Expression WhileScope;
 
-        readonly int MaxIterations = 10000;
+        readonly int MaxIterations = 100000;
 
         public WhileExpr(Scope scope)
         {

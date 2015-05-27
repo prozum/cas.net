@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Ast
 {
@@ -19,10 +21,7 @@ namespace Ast
 
         public Expression ReduceEvaluate()
         {
-            if (_reducedForm == null)
-                _reducedForm = ReduceCurrectOp();
-
-            return _reducedForm.Evaluate();
+            return ReduceCurrectOp().Evaluate();
         }
 
         public virtual Expression Evaluate()
@@ -42,7 +41,10 @@ namespace Ast
 
         public Expression ReduceCurrectOp()
         {
-            return Reduce().CurrectOperator();
+            if (_reducedForm == null)
+                _reducedForm = Reduce().CurrectOperator();
+
+            return _reducedForm;
         }
 
         public virtual Expression Reduce()
