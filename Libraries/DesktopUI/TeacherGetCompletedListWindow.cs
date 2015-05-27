@@ -53,6 +53,10 @@ namespace DesktopUI
                     button.Clicked += delegate
                     {
                         string completed = this.user.teacher.GetCompleted(button.TooltipText, this.Filename, GradeEntry.Text);
+                        MessageDialog ms = new MessageDialog(this, DialogFlags.DestroyWithParent, MessageType.Info, ButtonsType.Close, "Got assignment");
+                        ms.Run();
+                        ms.Destroy();
+
                         LoadWorkspace(completed);
                     };
                     grid.Attach(button, 1, 1 + i, 1, 1);

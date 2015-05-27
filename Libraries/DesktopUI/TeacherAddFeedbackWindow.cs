@@ -103,6 +103,11 @@ namespace DesktopUI
 						button.Clicked += delegate
 							{
                                 this.user.teacher.AddFeedback(feedbackString, this.Filename, StudentList[j], className);
+
+                                MessageDialog ms = new MessageDialog(this, DialogFlags.DestroyWithParent, MessageType.Info, ButtonsType.Close, "Added feedback");
+                                ms.Run();
+                                ms.Destroy();
+
                                 Destroy();
 							};
 						grid.Attach(button, 1, 1+i, 1, 1);

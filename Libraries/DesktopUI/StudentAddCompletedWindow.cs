@@ -68,7 +68,18 @@ namespace DesktopUI
             {
                 string serializedString = ImEx.Export.Serialize(metaTypeList);
                 this.user.student.AddCompleted(serializedString, this.Filename);
+
+                MessageDialog ms = new MessageDialog(this, DialogFlags.DestroyWithParent, MessageType.Info, ButtonsType.Close, "Upload Successful");
+                ms.Run();
+                ms.Destroy();
             }
+            else
+            {
+                MessageDialog ms = new MessageDialog(this, DialogFlags.DestroyWithParent, MessageType.Warning, ButtonsType.Close, "Upload failed");
+                ms.Run();
+                ms.Destroy();
+            }
+
 
             Destroy();
         }

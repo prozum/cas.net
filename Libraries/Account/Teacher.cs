@@ -32,11 +32,9 @@ namespace Account
 
 			client.Headers.Clear();
 
-			if (response == "Failed")
-			{
-				return null;
-			}
-			else if (response == "Corruption")
+			if (response == "Failed"
+				|| response == "Corruption"
+				|| response == "Filename already taken")
 			{
 				return null;
 			}

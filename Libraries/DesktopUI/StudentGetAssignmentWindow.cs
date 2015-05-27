@@ -57,6 +57,10 @@ namespace DesktopUI
             this.textviews.Reevaluate();
             this.textviews.ShowAll();
 
+            MessageDialog ms = new MessageDialog(this, DialogFlags.DestroyWithParent, MessageType.Info, ButtonsType.Close, "Got assignment");
+            ms.Run();
+            ms.Destroy();
+
             Destroy();
         }
     }
