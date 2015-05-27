@@ -91,7 +91,7 @@
                 var args = new List();
                 args.Items.Add(other);
 
-                var answer1 = SysFunc.MakeFunction(args, CurScope, "sqrt");
+                var answer1 = SysFunc.MakeFunction(args, new Scope(), "sqrt");
                 var answer2 = new Minus();
                 answer2.Child = answer1;
                 var answers = new List();

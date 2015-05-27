@@ -72,7 +72,7 @@ namespace Ast
 
             foreach (var expr in Expressions)
             {
-                if (GetBool("reduce"))
+                if (GetBool("reduceExpr"))
                     res = expr.ReduceEvaluate();
                 else
                     res = expr.Evaluate();
