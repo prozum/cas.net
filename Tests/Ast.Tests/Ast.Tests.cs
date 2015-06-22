@@ -214,6 +214,28 @@ namespace Ast.Tests
         [TestCase(0.25, "(1/2)/2")]
         [TestCase(1, "(1/2)/0.5")]
         #endregion
+
+        #region If
+        [TestCase(10, "if true: 10")]
+        [TestCase(null, "if false: 10")]
+        [TestCase(10, "if 1<2: 10")]
+        [TestCase(null, "if 1>2: 10")]
+        [TestCase(10, "if 1>2: 10 elif 1<2: 10")]
+        [TestCase(null, "if 1>2: 10 elif 1>2: 10")]
+        [TestCase(10, "if 1>2: 10 elif 1>2: 10 else: 10")]
+        #endregion
+
+        #region For
+        [TestCase("[5,10,15]", "for i in [5,10,15]: i")]
+        [TestCase("[5,10,15]", "list:=[5,10,15];ret for i in list: i")]
+        [TestCase("[0,1,2,3,4,5]", "for i in range[0,5,1]: i")]
+        [TestCase("[0,2,4,6,8,10]", "for i in range[0,5,1]: i*2")]
+        #endregion
+
+        #region While
+        [TestCase("[8,6,4,2,0]", "i:=10;ret while i>0: i:=i-2")]
+        #endregion
+
         #endregion
         #endregion
 
@@ -271,6 +293,14 @@ namespace Ast.Tests
             else if (res is Boolean)
             {
                 Assert.AreEqual(expected, (res as Boolean).@bool);
+            }
+            else if (res is Null)
+            {
+                Assert.AreEqual(expected, null);
+            }
+            else if (res is List)
+            {
+                Assert.AreEqual(expected, res.ToString());
             }
             else if (res is Error)
             {
