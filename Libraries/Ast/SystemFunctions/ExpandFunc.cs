@@ -17,8 +17,6 @@ namespace Ast
         public override Expression Call(List args)
         {
             return args[0].Expand();
-                return new ArgumentError(this);
-
         }
     }
 }

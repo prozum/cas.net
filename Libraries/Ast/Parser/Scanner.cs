@@ -9,7 +9,7 @@ namespace Ast
         static char[] Chars;
         static Pos Position;
 
-        static List<Error> Errors; 
+        static Error Error; 
 
         public static char CharNext(bool consume = true)
         {
@@ -26,7 +26,7 @@ namespace Ast
                 return EOS;
         }
 
-        public static Queue<Token> Tokenize(string tokenString, List<Error> errors)
+        public static Queue<Token> Tokenize(string tokenString, Error error)
         {
             var res = new Queue<Token> ();
 
@@ -34,13 +34,13 @@ namespace Ast
             Position = new Pos();
             Token tok;
 
-            Errors = errors;
+            Error = error;
 
             do
             {
                 tok = ScanNext();
 
-                if (errors.Count > 0)
+                if (Error != null)
                     return null;
 
                 res.Enqueue(tok);
@@ -312,7 +312,7 @@ namespace Ast
         {
             var error = new Error("Scanner: " + msg);
             error.Position = Position;
-            Errors.Add(error);
+            Error = error;
         }
     }
 }

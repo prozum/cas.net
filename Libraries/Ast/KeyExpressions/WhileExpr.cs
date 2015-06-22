@@ -3,7 +3,7 @@
     public class WhileExpr : Expression
     {
         public Expression Condition;
-        public Expression WhileScope;
+        public Scope WhileScope;
 
         readonly int MaxIterations = 100000;
 

@@ -42,18 +42,17 @@ public class Calculator : Window
             return;
         }
 
-        res = Eval.Parse(InputView.Buffer.Text);
+        Eval.Parse(InputView.Buffer.Text);
 
-        if (res == null)
+        if (Eval.Error == null)
         {
             res = Eval.Evaluate();
 
-            if (!(res is Null || res is Error))
+            if (res is Error)
+                Eval.SideEffects.Add(new ErrorData(res as Error));
+            else if (!(res is Null))
                 Buffer.Insert(ref insertIter, "ret: " + res.ToString() + "\n");
         }
-
-        if (res is Error)
-            Eval.SideEffects.Add(new ErrorData(res as Error));
 
         foreach(var data in Eval.SideEffects)
         {

@@ -4,18 +4,22 @@ namespace Ast
 {
     public class Evaluator : Scope
     {
-        public Parser Parser = new Parser();
+        public Parser Parser;
 
         public static Expression Eval(string parseString)
         {
-            return new Evaluator(parseString).Evaluate();
+            var eval = new Evaluator(parseString);
+
+            return eval.Evaluate();
         }
 
-        public Evaluator () : this(null) {}
-        public Evaluator (string parseString)
+        public Evaluator(string parseString = null)
         {
+            Parser = new Parser(this);
+
             if (parseString != null)
                 Parse(parseString);
+
             SetVar("reduceexpr", new Boolean(true));
             SetVar("debug", new Boolean(true));
 
@@ -52,15 +56,16 @@ namespace Ast
             scope.SetVar("plot", new PlotFunc(this));
             scope.SetVar("paraplot", new ParaPlotFunc(this));
             scope.SetVar("line", new LineFunc(this));
-
-
         }
 
-        public Error Parse(string parseString)
+        public void Parse(string parseString)
         {
             Expressions.Clear();
             SideEffects.Clear();
-            return Parser.Parse(parseString, this);
+            Parser.Parse(parseString);
+
+            if (Error != null)
+                SideEffects.Add(new ErrorData(Error));
         }
 
     }

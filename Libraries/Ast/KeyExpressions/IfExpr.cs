@@ -21,7 +21,7 @@ namespace Ast
                 res = Conditions[i].ReduceEvaluate();
 
                 if (CurScope.GetBool("debug"))
-                    CurScope.SideEffects.Add(new DebugData("Debug if cond["+i+"]: "+Conditions[i]+" = "+res));
+                    CurScope.SideEffects.Add(new DebugData("Debug if cond[" + i + "]: " + Conditions[i] + " = " + res));
                     
                 if (res is Error)
                     return res;
@@ -38,14 +38,14 @@ namespace Ast
                     }
                 }
                 else
-                    return new Error(this, "Condition " + i + ": " + Conditions[i] + " does not return bool");
+                    return new Error(this, "Condition " + i + ": " + Conditions[i] + " does not evaluate to bool");
             }
 
             if (Expressions.Count > Conditions.Count)
             {
                 res = Expressions[Expressions.Count - 1].Evaluate();
                 if (CurScope.GetBool("debug"))
-                    CurScope.SideEffects.Add(new DebugData("Debug if["+(Expressions.Count-1)+"]: "+Expressions[Expressions.Count-1]+" = "+res));
+                    CurScope.SideEffects.Add(new DebugData("Debug if[" + (Expressions.Count-1) + "]: " + Expressions[Expressions.Count-1] + " = " + res));
                 return res;
             }
 
