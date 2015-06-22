@@ -54,8 +54,7 @@ namespace Ast
         {
             if (CallStack.Count > MaxFunctionRecursion)
                 return new Error(this, "Maximum function recursion exceeded");;
-
-            // TODO add definition locals. Etc. deg 
+                
             var callScope = new Scope(CurScope);
             CallStack.Push(callScope);
 

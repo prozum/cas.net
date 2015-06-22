@@ -166,7 +166,9 @@
     <Compile Include="Evaluator\ErrorData.cs">
       <DependentUpon>EvalData.cs</DependentUpon>
     </Compile>
-    <Compile Include="Evaluator\DebugData.cs" />
+    <Compile Include="Evaluator\DebugData.cs">
+      <DependentUpon>EvalData.cs</DependentUpon>
+    </Compile>
     <Compile Include="Evaluator\PrintData.cs">
       <DependentUpon>EvalData.cs</DependentUpon>
     </Compile>

@@ -14,7 +14,7 @@ public class Calculator : Window
     TreeStore DefinitionStore;
     TreeView DefinitionTree;
 
-    TextView OutpuView;
+    TextView OutputView;
     TextBuffer Buffer;
 
     TextView InputView;
@@ -160,13 +160,13 @@ public class Calculator : Window
         Grid.Attach(EvalButton, 0, 1, 1, 1); 
 
 
-        OutpuView = new TextView();
-        OutpuView.Expand = true;
-        OutpuView.Editable = false;
+        OutputView = new TextView();
+        OutputView.Expand = true;
+        OutputView.Editable = false;
         var sw = new ScrolledWindow ();
-        sw.Add(OutpuView);
+        sw.Add(OutputView);
         Grid.Attach (sw, 0, 2, 1, 1);
-        Buffer = OutpuView.Buffer;
+        Buffer = OutputView.Buffer;
 
         DrawView = new DrawView();
         Grid.Attach(DrawView, 0, 3, 1, 1);
