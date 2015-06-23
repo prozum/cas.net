@@ -8,17 +8,16 @@ namespace Ast
 
         public static Expression Eval(string parseString)
         {
-            var eval = new Evaluator(parseString);
+            var eval = new Evaluator();
+
+            eval.Parse(parseString);
 
             return eval.Evaluate();
         }
 
-        public Evaluator(string parseString = null)
+        public Evaluator()
         {
             Parser = new Parser(this);
-
-            if (parseString != null)
-                Parse(parseString);
 
             SetVar("reduceexpr", new Boolean(true));
             SetVar("debug", new Boolean(true));
