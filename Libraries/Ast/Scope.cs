@@ -46,8 +46,6 @@ namespace Ast
             SideEffects = new List<EvalData>();
             Locals =  new Dictionary<string,Expression>();
             Return = new Boolean(false);
-
-            Error = null;
         }
 
         public Scope(Scope scope, ScopeContext cx = ScopeContext.Default)

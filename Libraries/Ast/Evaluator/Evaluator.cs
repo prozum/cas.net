@@ -61,11 +61,8 @@ namespace Ast
         {
             Expressions.Clear();
             SideEffects.Clear();
+            Error = null;
             Parser.Parse(parseString);
-
-            if (Error != null)
-                SideEffects.Add(new ErrorData(Error));
         }
-
     }
 }

@@ -44,15 +44,12 @@ public class Calculator : Window
 
         Eval.Parse(InputView.Buffer.Text);
 
-        if (Eval.Error == null)
-        {
-            res = Eval.Evaluate();
+        res = Eval.Evaluate();
 
-            if (res is Error)
-                Eval.SideEffects.Add(new ErrorData(res as Error));
-            else if (!(res is Null))
-                Buffer.Insert(ref insertIter, "ret: " + res.ToString() + "\n");
-        }
+        if (res is Error)
+            Eval.SideEffects.Add(new ErrorData(res as Error));
+        else if (!(res is Null))
+            Buffer.Insert(ref insertIter, "ret: " + res.ToString() + "\n");
 
         foreach(var data in Eval.SideEffects)
         {

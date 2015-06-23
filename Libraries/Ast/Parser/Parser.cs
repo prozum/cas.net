@@ -42,24 +42,25 @@ namespace Ast
 
         Queue<Token> Tokens;
         Token CurToken { get { return Tokens.Count > 0 ? Tokens.Peek() : EOS; } }
-        //List<Error> Errors = new List<Error>();
+
         Error Error;
-        //bool Error { get { return Errors.Count > 0; } }
         bool ExpectPrefix = true;
 
         public Parser(Evaluator eval)
         {
             GlobalScope = eval;
-            Error = eval.Error;
         }
 
         public void Parse(string parseString)
         {
             Error = null;
 
-            Tokens = Scanner.Tokenize(parseString, Error);
+            Tokens = Scanner.Tokenize(parseString, out Error);
             if (Error != null)
+            {
+                GlobalScope.Expressions.Add(Error);
                 return;
+            }
                 
             ParseScope(ScopeContext.Default, true);
         }
@@ -74,7 +75,7 @@ namespace Ast
             BinaryStack.Clear();
         }
 
-        public Scope ParseScope(ScopeContext cx = ScopeContext.Default, bool global = false)
+        public Expression ParseScope(ScopeContext cx = ScopeContext.Default, bool global = false)
         {
             while (Eat(TokenKind.NEW_LINE));
 
@@ -107,9 +108,28 @@ namespace Ast
 
         public void ParseExpressions()
         {
-            while (Tokens.Count > 0)
+            while (true)
             {
                 CurScope.Expressions.Add(ParseExpr());
+
+                switch (CurToken.Kind)
+                {
+                    case TokenKind.CURLY_END:
+                    case TokenKind.ELIF:
+                    case TokenKind.ELSE:
+                    case TokenKind.END_OF_STRING:
+                        return;
+
+                    case TokenKind.NEW_LINE:
+                    case TokenKind.SEMICOLON:
+                        Eat();
+                        if (CurContext == ParseContext.ScopeSingle)
+                            return;
+                        break;
+
+                    default:
+                        throw new Exception("Unexpected token: " + CurToken.Value);
+                }
 
                 if (Error != null)
                 {
@@ -117,13 +137,6 @@ namespace Ast
                     CurScope.Expressions.Clear();
                     return;
                 }
-
-                if (Peek(TokenKind.ELIF) || Peek(TokenKind.ELSE))
-                    return;
-
-                if (Eat(TokenKind.END_OF_STRING))
-                    return;
-                    
             }
         }
 
@@ -243,6 +256,7 @@ namespace Ast
 
         public Expression ParseWhile()
         {
+            Expression expr;
             Eat();
 
             ContextStack.Push(ParseContext.While);
@@ -252,10 +266,10 @@ namespace Ast
             if (Error != null)
                 return Error;
 
-            whileexpr.WhileScope = ParseScope();
+            expr = ParseScope();
             if (Error != null)
                 return Error;
-            whileexpr.Condition.CurScope = whileexpr.WhileScope;
+            whileexpr.Condition.CurScope = whileexpr.WhileScope = (Scope)expr;
 
             ContextStack.Pop();
             return whileexpr;
@@ -362,20 +376,10 @@ namespace Ast
                         break;
 
                     case TokenKind.SEMICOLON:
-                        if (CurContext == ParseContext.ScopeGlobal || CurContext == ParseContext.ScopeMulti)
-                        {
-                            done = true;
-                            Eat();
-                        }
-                        else if (CurContext == ParseContext.ScopeSingle)
-                            done = true;
-                        else if (CurContext == ParseContext.List)
+                        if (CurContext == ParseContext.List)
                             ReportError("Unexpected ';' in " + CurContext);
                         else
-                        {
                             done = true;
-                            Eat();
-                        }
                         break;
                     case TokenKind.COMMA:
                         if (CurContext == ParseContext.List)
@@ -432,7 +436,7 @@ namespace Ast
                     case TokenKind.DECIMAL:
                     case TokenKind.IMAG_INT:
                     case TokenKind.IMAG_DEC:
-                        SetupExpr(ParseNumber(),true);
+                        SetupExpr(ParseNumber(), true);
                         break;
                     
                     case TokenKind.TEXT:
@@ -483,7 +487,8 @@ namespace Ast
                             ReportError("Unexpected ']' in " + CurContext);
                         break;
                     case TokenKind.CURLY_END:
-                        if (CurContext == ParseContext.ScopeMulti || CurContext == ParseContext.ScopeSingle)
+                        if (CurContext == ParseContext.ScopeMulti || CurContext == ParseContext.ScopeSingle ||
+                            CurContext == ParseContext.Ret || CurContext == ParseContext.Import)
                             done = true;
                         else
                             ReportError("Unexpected '}' in " + CurContext);

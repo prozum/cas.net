@@ -209,42 +209,42 @@ namespace Ast
         #region DivWith
         public virtual Expression DivWith(Integer other)
         {
-            return new Error(this, "Don't support diving " + other.GetType().Name);
+            return new Error(this, "Don't support dividing " + other.GetType().Name);
         }
 
         public virtual Expression DivWith(Rational other)
         {
-            return new Error(this, "Don't support diving " + other.GetType().Name);
+            return new Error(this, "Don't support dividing " + other.GetType().Name);
         }
 
         public virtual Expression DivWith(Irrational other)
         {
-            return new Error(this, "Don't support diving " + other.GetType().Name);
+            return new Error(this, "Don't support dividing " + other.GetType().Name);
         }
 
         public virtual Expression DivWith(Boolean other)
         {
-            return new Error(this, "Don't support diving " + other.GetType().Name);
+            return new Error(this, "Don't support dividing " + other.GetType().Name);
         }
 
         public virtual Expression DivWith(Complex other)
         {
-            return new Error(this, "Don't support diving " + other.GetType().Name);
+            return new Error(this, "Don't support dividing " + other.GetType().Name);
         }
 
         public virtual Expression DivWith(List other)
         {
-            return new Error(this, "Don't support diving " + other.GetType().Name);
+            return new Error(this, "Don't support dividing " + other.GetType().Name);
         }
 
         public virtual Expression DivWith(Text other)
         {
-            return new Error(this, "Don't support diving " + other.GetType().Name);
+            return new Error(this, "Don't support dividing " + other.GetType().Name);
         }
 
         public virtual Expression DivWith(Null other)
         {
-            return new Error(this, "Don't support diving " + other.GetType().Name);
+            return new Error(this, "Don't support dividing " + other.GetType().Name);
         }
 
         #endregion

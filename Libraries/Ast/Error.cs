@@ -4,6 +4,10 @@
     {
         public string ErrorMessage;
 
+        public Error()
+        {
+        }
+
         public Error(string msg) 
         {
             ErrorMessage = msg;

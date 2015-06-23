@@ -26,22 +26,24 @@ namespace Ast
                 return EOS;
         }
 
-        public static Queue<Token> Tokenize(string tokenString, Error error)
+        public static Queue<Token> Tokenize(string tokenString, out Error error)
         {
-            var res = new Queue<Token> ();
+            Token tok;
+            error = null;
 
+            var res = new Queue<Token> ();
             Chars = tokenString.ToCharArray();
             Position = new Pos();
-            Token tok;
-
-            Error = error;
 
             do
             {
                 tok = ScanNext();
 
                 if (Error != null)
+                {
+                    error = Error;
                     return null;
+                }
 
                 res.Enqueue(tok);
             }
@@ -205,10 +207,6 @@ namespace Ast
             }
 
             return new Token(kind, number, startPos);
-        }
-        enum TextContext
-        {
-
         }
 
         private static string ExtractSubText(char endChar)
