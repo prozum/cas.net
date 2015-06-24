@@ -110,7 +110,9 @@ namespace Ast
         {
             while (true)
             {
+                while (Eat(TokenKind.NEW_LINE));
                 CurScope.Expressions.Add(ParseExpr());
+                while (Eat(TokenKind.NEW_LINE));
 
                 switch (CurToken.Kind)
                 {
@@ -120,21 +122,17 @@ namespace Ast
                     case TokenKind.END_OF_STRING:
                         return;
 
-                    case TokenKind.NEW_LINE:
                     case TokenKind.SEMICOLON:
                         Eat();
-                        if (CurContext == ParseContext.ScopeSingle)
-                            return;
                         break;
-
-                    default:
-                        throw new Exception("Unexpected token: " + CurToken.Value);
                 }
+
+                if (CurContext == ParseContext.ScopeSingle)
+                    return;
 
                 if (Error != null)
                 {
                     GlobalScope.Error = Error;
-                    CurScope.Expressions.Clear();
                     return;
                 }
             }
@@ -391,6 +389,7 @@ namespace Ast
 
 
                     case TokenKind.IF:
+                        done = true;
                         SetupExpr(ParseIf(), false);
                         break;
                     case TokenKind.FOR:

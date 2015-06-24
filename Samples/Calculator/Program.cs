@@ -69,7 +69,7 @@ public class Calculator : Window
             else if (data is WidgetData)
             {
                 WidgetView.AddWidget(data as WidgetData);
-                WidgetView.ShowAll();
+                WidgetView.Show();
             }
         }
     }
@@ -130,7 +130,7 @@ public class Calculator : Window
             }
             else if (@var.Value is VarFunc)
             {
-                iter = DefinitionStore.AppendValues(lastIter, @var.Value.ToString(), (@var.Value as VarFunc).Definition.ToString(), lastIter);
+                iter = DefinitionStore.AppendValues(lastIter, @var.Value.ToString(), (@var.Value as VarFunc).Definition.ToString());
                 UpdateScope(@var.Value as Scope, iter);
             }
             else if (@var.Value is Scope)

@@ -23,6 +23,7 @@ namespace Widget
             else
                 throw new Exception("Unhandled widget: " + data.GetType().Name);
                 
+            widget.ShowAll();
             Add(widget);
         }
 

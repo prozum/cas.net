@@ -35,6 +35,11 @@
 
             return resList;
         }
+
+        public override string ToString()
+        {
+            return "for " + Var + " in " + List.ToString() + ":" + ForScope.ToString();
+        }
     }
 }
 
