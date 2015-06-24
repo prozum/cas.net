@@ -1,6 +1,7 @@
 ﻿using Gtk;
 using Ast;
 using Draw;
+using Widget;
 using System.Collections.Generic;
 using System.Threading;
 using System.Globalization;
@@ -21,6 +22,7 @@ public class Calculator : Window
     Button EvalButton;
 
     DrawView DrawView;
+    WidgetView WidgetView;
 
     static void Main(string[] args)
     {
@@ -63,6 +65,11 @@ public class Calculator : Window
             {
                 DrawView.Plot(data as PlotData);
                 DrawView.Show();
+            }
+            else if (data is WidgetData)
+            {
+                WidgetView.AddWidget(data as WidgetData);
+                WidgetView.ShowAll();
             }
         }
     }
@@ -166,6 +173,10 @@ public class Calculator : Window
 
         DrawView = new DrawView();
         Grid.Attach(DrawView, 0, 3, 1, 1);
+
+        WidgetView = new WidgetView();
+        WidgetView.Changed += (object sender, System.EventArgs e) => UpdateDefinitions();
+        Grid.Attach(WidgetView, 0, 4, 1, 1);
 
         var infoTag = new TextTag ("debug");
         infoTag.Foreground = "blue";

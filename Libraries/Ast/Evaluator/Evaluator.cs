@@ -55,6 +55,10 @@ namespace Ast
             scope.SetVar("plot", new PlotFunc(this));
             scope.SetVar("paraplot", new ParaPlotFunc(this));
             scope.SetVar("line", new LineFunc(this));
+
+            scope = new Scope(this);
+            SetVar("widget", scope);
+            scope.SetVar("checkbox", new CheckboxFunc(this));
         }
 
         public void Parse(string parseString)

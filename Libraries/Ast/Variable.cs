@@ -81,6 +81,11 @@
             {
                 return CurScope.GetVar(Identifier);
             }
+
+            set
+            {
+                CurScope.SetVar(Identifier, value);
+            }
         }
 
         public override bool CompareTo(Expression other)

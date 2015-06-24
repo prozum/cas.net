@@ -204,6 +204,12 @@
     <Compile Include="SystemFunctions\DirFunc.cs">
       <DependentUpon>SysFunc.cs</DependentUpon>
     </Compile>
+    <Compile Include="Evaluator\CheckboxData.cs">
+      <DependentUpon>WidgetData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SystemFunctions\CheckboxFunc.cs">
+      <DependentUpon>SysFunc.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="AST Class Diagram.cd" />
