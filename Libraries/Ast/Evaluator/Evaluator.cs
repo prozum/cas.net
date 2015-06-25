@@ -18,6 +18,7 @@ namespace Ast
         public Evaluator()
         {
             Parser = new Parser(this);
+            Global = this;
 
             SetVar("reduceexpr", new Boolean(true));
             SetVar("debug", new Boolean(true));
@@ -42,7 +43,7 @@ namespace Ast
 
             scope = new Scope(this);
             SetVar("trig", scope);
-            SetVar("deg", new Boolean(true));
+            scope.SetVar("deg", new Boolean(true));
             scope.SetVar("sin", new SinFunc(this));
             scope.SetVar("cos", new CosFunc(this));
             scope.SetVar("tan", new TanFunc(this));

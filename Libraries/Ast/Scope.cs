@@ -6,11 +6,14 @@ namespace Ast
     public enum ScopeContext
     {
         Default,
+        Single,
+        Global,
         If
     }
 
     public class Scope : Expression
     {
+        public Scope Global;
         public List<Expression> Expressions = new List<Expression>();
 
         public Dictionary<string,Expression> Locals;
@@ -51,6 +54,7 @@ namespace Ast
         public Scope(Scope scope, ScopeContext cx = ScopeContext.Default)
         {
             CurScope = scope;
+            Global = scope.Global;
             SideEffects = scope.SideEffects;
             Error = scope.Error;
             Context = cx;

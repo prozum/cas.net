@@ -29,7 +29,7 @@ namespace Ast
         Stack<Queue<PostfixOperator>> PostfixStack = new Stack<Queue<PostfixOperator>>();
         Stack<Queue<BinaryOperator>> BinaryStack = new Stack<Queue<BinaryOperator>>();
 
-        Scope GlobalScope;
+        Evaluator Evaluator;
         Scope CurScope { get { return ScopeStack.Peek(); } }
         ParseContext CurContext { get { return ContextStack.Peek(); } }
 
@@ -43,26 +43,26 @@ namespace Ast
         Queue<Token> Tokens;
         Token CurToken { get { return Tokens.Count > 0 ? Tokens.Peek() : EOS; } }
 
-        Error Error;
+        bool Error { get { return Evaluator.Error != null; } }
         bool ExpectPrefix = true;
 
         public Parser(Evaluator eval)
         {
-            GlobalScope = eval;
+            Evaluator = eval;
         }
 
         public void Parse(string parseString)
         {
-            Error = null;
+            Evaluator.Error = null;
 
-            Tokens = Scanner.Tokenize(parseString, out Error);
-            if (Error != null)
-            {
-                GlobalScope.Expressions.Add(Error);
+            Tokens = Scanner.Tokenize(parseString, out Evaluator.Error);
+            if (Error)
                 return;
-            }
                 
             ParseScope(ScopeContext.Default, true);
+
+            if (Error)
+                Clear();
         }
 
         public void Clear()
@@ -82,7 +82,7 @@ namespace Ast
             if (global)
             {
                 ContextStack.Push(ParseContext.ScopeGlobal);
-                ScopeStack.Push(GlobalScope);
+                ScopeStack.Push(Evaluator);
             }
             else if (Eat(TokenKind.CURLY_START))
             {
@@ -96,12 +96,10 @@ namespace Ast
             }
 
             ParseExpressions();
-            if (Error != null)
-                return ScopeStack.Pop();
 
             if (CurContext == ParseContext.ScopeMulti && !Eat(TokenKind.CURLY_END))
                 ReportError("Missing } bracket");
-
+                
             ContextStack.Pop();
             return ScopeStack.Pop();
         }
@@ -130,11 +128,8 @@ namespace Ast
                 if (CurContext == ParseContext.ScopeSingle)
                     return;
 
-                if (Error != null)
-                {
-                    GlobalScope.Error = Error;
+                if (Error)
                     return;
-                }
             }
         }
 
@@ -170,180 +165,6 @@ namespace Ast
         }
 
         #endregion
-
-        public Expression ParseIf()
-        {
-            Expression cond;
-            Expression expr;
-
-            Eat();
-
-            ContextStack.Push(ParseContext.If);
-            var ifexpr = new IfExpr(CurScope);
-
-            cond = ParseColon();
-            if (Error != null)
-                return Error;
-            ifexpr.Conditions.Add(cond);
-
-            expr = ParseScope(ScopeContext.If);
-            if (Error != null)
-                return Error;
-            ifexpr.Expressions.Add(expr);
-
-            while (Eat(TokenKind.NEW_LINE));
-            while (Eat(TokenKind.ELIF))
-            {
-                cond = ParseColon();
-                if (Error != null)
-                    return Error;
-                ifexpr.Conditions.Add(cond);
-
-                expr = ParseScope(ScopeContext.If);
-                if (Error != null)
-                    return Error;
-                ifexpr.Expressions.Add(expr);
-
-                while (Eat(TokenKind.NEW_LINE));
-            }
-
-            while (Eat(TokenKind.NEW_LINE));
-            if (Eat(TokenKind.ELSE))
-            {
-                Eat(TokenKind.COLON); // Optional colon
-
-                expr = ParseScope(ScopeContext.If);
-                if (Error != null)
-                    return Error;
-                ifexpr.Expressions.Add(expr);
-            }
-
-            ContextStack.Pop();
-            return ifexpr;
-        }
-
-        public Expression ParseFor()
-        {
-            Eat();
-
-            ContextStack.Push(ParseContext.For);
-            var forexpr = new ForExpr(CurScope);
-
-            if (Peek(TokenKind.IDENTIFIER))
-            {
-                forexpr.Var = CurToken.Value;
-                Eat();
-            }
-            else
-                return ReportError("For: Missing symbol");
-
-            if (!Eat(TokenKind.IN))
-                return ReportError("For: Missing in");
-
-            forexpr.List = ParseColon();
-            if (Error != null)
-                return Error;
-
-            forexpr.ForScope = ParseScope();
-            if (Error != null)
-                return Error;
-
-            ContextStack.Pop();
-            return forexpr;
-        }
-
-        public Expression ParseWhile()
-        {
-            Expression expr;
-            Eat();
-
-            ContextStack.Push(ParseContext.While);
-            var whileexpr = new WhileExpr(CurScope);
-
-            whileexpr.Condition = ParseColon();
-            if (Error != null)
-                return Error;
-
-            expr = ParseScope();
-            if (Error != null)
-                return Error;
-            whileexpr.Condition.CurScope = whileexpr.WhileScope = (Scope)expr;
-
-            ContextStack.Pop();
-            return whileexpr;
-        }
-
-        public Expression ParseColon()
-        {
-            ContextStack.Push(ParseContext.Colon);
-            var res = ParseExpr();
-            ContextStack.Pop();
-
-            if (!Eat(TokenKind.COLON))
-                return ReportError("Missing :");
-
-            return res;
-        }
-
-        public List ParseList()
-        {
-            var list = new List();
-
-            Eat();
-            ContextStack.Push(ParseContext.List);
-
-            while (Tokens.Count > 0)
-            {
-                if (!(Eat(TokenKind.COMMA) || Eat(TokenKind.NEW_LINE)))
-                    list.Items.Add(ParseExpr());
-
-                if (Error != null)
-                    return list;
-
-                if (Eat(TokenKind.SQUARE_END))
-                    break;
-
-                if (Peek(TokenKind.END_OF_STRING))
-                {
-                    ReportError("Missing ] bracket");
-                    break;
-                }
-            }
-
-            ContextStack.Pop();
-
-            if (list.Items.Count == 1 && list.Items[0] is Null)
-                list.Items.Clear();
-
-            return list;
-        }
-
-        public Expression ParseParenthesis()
-        {
-            Eat();
-            ContextStack.Push(ParseContext.Parenthesis);
-
-            Expression parent = ParseExpr();
-
-            if (Error != null)
-                return parent;
-
-            if (!Eat(TokenKind.PARENT_END))
-                ReportError("Missing ) bracket");
-
-            ContextStack.Pop();
-
-            return parent;
-        }
-
-        public void ParseComment()
-        {
-            do
-            {
-                Eat();
-            }
-            while (CurToken.Kind != TokenKind.NEW_LINE && CurToken.Kind != TokenKind.END_OF_STRING);
-        }
 
         public Expression ParseExpr(bool eat = false)
         {
@@ -617,13 +438,13 @@ namespace Ast
                         break;
                 }
 
-                if (Error != null)
+                if (Error)
                 {
                     PrefixStack.Pop();
                     PostfixStack.Pop();
                     ExprStack.Pop();
                     BinaryStack.Pop();
-                    return Error;
+                    return null;
                 }
             }
                 
@@ -637,7 +458,7 @@ namespace Ast
             while (Peek(TokenKind.SQUARE_START))
             {
                 var op = new Call(ParseList(), CurScope);
-                if (Error != null)
+                if (Error)
                     return;
 
                 op.Position = CurToken.Position;
@@ -648,15 +469,18 @@ namespace Ast
 
         public void SetupExpr(Expression expr, bool eat)
         {
-            expr.Position = CurToken.Position;
-            expr.CurScope = CurScope;
+            if (Error)
+                return;
 
             if (eat)
                 Eat();
 
+            expr.Position = CurToken.Position;
+            expr.CurScope = CurScope;
+
             ParsePostfix();
 
-            if (Error != null)
+            if (Error)
                 return;
 
             while (CurPostfixStack.Count > 0)
@@ -682,18 +506,20 @@ namespace Ast
 
         public void SetupPrefixOp(PrefixOperator op)
         {
+            Eat();
+
             op.Position = CurToken.Position;
             op.CurScope = CurScope;
-            Eat();
 
             CurPrefixStack.Enqueue(op);
         }
 
         public void SetupBinaryOp(BinaryOperator op)
         {
+            Eat();
+
             op.Position = CurToken.Position;
             op.CurScope = CurScope;
-            Eat();
 
             CurBinaryStack.Enqueue(op);
             ExpectPrefix = true;
@@ -798,17 +624,188 @@ namespace Ast
             }
         }
 
-        public Error ReportError(Error error)
+        public Expression ParseIf()
         {
-            return Error = error;
+            Expression cond;
+            Expression expr;
+
+            Eat();
+
+            ContextStack.Push(ParseContext.If);
+            var ifexpr = new IfExpr(CurScope);
+
+            cond = ParseColon();
+            if (Error)
+                return null;
+            ifexpr.Conditions.Add(cond);
+
+            expr = ParseScope(ScopeContext.If);
+            if (Error)
+                return null;
+            ifexpr.Expressions.Add(expr);
+
+            while (Eat(TokenKind.NEW_LINE));
+            while (Eat(TokenKind.ELIF))
+            {
+                cond = ParseColon();
+                if (Error)
+                    return null;
+                ifexpr.Conditions.Add(cond);
+
+                expr = ParseScope(ScopeContext.If);
+                if (Error)
+                    return null;
+                ifexpr.Expressions.Add(expr);
+
+                while (Eat(TokenKind.NEW_LINE));
+            }
+
+            while (Eat(TokenKind.NEW_LINE));
+            if (Eat(TokenKind.ELSE))
+            {
+                Eat(TokenKind.COLON); // Optional colon
+
+                expr = ParseScope(ScopeContext.If);
+                if (Error)
+                    return null;
+                ifexpr.Expressions.Add(expr);
+            }
+
+            ContextStack.Pop();
+            return ifexpr;
         }
 
-        public Error ReportError(string msg)
+        public Expression ParseFor()
+        {
+            Eat();
+
+            ContextStack.Push(ParseContext.For);
+            var forexpr = new ForExpr(CurScope);
+
+            if (Peek(TokenKind.IDENTIFIER))
+            {
+                forexpr.Var = CurToken.Value;
+                Eat();
+            }
+            else
+                return ReportError("For: Missing symbol");
+
+            if (!Eat(TokenKind.IN))
+                return ReportError("For: Missing in");
+
+            forexpr.List = ParseColon();
+            if (Error)
+                return null;
+
+            forexpr.ForScope = ParseScope();
+            if (Error)
+                return null;
+
+            ContextStack.Pop();
+            return forexpr;
+        }
+
+        public Expression ParseWhile()
+        {
+            Expression expr;
+            Eat();
+
+            ContextStack.Push(ParseContext.While);
+            var whileexpr = new WhileExpr(CurScope);
+
+            whileexpr.Condition = ParseColon();
+            if (Error)
+                return null;
+
+            expr = ParseScope();
+            if (Error)
+                return null;
+            whileexpr.Condition.CurScope = whileexpr.WhileScope = (Scope)expr;
+
+            ContextStack.Pop();
+            return whileexpr;
+        }
+
+        public Expression ParseColon()
+        {
+            ContextStack.Push(ParseContext.Colon);
+            var res = ParseExpr();
+            ContextStack.Pop();
+
+            if (!Eat(TokenKind.COLON))
+                return ReportError("Missing :");
+
+            return res;
+        }
+
+        public List ParseList()
+        {
+            var list = new List();
+
+            Eat();
+            ContextStack.Push(ParseContext.List);
+
+            while (Tokens.Count > 0)
+            {
+                if (!(Eat(TokenKind.COMMA) || Eat(TokenKind.NEW_LINE)))
+                    list.Items.Add(ParseExpr());
+
+                if (Error)
+                    return list;
+
+                if (Eat(TokenKind.SQUARE_END))
+                    break;
+
+                if (Peek(TokenKind.END_OF_STRING))
+                {
+                    ReportError("Missing ] bracket");
+                    break;
+                }
+            }
+
+            ContextStack.Pop();
+
+            if (list.Items.Count == 1 && list.Items[0] is Null)
+                list.Items.Clear();
+
+            return list;
+        }
+
+        public Expression ParseParenthesis()
+        {
+            Eat();
+            ContextStack.Push(ParseContext.Parenthesis);
+
+            Expression parent = ParseExpr();
+
+            if (Error)
+                return null;
+
+            if (!Eat(TokenKind.PARENT_END))
+                ReportError("Missing ) bracket");
+
+            ContextStack.Pop();
+
+            return parent;
+        }
+
+        public void ParseComment()
+        {
+            do
+            {
+                Eat();
+            }
+            while (CurToken.Kind != TokenKind.NEW_LINE && CurToken.Kind != TokenKind.END_OF_STRING);
+        }
+
+        public Expression ReportError(string msg)
         {
             var error = new Error(msg);
             error.Position = CurToken.Position;
 
-            return Error = error;
+            Evaluator.Error = error;
+
+            return null;
         }
     }
 }
