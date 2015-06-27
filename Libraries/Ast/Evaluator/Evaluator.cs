@@ -20,7 +20,7 @@ namespace Ast
             Parser = new Parser(this);
             Global = this;
 
-            SetVar("reduceexpr", new Boolean(true));
+            SetVar("reduc", new Boolean(true));
             SetVar("debug", new Boolean(true));
 
             var scope = new Scope(this);
