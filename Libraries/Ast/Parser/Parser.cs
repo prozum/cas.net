@@ -65,6 +65,39 @@ namespace Ast
                 Clear();
         }
 
+        #region Peek Eat
+
+        public bool Peek()
+        {
+            return Tokens.Count > 0;
+        }
+
+        public bool Peek(TokenKind kind)
+        {
+            return CurToken.Kind == kind;
+        }
+
+        public bool Eat()
+        {
+            if (Tokens.Count > 0)
+                Tokens.Dequeue();
+
+            return Tokens.Count > 0;
+        }
+
+        public bool Eat(TokenKind kind)
+        {
+            if (Tokens.Count > 0 && Tokens.Peek().Kind == kind)
+            {
+                Tokens.Dequeue();
+                return true;
+            }
+
+            return false;
+        }
+
+        #endregion
+
         public void Clear()
         {
             ScopeStack.Clear();
@@ -133,39 +166,6 @@ namespace Ast
             }
         }
 
-        #region Peek Eat
-
-        public bool Peek()
-        {
-            return Tokens.Count > 0;
-        }
-
-        public bool Peek(TokenKind kind)
-        {
-            return CurToken.Kind == kind;
-        }
-
-        public bool Eat()
-        {
-            if (Tokens.Count > 0)
-                Tokens.Dequeue();
-
-            return Tokens.Count > 0;
-        }
-
-        public bool Eat(TokenKind kind)
-        {
-            if (Tokens.Count > 0 && Tokens.Peek().Kind == kind)
-            {
-                Tokens.Dequeue();
-                return true;
-            }
-                
-            return false;
-        }
-
-        #endregion
-
         public Expression ParseExpr(bool eat = false)
         {
             bool done = false;
@@ -188,10 +188,7 @@ namespace Ast
                         done = true;
                         break;
                     case TokenKind.NEW_LINE:
-                        if (CurContext != ParseContext.Parenthesis)
-                            done = true;
-                        if (CurContext != ParseContext.Ret && CurContext != ParseContext.Import)
-                            Eat();
+                        done |= CurContext != ParseContext.Parenthesis;
                         break;
 
                     case TokenKind.SEMICOLON:
@@ -567,7 +564,7 @@ namespace Ast
                         }
                         else
                         {
-                            left = curOp;
+                            left = top.Right;
                             top.Right = nextOp;
                         }
                     }

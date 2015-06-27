@@ -11,11 +11,11 @@ namespace Ast
 
         static Error Error; 
 
-        public static char CharNext(bool consume = true)
+        public static char CharNext(bool eat = true)
         {
             if (Position.i < Chars.Length)
             {
-                if (consume)
+                if (eat)
                 {
                     Position.Column++;
                     return Chars[Position.i++];

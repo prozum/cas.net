@@ -334,6 +334,14 @@ namespace Ast.Tests
         }
 
         [Test]
+        public void TheNotSoHardExpressionToParse()
+        {
+            var expected = "1+2/3^4*5";
+            var actual = Evaluator.Eval("~(" + expected + ")").ToString();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
         public void TheHardExpressionToParse()
         {
             var expected = "x:=x&x!=x+x/x^x.x*x";
