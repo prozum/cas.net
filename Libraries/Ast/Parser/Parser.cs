@@ -527,8 +527,8 @@ namespace Ast
 
         public Expression CreateAst(Queue<Expression> exprs, Queue<BinaryOperator> biops)
         {
-            Expression left, right;
-            BinaryOperator curOp, nextOp, top;
+            Expression left;
+            BinaryOperator curOp, nextOp, top, cmpOp;
 
             if (exprs.Count == 0)
                 return Constant.Null;
@@ -554,32 +554,42 @@ namespace Ast
 
                     if (curOp.Priority >= nextOp.Priority)
                     {
-                        right = exprs.Dequeue();
-                        curOp.Right = right;
+                        curOp.Right = exprs.Dequeue();
 
-                        if (top.Priority >= nextOp.Priority)
+                        cmpOp = curOp;
+                        while (cmpOp.Parent != null)
                         {
-                            left = top;
+                            if (nextOp.Priority > (cmpOp.Parent as BinaryOperator).Priority)
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                cmpOp = cmpOp.Parent as BinaryOperator;
+                            }
+                        }
+
+                        if (cmpOp.Parent == null)
+                        {
                             top = nextOp;
+                            left = cmpOp;
                         }
                         else
                         {
-                            left = top.Right;
-                            top.Right = nextOp;
+                            left = (cmpOp.Parent as BinaryOperator).Right;
+                            (cmpOp.Parent as BinaryOperator).Right = nextOp;
                         }
                     }
                     else
                     {
                         left = exprs.Dequeue();
 
-                        right = nextOp;
-                        curOp.Right = right;
+                        curOp.Right = nextOp;
                     }
                 }
                 else
                 {
-                    right = exprs.Dequeue();
-                    curOp.Right = right;
+                    curOp.Right = exprs.Dequeue();
                 }
             }
 
