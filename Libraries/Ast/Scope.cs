@@ -3,14 +3,6 @@ using System.Collections.Generic;
 
 namespace Ast
 {
-    public enum ScopeContext
-    {
-        Default,
-        Single,
-        Global,
-        If
-    }
-
     public class Scope : Expression
     {
         public Scope Global;
@@ -23,7 +15,7 @@ namespace Ast
         public Boolean Return;
 
         public Error Error;
-        public ScopeContext Context;
+        public bool Shared;
 
         public override Scope CurScope
         {
@@ -51,15 +43,15 @@ namespace Ast
             Return = new Boolean(false);
         }
 
-        public Scope(Scope scope, ScopeContext cx = ScopeContext.Default)
+        public Scope(Scope scope, bool shared = false)
         {
             CurScope = scope;
             Global = scope.Global;
             SideEffects = scope.SideEffects;
             Error = scope.Error;
-            Context = cx;
+            Shared = shared;
 
-            if (Context == ScopeContext.If)
+            if (Shared)
             {
                 Locals = scope.Locals;
                 Return = scope.Return;
@@ -96,7 +88,7 @@ namespace Ast
 
                 if (Return)
                 {
-                    if (Context == ScopeContext.If)
+                    if (Shared)
                         CurScope.Returns.Items.Add(Returns[0]);
 
                     break;

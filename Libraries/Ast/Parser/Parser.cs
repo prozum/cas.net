@@ -59,7 +59,7 @@ namespace Ast
             if (Error)
                 return;
                 
-            ParseScope(ScopeContext.Default, true);
+            ParseScope(false, true);
 
             if (Error)
                 Clear();
@@ -108,7 +108,7 @@ namespace Ast
             BinaryStack.Clear();
         }
 
-        public Expression ParseScope(ScopeContext cx = ScopeContext.Default, bool global = false)
+        public Expression ParseScope(bool shared = false, bool global = false)
         {
             while (Eat(TokenKind.NEW_LINE));
 
@@ -120,12 +120,12 @@ namespace Ast
             else if (Eat(TokenKind.CURLY_START))
             {
                 ContextStack.Push(ParseContext.ScopeMulti);
-                ScopeStack.Push(new Scope(CurScope, cx));
+                ScopeStack.Push(new Scope(CurScope, shared));
             }
             else
             {
                 ContextStack.Push(ParseContext.ScopeSingle);
-                ScopeStack.Push(new Scope(CurScope, cx));
+                ScopeStack.Push(new Scope(CurScope, shared));
             }
 
             ParseExpressions();
@@ -236,16 +236,10 @@ namespace Ast
                         break;
                     
                     case TokenKind.ELIF:
-                        if (CurScope.Context == ScopeContext.If)
-                            done = true;
-                        else
-                            ReportError("Unexpected 'elif' in " + CurContext);
+                        done = true;
                         break;
                     case TokenKind.ELSE:
-                        if (CurScope.Context == ScopeContext.If)
-                            done = true;
-                        else
-                            ReportError("Unexpected 'else' in " + CurContext);
+                        done = true;
                         break;
 
 
@@ -284,7 +278,7 @@ namespace Ast
                         SetupExpr(ParseList(),false);
                         break;
                     case TokenKind.CURLY_START:
-                        SetupExpr(ParseScope(),false);
+                        SetupExpr(ParseScope(), false);
                         break;
 
                     case TokenKind.HASH:
@@ -646,7 +640,7 @@ namespace Ast
                 return null;
             ifexpr.Conditions.Add(cond);
 
-            expr = ParseScope(ScopeContext.If);
+            expr = ParseScope(true);
             if (Error)
                 return null;
             ifexpr.Expressions.Add(expr);
@@ -659,7 +653,7 @@ namespace Ast
                     return null;
                 ifexpr.Conditions.Add(cond);
 
-                expr = ParseScope(ScopeContext.If);
+                expr = ParseScope(true);
                 if (Error)
                     return null;
                 ifexpr.Expressions.Add(expr);
@@ -672,7 +666,7 @@ namespace Ast
             {
                 Eat(TokenKind.COLON); // Optional colon
 
-                expr = ParseScope(ScopeContext.If);
+                expr = ParseScope(true);
                 if (Error)
                     return null;
                 ifexpr.Expressions.Add(expr);
