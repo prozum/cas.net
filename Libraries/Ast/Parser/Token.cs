@@ -16,6 +16,7 @@
         WHILE,
         RET,
         IMPORT,
+        GLOBAL,
 
         TEXT,
 

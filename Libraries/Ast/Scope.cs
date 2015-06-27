@@ -8,6 +8,7 @@ namespace Ast
         public Scope Global;
         public List<Expression> Expressions = new List<Expression>();
 
+        public HashSet<string> Globals;
         public Dictionary<string,Expression> Locals;
         public List<EvalData> SideEffects;
 
@@ -40,6 +41,7 @@ namespace Ast
         {
             SideEffects = new List<EvalData>();
             Locals =  new Dictionary<string,Expression>();
+            Globals = new HashSet<string>();
             Return = new Boolean(false);
         }
 
@@ -54,11 +56,13 @@ namespace Ast
             if (Shared)
             {
                 Locals = scope.Locals;
+                Globals = scope.Globals;
                 Return = scope.Return;
             }
             else
             {
                 Locals =  new Dictionary<string,Expression>();
+                Globals = new HashSet<string>();
                 Return = new Boolean(false);
             }
         }
@@ -116,10 +120,20 @@ namespace Ast
 
         public void SetVar(string identifier, Expression expr)
         {
-            if (Locals.ContainsKey(identifier))
-                Locals.Remove(identifier);
+            if (Globals.Contains(identifier))
+            {
+                if (Global.Locals.ContainsKey(identifier))
+                    Global.Locals.Remove(identifier);
+                
+                Global.Locals.Add(identifier, expr);
+            }
+            else
+            {
+                if (Locals.ContainsKey(identifier))
+                    Locals.Remove(identifier);
 
-            Locals.Add(identifier, expr);
+                Locals.Add(identifier, expr);
+            }
         }
 
         // TODO Fix position

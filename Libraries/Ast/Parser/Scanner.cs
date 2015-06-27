@@ -287,6 +287,8 @@ namespace Ast
                     return new Token(TokenKind.RET, identifier, startPos);
                 case "import":
                     return new Token(TokenKind.IMPORT, identifier, startPos);
+                case "global":
+                    return new Token(TokenKind.GLOBAL, identifier, startPos);
                 case "and":
                     return new Token(TokenKind.AND, identifier, startPos);
                 case "or":

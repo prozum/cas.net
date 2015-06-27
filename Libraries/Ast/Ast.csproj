@@ -210,6 +210,7 @@
     <Compile Include="SystemFunctions\CheckboxFunc.cs">
       <DependentUpon>SysFunc.cs</DependentUpon>
     </Compile>
+    <Compile Include="KeyExpressions\GlobalExpr.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="AST Class Diagram.cd" />

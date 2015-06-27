@@ -14,8 +14,6 @@ namespace Ast
         For,
         While,
         Colon,
-        Ret,
-        Import,
         Parenthesis
     }
 
@@ -129,9 +127,11 @@ namespace Ast
             }
 
             ParseExpressions();
+            if (Error)
+                return CurScope.Error;
 
             if (CurContext == ParseContext.ScopeMulti && !Eat(TokenKind.CURLY_END))
-                ReportError("Missing } bracket");
+                return ReportError("Missing } bracket");
                 
             ContextStack.Pop();
             return ScopeStack.Pop();
@@ -218,15 +218,15 @@ namespace Ast
                         break;
                     case TokenKind.RET:
                         done = true;
-                        ContextStack.Push(ParseContext.Ret);
                         SetupExpr(new RetExpr(ParseExpr(true), CurScope), false);
-                        ContextStack.Pop();
                         break;
                     case TokenKind.IMPORT:
                         done = true;
-                        ContextStack.Push(ParseContext.Import);
                         SetupExpr(new ImportExpr(ParseExpr(true), CurScope), false);
-                        ContextStack.Pop();
+                        break;
+                    case TokenKind.GLOBAL:
+                        done = true;
+                        SetupExpr(new GlobalExpr(ParseExpr(true), CurScope), false);
                         break;
                     case TokenKind.COLON:
                         if (CurContext == ParseContext.Colon)
@@ -298,8 +298,7 @@ namespace Ast
                             ReportError("Unexpected ']' in " + CurContext);
                         break;
                     case TokenKind.CURLY_END:
-                        if (CurContext == ParseContext.ScopeMulti || CurContext == ParseContext.ScopeSingle ||
-                            CurContext == ParseContext.Ret || CurContext == ParseContext.Import)
+                        if (CurContext == ParseContext.ScopeMulti || CurContext == ParseContext.ScopeSingle)
                             done = true;
                         else
                             ReportError("Unexpected '}' in " + CurContext);
