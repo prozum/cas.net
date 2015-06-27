@@ -9,6 +9,7 @@ namespace Ast
         List,
         ScopeSingle,
         ScopeMulti,
+        ScopeClass,
         ScopeGlobal,
         If,
         For,
@@ -106,7 +107,7 @@ namespace Ast
             BinaryStack.Clear();
         }
 
-        public Expression ParseScope(bool shared = false, bool global = false)
+        public Expression ParseScope(bool shared = false, bool global = false, bool @class = false)
         {
             while (Eat(TokenKind.NEW_LINE));
 
@@ -114,6 +115,16 @@ namespace Ast
             {
                 ContextStack.Push(ParseContext.ScopeGlobal);
                 ScopeStack.Push(Evaluator);
+            }
+            else if (@class)
+            {
+                ContextStack.Push(ParseContext.ScopeClass);
+                ScopeStack.Push(new Class(CurScope));
+
+                while (Eat(TokenKind.NEW_LINE));
+
+                if (!Eat(TokenKind.CURLY_START))
+                    return ReportError("Missing { bracket");
             }
             else if (Eat(TokenKind.CURLY_START))
             {
@@ -130,7 +141,7 @@ namespace Ast
             if (Error)
                 return CurScope.Error;
 
-            if (CurContext == ParseContext.ScopeMulti && !Eat(TokenKind.CURLY_END))
+            if (CurContext == ParseContext.ScopeMulti || CurContext == ParseContext.ScopeClass  && !Eat(TokenKind.CURLY_END))
                 return ReportError("Missing } bracket");
                 
             ContextStack.Pop();
@@ -205,7 +216,6 @@ namespace Ast
                         Eat();
                         break;
 
-
                     case TokenKind.IF:
                         done = true;
                         SetupExpr(ParseIf(), false);
@@ -227,6 +237,11 @@ namespace Ast
                     case TokenKind.GLOBAL:
                         done = true;
                         SetupExpr(new GlobalExpr(ParseExpr(true), CurScope), false);
+                        break;
+                    case TokenKind.CLASS:
+                        done = true;
+                        Eat();
+                        SetupExpr(ParseScope(false, false, true), false);
                         break;
                     case TokenKind.COLON:
                         if (CurContext == ParseContext.Colon)
@@ -298,7 +313,7 @@ namespace Ast
                             ReportError("Unexpected ']' in " + CurContext);
                         break;
                     case TokenKind.CURLY_END:
-                        if (CurContext == ParseContext.ScopeMulti || CurContext == ParseContext.ScopeSingle)
+                        if (CurContext == ParseContext.ScopeMulti || CurContext == ParseContext.ScopeClass || CurContext == ParseContext.ScopeSingle)
                             done = true;
                         else
                             ReportError("Unexpected '}' in " + CurContext);

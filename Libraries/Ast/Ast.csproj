@@ -211,6 +211,7 @@
       <DependentUpon>SysFunc.cs</DependentUpon>
     </Compile>
     <Compile Include="KeyExpressions\GlobalExpr.cs" />
+    <Compile Include="Class.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="AST Class Diagram.cd" />

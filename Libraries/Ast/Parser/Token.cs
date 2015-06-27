@@ -17,6 +17,7 @@
         RET,
         IMPORT,
         GLOBAL,
+        CLASS,
 
         TEXT,
 
