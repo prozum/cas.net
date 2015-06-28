@@ -78,8 +78,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{C36DB2
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CAS.NET.Android", "CAS.NET.Android\CAS.NET.Android.csproj", "{48BCABD0-AB3E-4F7F-8749-3D7708835977}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -168,18 +166,6 @@ Global
 		{3E0FBD2D-3E67-45BE-BCB0-B6B298718749}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{3E0FBD2D-3E67-45BE-BCB0-B6B298718749}.Release|x86.ActiveCfg = Release|Any CPU
 		{3E0FBD2D-3E67-45BE-BCB0-B6B298718749}.Release|x86.Build.0 = Release|Any CPU
-		{48BCABD0-AB3E-4F7F-8749-3D7708835977}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{48BCABD0-AB3E-4F7F-8749-3D7708835977}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{48BCABD0-AB3E-4F7F-8749-3D7708835977}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{48BCABD0-AB3E-4F7F-8749-3D7708835977}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{48BCABD0-AB3E-4F7F-8749-3D7708835977}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{48BCABD0-AB3E-4F7F-8749-3D7708835977}.Debug|x86.Build.0 = Debug|Any CPU
-		{48BCABD0-AB3E-4F7F-8749-3D7708835977}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{48BCABD0-AB3E-4F7F-8749-3D7708835977}.Release|Any CPU.Build.0 = Release|Any CPU
-		{48BCABD0-AB3E-4F7F-8749-3D7708835977}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{48BCABD0-AB3E-4F7F-8749-3D7708835977}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{48BCABD0-AB3E-4F7F-8749-3D7708835977}.Release|x86.ActiveCfg = Release|Any CPU
-		{48BCABD0-AB3E-4F7F-8749-3D7708835977}.Release|x86.Build.0 = Release|Any CPU
 		{5150E825-D811-4D68-8C0E-86A1F8573561}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5150E825-D811-4D68-8C0E-86A1F8573561}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5150E825-D811-4D68-8C0E-86A1F8573561}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
