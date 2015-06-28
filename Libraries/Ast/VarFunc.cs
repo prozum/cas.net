@@ -55,14 +55,20 @@ namespace Ast
             if (CallStack.Count > MaxFunctionRecursion)
                 return new Error(this, "Maximum function recursion exceeded");;
                 
-            var callScope = new Scope(CurScope);
+            var callScope = new Scope(base.CurScope);
             CallStack.Push(callScope);
 
             for (int i = 0; i < args.Count; i++)
             {
                 var arg = args[i].Value;
-                arg.CurScope = callScope;
-                callScope.SetVar((Arguments[i] as Variable).Identifier, arg);
+
+                if (Definition is Class)
+                    (Definition as Class).SetVar((Arguments[i] as Variable).Identifier, arg);
+                else
+                {
+                    arg.CurScope = callScope;
+                    callScope.SetVar((Arguments[i] as Variable).Identifier, arg);
+                }
             }
 
             var res = Definition.Evaluate();
@@ -106,6 +112,11 @@ namespace Ast
 //
 //            return false;
 //        }
+    
+        public override Expression Clone(Scope scope)
+        {
+            return new VarFunc(Identifier, Definition.Clone(scope), Arguments.Clone(scope) as List, scope);
+        }
     }
 }
 

@@ -44,9 +44,9 @@
             return false;
         }
 
-        public override Expression Clone()
+        public override Expression Clone(Scope scope)
         {
-            return new Error(ErrorMessage);
+            return this;
         }
     }
 

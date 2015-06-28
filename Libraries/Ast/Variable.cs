@@ -40,21 +40,21 @@
             return res;
         }
 
-        protected virtual T MakeClone<T>() where T : Variable, new()
+        protected virtual T MakeClone<T>(Scope scope) where T : Variable, new()
         {
             T res = new T();
             res.Identifier = Identifier;
-            res.Prefix = Prefix.Clone() as Real;
-            res.Exponent = Exponent.Clone() as Real;
-            res.CurScope = CurScope;
+            res.Prefix = Prefix.Clone(scope) as Real;
+            res.Exponent = Exponent.Clone(scope) as Real;
+            res.CurScope = scope;
             res.Position = Position;
 
             return res;
         }
 
-        public override Expression Clone()
+        public override Expression Clone(Scope scope)
         {
-            return MakeClone<Variable>();
+            return MakeClone<Variable>(scope);
         }
 
         public override Expression Evaluate()

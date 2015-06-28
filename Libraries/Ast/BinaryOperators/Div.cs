@@ -117,9 +117,9 @@
             return res;
         }
 
-        public override Expression Clone()
+        public override Expression Clone(Scope scope)
         {
-            return new Div(Left.Clone(), Right.Clone());
+            return new Div(Left.Clone(scope), Right.Clone(scope));
         }
 
         public Expression InvertOn(Expression other)

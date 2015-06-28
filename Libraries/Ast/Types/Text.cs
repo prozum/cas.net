@@ -21,6 +21,11 @@ namespace Ast
             return this;
         }
 
+        public override Expression Clone(Scope scope)
+        {
+            return new Text(@string);
+        }
+
         public override string ToString()
         {
             return @string;
@@ -66,6 +71,11 @@ namespace Ast
         }
 
         public override Expression AddWith(Complex other)
+        {
+            return new Text(@string + other.ToString());
+        }
+
+        public override Expression AddWith(Boolean other)
         {
             return new Text(@string + other.ToString());
         }

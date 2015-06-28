@@ -36,6 +36,17 @@
             return resList;
         }
 
+        public override Expression Clone(Scope scope)
+        {
+            var forExpr = new ForExpr(scope);
+
+            forExpr.Var = Var;
+            forExpr.List = List.Clone(scope);
+            forExpr.ForScope = ForScope.Clone(scope);
+
+            return forExpr;
+        }
+
         public override string ToString()
         {
             return "for " + Var + " in " + List.ToString() + ":" + ForScope.ToString();

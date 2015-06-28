@@ -25,9 +25,9 @@
             return new Add(left, newRight);
         }
 
-        public override Expression Clone()
+        public override Expression Clone(Scope scope)
         {
-            return new Sub(Left.Clone(), Right.Clone());
+            return new Sub(Left.Clone(scope), Right.Clone(scope));
         }
 
         public Expression InvertOn(Expression other)

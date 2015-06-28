@@ -15,6 +15,15 @@
             res.Child = Child.Reduce();
             return res;
         }
+
+        public override Expression Clone(Scope scope)
+        {
+            var nega = new Negation();
+            nega.CurScope = scope;
+            nega.Child = Child.Clone(scope);
+
+            return nega;
+        }
     }
 }
 

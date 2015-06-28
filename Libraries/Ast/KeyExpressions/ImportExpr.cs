@@ -61,6 +61,11 @@
             }
         }
 
+        public override Expression Clone(Scope scope)
+        {
+            return new ImportExpr(Expression.Clone(scope), scope);
+        }
+
         public override string ToString()
         {
             return "import " + Expression.ToString();

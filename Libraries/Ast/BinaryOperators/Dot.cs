@@ -81,6 +81,11 @@
         {
             return Value;
         }
+
+        public override Expression Clone(Scope scope)
+        {
+            return new Dot(Left.Clone(scope), Right.Clone(scope));
+        }
     }
 }
 

@@ -18,7 +18,7 @@
             }
         }
 
-        public override Expression Clone()
+        public override Expression Clone(Scope scope)
         {
             return new Irrational(@decimal);
         }

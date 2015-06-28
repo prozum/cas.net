@@ -18,6 +18,15 @@
 
             return res;
         }
+
+        public override Expression Clone(Scope scope)
+        {
+            var minus = new Minus();
+            minus.CurScope = scope;
+            minus.Child = Child.Clone(scope);
+
+            return minus;
+        }
     }
 }
 

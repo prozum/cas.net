@@ -34,7 +34,7 @@
             return res;
         }
 
-        public override Expression Clone()
+        public override Expression Clone(Scope scope)
         {
             return new Complex(real.Clone() as Real, imag.Clone() as Real);
         }

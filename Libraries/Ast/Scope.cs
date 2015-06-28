@@ -118,6 +118,18 @@ namespace Ast
             return false;
         }
 
+        public override Expression Clone(Scope scope)
+        {
+            var cloneScope = new Scope(scope, Shared);
+
+            foreach (var expr in Expressions)
+            {
+                cloneScope.Expressions.Add(expr.Clone(cloneScope));
+            }
+
+            return cloneScope;
+        }
+
         public void SetVar(string identifier, Expression expr)
         {
             if (Globals.Contains(identifier))

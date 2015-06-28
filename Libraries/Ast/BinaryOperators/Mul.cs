@@ -313,9 +313,9 @@
             return new Mul(left.Prefix * right.Prefix, new Exp(new Mul(newLeft, newRight), left.Exponent));
         }
 
-        public override Expression Clone()
+        public override Expression Clone(Scope scope)
         {
-            return new Mul(Left.Clone(), Right.Clone());
+            return new Mul(Left.Clone(scope), Right.Clone(scope));
         }
 
         public Expression InvertOn(Expression other)

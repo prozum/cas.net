@@ -13,9 +13,9 @@
             return new Boolean(!Left.CompareTo(Right));
         }
 
-        public override Expression Clone()
+        public override Expression Clone(Scope scope)
         {
-            return new NotEqual(Left.Clone(), Right.Clone());
+            return new NotEqual(Left.Clone(scope), Right.Clone(scope));
         }
 
         internal override Expression CurrectOperator()

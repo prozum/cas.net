@@ -18,9 +18,9 @@
             return new Equal(left, right);
         }
 
-        public override Expression Clone()
+        public override Expression Clone(Scope scope)
         {
-            return new Equal(Left.Clone(), Right.Clone());
+            return new Equal(Left.Clone(scope), Right.Clone(scope));
         }
 
         internal override Expression CurrectOperator()

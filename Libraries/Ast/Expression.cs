@@ -52,7 +52,12 @@ namespace Ast
             return this;
         }
 
-        public virtual Expression Clone()
+        public Expression Clone()
+        {
+            return Clone(CurScope);
+        }
+
+        public virtual Expression Clone(Scope scope)
         {
             return new Error(this, "Cannot clone");
         }

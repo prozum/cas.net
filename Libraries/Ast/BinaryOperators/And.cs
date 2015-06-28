@@ -22,6 +22,11 @@
         {
             return new And(left, right);
         }
+
+        public override Expression Clone(Scope scope)
+        {
+            return new And(Left.Clone(scope), Right.Clone(scope));
+        }
     }
 }
 

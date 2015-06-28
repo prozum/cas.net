@@ -194,9 +194,9 @@
             return new Add(Left.CurrectOperator(), Right.CurrectOperator());
         }
 
-        public override Expression Clone()
+        public override Expression Clone(Scope scope)
         {
-            return new Add(Left.Clone(), Right.Clone());
+            return new Add(Left.Clone(scope), Right.Clone(scope));
         }
 
         public Expression InvertOn(Expression other)

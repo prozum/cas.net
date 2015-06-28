@@ -78,9 +78,9 @@
             return res;
         }
 
-        public override Expression Clone()
+        public override Expression Clone(Scope scope)
         {
-            return new Exp(Left.Clone(), Right.Clone());
+            return new Exp(Left.Clone(scope), Right.Clone(scope));
         }
 
         public Expression InvertOn(Expression other)

@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-
-namespace Ast
+﻿namespace Ast
 {
     public class IfExpr : Expression
     {
-        public List<Expression> Conditions = new List<Expression>();
-        public List<Expression> Expressions = new List<Expression>();
+        public List Conditions = new List();
+        public List Expressions = new List();
 
         public IfExpr(Scope scope)
         { 
@@ -50,6 +48,16 @@ namespace Ast
             }
 
             return Constant.Null;
+        }
+
+        public override Expression Clone(Scope scope)
+        {
+            var ifExpr = new IfExpr(scope);
+
+            ifExpr.Conditions = Conditions.Clone(scope) as List;
+            ifExpr.Expressions = Expressions.Clone(scope) as List;
+
+            return ifExpr;
         }
 
         public override string ToString()

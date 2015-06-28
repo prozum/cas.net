@@ -22,6 +22,11 @@
         {
             return new Or(left, right);
         }
+
+        public override Expression Clone(Scope scope)
+        {
+            return new Or(Left.Clone(scope), Right.Clone(scope));
+        }
     }
 }
 

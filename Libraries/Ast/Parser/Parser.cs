@@ -141,7 +141,7 @@ namespace Ast
             if (Error)
                 return CurScope.Error;
 
-            if (CurContext == ParseContext.ScopeMulti || CurContext == ParseContext.ScopeClass  && !Eat(TokenKind.CURLY_END))
+            if ((CurContext == ParseContext.ScopeMulti || CurContext == ParseContext.ScopeClass)  && !Eat(TokenKind.CURLY_END))
                 return ReportError("Missing } bracket");
                 
             ContextStack.Pop();
@@ -283,7 +283,7 @@ namespace Ast
                         SetupExpr(new Null(),true);
                         break;
                     case TokenKind.SELF:
-                        SetupExpr(new Self(),true);
+                        SetupExpr(new Self(CurScope),true);
                         break;
 
                     case TokenKind.PARENT_START:
@@ -293,7 +293,10 @@ namespace Ast
                         SetupExpr(ParseList(),false);
                         break;
                     case TokenKind.CURLY_START:
-                        SetupExpr(ParseScope(), false);
+                        if (CurScope is Class)
+                            SetupExpr(ParseScope(true), false);
+                        else
+                            SetupExpr(ParseScope(), false);
                         break;
 
                     case TokenKind.HASH:
@@ -652,12 +655,12 @@ namespace Ast
             cond = ParseColon();
             if (Error)
                 return null;
-            ifexpr.Conditions.Add(cond);
+            ifexpr.Conditions.Items.Add(cond);
 
             expr = ParseScope(true);
             if (Error)
                 return null;
-            ifexpr.Expressions.Add(expr);
+            ifexpr.Expressions.Items.Add(expr);
 
             while (Eat(TokenKind.NEW_LINE));
             while (Eat(TokenKind.ELIF))
@@ -665,12 +668,12 @@ namespace Ast
                 cond = ParseColon();
                 if (Error)
                     return null;
-                ifexpr.Conditions.Add(cond);
+                ifexpr.Conditions.Items.Add(cond);
 
                 expr = ParseScope(true);
                 if (Error)
                     return null;
-                ifexpr.Expressions.Add(expr);
+                ifexpr.Expressions.Items.Add(expr);
 
                 while (Eat(TokenKind.NEW_LINE));
             }
@@ -683,7 +686,7 @@ namespace Ast
                 expr = ParseScope(true);
                 if (Error)
                     return null;
-                ifexpr.Expressions.Add(expr);
+                ifexpr.Expressions.Items.Add(expr);
             }
 
             ContextStack.Pop();

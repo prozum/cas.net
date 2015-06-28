@@ -24,6 +24,11 @@
             return res;
         }
 
+        public override Expression Clone(Scope scope)
+        {
+            return new RetExpr(Expression.Clone(scope), scope);
+        }
+
         public override string ToString()
         {
             return "ret " + Expression.ToString();

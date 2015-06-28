@@ -29,7 +29,7 @@
             return @bool.ToString();
         }
 
-        public override Expression Clone()
+        public override Expression Clone(Scope scope)
         {
             return new Boolean(@bool);
         }

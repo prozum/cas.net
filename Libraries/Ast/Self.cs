@@ -2,13 +2,9 @@
 {
     public class Self : Expression
     {
-        public Self()
+        public Self(Scope scope)
         {
-        }
-
-        public override string ToString()
-        {
-            return "self";
+            CurScope = scope;
         }
 
         public override Expression Evaluate()
@@ -22,6 +18,16 @@
             {
                 return CurScope;
             }
+        }
+
+        public override Expression Clone(Scope scope)
+        {
+            return new Self(scope);
+        }
+
+        public override string ToString()
+        {
+            return "self";
         }
     }
 }

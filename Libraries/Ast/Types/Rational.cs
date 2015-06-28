@@ -31,7 +31,7 @@ namespace Ast
             throw new NotImplementedException ();
         }
 
-        public override Expression Clone()
+        public override Expression Clone(Scope scope)
         {
             return new Rational(numerator, denominator);
         }

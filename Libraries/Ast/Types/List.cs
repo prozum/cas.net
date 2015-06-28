@@ -129,13 +129,13 @@ namespace Ast
             return false;
         }
 
-        public override Expression Clone()
+        public override Expression Clone(Scope scope)
         {
             var res = new List();
 
             foreach (var item in Items)
             {
-                res.Items.Add(item.Clone());
+                res.Items.Add(item.Clone(scope));
             }
 
             return res;

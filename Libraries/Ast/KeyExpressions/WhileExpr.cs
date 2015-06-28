@@ -45,10 +45,21 @@
 
         }
 
+        public override Expression Clone(Scope scope)
+        {
+            var whileExpr = new WhileExpr(scope);
+
+            whileExpr.Condition = Condition.Clone(scope);
+            whileExpr.WhileScope = WhileScope.Clone(scope) as Scope;
+
+            return whileExpr;
+        }
+
         public override string ToString()
         {
             return WhileScope.ToString();
         }
+
     }
 }
 

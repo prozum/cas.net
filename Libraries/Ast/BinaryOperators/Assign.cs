@@ -54,7 +54,6 @@ namespace Ast
                 {
                     identifier = (call.Child as Variable).Identifier;
                     expr = new VarFunc(identifier, Right, call.Arguments, scope);
-                   
                 }
                 else
                     return new Error(call.Child, "is not a variable");
@@ -75,9 +74,9 @@ namespace Ast
             return new Assign(left, right, CurScope);
         }
 
-        public override Expression Clone()
+        public override Expression Clone(Scope scope)
         {
-            return new Assign(Left.Clone(), Right.Clone(), CurScope);
+            return new Assign(Left.Clone(scope), Right.Clone(scope), scope);
         }
 
         internal override Expression CurrectOperator()

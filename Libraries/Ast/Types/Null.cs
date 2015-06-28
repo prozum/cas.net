@@ -15,5 +15,10 @@
         {
             return this;
         }
+
+        public override Expression Clone(Scope scope)
+        {
+            return this;
+        }
     }
 }

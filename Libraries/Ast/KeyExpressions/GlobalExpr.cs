@@ -35,6 +35,16 @@ namespace Ast
 
             return Constant.Null;
         }
+
+        public override Expression Clone(Scope scope)
+        {
+            return new GlobalExpr(Expression.Clone(scope), scope);
+        }
+
+        public override string ToString()
+        {
+            return "global " + Expression.ToString();
+        }
     }
 }
 

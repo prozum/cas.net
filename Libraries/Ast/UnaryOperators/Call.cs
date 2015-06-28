@@ -92,6 +92,14 @@
 
             return true;
         }
+
+        public override Expression Clone(Scope scope)
+        {
+            var call = new Call(Arguments.Clone(scope) as List, scope);
+            call.Child = Child.Clone(scope);
+
+            return call;
+        }
     }
 }
 

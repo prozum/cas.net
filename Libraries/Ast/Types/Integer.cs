@@ -24,7 +24,7 @@ namespace Ast
             return i.@int;
         }
 
-        public override Expression Clone()
+        public override Expression Clone(Scope scope)
         {
             return new Integer(@int);
         }

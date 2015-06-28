@@ -22,6 +22,11 @@
         {
             return new Mod(left, right);
         }
+
+        public override Expression Clone(Scope scope)
+        {
+            return new Mod(Left.Clone(scope), Right.Clone(scope));
+        }
     }
 }
 

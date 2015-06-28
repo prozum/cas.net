@@ -13,9 +13,9 @@
             return Left > Right;
         }
 
-        public override Expression Clone()
+        public override Expression Clone(Scope scope)
         {
-            return new Greater(Left.Clone(), Right.Clone());
+            return new Greater(Left.Clone(scope), Right.Clone(scope));
         }
 
         internal override Expression CurrectOperator()
