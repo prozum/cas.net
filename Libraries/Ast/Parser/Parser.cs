@@ -465,7 +465,11 @@ namespace Ast
         {
             while (Peek(TokenKind.SQUARE_START))
             {
-                var op = new Call(ParseList(), CurScope);
+                var args = ParseList();
+                if (Error)
+                    return;
+
+                var op = new Call(args, CurScope);
                 if (Error)
                     return;
 
