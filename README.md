@@ -5,3 +5,11 @@
 
 # CAS.NET
 A computer algebra system written in C#/GTK+
+
+# TODO
+- Arbitrary precision (whole,irrational,complex)
+- Handle variable lookup overflow
+- Nth root
+- Draw functions (line,circle,etc.)
+- Rational reduction with GCD
+- Widgets to manipulate variables
