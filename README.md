@@ -4,10 +4,10 @@
 [![Coverage Status](https://coveralls.io/repos/prozum/cas.net/badge.svg)](https://coveralls.io/r/prozum/cas.net)
 
 # CAS.NET
-A computer algebra system written in C#/GTK+
+Computer algebra system written in C#/GTK+
 
 # TODO
-- Arbitrary precision (whole,irrational,complex)
+- Arbitrary precision (integer,irrational,complex)
 - Handle variable lookup overflow
 - Nth root
 - Draw functions (line,circle,etc.)
