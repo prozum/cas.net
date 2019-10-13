@@ -7,6 +7,7 @@
 Computer algebra system written in C#/GTK+
 
 # TODO
+- A common sense parser and interpreter :)
 - Arbitrary precision (integer,irrational,complex)
 - Handle variable lookup overflow
 - Nth root
